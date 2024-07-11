@@ -1,6 +1,6 @@
 # The official home of Oh Gosh Git!?!
 
-It is the repository of [Oh Gosh, Git](https://ohgoshgit.github.io/OhGoshGit)
+It is the repository of [Oh Gosh, Git](https://ohgoshgit.github.io/)
 
 ## Inspiration
 
