@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About OhGoshGit!?!",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
+    "section": "",
+    "text": "This post is based on Dangit, I accidentally committed something to master that should have been on a brand new branch!"
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
+    "section": "Problem",
+    "text": "Problem\nLet’s say you have just set up a new git repository. Initially, you planned to create a new branch named “test” to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.\n ▶  What I originally planned to do\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       branch test\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\"\n\n\n\n\n\n\n ▶  What I’ve actually done…\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\""
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
+    "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
+    "section": "Solution: using git reset",
+    "text": "Solution: using git reset\n ▶  Steps\n\nCreate a new test branch based on the current HEAD state.\nReset the main branch to the state immediately after the first commit.\nSwitch to the test branch.\n\n ▶  Commands\n## Step 1\n% git branch test\n\n## Step 2\n% git reset 813faa2 --hard\n\n## Step 3\n% git switch test\n ▶  Explains\n\nYou can create a new branch based on the current HEAD without switching using git branch &lt;branch-name&gt;.\nUsing git reset --hard instead of git reset --soft ensures that by default, changes are not left in the current branch’s index or files.\nIf changes remain in the current branch, you would need to execute git stash or git clean.\n\n\n!!WARNING \nIf you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers."
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
+    "section": "References",
+    "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Git is hard, but we need to handle it",
+    "section": "",
+    "text": "Date\n\n\nAuthor\n\n\nTitle\n\n\n\n\n\n\n2024-07-12\n\n\nRyo Nakagami\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n\n\n\nNo matching items"
+  }
+]
