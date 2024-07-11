@@ -1,0 +1,14 @@
+---
+title: "Git is hard, but we need to handle it"
+subtitle: "Here are some bad situations I've gotten myself into, and how I eventually got myself out of them in plain english."
+listing:
+  contents: posts
+  sort: "date desc"
+  type: table
+  fields: [date, author, title]
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---

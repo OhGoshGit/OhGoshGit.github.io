@@ -1,0 +1,16 @@
+---
+title: "About OhGoshGit!?!"
+image: ./img/OGG_logo.png
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com
+    - icon: github
+      text: Github
+      href: https://github.com/OhGoshGit/OhGoshGit.github.io
+
+---
+
+About this blog

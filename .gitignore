@@ -1,0 +1,34 @@
+# AUTHOR: RyoNak
+# UPDATE: 2023-08-03
+# General
+sandbox/
+tmp/
+
+# Sensitive
+*.gpg
+
+# Envrionments
+.env
+env/
+ENV/
+env.bak/
+
+# Cache
+.DS_Store
+*.bak
+*.swp
+
+# IDE specific
+.vscode/
+
+# Logs
+logs
+*.log
+
+# bfg
+..bfg-report
+bfg_check_list/
+
+# quarto
+_site/
+/.quarto/

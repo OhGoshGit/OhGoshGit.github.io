@@ -1,0 +1,18 @@
+project:
+  type: website
+
+website:
+  title: "OhGoshGit!?!"
+  favicon: ./img/favicon-32x32.png
+  navbar:
+    right:
+      - text: "Dangit, Git!?!"
+        href: https://dangitgit.com/
+      - about.qmd
+      - icon: github
+        href: https://github.com/OhGoshGit/OhGoshGit.github.io
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    date-format: "iso"

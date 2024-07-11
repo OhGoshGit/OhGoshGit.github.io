@@ -1,0 +1,79 @@
+---
+title: "OGG... I accidentally committed something to master that should have been on a brand new branch!"
+author: "Ryo Nakagami"
+date: "2024-07-12"
+date-modified: "2024-07-12"
+categories: [git commit]
+---
+
+This post is based on [Dangit, I accidentally committed something to master that should have been on a brand new branch!](https://dangitgit.com/#accidental-commit-master)
+
+
+## Problem
+
+Let's say you have just set up a new git repository. Initially, you planned to create a new branch named "test" to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.
+
+<strong > &#9654;&nbsp; What I originally planned to do</strong>
+
+```{mermaid}
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       branch test
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+```
+
+<strong > &#9654;&nbsp; What I've actually done...</strong>
+
+
+```{mermaid}
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+```
+
+## Solution: using `git reset`
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+1. Create a new test branch based on the current HEAD state.
+2. Reset the main branch to the state immediately after the first commit.
+3. Switch to the test branch.
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+## Step 1
+% git branch test
+
+## Step 2
+% git reset 813faa2 --hard
+
+## Step 3
+% git switch test
+```
+
+<strong > &#9654;&nbsp; Explains</strong>
+
+- You can create a new branch based on the current HEAD without switching using `git branch <branch-name>`.
+- Using `git reset --hard` instead of `git reset --soft` ensures that by default, changes are not left in the current branch's index or files.
+- If changes remain in the current branch, you would need to execute `git stash` or `git clean`.
+
+<div style='padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657; background-color:#F8F8F8'>
+<strong style="color:#ffa657">!!WARNING</strong> <br>
+
+If you have already pushed to the remote repository with the wrong commits, 
+it's better not to execute the above solution because it could inconvenience other developers.
+
+</div>
+
+References
+----------
+- [Dangit, I accidentally committed something to master that should have been on a brand new branch!](https://dangitgit.com/#accidental-commit-master)
