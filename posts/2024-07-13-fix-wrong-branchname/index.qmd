@@ -1,0 +1,51 @@
+---
+title: "OGG... I accidentally named the branch the wrong name..."
+author: "Ryo Nakagami"
+date: "2024-07-13"
+date-modified: "2024-07-13"
+categories: [git branch]
+---
+
+## Problem
+
+Let's say you made a local development branch, `feature/inverse-matrix-calculation`. After some commits and pushes to remote, you realized that you had named the branch the wrong way.
+
+- the correct name: `feature/inverse-matrix-calculation`
+- the current name: `future-inverse-matrix-calculation`
+
+## Solution 1: checkout a new branch and delete the old
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+1. Create a new branch based on the current HEAD state at the `future-inverse-matrix-calculation`.
+2. Switch to the test branch
+3. Delete the old one
+4. Set the correct upstream branch
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+## Step 1 & 2
+% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation
+
+## Step 3
+% git branch -D future-inverse-matrix-calculation
+
+## Step 4
+% git branch feature/inverse-matrix-calculation -u <remote branch>
+```
+
+## Solution 2: rename the branch
+
+With the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.
+
+```zsh
+% git branch -m <old-name> <new-name>
+```
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+## rename using -m/--move option
+% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation
+```
