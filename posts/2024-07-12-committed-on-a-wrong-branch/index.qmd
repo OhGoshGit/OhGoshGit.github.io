@@ -66,7 +66,7 @@ Let's say you have just set up a new git repository. Initially, you planned to c
 - Using `git reset --hard` instead of `git reset --soft` ensures that by default, changes are not left in the current branch's index or files.
 - If changes remain in the current branch, you would need to execute `git stash` or `git clean`.
 
-<div style='padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657; background-color:#F8F8F8'>
+<div style='padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;'>
 <strong style="color:#ffa657">!!WARNING</strong> <br>
 
 If you have already pushed to the remote repository with the wrong commits, 
