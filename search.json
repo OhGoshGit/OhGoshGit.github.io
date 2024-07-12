@@ -25,7 +25,7 @@
     "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
     "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "Solution 1: checkout a new branch and delete the old",
-    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the test branch\nDelete the old one\nset the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the test branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
   },
   {
     "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
