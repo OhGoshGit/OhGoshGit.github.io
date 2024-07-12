@@ -4,18 +4,36 @@ project:
 website:
   title: "OhGoshGit!?!"
   favicon: ./img/favicon-32x32.png
+  repo-url: https://github.com/OhGoshGit/OhGoshGit.github.io
+  issue-url: https://github.com/OhGoshGit/OhGoshGit.github.io/issues
+  repo-actions: [edit, issue]
   navbar:
-    right:
+    left: 
       - text: "Dangit, Git!?!"
         href: https://dangitgit.com/
       - about.qmd
+    right:
       - icon: github
         href: https://github.com/OhGoshGit/OhGoshGit.github.io
+  page-footer:
+    left: |
+      © Copyright 2024-present Ryo Nakagami
+    center:
+      - text: "License"
+        href: LICENSE
+  comments:
+    utterances:
+         repo: OhGoshGit/OhGoshGit.github.io
+         label: discussion
+         issue-term: title
+
 format:
   html:
     theme: 
       light: cosmo
       dark: darkly
+    code-copy: true
+    code-overflow: wrap
     css: styles.css
     date-format: "iso"
     include-in-header: ./_include/setup_googletagmanager.html

@@ -10,7 +10,7 @@ about:
     - icon: github
       text: Github
       href: https://github.com/OhGoshGit/OhGoshGit.github.io
-
+comments: false
 ---
 
 About this blog
