@@ -16,3 +16,4 @@ format:
     theme: cosmo
     css: styles.css
     date-format: "iso"
+    include-in-header: ./_include/setup_googletagmanager.html
