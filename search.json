@@ -7,6 +7,34 @@
     "text": "About this blog"
   },
   {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "",
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "",
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 1: checkout a new branch and delete the old",
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the test branch\nDelete the old one\nset the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 2: rename the branch",
+    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
+  },
+  {
     "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
     "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
     "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
@@ -39,6 +67,6 @@
     "href": "index.html",
     "title": "Git is hard, but we need to handle it",
     "section": "",
-    "text": "Date\n\n\nAuthor\n\n\nTitle\n\n\n\n\n\n\n2024-07-12\n\n\nRyo Nakagami\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n\n\n\nNo matching items"
+    "text": "Date\n\n\nAuthor\n\n\nTitle\n\n\n\n\n\n\n2024-07-13\n\n\nRyo Nakagami\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n\n\n2024-07-12\n\n\nRyo Nakagami\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n\n\n\nNo matching items"
   }
 ]
