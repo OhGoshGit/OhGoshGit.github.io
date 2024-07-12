@@ -19,3 +19,4 @@ format:
     css: styles.css
     date-format: "iso"
     include-in-header: ./_include/setup_googletagmanager.html
+    include-in-body: ./_include/setup_googletagmanager_body.html
