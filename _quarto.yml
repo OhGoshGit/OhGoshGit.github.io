@@ -3,6 +3,8 @@ project:
 
 website:
   title: "OhGoshGit!?!"
+  google-analytics: 
+    tracking-id: "G-2W179PEWKM"
   favicon: ./img/favicon-32x32.png
   repo-url: https://github.com/OhGoshGit/OhGoshGit.github.io
   issue-url: https://github.com/OhGoshGit/OhGoshGit.github.io/issues
