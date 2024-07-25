@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2024-07-26-mirror-repository-to-newremote/index.html",
       "/posts/2024-07-18-cannot-push-to-remote-branch/index.html",
       "/posts/2024-07-13-fix-wrong-branchname/index.html",
       "/posts/2024-07-12-committed-on-a-wrong-branch/index.html"

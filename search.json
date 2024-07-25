@@ -4,7 +4,42 @@
     "href": "index.html",
     "title": "Git is hard, but we need to handle it",
     "section": "",
-    "text": "Date\n\n\nAuthor\n\n\nTitle\n\n\n\n\n\n\n2024-07-18\n\n\nRyo Nakagami\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n\n\n2024-07-13\n\n\nRyo Nakagami\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n\n\n2024-07-12\n\n\nRyo Nakagami\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n\n\n\nNo matching items"
+    "text": "Date\n\n\nAuthor\n\n\nTitle\n\n\n\n\n\n\n2024-07-26\n\n\nRyo Nakagami\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n\n\n2024-07-18\n\n\nRyo Nakagami\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n\n\n2024-07-13\n\n\nRyo Nakagami\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n\n\n2024-07-12\n\n\nRyo Nakagami\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "",
+    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "",
+    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "Solution: git clone –bare",
+    "text": "Solution: git clone –bare\n ▶  Steps\n\nCreate a bare clone of the repository\nMirror-push to the new repository\nRemove the temporary old local repository\n\n ▶  Commands\n# Step 1\n% git clone --bare https://github.com/EXAMPLE-USER/LinearModels.git\n\n# Step 2\n% cd LinearModels.git\n% git push --mirror https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git\n\n# Step 3\n% cd ..\n% rm -rf LinearModels.git\n\n📘 REMARKS \n\nA non-bare git clone downloads both the snapshot and history to the local machine. However, a git clone --bare only copies the history, allowing for a quicker transfer to a new remote repository.\nAdditionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．\nThe mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#why-not-no-bare-git-clone-and-git-push-mirror",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#why-not-no-bare-git-clone-and-git-push-mirror",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "Why not no-bare git clone and git push –mirror?",
+    "text": "Why not no-bare git clone and git push –mirror?\nWhen running git clone origin-url, you will get all of the tags copied, a local branch master (HEAD) tracking a remote branch origin/master, and remote branches origin/test1, origin/test2, and origin/test3.\nIf you do git push --mirror a non-bare cloned repository, it also pushes your remote branches, origin/test1, origin/test2, and origin/test3, because mirror implies everything. Then, you would get branches named origin/origin/test1."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "References",
+    "text": "References\n\nGitHub Docs &gt; Duplicating a repository"
   },
   {
     "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
@@ -42,34 +77,6 @@
     "text": "About this blog"
   },
   {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "",
-    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "",
-    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "What is happening",
-    "text": "What is happening\nGenerally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.\n\n\n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       checkout remote\n       merge local id:\"❗️failed to push\"\n\n\n Fig 1. Conflict between the local and the remote \n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       merge remote id:\"❗️failed to pull\"\n\n\n Fig 2. You cannot pull the remote either"
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "Solution: git pull --rebase",
-    "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
-  },
-  {
     "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
     "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
     "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
@@ -96,5 +103,33 @@
     "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
     "section": "References",
     "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "",
+    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "",
+    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "What is happening",
+    "text": "What is happening\nGenerally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.\n\n\n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       checkout remote\n       merge local id:\"❗️failed to push\"\n\n\n Fig 1. Conflict between the local and the remote \n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       merge remote id:\"❗️failed to pull\"\n\n\n Fig 2. You cannot pull the remote either"
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "Solution: git pull --rebase",
+    "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
   }
 ]

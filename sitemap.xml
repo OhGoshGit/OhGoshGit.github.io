@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://OhGoshGit.github.io/index.html</loc>
-    <lastmod>2024-07-18T12:35:05.023Z</lastmod>
+    <lastmod>2024-07-25T17:03:58.656Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OhGoshGit.github.io/posts/2024-07-26-mirror-repository-to-newremote/index.html</loc>
+    <lastmod>2024-07-25T17:03:58.656Z</lastmod>
   </url>
   <url>
     <loc>https://OhGoshGit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html</loc>
-    <lastmod>2024-07-18T12:35:05.023Z</lastmod>
+    <lastmod>2024-07-25T17:03:58.656Z</lastmod>
   </url>
   <url>
     <loc>https://OhGoshGit.github.io/about.html</loc>
-    <lastmod>2024-07-18T12:35:05.019Z</lastmod>
-  </url>
-  <url>
-    <loc>https://OhGoshGit.github.io/posts/2024-07-18-cannot-push-to-remote-branch/index.html</loc>
-    <lastmod>2024-07-18T12:35:05.023Z</lastmod>
+    <lastmod>2024-07-25T17:03:58.656Z</lastmod>
   </url>
   <url>
     <loc>https://OhGoshGit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/index.html</loc>
-    <lastmod>2024-07-18T12:35:05.023Z</lastmod>
+    <lastmod>2024-07-25T17:03:58.656Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OhGoshGit.github.io/posts/2024-07-18-cannot-push-to-remote-branch/index.html</loc>
+    <lastmod>2024-07-25T17:03:58.656Z</lastmod>
   </url>
 </urlset>
