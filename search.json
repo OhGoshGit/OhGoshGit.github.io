@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Git is hard, but we need to handle it",
     "section": "",
-    "text": "Date\n\n\nAuthor\n\n\nTitle\n\n\n\n\n\n\n2024-07-26\n\n\nRyo Nakagami\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n\n\n2024-07-18\n\n\nRyo Nakagami\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n\n\n2024-07-13\n\n\nRyo Nakagami\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n\n\n2024-07-12\n\n\nRyo Nakagami\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n\n\n\nNo matching items"
+    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
