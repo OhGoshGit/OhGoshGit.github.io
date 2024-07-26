@@ -1,6 +1,8 @@
 ---
 title: "OGG... I just want to save the current repository into another remote..."
-author: "Ryo Nakagami"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
 date: "2024-07-26"
 date-modified: last-modified
 categories: [git clone]

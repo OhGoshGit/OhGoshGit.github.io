@@ -1,6 +1,8 @@
 ---
 title: "OGG... I cannot push to remote branch and cannot pull the remote changes..."
-author: "Ryo Nakagami"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
 date: "2024-07-18"
 date-modified: last-modified
 categories: [git branch]

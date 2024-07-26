@@ -1,6 +1,8 @@
 ---
 title: "OGG... I accidentally committed something to master that should have been on a brand new branch!"
-author: "Ryo Nakagami"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
 date: "2024-07-12"
 date-modified: "2024-07-12"
 categories: [git commit]
