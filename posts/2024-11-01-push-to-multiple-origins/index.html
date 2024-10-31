@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2024-07-26">
+<meta name="dcterms.date" content="2024-11-01">
 
-<title>OGG… I just want to save the current repository into another remote… – OhGoshGit!?!</title>
+<title>OGG… How can I push my repository to githab and gitlab remote at once? – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -173,9 +173,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">OGG… I just want to save the current repository into another remote…</h1>
+      <h1 class="title">OGG… How can I push my repository to githab and gitlab remote at once?</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git clone</div>
+                <div class="quarto-category">git push</div>
               </div>
                   </div>
   </div>
@@ -193,7 +193,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-07-26</p>
+        <p class="date">2024-11-01</p>
       </div>
     </div>
     
@@ -216,11 +216,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution-git-clone-bare" id="toc-solution-git-clone-bare" class="nav-link" data-scroll-target="#solution-git-clone-bare">Solution: git clone –bare</a>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a>
   <ul class="collapse">
-  <li><a href="#why-not-no-bare-git-clone-and-git-push-mirror" id="toc-why-not-no-bare-git-clone-and-git-push-mirror" class="nav-link" data-scroll-target="#why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</a></li>
+  <li><a href="#automate-pushing-to-both-remotes-by-shellscript" id="toc-automate-pushing-to-both-remotes-by-shellscript" class="nav-link" data-scroll-target="#automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</a></li>
   </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -233,48 +232,108 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
+<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
+<p><strong> ▶&nbsp; Example</strong></p>
+<ul>
+<li>you might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application.</li>
+</ul>
 </section>
-<section id="solution-git-clone-bare" class="level2">
-<h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously, and keeping your project in sync.</p>
 <p><strong> ▶&nbsp; Steps</strong></p>
+<p>Here’s how you can set this up:</p>
 <ol type="1">
-<li>Create a bare clone of the repository</li>
-<li>Mirror-push to the new repository</li>
-<li>Remove the temporary old local repository</li>
+<li>Add Multiple Remotes by using <code>git remote add</code> command</li>
+<li>Check Your Remotes with <code>git remote -v</code></li>
+<li>Pushing to Multiple Remotes</li>
 </ol>
 <p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git clone <span class="at">--bare</span> https://github.com/EXAMPLE-USER/LinearModels.git</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> cd LinearModels.git</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git push <span class="at">--mirror</span> https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> cd ..</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> rm <span class="at">-rf</span> LinearModels.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="blog-custom-border">
-<p><strong>📘 REMARKS</strong> <br></p>
-<ul>
-<li>A non-bare <code>git clone</code> downloads both the snapshot and history to the local machine. However, a <code>git clone --bare</code> only copies the history, allowing for a quicker transfer to a new remote repository.</li>
-<li>Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．</li>
-<li>The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.</li>
-</ul>
+<p>Suppose you’re working on a local Git project named <code>hoshinokirby</code>. You want to push this project to both GitHub and GitLab.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Add multiple Remotes</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add github https://github.com/user-name/hoshinokirby.git</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add gitlab https://gitlab.com/user-name/hoshinokirby.git</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Check Your Remotes</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>output should be like below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">github</span>    https://github.com/user-name/hoshinokirby.git <span class="op">(fe</span>tch)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>github    https://github.com/user-name/hoshinokirby.git (push)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>gitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>gitlab    https://gitlab.com/user-name/hoshinokirby.git (push)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then,</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Push to Both Remotes:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push github feature/ml-prediction-enhancement</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push gitlab feature/ml-prediction-enhancement</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-<section id="why-not-no-bare-git-clone-and-git-push-mirror" class="level3">
-<h3 class="anchored" data-anchor-id="why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</h3>
-<p>When running <code>git clone origin-url</code>, you will get all of the tags copied, a local branch master (<code>HEAD</code>) tracking a remote branch <code>origin/master</code>, and remote branches <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>.</p>
-<p>If you do <code>git push --mirror</code> a non-bare cloned repository, it also pushes your remote branches, <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>, because mirror implies everything. Then, you would get branches named <code>origin/origin/test1</code>.</p>
-</section>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository">GitHub Docs &gt; Duplicating a repository</a></li>
-</ul>
+<div class="callout-title-container flex-fill">
+🍵 Green Tea Break: Delete a Remote****
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>f you have added the wrong remote in your Git repository and want to delete it, you can do so using the <code>git remote remove</code> command. Removing a remote only affects your local configuration and does not impact the remote repository itself.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the remote</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote remove <span class="op">&lt;</span>remote-name<span class="op">&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># shorthand version</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote rm <span class="op">&lt;</span>remote-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Before running the above commands, make sure to double-check the remote name to avoid accidental deletions.</p>
+</div>
+</div>
+<section id="automate-pushing-to-both-remotes-by-shellscript" class="level3">
+<h3 class="anchored" data-anchor-id="automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</h3>
+<p>The following script is designed to push a specified branch to all configured Git remotes.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------------------------</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Description</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   The script iterates over each remote and pushes the specified branch to it </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   using the git push command. The script retrieves the list of configured Git remotes </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   using the git remote command and stores it in the variable REMOTES.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   If no remotes are found, the script prints an error message and exits with a status code of 1.</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------------------------</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if branch name is provided</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$1</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Usage: </span><span class="va">$0</span><span class="st"> &lt;branch-name&gt;"</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the branch name</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="va">BRANCH_NAME</span><span class="op">=</span><span class="va">$1</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the list of remotes</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="va">REMOTES</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> remote<span class="va">)</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if there are any remotes configured</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$REMOTES</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"No remotes found. Please configure a remote repository."</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Push to each remote</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$REMOTES</span><span class="st">"</span> <span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">REMOTE</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">git</span> push <span class="st">"</span><span class="va">$REMOTE</span><span class="st">"</span> <span class="st">"</span><span class="va">$BRANCH_NAME</span><span class="st">"</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span> 0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To use this script, follow these steps:</p>
+<ol type="1">
+<li>Save the script to a file, e.g., <code>push_to_remotes.sh</code></li>
+<li>Make the script executable:</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x push_to_remotes.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="3" type="1">
+<li>Run the script with the branch name as an argument:</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./push_to_remotes.sh</span> <span class="op">&lt;</span>branch-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
