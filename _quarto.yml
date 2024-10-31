@@ -30,13 +30,22 @@ website:
 
 format:
   html:
+    include-in-header: 
+      - _include/setup_googletagmanager.html
+      - _include/custom_webfont.html
+    include-in-body: _include/setup_googletagmanager_body.html
     theme: 
-      light: cosmo
-      dark: darkly
+      light: 
+        - cosmo
+        - include/custom.scss
+        - include/light.scss
+      dark: 
+        - darkly
+        - include/custom.scss
+        - include/dark.scss
     code-copy: true
     code-overflow: wrap
     css: styles.css
     date-format: "iso"
-    include-in-header: ./_include/setup_googletagmanager.html
-    include-in-body: ./_include/setup_googletagmanager_body.html
+    mainfont: "Noto Sans JP"
     monofont: monospace
