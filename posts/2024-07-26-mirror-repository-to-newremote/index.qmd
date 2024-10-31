@@ -37,7 +37,7 @@ repository into gitlab repository, `https://gitlab.econometrics.com//EXAMPLE-USE
 % rm -rf LinearModels.git
 ```
 
-<div style='padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#00008B;'>
+<div class="blog-custom-border">
 <strong >📘 REMARKS</strong> <br>
 
 - A non-bare `git clone` downloads both the snapshot and history to the local machine. However, a `git clone --bare` only copies the history, allowing for a quicker transfer to a new remote repository.
@@ -46,7 +46,7 @@ repository into gitlab repository, `https://gitlab.econometrics.com//EXAMPLE-USE
 
 </div>
 
-## Why not no-bare git clone and git push --mirror?
+### Why not no-bare git clone and git push --mirror?
 
 When running `git clone origin-url`, you will get all of the tags copied,
 a local branch master (`HEAD`) tracking a remote branch `origin/master`, and remote
@@ -55,9 +55,6 @@ branches `origin/test1`, `origin/test2`, and `origin/test3`.
 If you do `git push --mirror` a non-bare cloned repository, it also pushes your remote branches,
 `origin/test1`, `origin/test2`, and `origin/test3`, because mirror implies everything.
 Then, you would get branches named `origin/origin/test1`. 
-
-
-
 
 References
 ----------

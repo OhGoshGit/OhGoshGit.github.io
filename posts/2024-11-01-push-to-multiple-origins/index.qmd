@@ -1,0 +1,134 @@
+---
+title: "OGG... How can I push my repository to githab and gitlab remote at once?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-11-01"
+date-modified: last-modified
+categories: [git push]
+---
+
+## Problem
+
+Suppose you're working on a local Git branch named `feature/ml-prediction-enhancement`.
+You want to push this project to both GitHub and GitLab.
+
+<strong > &#9654;&nbsp; Example</strong>
+
+- you might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application.
+
+## Solution
+
+In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously, and keeping your project in sync.
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+Here's how you can set this up:
+
+1. Add Multiple Remotes by using `git remote add` command
+2. Check Your Remotes with `git remote -v`
+3. Pushing to Multiple Remotes
+
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+Suppose you're working on a local Git project named `hoshinokirby`. You want to push this project to both GitHub and GitLab.
+
+```zsh
+# Step 1: Add multiple Remotes
+git remote add github https://github.com/user-name/hoshinokirby.git
+git remote add gitlab https://gitlab.com/user-name/hoshinokirby.git
+
+# Step 2: Check Your Remotes
+git remote -v
+```
+
+output should be like below:
+
+```zsh
+github    https://github.com/user-name/hoshinokirby.git (fetch)
+github    https://github.com/user-name/hoshinokirby.git (push)
+gitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)
+gitlab    https://gitlab.com/user-name/hoshinokirby.git (push)
+```
+
+Then, 
+
+```zsh
+# Step 3: Push to Both Remotes:
+git push github feature/ml-prediction-enhancement
+git push gitlab feature/ml-prediction-enhancement
+```
+
+::: {.nte- .callout-tip icon="false"}
+# 🍵 Green Tea Break: Delete a Remote****
+
+f you have added the wrong remote in your Git repository and want to delete it, you can do so using the `git remote remove` command. Removing a remote only affects your local configuration and does not impact the remote repository itself.
+
+```zsh
+# remove the remote
+git remote remove <remote-name>
+
+# shorthand version
+git remote rm <remote-name>
+```
+
+Before running the above commands, make sure to double-check the remote name to avoid accidental deletions.
+
+:::
+
+### Automate Pushing to Both Remotes by shellscript
+
+The following script is designed to push a specified branch to all configured Git remotes.
+
+```bash
+#!/bin/bash
+#--------------------------------------
+# Description
+#   The script iterates over each remote and pushes the specified branch to it 
+#   using the git push command. The script retrieves the list of configured Git remotes 
+#   using the git remote command and stores it in the variable REMOTES.
+#   If no remotes are found, the script prints an error message and exits with a status code of 1.
+#--------------------------------------
+
+
+# Check if branch name is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <branch-name>"
+  exit 1
+fi
+
+# Define the branch name
+BRANCH_NAME=$1
+
+# Get the list of remotes
+REMOTES=$(git remote)
+
+# Check if there are any remotes configured
+if [ -z "$REMOTES" ]; then
+  echo "No remotes found. Please configure a remote repository."
+  exit 1
+fi
+
+# Push to each remote
+echo "$REMOTES" | while read -r REMOTE; do
+    git push "$REMOTE" "$BRANCH_NAME"
+done
+
+exit 0
+```
+
+To use this script, follow these steps:
+
+1. Save the script to a file, e.g., `push_to_remotes.sh`
+2. Make the script executable:
+
+```zsh
+chmod +x push_to_remotes.sh
+```
+
+3. Run the script with the branch name as an argument:
+
+```zsh
+./push_to_remotes.sh <branch-name>
+```
