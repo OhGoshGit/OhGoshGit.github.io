@@ -1,10 +1,31 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Git is hard, but we need to handle it",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "",
-    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "",
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 1: checkout a new branch and delete the old",
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the test branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 2: rename the branch",
+    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
   },
   {
     "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
@@ -42,41 +63,6 @@
     "text": "References\n\nGitHub Docs &gt; Duplicating a repository"
   },
   {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 1: checkout a new branch and delete the old",
-    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the test branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 2: rename the branch",
-    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About OhGoshGit!?!",
-    "section": "",
-    "text": "About this blog"
-  },
-  {
     "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
     "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
     "title": "OGG… I accidentally committed something to master that should have been on a brand new branch!",
@@ -105,6 +91,20 @@
     "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
   },
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About OhGoshGit!?!",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Git is hard, but we need to handle it",
+    "section": "",
+    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
     "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
     "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
@@ -131,5 +131,33 @@
     "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
     "section": "Solution: git pull --rebase",
     "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "Solution",
+    "text": "Solution\nThere are two ways to resolve this:\n\nRename your local branch to follow the naming convention, then push it to the remote.\nPush your current branch to the remote using the correct branch name without renaming it locally.\n\n\nSolution 1: rename your local branch name\n\nRenaming your local branch is explained on this post.\n ▶  Commands\n# Step 1: rename your local branch\ngit branch -m &lt;old-name&gt; &lt;new-name&gt;\n\n# Step 2: push to the remote\ngit push -u origin HEAD\n\n\nSolution 2: Push a local git branch to a remote with a different name\n\ngit push origin local-branch-name:remote-branch-name tells Git to push the local branch local-branch-name to the remote repository origin and create/update the branch named remote-branch-name there.\nBut be aware the command carry some risks. If remote-branch-name already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.\nTo mitigate the above risk, it’s better to check the status of the remnote branch first with git fetch and git branch -a. DO NOT USE git push --force.\n ▶  Commands\n# Step 1: git fetch and check your remote\ngit fetch \n\n# Step 2: Make sure your new remote name will not cause a problem\ngit branch -a  \n\n# Step 3: Push your local branch with different remote name\ngit push origin local-branch-name:remote-branch-name\n\n\n\n\n\n\n🍵 Green Tea Break: why use git fetch not git pull?\n\n\n\n ▶  git fetch keeps your local work untouched\n\ngit fetch only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.\ngit pull combines git fetch and git merge, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.\n\nIf you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use git fetch because it helps avoid unexpected merges."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "Use-cases",
+    "text": "Use-cases\n ▶  Temporarily Sharing Work\nIf you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like temp/20241031-login-test.\n ▶  Avoid Naming Conflicts\nIf there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called feature/login on the remote, you might push you local feature/login branch as feature/login-update.\nIn this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run\ngit branch -vvv\nand if the result is not what you expect, you can run\ngit branch --set-upstream-to=origin/new-feature\nto set your upstream branch to the correct one."
   }
 ]

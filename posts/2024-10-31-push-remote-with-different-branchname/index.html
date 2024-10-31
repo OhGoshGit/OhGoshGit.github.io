@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2024-07-12">
+<meta name="dcterms.date" content="2024-10-31">
 
-<title>OGG… I accidentally committed something to master that should have been on a brand new branch! – OhGoshGit!?!</title>
+<title>OGG… I just want to push a local git branch to a remote with a different name… – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -124,9 +124,6 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
-<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -176,9 +173,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">OGG… I accidentally committed something to master that should have been on a brand new branch!</h1>
+      <h1 class="title">OGG… I just want to push a local git branch to a remote with a different name…</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git commit</div>
+                <div class="quarto-category">git branch</div>
               </div>
                   </div>
   </div>
@@ -196,14 +193,14 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-07-12</p>
+        <p class="date">2024-10-31</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">2024-07-12</p>
+        <p class="date-modified">2024-10-31</p>
       </div>
     </div>
       
@@ -219,8 +216,12 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution-using-git-reset" id="toc-solution-using-git-reset" class="nav-link" data-scroll-target="#solution-using-git-reset">Solution: using <code>git reset</code></a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a>
+  <ul class="collapse">
+  <li><a href="#solution-1-rename-your-local-branch-name" id="toc-solution-1-rename-your-local-branch-name" class="nav-link" data-scroll-target="#solution-1-rename-your-local-branch-name">Solution 1: rename your local branch name</a></li>
+  <li><a href="#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" id="toc-solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="nav-link" data-scroll-target="#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">Solution 2: Push a local git branch to a remote with a different name</a></li>
+  </ul></li>
+  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use-cases</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -231,83 +232,74 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<p>This post is based on <a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you have just set up a new git repository. Initially, you planned to create a new branch named “test” to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.</p>
-<p><strong> ▶&nbsp; What I originally planned to do</strong></p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
-    gitGraph
-       commit id: "813faa2"
-       branch test
-       commit id: "28a8bf7"
-       commit id: "466fbe7"
-       commit id: "30bf56a"
-       commit id: "6159140"
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p><strong> ▶&nbsp; What I’ve actually done…</strong></p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
-    gitGraph
-       commit id: "813faa2"
-       commit id: "28a8bf7"
-       commit id: "466fbe7"
-       commit id: "30bf56a"
-       commit id: "6159140"
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
+<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
 </section>
-<section id="solution-using-git-reset" class="level2">
-<h2 class="anchored" data-anchor-id="solution-using-git-reset">Solution: using <code>git reset</code></h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>There are two ways to resolve this:</p>
 <ol type="1">
-<li>Create a new test branch based on the current HEAD state.</li>
-<li>Reset the main branch to the state immediately after the first commit.</li>
-<li>Switch to the test branch.</li>
+<li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
+<li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
 </ol>
+<section id="solution-1-rename-your-local-branch-name" class="level3">
+<h3 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">Solution 1: rename your local branch name</h3>
+<hr>
+<p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
 <p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch test</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: rename your local branch</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-m</span> <span class="op">&lt;</span>old-name<span class="op">&gt;</span> <span class="op">&lt;</span>new-name<span class="op">&gt;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git reset 813faa2 <span class="at">--hard</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git switch test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong> ▶&nbsp; Explains</strong></p>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: push to the remote</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin HEAD</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level3">
+<h3 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">Solution 2: Push a local git branch to a remote with a different name</h3>
+<hr>
+<p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
+<p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
+<p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: git fetch and check your remote</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Make sure your new remote name will not cause a problem</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-a</span>  </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Push your local branch with different remote name</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin local-branch-name:remote-branch-name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🍵 Green Tea Break: why use <code>git fetch</code> not <code>git pull</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong> ▶&nbsp; <code>git fetch</code> keeps your local work untouched</strong></p>
 <ul>
-<li>You can create a new branch based on the current HEAD without switching using <code>git branch &lt;branch-name&gt;</code>.</li>
-<li>Using <code>git reset --hard</code> instead of <code>git reset --soft</code> ensures that by default, changes are not left in the current branch’s index or files.</li>
-<li>If changes remain in the current branch, you would need to execute <code>git stash</code> or <code>git clean</code>.</li>
+<li><code>git fetch</code> only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.</li>
+<li><code>git pull</code> combines <code>git fetch</code> and <code>git merge</code>, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.</li>
 </ul>
-<div style="padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;">
-<p><strong style="color:#ffa657">!!WARNING</strong> <br></p>
-<p>If you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers.</p>
+<p>If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use <code>git fetch</code> because it helps avoid unexpected merges.</p>
+</div>
 </div>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></li>
-</ul>
+</section>
+<section id="use-cases" class="level2">
+<h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
+<p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
+<p>If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like <code>temp/20241031-login-test</code>.</p>
+<p><strong> ▶&nbsp; Avoid Naming Conflicts</strong></p>
+<p>If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called <code>feature/login</code> on the remote, you might push you local <code>feature/login</code> branch as <code>feature/login-update</code>.</p>
+<p>In this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-vvv</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and if the result is not what you expect, you can run</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">--set-upstream-to</span><span class="op">=</span>origin/new-feature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>to set your upstream branch to the correct one.</p>
 
 
 </section>
