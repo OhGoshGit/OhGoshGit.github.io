@@ -1,0 +1,39 @@
+name: "Report Wrong Contents"
+description: "Use this template to report wrong contents in the repository."
+title: "[WRONG CONTENT] - "
+labels: ["bug", "content"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report wrong contents. Please fill out the information below.
+
+  - type: input
+    id: url
+    attributes:
+      label: "URL of the page with wrong content"
+      description: "Provide the URL where the wrong content is located."
+      placeholder: "https://example.com/page"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description of the wrong content"
+      description: "Describe what is wrong with the content."
+      placeholder: "The content on this page is outdated because..."
+
+  - type: textarea
+    id: correct_content
+    attributes:
+      label: "Suggested correct content"
+      description: "Provide the correct content if you have it."
+      placeholder: "The correct content should be..."
+
+  - type: input
+    id: additional_info
+    attributes:
+      label: "Additional Information"
+      description: "Any additional information that might help us understand the issue."
+      placeholder: "Additional context or screenshots..."

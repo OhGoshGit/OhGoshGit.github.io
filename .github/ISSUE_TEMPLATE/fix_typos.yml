@@ -1,0 +1,32 @@
+name: "Fix Typos"
+description: "Report typos or grammatical errors in the documentation."
+title: "[Typo] "
+labels: ["typo", "documentation"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a typo or grammatical error. Please provide the details below.
+
+  - type: input
+    id: location
+    attributes:
+      label: "Location"
+      description: "Provide the location of the typo (e.g., page URL, section heading)."
+      placeholder: "e.g., https://example.com/docs/page#section"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "Describe the typo or grammatical error."
+      placeholder: "e.g., 'recieve' should be 'receive'"
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: "Suggested Correction"
+      description: "Provide the correct text if possible."
+      placeholder: "e.g., 'receive'"
