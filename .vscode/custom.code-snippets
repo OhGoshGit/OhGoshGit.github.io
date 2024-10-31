@@ -1,0 +1,88 @@
+{
+    "Definition": {
+        "scope": "quarto",
+		"prefix": "def",
+		"body": [
+			"<div class=\"blog-custom-border\">",
+			"<strong>Def: </strong> <br>",
+			"",
+			"</div>"
+		],
+		"description": "Gray Color Text Block"
+	},
+    "problem":{
+        "scope": "quarto",
+		"prefix": "problem",
+		"body":[
+			"<div class=\"blog-custom-border\">",
+			"::: {#exr- .custom_problem }",
+			"<br>",
+			"",
+			":::",
+			"",
+			"</div>",
+		],
+		"description": "problem-block"
+	},
+	"theorem":{
+        "scope": "quarto",
+		"prefix": "thm",
+		"body":[
+			"<div class=\"blog-custom-border\">",
+			"::: {#thm- .custom_problem }",
+			"<br>",
+			"",
+			":::",
+			"",
+			"</div>",
+		],
+		"description": "problem-block"
+	},
+	"REMARKS": {
+        "scope": "quarto",
+		"prefix": "remarks",
+		"body": [
+			"<div class=\"blog-custom-border\">",
+			"<strong >📘 REMARKS</strong> <br>",
+			"",
+			"</div>"
+		],
+		"description": ""
+	},
+
+	"green tea break":{
+		"scope": "quarto",
+		"prefix": "green",
+		"body":[
+			"::: {.nte- .callout-tip icon=\"false\"}",
+			"# 🍵 Green Tea Break",
+			"",
+			":::",
+		],
+		"description": "adding column"
+	},
+
+
+	"property": {
+        "scope": "quarto",
+		"prefix": "property",
+		"body": [
+			":::{.callout-note}",
+			"## Property",
+			":::"
+		],
+		"description": "property"
+	},
+
+	"solution-block":{
+		"prefix": "sol-block",
+		"body": [
+			"<!--::: {.callout-note collapse=\"true\" icon=false}-->",
+			"::: {.callout-note collapse=\"false\" icon=false}",
+			"## Solution",
+			"",
+			":::",
+		],
+		"description": "foldable solution block"
+	},
+}
