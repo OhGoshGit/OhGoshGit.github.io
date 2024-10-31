@@ -1,0 +1,103 @@
+---
+title: "OGG... I just want to push a local git branch to a remote with a different name..."
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-10-31"
+date-modified: last-modified
+categories: [git branch]
+---
+
+## Problem
+
+Suppose you're working on a local Git branch named `feature/ml-prediction-enhancement`. 
+. When you attempt to push this branch to the remote repository, 
+you realize that it doesn’t follow the branch naming convention.
+The correct format should be `dev-2.2.x-0001/ml-prediction-enhancement`.
+
+## Solution
+
+There are two ways to resolve this:
+
+1. Rename your local branch to follow the naming convention, then push it to the remote.
+2. Push your current branch to the remote using the correct branch name without renaming it locally.
+
+### Solution 1: rename your local branch name
+---
+
+Renaming your local branch is explained on [this post](https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html).
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+# Step 1: rename your local branch
+git branch -m <old-name> <new-name>
+
+# Step 2: push to the remote
+git push -u origin HEAD
+```
+
+### Solution 2: Push a local git branch to a remote with a different name
+---
+
+`git push origin local-branch-name:remote-branch-name` tells Git to push the local branch `local-branch-name`
+to the remote repository `origin` and create/update the branch named `remote-branch-name` there.
+
+But be aware the command carry some risks. If `remote-branch-name` already exists on the remote repository, 
+this command will update it with the contents of your local branch. 
+If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.
+
+To mitigate the above risk, it's better to check the status of the remnote branch first with `git fetch` and `git branch -a`. 
+DO NOT USE `git push --force`.
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+# Step 1: git fetch and check your remote
+git fetch 
+
+# Step 2: Make sure your new remote name will not cause a problem
+git branch -a  
+
+# Step 3: Push your local branch with different remote name
+git push origin local-branch-name:remote-branch-name
+```
+
+::: {.nte- .callout-tip icon="false"}
+# 🍵 Green Tea Break: why use `git fetch` not `git pull`?
+
+<strong > &#9654;&nbsp; `git fetch` keeps your local work untouched</strong>
+
+- `git fetch` only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.
+- `git pull` combines `git fetch` and `git merge`, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.
+
+If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use `git fetch` because it helps avoid unexpected merges.
+
+:::
+
+
+## Use-cases
+
+<strong > &#9654;&nbsp; Temporarily Sharing Work</strong>
+
+If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like `temp/20241031-login-test`.
+
+<strong > &#9654;&nbsp; Avoid Naming Conflicts</strong>
+
+If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called `feature/login` on the remote, 
+you might push you local `feature/login` branch as `feature/login-update`.
+
+In this case, after pushing to the remote, make sure the upstream branch points to your intended branch.
+It’s a good idea to run 
+
+```zsh
+git branch -vvv
+```
+
+and if the result is not what you expect, you can run 
+
+```zsh
+git branch --set-upstream-to=origin/new-feature
+```
+
+to set your upstream branch to the correct one.
