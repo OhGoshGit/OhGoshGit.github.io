@@ -61,7 +61,7 @@ git push gitlab feature/ml-prediction-enhancement
 ```
 
 ::: {.nte- .callout-tip icon="false"}
-# 🍵 Green Tea Break: Delete a Remote****
+# 🍵 Green Tea Break: **Delete a Remote**
 
 f you have added the wrong remote in your Git repository and want to delete it, you can do so using the `git remote remove` command. Removing a remote only affects your local configuration and does not impact the remote repository itself.
 
