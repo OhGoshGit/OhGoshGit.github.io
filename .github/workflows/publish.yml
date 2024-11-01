@@ -3,7 +3,7 @@ on:
   push:
     branches: main
 
-name: statistics_for_reg_monkey
+name: Publish OhGoshGit
 
 jobs:
   build-deploy:
