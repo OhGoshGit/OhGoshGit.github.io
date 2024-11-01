@@ -19,7 +19,7 @@ You want to push this project to both GitHub and GitLab.
 
 ## Solution
 
-In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously, and keeping your project in sync.
+In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.
 
 <strong > &#9654;&nbsp; Steps</strong>
 
