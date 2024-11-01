@@ -3,6 +3,7 @@ project:
 
 website:
   title: "OhGoshGit!?!"
+  site-url: https://ohgoshgit.github.io/
   google-analytics: 
     tracking-id: "G-2W179PEWKM"
   favicon: ./img/favicon-32x32.png
@@ -17,6 +18,8 @@ website:
     right:
       - icon: github
         href: https://github.com/OhGoshGit/OhGoshGit.github.io
+      - icon: rss
+        href: index.xml
   page-footer:
     center:
       - text: © Copyright RyoNak
