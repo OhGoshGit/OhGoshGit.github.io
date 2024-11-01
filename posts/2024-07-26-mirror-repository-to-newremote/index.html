@@ -238,7 +238,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
+<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
 </section>
 <section id="solution-git-clone-bare" class="level2">
 <h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
@@ -254,7 +254,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> cd LinearModels.git</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git push <span class="at">--mirror</span> https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git push <span class="at">--mirror</span> https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> cd ..</span>

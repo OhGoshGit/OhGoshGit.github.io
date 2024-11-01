@@ -472,7 +472,7 @@ font-style: inherit;">=</span>origin/new-feature</span></code></pre></div>
 
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
+<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
 </section>
 <section id="solution-git-clone-bare" class="level2">
 <h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
@@ -502,7 +502,7 @@ font-style: inherit;">%</span> cd LinearModels.git</span>
 background-color: null;
 font-style: inherit;">%</span> git push <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">--mirror</span> https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</span>
+font-style: inherit;">--mirror</span> https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</span>
 <span id="cb1-7"></span>
 <span id="cb1-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
