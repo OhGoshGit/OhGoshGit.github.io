@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2024-11-01">
 
-<title>Git is hard, but we need to handle it – OhGoshGit!?!</title>
+<title>OGG… Test – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +25,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,35 +71,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -120,38 +91,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+<link rel="stylesheet" href="../../styles.css">
+</head>
 
 <body class="nav-fixed">
 
@@ -160,7 +102,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -175,7 +117,7 @@ window.Quarto = {
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
@@ -186,7 +128,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -201,137 +143,67 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">Git is hard, but we need to handle it</h1>
-            <p class="subtitle lead">Here are some bad situations I’ve gotten myself into, and how I eventually got myself out of them in plain english.</p>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">OGG… Test</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">git branch</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2024-11-01</p>
+      </div>
+    </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2024-11-01</p>
+      </div>
+    </div>
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div><div class="category" data-category="git branch">git branch <span class="quarto-category-count">(4)</span></div><div class="category" data-category="git clone">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="git commit">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="git push">git push <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-<th>
-Date
-</th>
-<th>
-Title
-</th>
-<th>
-Reading Time
-</th>
-</tr>
-</thead>
-<tbody class="list">
-<tr data-index="0" data-categories="git branch" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1730437106014" data-listing-date-modified-sort="1730437106000" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="OGG... Test" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="./posts/2000-01-01-test/index.html" class="title listing-title">OGG… Test</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-</tr>
-<tr data-index="1" data-categories="git push" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1730437106014" data-listing-date-modified-sort="1730437106000" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I push my repository to githab and gitlab remote at once?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="./posts/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">OGG… How can I push my repository to githab and gitlab remote at once?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-</tr>
-<tr data-index="2" data-categories="git branch" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1730437106014" data-listing-date-modified-sort="1730437106000" data-listing-reading-time-sort="3" data-listing-word-count-sort="524" data-listing-title-sort="OGG... I just want to push a local git branch to a remote with a different name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="./posts/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">OGG… I just want to push a local git branch to a remote with a different name…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-</tr>
-<tr data-index="3" data-categories="git clone" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1730437106014" data-listing-date-modified-sort="1730437106000" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="OGG... I just want to save the current repository into another remote..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="./posts/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">OGG… I just want to save the current repository into another remote…</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-</tr>
-<tr data-index="4" data-categories="git branch" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1730437106014" data-listing-date-modified-sort="1730437106000" data-listing-reading-time-sort="5" data-listing-word-count-sort="865" data-listing-title-sort="OGG... I cannot push to remote branch and cannot pull the remote changes..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="./posts/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">OGG… I cannot push to remote branch and cannot pull the remote changes…</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-</tr>
-<tr data-index="5" data-categories="git branch" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1730437106014" data-listing-date-modified-sort="1720828800000" data-listing-reading-time-sort="1" data-listing-word-count-sort="143" data-listing-title-sort="OGG... I accidentally named the branch the wrong name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="./posts/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">OGG… I accidentally named the branch the wrong name…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-</tr>
-<tr data-index="6" data-categories="git commit" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1730437106014" data-listing-date-modified-sort="1720742400000" data-listing-reading-time-sort="2" data-listing-word-count-sort="372" data-listing-title-sort="OGG... I accidentally committed something to master that should have been on a brand new branch!" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="./posts/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">OGG… I accidentally committed something to master that should have been on a brand new branch!</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -896,6 +768,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -908,12 +782,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="./LICENSE">
+    <a class="nav-link" href="../../LICENSE">
 <p>License</p>
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2000-01-01-test/index.html",
       "/posts/2024-11-01-push-to-multiple-origins/index.html",
       "/posts/2024-10-31-push-remote-with-different-branchname/index.html",
       "/posts/2024-07-26-mirror-repository-to-newremote/index.html",

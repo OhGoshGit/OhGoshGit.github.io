@@ -77,18 +77,18 @@
     "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Git is hard, but we need to handle it",
-    "section": "",
-    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About OhGoshGit!?!",
     "section": "",
     "text": "About this blog"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Git is hard, but we need to handle it",
+    "section": "",
+    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… Test\n\n\n1 min\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
