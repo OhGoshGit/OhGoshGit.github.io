@@ -1,8 +1,9 @@
 name: rss-to-twitter
 on:
+  schedule:
+    # every 15 minutes
+    - cron: "*/1 * * * *"
   workflow_dispatch:
-  push:
-    branches: main
 jobs:
   twitter:
     # if github.event.build.error.message is not null, it means that the build failed. Skip it
