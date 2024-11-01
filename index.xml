@@ -12,27 +12,6 @@
 <generator>quarto-1.5.57</generator>
 <lastBuildDate>Fri, 01 Nov 2024 00:00:00 GMT</lastBuildDate>
 <item>
-  <title>OGG… Test</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2000-01-01-test/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="problem" class="level2">
-
-
-
-</section>
-
- ]]></description>
-  <category>git branch</category>
-  <guid>https://ohgoshgit.github.io/posts/2000-01-01-test/</guid>
-  <pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
   <title>OGG… How can I push my repository to githab and gitlab remote at once?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-11-01-push-to-multiple-origins/</link>
