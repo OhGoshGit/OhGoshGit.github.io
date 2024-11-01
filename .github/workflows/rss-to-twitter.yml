@@ -1,6 +1,8 @@
 name: rss-to-twitter
 on:
   workflow_dispatch:
+  push:
+    branches: main
 jobs:
   twitter:
     # if github.event.build.error.message is not null, it means that the build failed. Skip it
