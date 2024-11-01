@@ -12,7 +12,7 @@ categories: [git clone]
 
 Let’s say you are working on a GitHub-hosted repository, `LinearModels`, remotely and/or locally with your colleagues.
 Development is going on at the current repository, but your boss has asked you to mirror the current
-repository into gitlab repository, `https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git`, while keeping the history as of now.
+repository into gitlab repository, `https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git`, while keeping the history as of now.
 
 ## Solution: git clone --bare
 
@@ -30,7 +30,7 @@ repository into gitlab repository, `https://gitlab.econometrics.com//EXAMPLE-USE
 
 # Step 2
 % cd LinearModels.git
-% git push --mirror https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git
+% git push --mirror https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git
 
 # Step 3
 % cd ..
