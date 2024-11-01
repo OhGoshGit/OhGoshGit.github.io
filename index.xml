@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>OhGoshGit!?!</title>
+<link>https://ohgoshgit.github.io/</link>
+<atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.5.57</generator>
+<lastBuildDate>Fri, 01 Nov 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How can I push my repository to githab and gitlab remote at once?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-11-01-push-to-multiple-origins/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
+<p><strong> ▶&nbsp; Example</strong></p>
+<ul>
+<li>you might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application.</li>
+</ul>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.</p>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<p>Here’s how you can set this up:</p>
+<ol type="1">
+<li>Add Multiple Remotes by using <code>git remote add</code> command</li>
+<li>Check Your Remotes with <code>git remote -v</code></li>
+<li>Pushing to Multiple Remotes</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<p>Suppose you’re working on a local Git project named <code>hoshinokirby</code>. You want to push this project to both GitHub and GitLab.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: Add multiple Remotes</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote add github https://github.com/user-name/hoshinokirby.git</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote add gitlab https://gitlab.com/user-name/hoshinokirby.git</span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: Check Your Remotes</span></span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-v</span></span></code></pre></div>
+<p>output should be like below:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">github</span>    https://github.com/user-name/hoshinokirby.git <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(fe</span>tch)</span>
+<span id="cb2-2">github    https://github.com/user-name/hoshinokirby.git (push)</span>
+<span id="cb2-3">gitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)</span>
+<span id="cb2-4">gitlab    https://gitlab.com/user-name/hoshinokirby.git (push)</span></code></pre></div>
+<p>Then,</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: Push to Both Remotes:</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push github feature/ml-prediction-enhancement</span>
+<span id="cb3-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push gitlab feature/ml-prediction-enhancement</span></code></pre></div>
+<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🍵 Green Tea Break: <strong>Delete a Remote</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>f you have added the wrong remote in your Git repository and want to delete it, you can do so using the <code>git remote remove</code> command. Removing a remote only affects your local configuration and does not impact the remote repository itself.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove the remote</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote remove <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb4-3"></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># shorthand version</span></span>
+<span id="cb4-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote rm <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p>Before running the above commands, make sure to double-check the remote name to avoid accidental deletions.</p>
+</div>
+</div>
+<section id="automate-pushing-to-both-remotes-by-shellscript" class="level3">
+<h3 class="anchored" data-anchor-id="automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</h3>
+<p>The following script is designed to push a specified branch to all configured Git remotes.</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#!/bin/bash</span></span>
+<span id="cb5-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#--------------------------------------</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Description</span></span>
+<span id="cb5-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   The script iterates over each remote and pushes the specified branch to it </span></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   using the git push command. The script retrieves the list of configured Git remotes </span></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   using the git remote command and stores it in the variable REMOTES.</span></span>
+<span id="cb5-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   If no remotes are found, the script prints an error message and exits with a status code of 1.</span></span>
+<span id="cb5-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#--------------------------------------</span></span>
+<span id="cb5-9"></span>
+<span id="cb5-10"></span>
+<span id="cb5-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if branch name is provided</span></span>
+<span id="cb5-12"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">[</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$1</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">]</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb5-13">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Usage: </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$0</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> &lt;branch-name&gt;"</span></span>
+<span id="cb5-14">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">exit</span> 1</span>
+<span id="cb5-15"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">fi</span></span>
+<span id="cb5-16"></span>
+<span id="cb5-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Define the branch name</span></span>
+<span id="cb5-18"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">BRANCH_NAME</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$1</span></span>
+<span id="cb5-19"></span>
+<span id="cb5-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Get the list of remotes</span></span>
+<span id="cb5-21"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">REMOTES</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb5-22"></span>
+<span id="cb5-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if there are any remotes configured</span></span>
+<span id="cb5-24"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">[</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$REMOTES</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">]</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb5-25">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"No remotes found. Please configure a remote repository."</span></span>
+<span id="cb5-26">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">exit</span> 1</span>
+<span id="cb5-27"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">fi</span></span>
+<span id="cb5-28"></span>
+<span id="cb5-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Push to each remote</span></span>
+<span id="cb5-30"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$REMOTES</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">while</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">read</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">REMOTE</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">do</span></span>
+<span id="cb5-31">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$REMOTE</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$BRANCH_NAME</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb5-32"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">done</span></span>
+<span id="cb5-33"></span>
+<span id="cb5-34"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">exit</span> 0</span></code></pre></div>
+<p>To use this script, follow these steps:</p>
+<ol type="1">
+<li>Save the script to a file, e.g., <code>push_to_remotes.sh</code></li>
+<li>Make the script executable:</li>
+</ol>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">chmod</span> +x push_to_remotes.sh</span></code></pre></div>
+<ol start="3" type="1">
+<li>Run the script with the branch name as an argument:</li>
+</ol>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">./push_to_remotes.sh</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>branch-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>git push</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-11-01-push-to-multiple-origins/</guid>
+  <pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I just want to push a local git branch to a remote with a different name…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-10-31-push-remote-with-different-branchname/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>There are two ways to resolve this:</p>
+<ol type="1">
+<li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
+<li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
+</ol>
+<section id="solution-1-rename-your-local-branch-name" class="level3">
+<h3 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">Solution 1: rename your local branch name</h3>
+<hr>
+<p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: rename your local branch</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>old-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: push to the remote</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin HEAD</span></code></pre></div>
+</section>
+<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level3">
+<h3 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">Solution 2: Push a local git branch to a remote with a different name</h3>
+<hr>
+<p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
+<p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
+<p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: git fetch and check your remote</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> fetch </span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: Make sure your new remote name will not cause a problem</span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-a</span>  </span>
+<span id="cb2-6"></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: Push your local branch with different remote name</span></span>
+<span id="cb2-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push origin local-branch-name:remote-branch-name</span></code></pre></div>
+<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🍵 Green Tea Break: why use <code>git fetch</code> not <code>git pull</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong> ▶&nbsp; <code>git fetch</code> keeps your local work untouched</strong></p>
+<ul>
+<li><code>git fetch</code> only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.</li>
+<li><code>git pull</code> combines <code>git fetch</code> and <code>git merge</code>, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.</li>
+</ul>
+<p>If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use <code>git fetch</code> because it helps avoid unexpected merges.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="use-cases" class="level2">
+<h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
+<p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
+<p>If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like <code>temp/20241031-login-test</code>.</p>
+<p><strong> ▶&nbsp; Avoid Naming Conflicts</strong></p>
+<p>If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called <code>feature/login</code> on the remote, you might push you local <code>feature/login</code> branch as <code>feature/login-update</code>.</p>
+<p>In this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-vvv</span></span></code></pre></div>
+<p>and if the result is not what you expect, you can run</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--set-upstream-to</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>origin/new-feature</span></code></pre></div>
+<p>to set your upstream branch to the correct one.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-10-31-push-remote-with-different-branchname/</guid>
+  <pubDate>Thu, 31 Oct 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I just want to save the current repository into another remote…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
+</section>
+<section id="solution-git-clone-bare" class="level2">
+<h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Create a bare clone of the repository</li>
+<li>Mirror-push to the new repository</li>
+<li>Remove the temporary old local repository</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--bare</span> https://github.com/EXAMPLE-USER/LinearModels.git</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2</span></span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> cd LinearModels.git</span>
+<span id="cb1-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--mirror</span> https://gitlab.econometrics.com//EXAMPLE-USER/NEW-REPOSITORY.git</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3</span></span>
+<span id="cb1-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> cd ..</span>
+<span id="cb1-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> rm <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div>
+<div class="blog-custom-border">
+<p><strong>📘 REMARKS</strong> <br></p>
+<ul>
+<li>A non-bare <code>git clone</code> downloads both the snapshot and history to the local machine. However, a <code>git clone --bare</code> only copies the history, allowing for a quicker transfer to a new remote repository.</li>
+<li>Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．</li>
+<li>The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.</li>
+</ul>
+</div>
+<section id="why-not-no-bare-git-clone-and-git-push-mirror" class="level3">
+<h3 class="anchored" data-anchor-id="why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</h3>
+<p>When running <code>git clone origin-url</code>, you will get all of the tags copied, a local branch master (<code>HEAD</code>) tracking a remote branch <code>origin/master</code>, and remote branches <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>.</p>
+<p>If you do <code>git push --mirror</code> a non-bare cloned repository, it also pushes your remote branches, <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>, because mirror implies everything. Then, you would get branches named <code>origin/origin/test1</code>.</p>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository">GitHub Docs &gt; Duplicating a repository</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git clone</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/</guid>
+  <pubDate>Fri, 26 Jul 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I cannot push to remote branch and cannot pull the remote changes…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-07-18-cannot-push-to-remote-branch/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Let’s say you are working on a local development branch, <code>eda/data-sanity-check</code>. After some modifications and commits on the local, you realized that you cannot push to the remote branch.</p>
+<p>When you hit <code>git push</code>, you’ve got the following error:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git push</span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb1-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">To</span> https://github.com/RyoNakagami/github_sandbox</span>
+<span id="cb1-4"> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">! </span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[rejected]</span>        eda/data-sanity-check <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> eda/data-sanity-check <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(fe</span>tch first)</span>
+<span id="cb1-5"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">error:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;"> failed to push some refs to 'https</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">//github.com/RyoNakagami/github_sandbox'</span></span>
+<span id="cb1-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> Updates were rejected because the remote contains work that you do</span>
+<span id="cb1-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> not have locally. This is usually caused by another repository pushing</span>
+<span id="cb1-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> to the same ref. You may want to first integrate the remote changes</span>
+<span id="cb1-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">e.g., </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'git pull ...'</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span> before pushing again.</span>
+<span id="cb1-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> See the <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Note about fast-forwards'</span> in <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'git push --help'</span> for details.</span></code></pre></div>
+</section>
+<section id="what-is-happening" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-happening">What is happening</h2>
+<p>Generally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       commit id: "local-mod-2"
+       commit id: "local-mod-3"
+       checkout remote
+       merge local id:"❗️failed to push"
+</pre>
+</div>
+<p></p><figcaption> Fig 1. Conflict between the local and the remote</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       commit id: "local-mod-2"
+       commit id: "local-mod-3"
+       merge remote id:"❗️failed to pull"
+</pre>
+</div>
+<p></p><figcaption> Fig 2. You cannot pull the remote either</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="solution-git-pull---rebase" class="level2">
+<h2 class="anchored" data-anchor-id="solution-git-pull---rebase">Solution: git pull --rebase</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Check the difference between the local and the romote</li>
+<li>Resolve the local-remote conflict</li>
+<li>push top the remote after solving the conflict</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## fetch the remote info</span></span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git fetch</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## check which files are different from the remote</span></span>
+<span id="cb2-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git difftool eda/data-sanity-check origin</span></code></pre></div>
+<p>The above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.</p>
+<p>Then, let’s solve the conflict.</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 2</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git pull <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--rebase</span></span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb3-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Auto-merging</span> eda/check_datasanity.py</span>
+<span id="cb3-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">CONFLICT</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">content</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: Merge conflict in eda/check_datasanity.py</span>
+<span id="cb3-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">error:</span> could not apply <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>your-current HEAD commit-id<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>... eda: add histogram</span>
+<span id="cb3-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> Resolve all conflicts manually, mark them as resolved with</span>
+<span id="cb3-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git add/rm &lt;conflicted_files&gt;"</span>, then run <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase --continue"</span>.</span>
+<span id="cb3-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> You can instead skip this commit: run <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase --skip"</span>.</span>
+<span id="cb3-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> To abort and get back to the state before <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase"</span>, run <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase --abort"</span>.</span>
+<span id="cb3-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Could</span> not apply <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>your-current HEAD commit-id<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>... eda: add histogram</span>
+<span id="cb3-12"></span>
+<span id="cb3-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## after resolving the conflict</span></span>
+<span id="cb3-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--continue</span></span></code></pre></div>
+<p>The <code>git pull --rebase</code> commands is the same as <code>git pull</code> + <code>git rebase</code>. Aftrer hitting <code>git pull --rebase</code>, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.</p>
+<p>After resolving the conflict, do not foregt to run <code>git rebase --continue</code>, otherwise you continue to stay in the conflict-resolution mode.</p>
+<p>Your git history will look like the following;</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       merge remote id:"pull"
+       commit id: "conflict-resolve"
+</pre>
+</div>
+<p></p><figcaption> Fig 3. git pull –rebase</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+<p>At the above <code>conflict-resolve</code> node, you choose which local modifications should stay in the repository history.</p>
+<p>Then, now that you are able to push to the remote.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 3: push to the remote</span></span>
+<span id="cb4-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git push origin HEAD</span></code></pre></div>
+<p><strong> ▶&nbsp; REMARKS</strong></p>
+<ul>
+<li>When hitting <code>git pull --rebase</code>, it’s possible that all differences automatically are resoloved.
+<ul>
+<li>For example, you modified some files but ther remote changes are not related to the files you’ve chnaged.</li>
+<li><code>git pull --rebase</code> automatically resolved the difference which does not cause the conflict.</li>
+</ul></li>
+<li>When you get confused and want to get out of the conflict-resolution mode without saving, hit the <code>git rebase --abort</code></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-07-18-cannot-push-to-remote-branch/</guid>
+  <pubDate>Thu, 18 Jul 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I accidentally named the branch the wrong name…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Let’s say you made a local development branch, <code>feature/inverse-matrix-calculation</code>. After some commits and pushes to remote, you realized that you had named the branch the wrong way.</p>
+<ul>
+<li>the correct name: <code>feature/inverse-matrix-calculation</code></li>
+<li>the current name: <code>future-inverse-matrix-calculation</code></li>
+</ul>
+</section>
+<section id="solution-1-checkout-a-new-branch-and-delete-the-old" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-checkout-a-new-branch-and-delete-the-old">Solution 1: checkout a new branch and delete the old</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Create a new branch based on the current HEAD state at the <code>future-inverse-matrix-calculation</code>.</li>
+<li>Switch to the test branch</li>
+<li>Delete the old one</li>
+<li>Set the correct upstream branch</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 1 &amp; 2</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 3</span></span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-D</span> future-inverse-matrix-calculation</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 4</span></span>
+<span id="cb1-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch feature/inverse-matrix-calculation <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>remote branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+</section>
+<section id="solution-2-rename-the-branch" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-rename-the-branch">Solution 2: rename the branch</h2>
+<p>With the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>old-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## rename using -m/--move option</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span></code></pre></div>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/</guid>
+  <pubDate>Sat, 13 Jul 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I accidentally committed something to master that should have been on a brand new branch!</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>This post is based on <a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Let’s say you have just set up a new git repository. Initially, you planned to create a new branch named “test” to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.</p>
+<p><strong> ▶&nbsp; What I originally planned to do</strong></p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       branch test
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><strong> ▶&nbsp; What I’ve actually done…</strong></p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="solution-using-git-reset" class="level2">
+<h2 class="anchored" data-anchor-id="solution-using-git-reset">Solution: using <code>git reset</code></h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Create a new test branch based on the current HEAD state.</li>
+<li>Reset the main branch to the state immediately after the first commit.</li>
+<li>Switch to the test branch.</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 1</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch test</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 2</span></span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git reset 813faa2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--hard</span></span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 3</span></span>
+<span id="cb1-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git switch test</span></code></pre></div>
+<p><strong> ▶&nbsp; Explains</strong></p>
+<ul>
+<li>You can create a new branch based on the current HEAD without switching using <code>git branch &lt;branch-name&gt;</code>.</li>
+<li>Using <code>git reset --hard</code> instead of <code>git reset --soft</code> ensures that by default, changes are not left in the current branch’s index or files.</li>
+<li>If changes remain in the current branch, you would need to execute <code>git stash</code> or <code>git clean</code>.</li>
+</ul>
+<div style="padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;">
+<p><strong style="color:#ffa657">!!WARNING</strong> <br></p>
+<p>If you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers.</p>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git commit</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/</guid>
+  <pubDate>Fri, 12 Jul 2024 00:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
