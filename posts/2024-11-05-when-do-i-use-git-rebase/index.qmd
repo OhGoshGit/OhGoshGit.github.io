@@ -242,7 +242,7 @@ git rebase main
 
 ```{mermaid}
 %%| label: git-rebase-undo-rebase
-%%| fig-cap: Fig 3. initial setup
+%%| fig-cap: Fig 4. git rebase with bugs
 %%{init: { 'logLevel': 'debug', 'theme': 'base', 
             'gitGraph': {'rotateCommitLabel': true,
                          'mainBranchName': 'main'}}}%%
@@ -376,23 +376,23 @@ Let's say you are working on a repository with the following versioning strategy
 
 |Version class|explained|
 |---|---|
-|Major Version (x)| Changes in the major version indicate breaking changes or significant new features. 
-|Minor Version (y)|Changes in the minor version often introduce new features that are backward-compatible.|
-|Patch Version (z)|Changes in the patch version generally include bug fixes and minor improvements. |
+|Major Version (`x`)| Changes in the major version indicate breaking changes or significant new features. 
+|Minor Version (`y`)|Changes in the minor version often introduce new features that are backward-compatible.|
+|Patch Version (`z`)|Changes in the patch version generally include bug fixes and minor improvements. |
 
 Then, better to adopt the following `git rebase` strategy:
 
-<strong > &#9654;&nbsp; Changes in 'x' (Major Version):</strong>
+<strong > &#9654;&nbsp; Changes in `x` (Major Version):</strong>
 
 - **Recommendation: Always rebase.**
 - **Reason**: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.
 
-<strong > &#9654;&nbsp; Changes in 'y' (Minor Version):</strong>
+<strong > &#9654;&nbsp; Changes in `y` (Minor Version):</strong>
 
 - **Recommendation: Rebase as a precaution.**
 - **Reason**: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.
 
-<strong > &#9654;&nbsp; Changes in 'z' (Patch Version):</strong>
+<strong > &#9654;&nbsp; Changes in `z` (Patch Version):</strong>
 
 - **Recommendation: Rebase not required.**
 - **Reason**: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase.
