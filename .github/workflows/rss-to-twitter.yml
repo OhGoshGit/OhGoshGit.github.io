@@ -2,7 +2,7 @@ name: rss-to-twitter
 on:
   schedule:
     # every 15 minutes
-    - cron: "*/5 * * * *"
+    - cron: "*/20 * * * *"
   workflow_dispatch:
 jobs:
   twitter:
