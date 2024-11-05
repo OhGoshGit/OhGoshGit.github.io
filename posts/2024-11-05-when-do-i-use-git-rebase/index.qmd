@@ -1,0 +1,398 @@
+---
+title: "OGG... Should I use git rebase?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-11-05"
+date-modified: last-modified
+categories: [git rebase]
+---
+
+## Problem
+
+Let's say you’re working on a project with a `main` branch and a `feature` branch. 
+While you are making changes to `feature` branch, the `main` branch has received some new commits from other developers.
+
+You want to incorporate these new commits into your `feature` branch, but not sure whether you should do it by
+`git rebase` or `git merge`.
+
+```{mermaid}
+%%| label: fig-branch-development
+%%| fig-cap: Fig 1. Changes in `main` branch
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A1"
+       commit id: "A2"
+       branch feature
+       commit id: "B1"
+       commit id: "B2"
+       checkout main
+       commit id: "A3"
+       commit id: "A4"
+       checkout feature
+       merge main id:"❓git merge or rebase?"
+```
+
+<strong > &#9654;&nbsp; Why not just ignore changes in the main branch for now?</strong>
+
+Ignoring updates on the main branch for now is sometimes feasible, but there are a few important disadvantages to consider.
+
+1. **<u>Delaying sync increases potential conflicts</u>**
+
+The longer your feature branch diverges from main, the more changes accumulate. When you finally integrate with `main`, you’re more likely to encounter a large, complex set of merge conflicts. Resolving conflicts with many changes can be time-consuming and prone to errors.
+
+
+2. **<u>Working in an outdated context</u>**
+
+If `main` includes changes that affect the overall project (e.g., updates to libraries, modifications to shared components, or security fixes), ignoring them means you’re working in an increasingly outdated context. Your feature might develop incompatibilities that aren’t apparent until the final merge.
+
+Plus, Continuous Integration testing or Continuous Deployment　workflows typically run against the latest main code. 
+By not keeping up with `main`, you risk your branch passing tests locally but failing in CI/CD because it lacks compatibility with newer changes.
+
+::: {.nte- .callout-tip icon="false"}
+# 🍵 Might Be Okay to Ignore main Changes
+
+There are situations where you can safely ignore `main` temporarily:
+
+- Isolated feature
+- Short-lived feature branch
+- Experimental branches
+
+:::
+
+### Solution
+
+There is no one-size-fits-all approach and it all comes down to what you value most.
+
+<strong > &#9654;&nbsp; Pros and Cons</strong>
+
+|Command|Pros|Cons|
+|---|---|---|
+|`rebase`|Clean, linear history; ideal for local branches|It’s possible that a “commit that was working fine” could turn into a “commit that doesn’t work.”|
+|`merge`|Maintains full history; safe for shared branches|Creates new merge commits, making history less linear|
+
+Generally speaking, 
+
+- `git merge` pull the latest changes from main into the feature branch, creating a new merge commit
+- `git rebase` changes the base of the feature branch to the latest commit and then replays the changes in the feature branch from there
+
+### Incorporate the changes by `git rebase`
+
+At the branch development of @fig-branch-development, you can rebase the feature branch with the following steps:
+
+```zsh
+# Step 1: Checkout the feature branch
+git switch feature
+
+# Step 2: rebase onto main:
+git rebase main
+```
+
+These commands tell Git to
+
+- Temporarily remove B1, B2
+- Fast-forward the branch to main’s latest commit (A3, A4)
+- Apply B1, B2 on top of A4
+
+Then, git history will turn into the following
+
+```{mermaid}
+%%| label: fig-branch-development-after-rebase
+%%| fig-cap: Fig 2. git rebase
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A1"
+       commit id: "A2"
+       commit id: "A3"
+       commit id: "A4"
+       branch feature
+       commit id: "B1"
+       commit id: "B2"
+```
+
+<strong > &#9654;&nbsp; Conflicts caused by `git rebase`</strong>
+
+If there are changes in `main` that modify the same parts of code as your commits, Git won’t know how to reconcile those differences automatically. These overlapping changes are what cause conflicts.
+
+For example:
+
+- Let’s say you edited `file_A.py` in your feature branch to add a new function.
+- Meanwhile, another developer made a conflicting change to the same section of `file_A.py` in main.
+
+When rebase tries to apply your changes on top of main, Git encounters a conflict because it doesn’t know which version to keep. Instead, Git will list files with conflicts. You’ll see a message like
+
+```zsh
+CONFLICT (content): Merge conflict in file_A.py
+```
+
+Open each conflicted file. Git will add conflict markers to show where the differences are:
+
+```zsh
+<<<<<<< HEAD
+// Code from main branch
+=======
+// Code from your feature branch
+>>>>>>> your-commit-hash
+```
+
+You are expected to decide which parts of the code to keep and remove the conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) after resolving. Then,
+
+```zsh
+# git add the modified files
+git add file_A.py
+
+# Continue the rebase
+git rebase --continue
+```
+
+If you want to start over or quit rebasing, you can abort the rebase with
+
+```zsh
+git rebase --abort
+```
+
+<strong > &#9654;&nbsp; “commit that was working fine” could turn into a “not working”</strong>
+
+
+When you rebase a branch, you’re reapplying commits onto a new base, 
+which can potentially break previously functional code. So to minimize this risk, 
+better to do the followings:
+
+1. **Test after rebasing**: After a rebase, test your feature branch to ensure that everything still works as expected.
+2. **Check each commit after conflicts**: If you resolved conflicts during the rebase, double-check those areas to ensure the changes align with your intended functionality.
+
+In summary, rebasing changes the context in which your commits operate, so it’s important to verify that they still work as intended in the new context.
+
+## Undo `git rebase`
+
+Let's say you’re working on a `feature` branch. You rebased it onto the main branch to incorporate recent changes, but after the rebase, you realize that:
+
+- You made a mistake resolving a conflict. or
+- Some tests are failing because of unexpected interactions with the latest changes from `main`.
+
+In this case, You wants to undo the rebase and return the branch to its original state.
+
+<strong > &#9654;&nbsp; Initial Setup</strong>
+
+```{mermaid}
+%%| label: git-rebase-undo-initial-setup
+%%| fig-cap: Fig 3. initial setup
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A"
+       commit id: "B"
+       branch feature
+       commit id: "X"
+       commit id: "Y"
+       checkout main
+       commit id: "C"
+       commit id: "D"
+```
+
+```zsh
+% git log --graph --all
+* commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 (HEAD -> main)
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:27:55 2024 +0900
+| 
+|     D
+| 
+* commit cd439d184bd0d5a2ad9dc6993a1675862cee6495
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:27:29 2024 +0900
+| 
+|     C
+|   
+| * commit d4ac5504a56ee01fc7a62e09f0ed7dbdfc5a60d6 (feature)
+| | Author: Kirby <hoshinokirby@gmail.com>
+| | Date:   Tue Nov 5 19:26:51 2024 +0900
+| | 
+| |     Y
+| | 
+| * commit 4fbd2929aa96ef8b7d07388e27e6b2f23c615199
+|/  Author: Kirby <hoshinokirby@gmail.com>
+|   Date:   Tue Nov 5 19:26:20 2024 +0900
+|   
+|       X
+| 
+* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:25:46 2024 +0900
+| 
+|     B
+| 
+* commit feadb03ae713ab05b828e066c09bacb339756df7
+  Author: Kirby <hoshinokirby@gmail.com>
+  Date:   Tue Nov 5 19:25:27 2024 +0900
+```
+
+
+You rebase feature onto `D` of the `main` by the following commands:
+
+```zsh
+git switch feature
+git rebase main
+```
+
+```{mermaid}
+%%| label: git-rebase-undo-rebase
+%%| fig-cap: Fig 3. initial setup
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A"
+       commit id: "B"
+       commit id: "C"
+       commit id: "D"
+       branch feature
+       commit id: "X"
+       commit id: "Y"
+```
+
+But after finishing the rebase, you realized that some tests are failing because of unexpected interactions with the latest changes from `main`. 
+
+### Solution: Undoing the Rebase
+
+One way to undo a `git rebase` is by using `git reflog`, which keeps a history of where your branches have pointed over time, and `git reset --hard`
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+First, check the commit history at the `feature` branch by `git log`:
+
+```zsh
+% git log --graph      
+* commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 (HEAD -> feature)
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:26:51 2024 +0900
+| 
+|     Y
+| 
+* commit 110878e53b16fd10c0d044a3a9d9cdf46db44861
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:26:20 2024 +0900
+| 
+|     X
+| 
+* commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 (main)
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:27:55 2024 +0900
+| 
+|     D
+| 
+* commit cd439d184bd0d5a2ad9dc6993a1675862cee6495
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:27:29 2024 +0900
+| 
+|     C
+| 
+* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:25:46 2024 +0900
+| 
+|     B
+| 
+* commit feadb03ae713ab05b828e066c09bacb339756df7
+  Author: Kirby <hoshinokirby@gmail.com>
+  Date:   Tue Nov 5 19:25:27 2024 +0900
+
+      A
+```
+
+Sadly, you have successfully rebased the feature branch onto commit-id `D` of the main.
+But no worried, run the `git reflog` command to see recent actions on your branch:
+
+```zsh
+% git reflog
+14b3c5d (HEAD -> feature) HEAD@{0}: rebase (finish): returning to refs/heads/feature
+14b3c5d (HEAD -> feature) HEAD@{1}: rebase (pick): Y
+110878e HEAD@{2}: rebase (pick): X
+1625fb5 (main) HEAD@{3}: rebase (start): checkout main
+d4ac550 HEAD@{4}: checkout: moving from feature to feature
+d4ac550 HEAD@{5}: checkout: moving from main to feature
+1625fb5 (main) HEAD@{6}: commit: D
+cd439d1 HEAD@{7}: commit: C
+963f1a1 HEAD@{8}: checkout: moving from feature to main
+d4ac550 HEAD@{9}: commit: Y
+4fbd292 HEAD@{10}: commit: X
+963f1a1 HEAD@{11}: checkout: moving from main to feature
+963f1a1 HEAD@{12}: commit: B
+feadb03 HEAD@{13}: commit (initial): A
+```
+
+The line `1625fb5 (main) HEAD@{3}: rebase (start): checkout main` indicates when Git started the rebase process. So, if you want to undo the rebase, just reset to the entry `d4ac550 HEAD@{4}:` to go back to your previous state before the rebase.
+
+Use `git reset` to move your branch pointer back to the commit just before the rebase:
+
+```zsh
+# Step 1: Undo git rebase
+% git reset --hard HEAD@{4}
+
+# Step 2: check history
+% git log --graph      
+* commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 (HEAD -> feature)
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:26:51 2024 +0900
+| 
+|     Y
+| 
+* commit 110878e53b16fd10c0d044a3a9d9cdf46db44861
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:26:20 2024 +0900
+| 
+|     X
+| 
+* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6
+| Author: Kirby <hoshinokirby@gmail.com>
+| Date:   Tue Nov 5 19:25:46 2024 +0900
+| 
+|     B
+| 
+* commit feadb03ae713ab05b828e066c09bacb339756df7
+  Author: Kirby <hoshinokirby@gmail.com>
+  Date:   Tue Nov 5 19:25:27 2024 +0900
+
+      A
+```
+
+## `git rebase` or `git merge`?
+
+As explined above, if your goal is to maintain a clean and linear commit history and you’re working primarily with your own branches, `git rebase` is often the best choice. On the other hand, if you’re collaborating closely with others and want to ensure that history is preserved, or if you want to avoid rewriting shared commits, `git merge` is likely the better option.
+
+<strong > &#9654;&nbsp; General Recommendation</strong>
+
+- If your feature branch is not shared yet, go with `git rebase` for a cleaner, linear history.
+- If your feature branch is already shared or part of a collaborative workflow, stick with `git merge` to avoid potential conflicts for collaborators.
+
+### Versioning and `git rebase` strategy
+
+Let's say you are working on a repository with the following versioning strategy:
+
+|Version class|explained|
+|---|---|
+|Major Version (x)| Changes in the major version indicate breaking changes or significant new features. 
+|Minor Version (y)|Changes in the minor version often introduce new features that are backward-compatible.|
+|Patch Version (z)|Changes in the patch version generally include bug fixes and minor improvements. |
+
+Then, better to adopt the following `git rebase` strategy:
+
+<strong > &#9654;&nbsp; Changes in 'x' (Major Version):</strong>
+
+- **Recommendation: Always rebase.**
+- **Reason**: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.
+
+<strong > &#9654;&nbsp; Changes in 'y' (Minor Version):</strong>
+
+- **Recommendation: Rebase as a precaution.**
+- **Reason**: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.
+
+<strong > &#9654;&nbsp; Changes in 'z' (Patch Version):</strong>
+
+- **Recommendation: Rebase not required.**
+- **Reason**: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase.
