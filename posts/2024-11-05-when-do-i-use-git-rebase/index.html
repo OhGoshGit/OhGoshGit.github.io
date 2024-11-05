@@ -622,31 +622,31 @@ Figure&nbsp;2: Fig 2. git rebase
 </thead>
 <tbody>
 <tr class="odd">
-<td>Major Version (x)</td>
+<td>Major Version (<code>x</code>)</td>
 <td>Changes in the major version indicate breaking changes or significant new features.</td>
 </tr>
 <tr class="even">
-<td>Minor Version (y)</td>
+<td>Minor Version (<code>y</code>)</td>
 <td>Changes in the minor version often introduce new features that are backward-compatible.</td>
 </tr>
 <tr class="odd">
-<td>Patch Version (z)</td>
+<td>Patch Version (<code>z</code>)</td>
 <td>Changes in the patch version generally include bug fixes and minor improvements.</td>
 </tr>
 </tbody>
 </table>
 <p>Then, better to adopt the following <code>git rebase</code> strategy:</p>
-<p><strong> ▶&nbsp; Changes in ‘x’ (Major Version):</strong></p>
+<p><strong> ▶&nbsp; Changes in <code>x</code> (Major Version):</strong></p>
 <ul>
 <li><strong>Recommendation: Always rebase.</strong></li>
 <li><strong>Reason</strong>: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.</li>
 </ul>
-<p><strong> ▶&nbsp; Changes in ‘y’ (Minor Version):</strong></p>
+<p><strong> ▶&nbsp; Changes in <code>y</code> (Minor Version):</strong></p>
 <ul>
 <li><strong>Recommendation: Rebase as a precaution.</strong></li>
 <li><strong>Reason</strong>: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.</li>
 </ul>
-<p><strong> ▶&nbsp; Changes in ‘z’ (Patch Version):</strong></p>
+<p><strong> ▶&nbsp; Changes in <code>z</code> (Patch Version):</strong></p>
 <ul>
 <li><strong>Recommendation: Rebase not required.</strong></li>
 <li><strong>Reason</strong>: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase.</li>
