@@ -1,5 +1,5 @@
 ---
-title: "OGG... I accidentally committed something to master that should have been on a brand new branch!"
+title: "OGG... I accidentally committed something to main that should have been on a brand new branch!"
 author: 
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
@@ -13,7 +13,7 @@ This post is based on [Dangit, I accidentally committed something to master that
 
 ## Problem
 
-Let's say you have just set up a new git repository. Initially, you planned to create a new branch named "test" to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.
+Let's say you have just set up a new git repository. Initially, you planned to create a new branch named `test` to work on after the first commit, which involved editing the `README.md` file. However, in practice, you continued to make changes on the `main` branch instead.
 
 <strong > &#9654;&nbsp; What I originally planned to do</strong>
 
@@ -45,20 +45,20 @@ Let's say you have just set up a new git repository. Initially, you planned to c
 
 <strong > &#9654;&nbsp; Steps</strong>
 
-1. Create a new test branch based on the current HEAD state.
-2. Reset the main branch to the state immediately after the first commit.
-3. Switch to the test branch.
+1. Create a new test branch based on the current `HEAD` state.
+2. Reset the `main` branch to the state immediately after the first commit.
+3. Switch to the `test` branch.
 
 <strong > &#9654;&nbsp; Commands</strong>
 
 ```zsh
-## Step 1
+## Step 1: keep the current repository state into test branch
 % git branch test
 
-## Step 2
+## Step 2: clean the main branch
 % git reset 813faa2 --hard
 
-## Step 3
+## Step 3: moving to the test branch
 % git switch test
 ```
 

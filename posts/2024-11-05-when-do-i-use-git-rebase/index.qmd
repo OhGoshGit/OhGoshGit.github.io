@@ -8,6 +8,7 @@ date-modified: last-modified
 categories: [git rebase]
 ---
 
+
 ## Problem
 
 Let's say you’re working on a project with a `main` branch and a `feature` branch. 
