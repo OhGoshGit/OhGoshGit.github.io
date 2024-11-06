@@ -1975,7 +1975,7 @@ font-style: inherit;">%</span> git push origin HEAD</span></code></pre></div>
 <p><strong> ▶&nbsp; Steps</strong></p>
 <ol type="1">
 <li>Create a new branch based on the current HEAD state at the <code>future-inverse-matrix-calculation</code>.</li>
-<li>Switch to the test branch</li>
+<li>Switch to the <code>future-inverse-matrix-calculation</code> branch</li>
 <li>Delete the old one</li>
 <li>Set the correct upstream branch</li>
 </ol>

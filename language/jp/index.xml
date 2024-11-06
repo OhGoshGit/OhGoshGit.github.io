@@ -10,7 +10,101 @@
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.5.57</generator>
-<lastBuildDate>Fri, 12 Jul 2024 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 13 Jul 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>あぁぁ… 間違ったbranch nameつけてしもうた…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-13-fix-wrong-branchname/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>feature/inverse-matrix-calculation</code> というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．</p>
+<ul>
+<li>間違ったbranch name: <code>feature/inverse-matrix-calculation</code></li>
+<li>正しいbranch name: <code>future-inverse-matrix-calculation</code></li>
+</ul>
+</section>
+<section id="solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する">Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する</h2>
+<p><strong> ▶&nbsp; 方針</strong></p>
+<ol type="1">
+<li>現在の <code>HEAD</code> をベースに <code>future-inverse-matrix-calculation</code> を作成</li>
+<li><code>future-inverse-matrix-calculation</code> branchへ移動</li>
+<li>誤った名前の古いbranchを削除</li>
+<li><code>future-inverse-matrix-calculation</code> branchについて，upstream branchを作成</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 1 &amp; 2</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 3</span></span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-D</span> future-inverse-matrix-calculation</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 4</span></span>
+<span id="cb1-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch feature/inverse-matrix-calculation <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>remote branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+</section>
+<section id="solution-2-現在のブランチをリネームする" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-現在のブランチをリネームする">Solution 2: 現在のブランチをリネームする</h2>
+<p><strong> ▶&nbsp; 方針</strong></p>
+<p>現在の<code>feature/inverse-matrix-calculation</code> branchをリネームすることでupstream branch設定を維持したまま，正しい名前へ変更することができます．</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>old-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## rename using -m/--move option</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span></code></pre></div>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-13-fix-wrong-branchname/</guid>
+  <pubDate>Sat, 13 Jul 2024 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた</title>
   <dc:creator>Ryo Nakagami</dc:creator>

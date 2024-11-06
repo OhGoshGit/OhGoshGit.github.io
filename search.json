@@ -18,7 +18,7 @@
     "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
     "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "Solution 1: checkout a new branch and delete the old",
-    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the test branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
   },
   {
     "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
@@ -112,6 +112,41 @@
     "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-11-06\n\n\nOGG… How do I check unstaged differences with the latest commit?\n\n\n3 min\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "section": "",
+    "text": "feature/inverse-matrix-calculation というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．\n\n間違ったbranch name: feature/inverse-matrix-calculation\n正しいbranch name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "section": "",
+    "text": "feature/inverse-matrix-calculation というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．\n\n間違ったbranch name: feature/inverse-matrix-calculation\n正しいbranch name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "section": "Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する",
+    "text": "Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する\n ▶  方針\n\n現在の HEAD をベースに future-inverse-matrix-calculation を作成\nfuture-inverse-matrix-calculation branchへ移動\n誤った名前の古いbranchを削除\nfuture-inverse-matrix-calculation branchについて，upstream branchを作成\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-2-現在のブランチをリネームする",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-2-現在のブランチをリネームする",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "section": "Solution 2: 現在のブランチをリネームする",
+    "text": "Solution 2: 現在のブランチをリネームする\n ▶  方針\n現在のfeature/inverse-matrix-calculation branchをリネームすることでupstream branch設定を維持したまま，正しい名前へ変更することができます．\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
+  },
+  {
+    "objectID": "language/jp/index.html",
+    "href": "language/jp/index.html",
+    "title": "Gitってむずかしいわぁ．．．でもヘコタレへん",
+    "section": "",
+    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-07-13\n\n\nあぁぁ… 間違ったbranch nameつけてしもうた…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nあぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた\n\n\n2 min\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html",
     "href": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html",
     "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
@@ -138,13 +173,6 @@
     "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
     "section": "References",
     "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
-  },
-  {
-    "objectID": "language/jp/index.html",
-    "href": "language/jp/index.html",
-    "title": "Gitってむずかしいわぁ．．．でもヘコタレへん",
-    "section": "",
-    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-07-12\n\n\nあぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた\n\n\n2 min\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
