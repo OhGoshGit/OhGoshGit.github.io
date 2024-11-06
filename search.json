@@ -105,6 +105,13 @@
     "text": "git rebase or git merge?\nAs explined above, if your goal is to maintain a clean and linear commit history and you’re working primarily with your own branches, git rebase is often the best choice. On the other hand, if you’re collaborating closely with others and want to ensure that history is preserved, or if you want to avoid rewriting shared commits, git merge is likely the better option.\n ▶  General Recommendation\n\nIf your feature branch is not shared yet, go with git rebase for a cleaner, linear history.\nIf your feature branch is already shared or part of a collaborative workflow, stick with git merge to avoid potential conflicts for collaborators.\n\n\nVersioning and git rebase strategy\nLet’s say you are working on a repository with the following versioning strategy:\n\n\n\n\n\n\n\nVersion class\nexplained\n\n\n\n\nMajor Version (x)\nChanges in the major version indicate breaking changes or significant new features.\n\n\nMinor Version (y)\nChanges in the minor version often introduce new features that are backward-compatible.\n\n\nPatch Version (z)\nChanges in the patch version generally include bug fixes and minor improvements.\n\n\n\nThen, better to adopt the following git rebase strategy:\n ▶  Changes in x (Major Version):\n\nRecommendation: Always rebase.\nReason: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.\n\n ▶  Changes in y (Minor Version):\n\nRecommendation: Rebase as a precaution.\nReason: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.\n\n ▶  Changes in z (Patch Version):\n\nRecommendation: Rebase not required.\nReason: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase."
   },
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Git is hard, but we need to handle it",
+    "section": "",
+    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-11-06\n\n\nOGG… How do I check unstaged differences with the latest commit?\n\n\n3 min\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About OhGoshGit!?!",
@@ -112,11 +119,32 @@
     "text": "About this blog"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Git is hard, but we need to handle it",
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
     "section": "",
-    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "",
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "Solution 1: Using git diff",
+    "text": "Solution 1: Using git diff\ngit diff allows you to inspect changes in your code, from minor edits to major branch comparisons.\n ▶  Key Takeaways\n\n\n\n\n\n\n\nCommands\nExplaination\n\n\n\n\ngit diff\nCheck unstaged changes with HEAD\n\n\ngit diff --staged\nCheck staged changes with HEAD\n\n\ngit diff &lt;commit1&gt; &lt;commit2&gt;\nCompare two specific commits\n\n\ngit diff main feature-branch\nCompare branches\n\n\ngit diff HEAD &lt;file/directory-path&gt;\nCheck single file/directory changes with HEAD\n\n\ngit diff --stat\nShows a summary of changes for each file, such as how many lines were added and deleted\n\n\n\n ▶  Viewing Changes in the Working Directory\nTo see all changes in your working directory that haven’t been staged,\ngit diff\nThis command shows the differences between your working directory and the last commit in your terminal display.\nIf you want to see staged changes with your latest commit,\ngit diff --staged\n ▶  Comparing with a Specific Commit\nTo see differences between your current state and a specific commit,\n## (1) Compared with latest commit\ngit diff\ngit diff HEAD\n\n## (2) Compared with specific commit\ngit diff &lt;commit-hash&gt;\n\n## (3) Comparing two specific commits\ngit diff &lt;commit-hash1&gt; &lt;commit-hash2&gt;\n\n## (4) Comparing the HEAD with the HEAD~1\ngit diff HEAD~1 HEAD\n ▶  Comparing Branches\nYou can also use git diff to compare different branches.\ngit diff main feature-branch\n ▶  Shows a summary of changes for each file\nWhen you want to see a summary of changes for each file, such as how many lines were added and deleted, use git diff --stat. If you want to compare the current branch with gh-pages branch in .github/ directory,\n% git diff --stat gh-pages .github/ \n .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++\n .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++\n .github/pull_request_template.md             | 25 +++++++++++++++++++++++++\n .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++\n .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++\n 5 files changed, 142 insertions(+)\nThe number shows how many lines are modified for each files."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "Solution 2: Using git difftool",
+    "text": "Solution 2: Using git difftool\ngit difftool is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.\nThe syntax of git difftool is similar to git diff. For example,\n\n\n\n\n\n\n\ngit difftool commands\ngit diff commands\n\n\n\n\ngit difftool\ngit diff\n\n\ngit difftool --stagedgit difftool --cached\ngit diff --staged\n\n\ngit difftool &lt;commit1&gt; &lt;commit2&gt;\ngit diff &lt;commit1&gt; &lt;commit2&gt;\n\n\ngit difftool main feature-branch\ngit diff main feature-branch\n\n\ngit difftool HEAD &lt;file/directory-path&gt;\ngit diff HEAD &lt;file/directory-path&gt;\n\n\n\n ▶  Choosing an editor \nYou can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is\ngit config --global diff.tool your_preferred_tool\nFor example, if you prefer to vscode,\ngit config --global diff.tool vscode\nTo check if you successfully configure difftool editor,\ngit config -l\nthen, you can check what editor is you default git difftool editor.\n ▶  Choosing an editor temporarily\nIf you temporarily show the diff in vimdiff,\ngit difftool HEAD~1 HEAD --tool=vimdiff"
   },
   {
     "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",

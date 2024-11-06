@@ -10,7 +10,259 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.5.57</generator>
-<lastBuildDate>Tue, 05 Nov 2024 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 06 Nov 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I check unstaged differences with the latest commit?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.</p>
+<p>You want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor.</p>
+</section>
+<section id="solution-1-using-git-diff" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-using-git-diff">Solution 1: Using <code>git diff</code></h2>
+<p><code>git diff</code> allows you to inspect changes in your code, from minor edits to major branch comparisons.</p>
+<p><strong> ▶&nbsp; Key Takeaways</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Commands</th>
+<th>Explaination</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git diff</code></td>
+<td>Check unstaged changes with HEAD</td>
+</tr>
+<tr class="even">
+<td><code>git diff --staged</code></td>
+<td>Check staged changes with HEAD</td>
+</tr>
+<tr class="odd">
+<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
+<td>Compare two specific commits</td>
+</tr>
+<tr class="even">
+<td><code>git diff main feature-branch</code></td>
+<td>Compare branches</td>
+</tr>
+<tr class="odd">
+<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+<td>Check single file/directory changes with HEAD</td>
+</tr>
+<tr class="even">
+<td><code>git diff --stat</code></td>
+<td>Shows a summary of changes for each file, such as how many lines were added and deleted</td>
+</tr>
+</tbody>
+</table>
+<p><strong> ▶&nbsp; Viewing Changes in the Working Directory</strong></p>
+<p>To see all changes in your working directory that haven’t been staged,</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff</span></code></pre></div>
+<p>This command shows the differences between your working directory and the last commit in your terminal display.</p>
+<p>If you want to see staged changes with your latest commit,</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--staged</span></span></code></pre></div>
+<p><strong> ▶&nbsp; Comparing with a Specific Commit</strong></p>
+<p>To see differences between your current state and a specific commit,</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (1) Compared with latest commit</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff</span>
+<span id="cb3-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD</span>
+<span id="cb3-4"></span>
+<span id="cb3-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (2) Compared with specific commit</span></span>
+<span id="cb3-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb3-7"></span>
+<span id="cb3-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (3) Comparing two specific commits</span></span>
+<span id="cb3-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash1<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash2<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb3-10"></span>
+<span id="cb3-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (4) Comparing the HEAD with the HEAD~1</span></span>
+<span id="cb3-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">~</span>1 HEAD</span></code></pre></div>
+<p><strong> ▶&nbsp; Comparing Branches</strong></p>
+<p>You can also use <code>git diff</code> to compare different branches.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff main feature-branch</span></code></pre></div>
+<p><strong> ▶&nbsp; Shows a summary of changes for each file</strong></p>
+<p>When you want to see a summary of changes for each file, such as how many lines were added and deleted, use <code>git diff --stat</code>. If you want to compare the current branch with <code>gh-pages</code> branch in <code>.github/</code> directory,</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git diff <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--stat</span> gh-pages .github/ </span>
+<span id="cb5-2"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/ISSUE_TEMPLATE/fix_documentation.yml</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">39</span> +++++++++++++++++++++++++++++++++++++++</span>
+<span id="cb5-3"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/ISSUE_TEMPLATE/fix_typos.yml</span>         <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">32</span> ++++++++++++++++++++++++++++++++</span>
+<span id="cb5-4"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/pull_request_template.md</span>             <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">25</span> +++++++++++++++++++++++++</span>
+<span id="cb5-5"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/workflows/publish.yml</span>                <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">26</span> ++++++++++++++++++++++++++</span>
+<span id="cb5-6"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/workflows/rss-to-twitter.yml</span>         <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">20</span> ++++++++++++++++++++</span>
+<span id="cb5-7"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">5</span> files changed, 142 insertions<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(+)</span></span></code></pre></div>
+<p>The number shows how many lines are modified for each files.</p>
+</section>
+<section id="solution-2-using-git-difftool" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-using-git-difftool">Solution 2: Using <code>git difftool</code></h2>
+<p><code>git difftool</code> is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.</p>
+<p>The syntax of <code>git difftool</code> is similar to <code>git diff</code>. For example,</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>git difftool</code> commands</th>
+<th><code>git diff</code> commands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git difftool</code></td>
+<td><code>git diff</code></td>
+</tr>
+<tr class="even">
+<td><code>git difftool --staged</code><br><code>git difftool --cached</code></td>
+<td><code>git diff --staged</code></td>
+</tr>
+<tr class="odd">
+<td><code>git difftool &lt;commit1&gt; &lt;commit2&gt;</code></td>
+<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
+</tr>
+<tr class="even">
+<td><code>git difftool main feature-branch</code></td>
+<td><code>git diff main feature-branch</code></td>
+</tr>
+<tr class="odd">
+<td><code>git difftool HEAD &lt;file/directory-path&gt;</code></td>
+<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong> ▶&nbsp; Choosing an editor </strong></p>
+<p>You can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> diff.tool your_preferred_tool</span></code></pre></div>
+<p>For example, if you prefer to vscode,</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> diff.tool vscode</span></code></pre></div>
+<p>To check if you successfully configure difftool editor,</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-l</span></span></code></pre></div>
+<p>then, you can check what editor is you default git difftool editor.</p>
+<p><strong> ▶&nbsp; Choosing an editor temporarily</strong></p>
+<p>If you temporarily show the diff in vimdiff,</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> difftool HEAD<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">~</span>1 HEAD <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--tool</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>vimdiff</span></code></pre></div>
+
+
+</section>
+
+ ]]></description>
+  <category>git difftool</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/</guid>
+  <pubDate>Wed, 06 Nov 2024 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… Should I use git rebase?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
