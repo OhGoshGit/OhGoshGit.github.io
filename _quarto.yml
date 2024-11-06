@@ -16,6 +16,10 @@ website:
         href: https://dangitgit.com/
       - about.qmd
     right:
+      - href: ./language/jp/
+        text: 日本語
+      - href: ./
+        text: English
       - icon: github
         href: https://github.com/OhGoshGit/OhGoshGit.github.io
       - icon: rss

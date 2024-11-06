@@ -1,0 +1,82 @@
+---
+title: "あぁぁ... 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-07-12"
+date-modified: last-modified
+categories: [git commit]
+---
+
+この記事は[Dangit, I accidentally committed something to master that should have been on a brand new branch!](https://dangitgit.com/#accidental-commit-master)をベースにしています．
+
+
+## Problem
+
+新しいGitリポジトリをセットアップしたとします．最初は `test`という名前の新しいブランチを作成して，`README.md`ファイルを編集する最初のコミットの後にそこで作業する予定でした．
+しかし，実際には`main`ブランチでそのまま変更を続けてしまったとします．
+
+<strong > &#9654;&nbsp; 当初の予定</strong>
+
+```{mermaid}
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       branch test
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+```
+
+<strong > &#9654;&nbsp; 実際のやらかし</strong>
+
+
+```{mermaid}
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+```
+
+## Solution: `git reset`を用いた解決方法
+
+<strong > &#9654;&nbsp; 方針</strong>
+
+1. 現在のHEADの状態を元に，新しい`test`ブランチを作成します。
+2. 最初のコミット直後の状態に`main`ブランチをリセットします。
+3. `test`ブランチに切り替えます。
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+## Step 1: 現在の内容をtest branchに保存する
+% git branch test
+
+## Step 2: main branchをきれいな状態に戻す
+% git reset 813faa2 --hard
+
+## Step 3: 開発ブランチをtestにする
+% git switch test
+```
+
+<strong > &#9654;&nbsp; 解説</strong>
+
+- `git branch <branch-name>` コマンドを使うと，現在のHEADを元に新しいブランチを作成できますが，ブランチの切り替えは行われません
+- `git reset --soft` ではなく `git reset --hard` を使うと，デフォルトで現在のブランチのインデックスやファイルに変更が残らないようにできます
+- もし現在のブランチに変更が残っている場合は，`git stash` や `git clean` を実行する必要があります
+
+<div style='padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;'>
+<strong style="color:#ffa657">警告 !</strong> <br> 
+
+もし誤ったコミットをリモートリポジトリに既にプッシュしてしまった場合，他の開発者に迷惑をかける可能性があるため，上記の解決策を実行しないほうが良いです．
+
+</div>
+
+
+References
+----------
+- [Dangit, I accidentally committed something to master that should have been on a brand new branch!](https://dangitgit.com/#accidental-commit-master)
