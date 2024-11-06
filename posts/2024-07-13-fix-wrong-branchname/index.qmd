@@ -4,7 +4,7 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2024-07-13"
-date-modified: "2024-07-13"
+date-modified: last-modified
 categories: [git branch]
 ---
 
@@ -20,7 +20,7 @@ Let's say you made a local development branch, `feature/inverse-matrix-calculati
 <strong > &#9654;&nbsp; Steps</strong>
 
 1. Create a new branch based on the current HEAD state at the `future-inverse-matrix-calculation`.
-2. Switch to the test branch
+2. Switch to the `future-inverse-matrix-calculation` branch
 3. Delete the old one
 4. Set the correct upstream branch
 

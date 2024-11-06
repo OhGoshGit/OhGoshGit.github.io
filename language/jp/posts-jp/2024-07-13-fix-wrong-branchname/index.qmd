@@ -1,0 +1,56 @@
+---
+title: "あぁぁ... 間違ったbranch nameつけてしもうた..."
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-07-13"
+date-modified: last-modified
+categories: [git branch]
+---
+
+## Problem
+
+`feature/inverse-matrix-calculation` というlocal branchを作成し，開発を進めていたとします．
+ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．
+
+- 間違ったbranch name: `feature/inverse-matrix-calculation`
+- 正しいbranch name: `future-inverse-matrix-calculation`
+
+## Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する
+
+<strong > &#9654;&nbsp; 方針</strong>
+
+1. 現在の `HEAD` をベースに `future-inverse-matrix-calculation` を作成
+2. `future-inverse-matrix-calculation` branchへ移動
+3. 誤った名前の古いbranchを削除
+4. `future-inverse-matrix-calculation` branchについて，upstream branchを作成
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+## Step 1 & 2
+% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation
+
+## Step 3
+% git branch -D future-inverse-matrix-calculation
+
+## Step 4
+% git branch feature/inverse-matrix-calculation -u <remote branch>
+```
+
+## Solution 2: 現在のブランチをリネームする
+
+<strong > &#9654;&nbsp; 方針</strong>
+
+現在の`feature/inverse-matrix-calculation` branchをリネームすることでupstream branch設定を維持したまま，正しい名前へ変更することができます．
+
+```zsh
+% git branch -m <old-name> <new-name>
+```
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+## rename using -m/--move option
+% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation
+```
