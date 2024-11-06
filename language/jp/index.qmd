@@ -1,0 +1,16 @@
+---
+title: "Gitってむずかしいわぁ．．．でもヘコタレへん"
+subtitle: "日常の分析/開発場面で直面したトラブルとその解決方法を平易な日本語で紹介します"
+listing:
+  contents: posts-jp
+  sort: "date desc"
+  type: table
+  fields: [date, title, reading-time]
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  feed: true
+page-layout: full
+title-block-banner: true
+comments: false
+---
