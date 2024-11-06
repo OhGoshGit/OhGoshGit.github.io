@@ -9,7 +9,7 @@
 <meta name="author" content="Ryo Nakagami">
 <meta name="dcterms.date" content="2024-07-12">
 
-<title>OGG… I accidentally committed something to master that should have been on a brand new branch! – OhGoshGit!?!</title>
+<title>OGG… I accidentally committed something to main that should have been on a brand new branch! – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -189,7 +189,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">OGG… I accidentally committed something to master that should have been on a brand new branch!</h1>
+      <h1 class="title">OGG… I accidentally committed something to main that should have been on a brand new branch!</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">git commit</div>
               </div>
@@ -247,7 +247,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <p>This post is based on <a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you have just set up a new git repository. Initially, you planned to create a new branch named “test” to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.</p>
+<p>Let’s say you have just set up a new git repository. Initially, you planned to create a new branch named <code>test</code> to work on after the first commit, which involved editing the <code>README.md</code> file. However, in practice, you continued to make changes on the <code>main</code> branch instead.</p>
 <p><strong> ▶&nbsp; What I originally planned to do</strong></p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -292,18 +292,18 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="solution-using-git-reset">Solution: using <code>git reset</code></h2>
 <p><strong> ▶&nbsp; Steps</strong></p>
 <ol type="1">
-<li>Create a new test branch based on the current HEAD state.</li>
-<li>Reset the main branch to the state immediately after the first commit.</li>
-<li>Switch to the test branch.</li>
+<li>Create a new test branch based on the current <code>HEAD</code> state.</li>
+<li>Reset the <code>main</code> branch to the state immediately after the first commit.</li>
+<li>Switch to the <code>test</code> branch.</li>
 </ol>
 <p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1</span></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1: keep the current repository state into test branch</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch test</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2: clean the main branch</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git reset 813faa2 <span class="at">--hard</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3: moving to the test branch</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git switch test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong> ▶&nbsp; Explains</strong></p>
 <ul>

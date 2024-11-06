@@ -2046,7 +2046,7 @@ font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/invers
   <pubDate>Sat, 13 Jul 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>OGG… I accidentally committed something to master that should have been on a brand new branch!</title>
+  <title>OGG… I accidentally committed something to main that should have been on a brand new branch!</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/</link>
   <description><![CDATA[ 
@@ -2058,7 +2058,7 @@ font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/invers
 <p>This post is based on <a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you have just set up a new git repository. Initially, you planned to create a new branch named “test” to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.</p>
+<p>Let’s say you have just set up a new git repository. Initially, you planned to create a new branch named <code>test</code> to work on after the first commit, which involved editing the <code>README.md</code> file. However, in practice, you continued to make changes on the <code>main</code> branch instead.</p>
 <p><strong> ▶&nbsp; What I originally planned to do</strong></p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -2103,21 +2103,21 @@ font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/invers
 <h2 class="anchored" data-anchor-id="solution-using-git-reset">Solution: using <code>git reset</code></h2>
 <p><strong> ▶&nbsp; Steps</strong></p>
 <ol type="1">
-<li>Create a new test branch based on the current HEAD state.</li>
-<li>Reset the main branch to the state immediately after the first commit.</li>
-<li>Switch to the test branch.</li>
+<li>Create a new test branch based on the current <code>HEAD</code> state.</li>
+<li>Reset the <code>main</code> branch to the state immediately after the first commit.</li>
+<li>Switch to the <code>test</code> branch.</li>
 </ol>
 <p><strong> ▶&nbsp; Commands</strong></p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## Step 1</span></span>
+font-style: inherit;">## Step 1: keep the current repository state into test branch</span></span>
 <span id="cb1-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git branch test</span>
 <span id="cb1-3"></span>
 <span id="cb1-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## Step 2</span></span>
+font-style: inherit;">## Step 2: clean the main branch</span></span>
 <span id="cb1-5"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git reset 813faa2 <span class="at" style="color: #657422;
@@ -2126,7 +2126,7 @@ font-style: inherit;">--hard</span></span>
 <span id="cb1-6"></span>
 <span id="cb1-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## Step 3</span></span>
+font-style: inherit;">## Step 3: moving to the test branch</span></span>
 <span id="cb1-8"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git switch test</span></code></pre></div>
