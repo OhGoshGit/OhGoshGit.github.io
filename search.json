@@ -112,6 +112,41 @@
     "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-11-06\n\n\nOGG… How do I check unstaged differences with the latest commit?\n\n\n3 min\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to master that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "href": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
+    "section": "",
+    "text": "この記事はDangit, I accidentally committed something to master that should have been on a brand new branch!をベースにしています．"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "href": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
+    "section": "Problem",
+    "text": "Problem\n新しいGitリポジトリをセットアップしたとします．最初は testという名前の新しいブランチを作成して，README.mdファイルを編集する最初のコミットの後にそこで作業する予定でした． しかし，実際にはmainブランチでそのまま変更を続けてしまったとします．\n ▶  当初の予定\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       branch test\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\"\n\n\n\n\n\n\n ▶  実際のやらかし\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\""
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html#solution-git-resetを用いた解決方法",
+    "href": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html#solution-git-resetを用いた解決方法",
+    "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
+    "section": "Solution: git resetを用いた解決方法",
+    "text": "Solution: git resetを用いた解決方法\n ▶  方針\n\n現在のHEADの状態を元に，新しいtestブランチを作成します。\n最初のコミット直後の状態にmainブランチをリセットします。\ntestブランチに切り替えます。\n\n ▶  Commands\n## Step 1: 現在の内容をtest branchに保存する\n% git branch test\n\n## Step 2: main branchをきれいな状態に戻す\n% git reset 813faa2 --hard\n\n## Step 3: 開発ブランチをtestにする\n% git switch test\n ▶  解説\n\ngit branch &lt;branch-name&gt; コマンドを使うと，現在のHEADを元に新しいブランチを作成できますが，ブランチの切り替えは行われません\ngit reset --soft ではなく git reset --hard を使うと，デフォルトで現在のブランチのインデックスやファイルに変更が残らないようにできます\nもし現在のブランチに変更が残っている場合は，git stash や git clean を実行する必要があります\n\n\n警告 ! \nもし誤ったコミットをリモートリポジトリに既にプッシュしてしまった場合，他の開発者に迷惑をかける可能性があるため，上記の解決策を実行しないほうが良いです．"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "href": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
+    "section": "References",
+    "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
+  },
+  {
+    "objectID": "language/jp/index.html",
+    "href": "language/jp/index.html",
+    "title": "Gitってむずかしいわぁ．．．でもヘコタレへん",
+    "section": "",
+    "text": "Date\n\n\nTitle\n\n\nReading Time\n\n\n\n\n\n\n2024-07-12\n\n\nあぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた\n\n\n2 min\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About OhGoshGit!?!",

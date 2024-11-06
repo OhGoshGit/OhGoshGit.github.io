@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>OhGoshGit!?!</title>
+<link>https://ohgoshgit.github.io/language/jp/</link>
+<atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.5.57</generator>
+<lastBuildDate>Fri, 12 Jul 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>この記事は<a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a>をベースにしています．</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>新しいGitリポジトリをセットアップしたとします．最初は <code>test</code>という名前の新しいブランチを作成して，<code>README.md</code>ファイルを編集する最初のコミットの後にそこで作業する予定でした． しかし，実際には<code>main</code>ブランチでそのまま変更を続けてしまったとします．</p>
+<p><strong> ▶&nbsp; 当初の予定</strong></p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       branch test
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><strong> ▶&nbsp; 実際のやらかし</strong></p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
+    gitGraph
+       commit id: "813faa2"
+       commit id: "28a8bf7"
+       commit id: "466fbe7"
+       commit id: "30bf56a"
+       commit id: "6159140"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="solution-git-resetを用いた解決方法" class="level2">
+<h2 class="anchored" data-anchor-id="solution-git-resetを用いた解決方法">Solution: <code>git reset</code>を用いた解決方法</h2>
+<p><strong> ▶&nbsp; 方針</strong></p>
+<ol type="1">
+<li>現在のHEADの状態を元に，新しい<code>test</code>ブランチを作成します。</li>
+<li>最初のコミット直後の状態に<code>main</code>ブランチをリセットします。</li>
+<li><code>test</code>ブランチに切り替えます。</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 1: 現在の内容をtest branchに保存する</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git branch test</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 2: main branchをきれいな状態に戻す</span></span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git reset 813faa2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--hard</span></span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 3: 開発ブランチをtestにする</span></span>
+<span id="cb1-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git switch test</span></code></pre></div>
+<p><strong> ▶&nbsp; 解説</strong></p>
+<ul>
+<li><code>git branch &lt;branch-name&gt;</code> コマンドを使うと，現在のHEADを元に新しいブランチを作成できますが，ブランチの切り替えは行われません</li>
+<li><code>git reset --soft</code> ではなく <code>git reset --hard</code> を使うと，デフォルトで現在のブランチのインデックスやファイルに変更が残らないようにできます</li>
+<li>もし現在のブランチに変更が残っている場合は，<code>git stash</code> や <code>git clean</code> を実行する必要があります</li>
+</ul>
+<div style="padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;">
+<p><strong style="color:#ffa657">警告 !</strong> <br></p>
+<p>もし誤ったコミットをリモートリポジトリに既にプッシュしてしまった場合，他の開発者に迷惑をかける可能性があるため，上記の解決策を実行しないほうが良いです．</p>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git commit</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/</guid>
+  <pubDate>Fri, 12 Jul 2024 00:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
