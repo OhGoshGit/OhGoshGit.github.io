@@ -9,8 +9,1949 @@
 <link>https://ohgoshgit.github.io/language/jp/</link>
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.5.57</generator>
-<lastBuildDate>Sat, 13 Jul 2024 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.6.39</generator>
+<lastBuildDate>Wed, 06 Nov 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I check unstaged differences with the latest commit?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.</p>
+<p>You want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor.</p>
+</section>
+<section id="solution-1-using-git-diff" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-using-git-diff">Solution 1: Using <code>git diff</code></h2>
+<p><code>git diff</code> allows you to inspect changes in your code, from minor edits to major branch comparisons.</p>
+<p><strong> ▶&nbsp; Key Takeaways</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Commands</th>
+<th>Explaination</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git diff</code></td>
+<td>Check unstaged changes with HEAD</td>
+</tr>
+<tr class="even">
+<td><code>git diff --staged</code></td>
+<td>Check staged changes with HEAD</td>
+</tr>
+<tr class="odd">
+<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
+<td>Compare two specific commits</td>
+</tr>
+<tr class="even">
+<td><code>git diff main feature-branch</code></td>
+<td>Compare branches</td>
+</tr>
+<tr class="odd">
+<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+<td>Check single file/directory changes with HEAD</td>
+</tr>
+<tr class="even">
+<td><code>git diff --stat</code></td>
+<td>Shows a summary of changes for each file, such as how many lines were added and deleted</td>
+</tr>
+</tbody>
+</table>
+<p><strong> ▶&nbsp; Viewing Changes in the Working Directory</strong></p>
+<p>To see all changes in your working directory that haven’t been staged,</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff</span></code></pre></div>
+<p>This command shows the differences between your working directory and the last commit in your terminal display.</p>
+<p>If you want to see staged changes with your latest commit,</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--staged</span></span></code></pre></div>
+<p><strong> ▶&nbsp; Comparing with a Specific Commit</strong></p>
+<p>To see differences between your current state and a specific commit,</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (1) Compared with latest commit</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff</span>
+<span id="cb3-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD</span>
+<span id="cb3-4"></span>
+<span id="cb3-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (2) Compared with specific commit</span></span>
+<span id="cb3-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb3-7"></span>
+<span id="cb3-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (3) Comparing two specific commits</span></span>
+<span id="cb3-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash1<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash2<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb3-10"></span>
+<span id="cb3-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## (4) Comparing the HEAD with the HEAD~1</span></span>
+<span id="cb3-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">~</span>1 HEAD</span></code></pre></div>
+<p><strong> ▶&nbsp; Comparing Branches</strong></p>
+<p>You can also use <code>git diff</code> to compare different branches.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff main feature-branch</span></code></pre></div>
+<p><strong> ▶&nbsp; Shows a summary of changes for each file</strong></p>
+<p>When you want to see a summary of changes for each file, such as how many lines were added and deleted, use <code>git diff --stat</code>. If you want to compare the current branch with <code>gh-pages</code> branch in <code>.github/</code> directory,</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git diff <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--stat</span> gh-pages .github/ </span>
+<span id="cb5-2"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/ISSUE_TEMPLATE/fix_documentation.yml</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">39</span> +++++++++++++++++++++++++++++++++++++++</span>
+<span id="cb5-3"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/ISSUE_TEMPLATE/fix_typos.yml</span>         <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">32</span> ++++++++++++++++++++++++++++++++</span>
+<span id="cb5-4"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/pull_request_template.md</span>             <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">25</span> +++++++++++++++++++++++++</span>
+<span id="cb5-5"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/workflows/publish.yml</span>                <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">26</span> ++++++++++++++++++++++++++</span>
+<span id="cb5-6"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.github/workflows/rss-to-twitter.yml</span>         <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">20</span> ++++++++++++++++++++</span>
+<span id="cb5-7"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">5</span> files changed, 142 insertions<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(+)</span></span></code></pre></div>
+<p>The number shows how many lines are modified for each files.</p>
+</section>
+<section id="solution-2-using-git-difftool" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-using-git-difftool">Solution 2: Using <code>git difftool</code></h2>
+<p><code>git difftool</code> is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.</p>
+<p>The syntax of <code>git difftool</code> is similar to <code>git diff</code>. For example,</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>git difftool</code> commands</th>
+<th><code>git diff</code> commands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git difftool</code></td>
+<td><code>git diff</code></td>
+</tr>
+<tr class="even">
+<td><code>git difftool --staged</code><br><code>git difftool --cached</code></td>
+<td><code>git diff --staged</code></td>
+</tr>
+<tr class="odd">
+<td><code>git difftool &lt;commit1&gt; &lt;commit2&gt;</code></td>
+<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
+</tr>
+<tr class="even">
+<td><code>git difftool main feature-branch</code></td>
+<td><code>git diff main feature-branch</code></td>
+</tr>
+<tr class="odd">
+<td><code>git difftool HEAD &lt;file/directory-path&gt;</code></td>
+<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong> ▶&nbsp; Choosing an editor </strong></p>
+<p>You can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> diff.tool your_preferred_tool</span></code></pre></div>
+<p>For example, if you prefer to vscode,</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> diff.tool vscode</span></code></pre></div>
+<p>To check if you successfully configure difftool editor,</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-l</span></span></code></pre></div>
+<p>then, you can check what editor is you default git difftool editor.</p>
+<p><strong> ▶&nbsp; Choosing an editor temporarily</strong></p>
+<p>If you temporarily show the diff in vimdiff,</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> difftool HEAD<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">~</span>1 HEAD <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--tool</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>vimdiff</span></code></pre></div>
+
+
+</section>
+
+ ]]></description>
+  <category>git difftool</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/</guid>
+  <pubDate>Wed, 06 Nov 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… Should I use git rebase?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Let’s say you’re working on a project with a <code>main</code> branch and a <code>feature</code> branch. While you are making changes to <code>feature</code> branch, the <code>main</code> branch has received some new commits from other developers.</p>
+<p>You want to incorporate these new commits into your <code>feature</code> branch, but not sure whether you should do it by <code>git rebase</code> or <code>git merge</code>.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-branch-development" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-branch-development-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-branch-development">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A1"
+       commit id: "A2"
+       branch feature
+       commit id: "B1"
+       commit id: "B2"
+       checkout main
+       commit id: "A3"
+       commit id: "A4"
+       checkout feature
+       merge main id:"❓git merge or rebase?"
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-branch-development-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Fig 1. Changes in <code>main</code> branch
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong> ▶&nbsp; Why not just ignore changes in the main branch for now?</strong></p>
+<p>Ignoring updates on the main branch for now is sometimes feasible, but there are a few important disadvantages to consider.</p>
+<ol type="1">
+<li><strong><u>Delaying sync increases potential conflicts</u></strong></li>
+</ol>
+<p>The longer your feature branch diverges from main, the more changes accumulate. When you finally integrate with <code>main</code>, you’re more likely to encounter a large, complex set of merge conflicts. Resolving conflicts with many changes can be time-consuming and prone to errors.</p>
+<ol start="2" type="1">
+<li><strong><u>Working in an outdated context</u></strong></li>
+</ol>
+<p>If <code>main</code> includes changes that affect the overall project (e.g., updates to libraries, modifications to shared components, or security fixes), ignoring them means you’re working in an increasingly outdated context. Your feature might develop incompatibilities that aren’t apparent until the final merge.</p>
+<p>Plus, Continuous Integration testing or Continuous Deployment　workflows typically run against the latest main code. By not keeping up with <code>main</code>, you risk your branch passing tests locally but failing in CI/CD because it lacks compatibility with newer changes.</p>
+<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🍵 Might Be Okay to Ignore main Changes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are situations where you can safely ignore <code>main</code> temporarily:</p>
+<ul>
+<li>Isolated feature</li>
+<li>Short-lived feature branch</li>
+<li>Experimental branches</li>
+</ul>
+</div>
+</div>
+<section id="solution" class="level3">
+<h3 class="anchored" data-anchor-id="solution">Solution</h3>
+<p>There is no one-size-fits-all approach and it all comes down to what you value most.</p>
+<p><strong> ▶&nbsp; Pros and Cons</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>rebase</code></td>
+<td>Clean, linear history; ideal for local branches</td>
+<td>It’s possible that a “commit that was working fine” could turn into a “commit that doesn’t work.”</td>
+</tr>
+<tr class="even">
+<td><code>merge</code></td>
+<td>Maintains full history; safe for shared branches</td>
+<td>Creates new merge commits, making history less linear</td>
+</tr>
+</tbody>
+</table>
+<p>Generally speaking,</p>
+<ul>
+<li><code>git merge</code> pull the latest changes from main into the feature branch, creating a new merge commit</li>
+<li><code>git rebase</code> changes the base of the feature branch to the latest commit and then replays the changes in the feature branch from there</li>
+</ul>
+</section>
+<section id="incorporate-the-changes-by-git-rebase" class="level3">
+<h3 class="anchored" data-anchor-id="incorporate-the-changes-by-git-rebase">Incorporate the changes by <code>git rebase</code></h3>
+<p>At the branch development of Figure&nbsp;1, you can rebase the feature branch with the following steps:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: Checkout the feature branch</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch feature</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: rebase onto main:</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase main</span></code></pre></div>
+<p>These commands tell Git to</p>
+<ul>
+<li>Temporarily remove B1, B2</li>
+<li>Fast-forward the branch to main’s latest commit (A3, A4)</li>
+<li>Apply B1, B2 on top of A4</li>
+</ul>
+<p>Then, git history will turn into the following</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-branch-development-after-rebase" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-branch-development-after-rebase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-branch-development-after-rebase">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A1"
+       commit id: "A2"
+       commit id: "A3"
+       commit id: "A4"
+       branch feature
+       commit id: "B1"
+       commit id: "B2"
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-branch-development-after-rebase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Fig 2. git rebase
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong> ▶&nbsp; Conflicts caused by <code>git rebase</code></strong></p>
+<p>If there are changes in <code>main</code> that modify the same parts of code as your commits, Git won’t know how to reconcile those differences automatically. These overlapping changes are what cause conflicts.</p>
+<p>For example:</p>
+<ul>
+<li>Let’s say you edited <code>file_A.py</code> in your feature branch to add a new function.</li>
+<li>Meanwhile, another developer made a conflicting change to the same section of <code>file_A.py</code> in main.</li>
+</ul>
+<p>When rebase tries to apply your changes on top of main, Git encounters a conflict because it doesn’t know which version to keep. Instead, Git will list files with conflicts. You’ll see a message like</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">CONFLICT</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">content</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: Merge conflict in file_A.py</span></code></pre></div>
+<p>Open each conflicted file. Git will add conflict markers to show where the differences are:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> HEAD</span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">//</span> Code from main branch</span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=======</span></span>
+<span id="cb3-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">//</span> Code from your feature branch</span>
+<span id="cb3-5"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> your-commit-hash</span></code></pre></div>
+<p>You are expected to decide which parts of the code to keep and remove the conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) after resolving. Then,</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># git add the modified files</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add file_A.py</span>
+<span id="cb4-3"></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Continue the rebase</span></span>
+<span id="cb4-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--continue</span></span></code></pre></div>
+<p>If you want to start over or quit rebasing, you can abort the rebase with</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--abort</span></span></code></pre></div>
+<p><strong> ▶&nbsp; “commit that was working fine” could turn into a “not working”</strong></p>
+<p>When you rebase a branch, you’re reapplying commits onto a new base, which can potentially break previously functional code. So to minimize this risk, better to do the followings:</p>
+<ol type="1">
+<li><strong>Test after rebasing</strong>: After a rebase, test your feature branch to ensure that everything still works as expected.</li>
+<li><strong>Check each commit after conflicts</strong>: If you resolved conflicts during the rebase, double-check those areas to ensure the changes align with your intended functionality.</li>
+</ol>
+<p>In summary, rebasing changes the context in which your commits operate, so it’s important to verify that they still work as intended in the new context.</p>
+</section>
+</section>
+<section id="undo-git-rebase" class="level2">
+<h2 class="anchored" data-anchor-id="undo-git-rebase">Undo <code>git rebase</code></h2>
+<p>Let’s say you’re working on a <code>feature</code> branch. You rebased it onto the main branch to incorporate recent changes, but after the rebase, you realize that:</p>
+<ul>
+<li>You made a mistake resolving a conflict. or</li>
+<li>Some tests are failing because of unexpected interactions with the latest changes from <code>main</code>.</li>
+</ul>
+<p>In this case, You wants to undo the rebase and return the branch to its original state.</p>
+<p><strong> ▶&nbsp; Initial Setup</strong></p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="git-rebase-undo-initial-setup">
+<div>
+<pre class="mermaid mermaid-js" data-label="git-rebase-undo-initial-setup">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A"
+       commit id: "B"
+       branch feature
+       commit id: "X"
+       commit id: "Y"
+       checkout main
+       commit id: "C"
+       commit id: "D"
+</pre>
+</div>
+<p>Fig 3. initial setup</p>
+</div>
+</div>
+</div>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--graph</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--all</span></span>
+<span id="cb6-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">HEAD -&gt; main</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb6-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb6-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:27:55 2024 +0900</span>
+<span id="cb6-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb6-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">D</span></span>
+<span id="cb6-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb6-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit cd439d184bd0d5a2ad9dc6993a1675862cee6495</span>
+<span id="cb6-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb6-10"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:27:29 2024 +0900</span>
+<span id="cb6-11"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb6-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">C</span></span>
+<span id="cb6-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>   </span>
+<span id="cb6-14"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit d4ac5504a56ee01fc7a62e09f0ed7dbdfc5a60d6 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(fe</span>ature)</span>
+<span id="cb6-15">| | Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
+<span id="cb6-16">| | Date:   Tue Nov 5 19:26:51 2024 +0900</span>
+<span id="cb6-17">| | </span>
+<span id="cb6-18">| |     Y</span>
+<span id="cb6-19">| | </span>
+<span id="cb6-20">| * commit 4fbd2929aa96ef8b7d07388e27e6b2f23c615199</span>
+<span id="cb6-21">|/  Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
+<span id="cb6-22">|   Date:   Tue Nov 5 19:26:20 2024 +0900</span>
+<span id="cb6-23">|   </span>
+<span id="cb6-24">|       X</span>
+<span id="cb6-25">| </span>
+<span id="cb6-26">* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6</span>
+<span id="cb6-27">| Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
+<span id="cb6-28">| Date:   Tue Nov 5 19:25:46 2024 +0900</span>
+<span id="cb6-29">| </span>
+<span id="cb6-30">|     B</span>
+<span id="cb6-31">| </span>
+<span id="cb6-32">* commit feadb03ae713ab05b828e066c09bacb339756df7</span>
+<span id="cb6-33">  Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
+<span id="cb6-34">  Date:   Tue Nov 5 19:25:27 2024 +0900</span></code></pre></div>
+<p>You rebase feature onto <code>D</code> of the <code>main</code> by the following commands:</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch feature</span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase main</span></code></pre></div>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="git-rebase-undo-rebase">
+<div>
+<pre class="mermaid mermaid-js" data-label="git-rebase-undo-rebase">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+    gitGraph
+       commit id: "A"
+       commit id: "B"
+       commit id: "C"
+       commit id: "D"
+       branch feature
+       commit id: "X"
+       commit id: "Y"
+</pre>
+</div>
+<p>Fig 4. git rebase with bugs</p>
+</div>
+</div>
+</div>
+<p>But after finishing the rebase, you realized that some tests are failing because of unexpected interactions with the latest changes from <code>main</code>.</p>
+<section id="solution-undoing-the-rebase" class="level3">
+<h3 class="anchored" data-anchor-id="solution-undoing-the-rebase">Solution: Undoing the Rebase</h3>
+<p>One way to undo a <code>git rebase</code> is by using <code>git reflog</code>, which keeps a history of where your branches have pointed over time, and <code>git reset --hard</code></p>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<p>First, check the commit history at the <code>feature</code> branch by <code>git log</code>:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--graph</span>      </span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb8-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:26:51 2024 +0900</span>
+<span id="cb8-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Y</span></span>
+<span id="cb8-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 110878e53b16fd10c0d044a3a9d9cdf46db44861</span>
+<span id="cb8-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-10"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:26:20 2024 +0900</span>
+<span id="cb8-11"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">X</span></span>
+<span id="cb8-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(main)</span></span>
+<span id="cb8-15"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-16"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:27:55 2024 +0900</span>
+<span id="cb8-17"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-18"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">D</span></span>
+<span id="cb8-19"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-20"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit cd439d184bd0d5a2ad9dc6993a1675862cee6495</span>
+<span id="cb8-21"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-22"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:27:29 2024 +0900</span>
+<span id="cb8-23"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-24"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">C</span></span>
+<span id="cb8-25"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-26"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 963f1a18446313f9ee37c3dc33eab2909349b4b6</span>
+<span id="cb8-27"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-28"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:25:46 2024 +0900</span>
+<span id="cb8-29"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-30"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">B</span></span>
+<span id="cb8-31"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb8-32"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit feadb03ae713ab05b828e066c09bacb339756df7</span>
+<span id="cb8-33">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-34">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:25:27 2024 +0900</span>
+<span id="cb8-35"></span>
+<span id="cb8-36">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">A</span></span></code></pre></div>
+<p>Sadly, you have successfully rebased the feature branch onto commit-id <code>D</code> of the main. But no worried, run the <code>git reflog</code> command to see recent actions on your branch:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git reflog</span>
+<span id="cb9-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">14b3c5d</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span> HEAD@{0}: rebase <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">finish</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: returning to refs/heads/feature</span>
+<span id="cb9-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">14b3c5d</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span> HEAD@{1}: rebase <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">pick</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: Y</span>
+<span id="cb9-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">110878e</span> HEAD@{2}: rebase <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">pick</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: X</span>
+<span id="cb9-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">1625fb5</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(main)</span> HEAD@{3}: rebase <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">start</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: checkout main</span>
+<span id="cb9-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">d4ac550</span> HEAD@{4}: checkout: moving from feature to feature</span>
+<span id="cb9-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">d4ac550</span> HEAD@{5}: checkout: moving from main to feature</span>
+<span id="cb9-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">1625fb5</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(main)</span> HEAD@{6}: commit: D</span>
+<span id="cb9-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">cd439d1</span> HEAD@{7}: commit: C</span>
+<span id="cb9-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">963f1a1</span> HEAD@{8}: checkout: moving from feature to main</span>
+<span id="cb9-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">d4ac550</span> HEAD@{9}: commit: Y</span>
+<span id="cb9-12"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">4fbd292</span> HEAD@{10}: commit: X</span>
+<span id="cb9-13"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">963f1a1</span> HEAD@{11}: checkout: moving from main to feature</span>
+<span id="cb9-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">963f1a1</span> HEAD@{12}: commit: B</span>
+<span id="cb9-15"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">feadb03</span> HEAD@{13}: commit <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">initial</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: A</span></code></pre></div>
+<p>The line <code>1625fb5 (main) HEAD@{3}: rebase (start): checkout main</code> indicates when Git started the rebase process. So, if you want to undo the rebase, just reset to the entry <code>d4ac550 HEAD@{4}:</code> to go back to your previous state before the rebase.</p>
+<p>Use <code>git reset</code> to move your branch pointer back to the commit just before the rebase:</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: Undo git rebase</span></span>
+<span id="cb10-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git reset <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--hard</span> HEAD@{4}</span>
+<span id="cb10-3"></span>
+<span id="cb10-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: check history</span></span>
+<span id="cb10-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--graph</span>      </span>
+<span id="cb10-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb10-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb10-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:26:51 2024 +0900</span>
+<span id="cb10-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb10-10"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Y</span></span>
+<span id="cb10-11"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb10-12"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 110878e53b16fd10c0d044a3a9d9cdf46db44861</span>
+<span id="cb10-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb10-14"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:26:20 2024 +0900</span>
+<span id="cb10-15"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb10-16"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">X</span></span>
+<span id="cb10-17"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb10-18"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit 963f1a18446313f9ee37c3dc33eab2909349b4b6</span>
+<span id="cb10-19"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb10-20"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:25:46 2024 +0900</span>
+<span id="cb10-21"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb10-22"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>     <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">B</span></span>
+<span id="cb10-23"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> </span>
+<span id="cb10-24"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> commit feadb03ae713ab05b828e066c09bacb339756df7</span>
+<span id="cb10-25">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb10-26">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span>   Tue Nov 5 19:25:27 2024 +0900</span>
+<span id="cb10-27"></span>
+<span id="cb10-28">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">A</span></span></code></pre></div>
+</section>
+</section>
+<section id="git-rebase-or-git-merge" class="level2">
+<h2 class="anchored" data-anchor-id="git-rebase-or-git-merge"><code>git rebase</code> or <code>git merge</code>?</h2>
+<p>As explined above, if your goal is to maintain a clean and linear commit history and you’re working primarily with your own branches, <code>git rebase</code> is often the best choice. On the other hand, if you’re collaborating closely with others and want to ensure that history is preserved, or if you want to avoid rewriting shared commits, <code>git merge</code> is likely the better option.</p>
+<p><strong> ▶&nbsp; General Recommendation</strong></p>
+<ul>
+<li>If your feature branch is not shared yet, go with <code>git rebase</code> for a cleaner, linear history.</li>
+<li>If your feature branch is already shared or part of a collaborative workflow, stick with <code>git merge</code> to avoid potential conflicts for collaborators.</li>
+</ul>
+<section id="versioning-and-git-rebase-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="versioning-and-git-rebase-strategy">Versioning and <code>git rebase</code> strategy</h3>
+<p>Let’s say you are working on a repository with the following versioning strategy:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Version class</th>
+<th>explained</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Major Version (<code>x</code>)</td>
+<td>Changes in the major version indicate breaking changes or significant new features.</td>
+</tr>
+<tr class="even">
+<td>Minor Version (<code>y</code>)</td>
+<td>Changes in the minor version often introduce new features that are backward-compatible.</td>
+</tr>
+<tr class="odd">
+<td>Patch Version (<code>z</code>)</td>
+<td>Changes in the patch version generally include bug fixes and minor improvements.</td>
+</tr>
+</tbody>
+</table>
+<p>Then, better to adopt the following <code>git rebase</code> strategy:</p>
+<p><strong> ▶&nbsp; Changes in <code>x</code> (Major Version):</strong></p>
+<ul>
+<li><strong>Recommendation: Always rebase.</strong></li>
+<li><strong>Reason</strong>: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.</li>
+</ul>
+<p><strong> ▶&nbsp; Changes in <code>y</code> (Minor Version):</strong></p>
+<ul>
+<li><strong>Recommendation: Rebase as a precaution.</strong></li>
+<li><strong>Reason</strong>: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.</li>
+</ul>
+<p><strong> ▶&nbsp; Changes in <code>z</code> (Patch Version):</strong></p>
+<ul>
+<li><strong>Recommendation: Rebase not required.</strong></li>
+<li><strong>Reason</strong>: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase.</li>
+</ul>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>git rebase</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/</guid>
+  <pubDate>Tue, 05 Nov 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… How can I push my repository to githab and gitlab remote at once?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-01-push-to-multiple-origins/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
+<p><strong> ▶&nbsp; Example</strong></p>
+<ul>
+<li>you might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application.</li>
+</ul>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.</p>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<p>Here’s how you can set this up:</p>
+<ol type="1">
+<li>Add Multiple Remotes by using <code>git remote add</code> command</li>
+<li>Check Your Remotes with <code>git remote -v</code></li>
+<li>Pushing to Multiple Remotes</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<p>Suppose you’re working on a local Git project named <code>hoshinokirby</code>. You want to push this project to both GitHub and GitLab.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: Add multiple Remotes</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote add github https://github.com/user-name/hoshinokirby.git</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote add gitlab https://gitlab.com/user-name/hoshinokirby.git</span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: Check Your Remotes</span></span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-v</span></span></code></pre></div>
+<p>output should be like below:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">github</span>    https://github.com/user-name/hoshinokirby.git <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(fe</span>tch)</span>
+<span id="cb2-2">github    https://github.com/user-name/hoshinokirby.git (push)</span>
+<span id="cb2-3">gitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)</span>
+<span id="cb2-4">gitlab    https://gitlab.com/user-name/hoshinokirby.git (push)</span></code></pre></div>
+<p>Then,</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: Push to Both Remotes:</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push github feature/ml-prediction-enhancement</span>
+<span id="cb3-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push gitlab feature/ml-prediction-enhancement</span></code></pre></div>
+<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🍵 Green Tea Break: <strong>Delete a Remote</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>f you have added the wrong remote in your Git repository and want to delete it, you can do so using the <code>git remote remove</code> command. Removing a remote only affects your local configuration and does not impact the remote repository itself.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove the remote</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote remove <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb4-3"></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># shorthand version</span></span>
+<span id="cb4-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote rm <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p>Before running the above commands, make sure to double-check the remote name to avoid accidental deletions.</p>
+</div>
+</div>
+<section id="automate-pushing-to-both-remotes-by-shellscript" class="level3">
+<h3 class="anchored" data-anchor-id="automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</h3>
+<p>The following script is designed to push a specified branch to all configured Git remotes.</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#!/bin/bash</span></span>
+<span id="cb5-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#--------------------------------------</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Description</span></span>
+<span id="cb5-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   The script iterates over each remote and pushes the specified branch to it </span></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   using the git push command. The script retrieves the list of configured Git remotes </span></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   using the git remote command and stores it in the variable REMOTES.</span></span>
+<span id="cb5-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   If no remotes are found, the script prints an error message and exits with a status code of 1.</span></span>
+<span id="cb5-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#--------------------------------------</span></span>
+<span id="cb5-9"></span>
+<span id="cb5-10"></span>
+<span id="cb5-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if branch name is provided</span></span>
+<span id="cb5-12"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">[</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$1</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">]</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb5-13">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Usage: </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$0</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> &lt;branch-name&gt;"</span></span>
+<span id="cb5-14">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">exit</span> 1</span>
+<span id="cb5-15"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">fi</span></span>
+<span id="cb5-16"></span>
+<span id="cb5-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Define the branch name</span></span>
+<span id="cb5-18"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">BRANCH_NAME</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$1</span></span>
+<span id="cb5-19"></span>
+<span id="cb5-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Get the list of remotes</span></span>
+<span id="cb5-21"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">REMOTES</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb5-22"></span>
+<span id="cb5-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if there are any remotes configured</span></span>
+<span id="cb5-24"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">[</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$REMOTES</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">]</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb5-25">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"No remotes found. Please configure a remote repository."</span></span>
+<span id="cb5-26">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">exit</span> 1</span>
+<span id="cb5-27"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">fi</span></span>
+<span id="cb5-28"></span>
+<span id="cb5-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Push to each remote</span></span>
+<span id="cb5-30"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$REMOTES</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">while</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">read</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">REMOTE</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">do</span></span>
+<span id="cb5-31">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$REMOTE</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$BRANCH_NAME</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb5-32"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">done</span></span>
+<span id="cb5-33"></span>
+<span id="cb5-34"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">exit</span> 0</span></code></pre></div>
+<p>To use this script, follow these steps:</p>
+<ol type="1">
+<li>Save the script to a file, e.g., <code>push_to_remotes.sh</code></li>
+<li>Make the script executable:</li>
+</ol>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">chmod</span> +x push_to_remotes.sh</span></code></pre></div>
+<ol start="3" type="1">
+<li>Run the script with the branch name as an argument:</li>
+</ol>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">./push_to_remotes.sh</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>branch-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>git push</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-01-push-to-multiple-origins/</guid>
+  <pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I just want to push a local git branch to a remote with a different name…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>There are two ways to resolve this:</p>
+<ol type="1">
+<li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
+<li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
+</ol>
+<section id="solution-1-rename-your-local-branch-name" class="level3">
+<h3 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">Solution 1: rename your local branch name</h3>
+<hr>
+<p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: rename your local branch</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>old-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: push to the remote</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin HEAD</span></code></pre></div>
+</section>
+<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level3">
+<h3 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">Solution 2: Push a local git branch to a remote with a different name</h3>
+<hr>
+<p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
+<p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
+<p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: git fetch and check your remote</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> fetch </span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: Make sure your new remote name will not cause a problem</span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-a</span>  </span>
+<span id="cb2-6"></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: Push your local branch with different remote name</span></span>
+<span id="cb2-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push origin local-branch-name:remote-branch-name</span></code></pre></div>
+<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🍵 Green Tea Break: why use <code>git fetch</code> not <code>git pull</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong> ▶&nbsp; <code>git fetch</code> keeps your local work untouched</strong></p>
+<ul>
+<li><code>git fetch</code> only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.</li>
+<li><code>git pull</code> combines <code>git fetch</code> and <code>git merge</code>, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.</li>
+</ul>
+<p>If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use <code>git fetch</code> because it helps avoid unexpected merges.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="use-cases" class="level2">
+<h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
+<p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
+<p>If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like <code>temp/20241031-login-test</code>.</p>
+<p><strong> ▶&nbsp; Avoid Naming Conflicts</strong></p>
+<p>If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called <code>feature/login</code> on the remote, you might push you local <code>feature/login</code> branch as <code>feature/login-update</code>.</p>
+<p>In this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-vvv</span></span></code></pre></div>
+<p>and if the result is not what you expect, you can run</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--set-upstream-to</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>origin/new-feature</span></code></pre></div>
+<p>to set your upstream branch to the correct one.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/</guid>
+  <pubDate>Thu, 31 Oct 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I just want to save the current repository into another remote…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
+</section>
+<section id="solution-git-clone-bare" class="level2">
+<h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Create a bare clone of the repository</li>
+<li>Mirror-push to the new repository</li>
+<li>Remove the temporary old local repository</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--bare</span> https://github.com/EXAMPLE-USER/LinearModels.git</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2</span></span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> cd LinearModels.git</span>
+<span id="cb1-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--mirror</span> https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3</span></span>
+<span id="cb1-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> cd ..</span>
+<span id="cb1-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> rm <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div>
+<div class="blog-custom-border">
+<p><strong>📘 REMARKS</strong> <br></p>
+<ul>
+<li>A non-bare <code>git clone</code> downloads both the snapshot and history to the local machine. However, a <code>git clone --bare</code> only copies the history, allowing for a quicker transfer to a new remote repository.</li>
+<li>Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．</li>
+<li>The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.</li>
+</ul>
+</div>
+<section id="why-not-no-bare-git-clone-and-git-push-mirror" class="level3">
+<h3 class="anchored" data-anchor-id="why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</h3>
+<p>When running <code>git clone origin-url</code>, you will get all of the tags copied, a local branch master (<code>HEAD</code>) tracking a remote branch <code>origin/master</code>, and remote branches <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>.</p>
+<p>If you do <code>git push --mirror</code> a non-bare cloned repository, it also pushes your remote branches, <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>, because mirror implies everything. Then, you would get branches named <code>origin/origin/test1</code>.</p>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository">GitHub Docs &gt; Duplicating a repository</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git clone</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/</guid>
+  <pubDate>Fri, 26 Jul 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>OGG… I cannot push to remote branch and cannot pull the remote changes…</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Let’s say you are working on a local development branch, <code>eda/data-sanity-check</code>. After some modifications and commits on the local, you realized that you cannot push to the remote branch.</p>
+<p>When you hit <code>git push</code>, you’ve got the following error:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git push</span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb1-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">To</span> https://github.com/RyoNakagami/github_sandbox</span>
+<span id="cb1-4"> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">! </span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[rejected]</span>        eda/data-sanity-check <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> eda/data-sanity-check <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(fe</span>tch first)</span>
+<span id="cb1-5"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">error:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;"> failed to push some refs to 'https</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">//github.com/RyoNakagami/github_sandbox'</span></span>
+<span id="cb1-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> Updates were rejected because the remote contains work that you do</span>
+<span id="cb1-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> not have locally. This is usually caused by another repository pushing</span>
+<span id="cb1-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> to the same ref. You may want to first integrate the remote changes</span>
+<span id="cb1-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">e.g., </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'git pull ...'</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span> before pushing again.</span>
+<span id="cb1-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> See the <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Note about fast-forwards'</span> in <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'git push --help'</span> for details.</span></code></pre></div>
+</section>
+<section id="what-is-happening" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-happening">What is happening</h2>
+<p>Generally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       commit id: "local-mod-2"
+       commit id: "local-mod-3"
+       checkout remote
+       merge local id:"❗️failed to push"
+</pre>
+</div>
+<p></p><figcaption> Fig 1. Conflict between the local and the remote</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       commit id: "local-mod-2"
+       commit id: "local-mod-3"
+       merge remote id:"❗️failed to pull"
+</pre>
+</div>
+<p></p><figcaption> Fig 2. You cannot pull the remote either</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="solution-git-pull---rebase" class="level2">
+<h2 class="anchored" data-anchor-id="solution-git-pull---rebase">Solution: git pull --rebase</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Check the difference between the local and the romote</li>
+<li>Resolve the local-remote conflict</li>
+<li>push top the remote after solving the conflict</li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## fetch the remote info</span></span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git fetch</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## check which files are different from the remote</span></span>
+<span id="cb2-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git difftool eda/data-sanity-check origin</span></code></pre></div>
+<p>The above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.</p>
+<p>Then, let’s solve the conflict.</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 2</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git pull <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--rebase</span></span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb3-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Auto-merging</span> eda/check_datasanity.py</span>
+<span id="cb3-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">CONFLICT</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">content</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">)</span>: Merge conflict in eda/check_datasanity.py</span>
+<span id="cb3-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">error:</span> could not apply <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>your-current HEAD commit-id<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>... eda: add histogram</span>
+<span id="cb3-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> Resolve all conflicts manually, mark them as resolved with</span>
+<span id="cb3-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git add/rm &lt;conflicted_files&gt;"</span>, then run <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase --continue"</span>.</span>
+<span id="cb3-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> You can instead skip this commit: run <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase --skip"</span>.</span>
+<span id="cb3-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">hint:</span> To abort and get back to the state before <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase"</span>, run <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"git rebase --abort"</span>.</span>
+<span id="cb3-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Could</span> not apply <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>your-current HEAD commit-id<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>... eda: add histogram</span>
+<span id="cb3-12"></span>
+<span id="cb3-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## after resolving the conflict</span></span>
+<span id="cb3-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--continue</span></span></code></pre></div>
+<p>The <code>git pull --rebase</code> commands is the same as <code>git pull</code> + <code>git rebase</code>. Aftrer hitting <code>git pull --rebase</code>, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.</p>
+<p>After resolving the conflict, do not foregt to run <code>git rebase --continue</code>, otherwise you continue to stay in the conflict-resolution mode.</p>
+<p>Your git history will look like the following;</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       merge remote id:"pull"
+       commit id: "conflict-resolve"
+</pre>
+</div>
+<p></p><figcaption> Fig 3. git pull –rebase</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+<p>At the above <code>conflict-resolve</code> node, you choose which local modifications should stay in the repository history.</p>
+<p>Then, now that you are able to push to the remote.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 3: push to the remote</span></span>
+<span id="cb4-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git push origin HEAD</span></code></pre></div>
+<p><strong> ▶&nbsp; REMARKS</strong></p>
+<ul>
+<li>When hitting <code>git pull --rebase</code>, it’s possible that all differences automatically are resoloved.
+<ul>
+<li>For example, you modified some files but ther remote changes are not related to the files you’ve chnaged.</li>
+<li><code>git pull --rebase</code> automatically resolved the difference which does not cause the conflict.</li>
+</ul></li>
+<li>When you get confused and want to get out of the conflict-resolution mode without saving, hit the <code>git rebase --abort</code></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/</guid>
+  <pubDate>Thu, 18 Jul 2024 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>あぁぁ… 間違ったbranch nameつけてしもうた…</title>
   <dc:creator>Ryo Nakagami</dc:creator>

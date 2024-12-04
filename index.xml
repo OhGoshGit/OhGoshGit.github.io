@@ -9,7 +9,7 @@
 <link>https://ohgoshgit.github.io/</link>
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.5.57</generator>
+<generator>quarto-1.6.39</generator>
 <lastBuildDate>Wed, 06 Nov 2024 00:00:00 GMT</lastBuildDate>
 <item>
   <title>OGG… How do I check unstaged differences with the latest commit?</title>
