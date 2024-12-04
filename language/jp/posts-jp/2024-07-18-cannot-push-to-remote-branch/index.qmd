@@ -1,0 +1,153 @@
+---
+title: "OGG... I cannot push to remote branch and cannot pull the remote changes..."
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-07-18"
+date-modified: last-modified
+categories: [git branch]
+---
+
+## Problem
+
+Let's say you are working on a local development branch, `eda/data-sanity-check`. 
+After some modifications and commits on the local, you realized that you cannot push to
+the remote branch.
+
+When you hit `git push`, you've got the following error:
+
+```zsh
+% git push
+...
+To https://github.com/RyoNakagami/github_sandbox
+ ! [rejected]        eda/data-sanity-check -> eda/data-sanity-check (fetch first)
+error: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+## What is happening
+
+Generally speaking, you need to pull the remote and stay up-to-date before pushing.
+But the problem is you've already git commited on some modifications at the current branch
+while there are some commits at the remote branch too, and that's why you cannot pull
+the remote because of the history conflict.
+
+::: {layout-ncol=2}
+
+```{mermaid}
+%%| fig-cap: Fig 1. Conflict between the local and the remote
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       commit id: "local-mod-2"
+       commit id: "local-mod-3"
+       checkout remote
+       merge local id:"❗️failed to push"
+```
+
+```{mermaid}
+%%| fig-cap: Fig 2. You cannot pull the remote either
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       commit id: "local-mod-2"
+       commit id: "local-mod-3"
+       merge remote id:"❗️failed to pull"
+```
+
+:::
+
+## Solution: git pull -\-rebase
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+1. Check the difference between the local and the romote
+2. Resolve the local-remote conflict
+3. push top the remote after solving the conflict
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+## fetch the remote info
+% git fetch
+
+## check which files are different from the remote
+% git difftool eda/data-sanity-check origin
+```
+
+The above commands are just for checking the remote-local difference.
+If you want to solve the problem quickly, it's alright to skip the process.
+
+Then, let's solve the conflict.
+
+```zsh
+## Step 2
+% git pull --rebase
+...
+Auto-merging eda/check_datasanity.py
+CONFLICT (content): Merge conflict in eda/check_datasanity.py
+error: could not apply <your-current HEAD commit-id>... eda: add histogram
+hint: Resolve all conflicts manually, mark them as resolved with
+hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+hint: You can instead skip this commit: run "git rebase --skip".
+hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+Could not apply <your-current HEAD commit-id>... eda: add histogram
+
+## after resolving the conflict
+% git rebase --continue
+```
+
+The `git pull --rebase` commands is the same as `git pull` + `git rebase`.
+Aftrer hitting `git pull --rebase`, you are now in the conflict-resolution process 
+when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do
+in a usual merge-conflict.
+
+After resolving the conflict, do not foregt to run `git rebase --continue`, otherwise 
+you continue to stay in the conflict-resolution mode.
+
+Your git history will look like the following;
+
+```{mermaid}
+%%| fig-cap: Fig 3. git pull --rebase
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'local'}}}%%
+    gitGraph
+       commit id: "local-mod-1"
+       branch remote
+       commit id: "remote-mod-1"
+       checkout local
+       merge remote id:"pull"
+       commit id: "conflict-resolve"
+```
+
+At the above `conflict-resolve` node, you choose which local modifications should stay 
+in the repository history.
+
+Then, now that you are able to push to the remote.
+
+```zsh
+## Step 3: push to the remote
+% git push origin HEAD
+```
+
+<strong > &#9654;&nbsp; REMARKS</strong>
+
+- When hitting `git pull --rebase`, it's possible that all differences automatically are resoloved.
+    -  For example, you modified some files but ther remote changes are not related to the files you've chnaged.
+    - `git pull --rebase` automatically resolved the difference which does not cause the conflict.
+- When you get confused and want to get out of the conflict-resolution mode without saving, hit the `git rebase --abort`

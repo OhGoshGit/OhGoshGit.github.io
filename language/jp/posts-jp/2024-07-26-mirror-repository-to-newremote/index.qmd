@@ -1,0 +1,61 @@
+---
+title: "OGG... I just want to save the current repository into another remote..."
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-07-26"
+date-modified: last-modified
+categories: [git clone]
+---
+
+## Problem
+
+Let’s say you are working on a GitHub-hosted repository, `LinearModels`, remotely and/or locally with your colleagues.
+Development is going on at the current repository, but your boss has asked you to mirror the current
+repository into gitlab repository, `https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git`, while keeping the history as of now.
+
+## Solution: git clone --bare
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+1. Create a bare clone of the repository
+2. Mirror-push to the new repository
+3. Remove the temporary old local repository 
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+```zsh
+# Step 1
+% git clone --bare https://github.com/EXAMPLE-USER/LinearModels.git
+
+# Step 2
+% cd LinearModels.git
+% git push --mirror https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git
+
+# Step 3
+% cd ..
+% rm -rf LinearModels.git
+```
+
+<div class="blog-custom-border">
+<strong >📘 REMARKS</strong> <br>
+
+- A non-bare `git clone` downloads both the snapshot and history to the local machine. However, a `git clone --bare` only copies the history, allowing for a quicker transfer to a new remote repository.
+- Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．
+- The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.
+
+</div>
+
+### Why not no-bare git clone and git push --mirror?
+
+When running `git clone origin-url`, you will get all of the tags copied,
+a local branch master (`HEAD`) tracking a remote branch `origin/master`, and remote
+branches `origin/test1`, `origin/test2`, and `origin/test3`. 
+
+If you do `git push --mirror` a non-bare cloned repository, it also pushes your remote branches,
+`origin/test1`, `origin/test2`, and `origin/test3`, because mirror implies everything.
+Then, you would get branches named `origin/origin/test1`. 
+
+References
+----------
+- [GitHub Docs > Duplicating a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository)

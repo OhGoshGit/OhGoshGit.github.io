@@ -1,0 +1,139 @@
+---
+title: "OGG... How do I check unstaged differences with the latest commit?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-11-06"
+date-modified: last-modified
+categories: [git difftool]
+---
+
+## Problem
+
+After committing changes to files in your working repository, you continue working on further developments.
+Then, you notice that you've accidentally made some errors in certain git-tracked files, and the class is not working.
+
+You want to check what changes you've made compared to the latest commit, but you're not sure how to do it.
+It would also be helpful to view the differences in an editor.
+
+## Solution 1: Using `git diff`
+
+`git diff` allows you to inspect changes in your code, from minor edits to major branch comparisons.
+
+<strong > &#9654;&nbsp; Key Takeaways</strong>
+
+|Commands|Explaination|
+|---|---|
+|`git diff`|Check unstaged changes with HEAD|
+|`git diff --staged`|Check staged changes with HEAD|
+|`git diff <commit1> <commit2>`|Compare two specific commits|
+|`git diff main feature-branch`|Compare branches|
+|`git diff HEAD <file/directory-path>`|Check single file/directory changes with HEAD|
+|`git diff --stat`|Shows a summary of changes for each file, such as how many lines were added and deleted|
+
+<strong > &#9654;&nbsp; Viewing Changes in the Working Directory</strong>
+
+To see all changes in your working directory that haven’t been staged,
+
+```zsh
+git diff
+```
+
+This command shows the differences between your working directory and the last commit in your terminal display.
+
+If you want to see staged changes with your latest commit, 
+
+```zsh
+git diff --staged
+```
+
+<strong > &#9654;&nbsp; Comparing with a Specific Commit</strong>
+
+To see differences between your current state and a specific commit,
+
+```zsh
+## (1) Compared with latest commit
+git diff
+git diff HEAD
+
+## (2) Compared with specific commit
+git diff <commit-hash>
+
+## (3) Comparing two specific commits
+git diff <commit-hash1> <commit-hash2>
+
+## (4) Comparing the HEAD with the HEAD~1
+git diff HEAD~1 HEAD
+```
+
+<strong > &#9654;&nbsp; Comparing Branches</strong>
+
+You can also use `git diff` to compare different branches.
+
+```zsh
+git diff main feature-branch
+```
+
+<strong > &#9654;&nbsp;  Shows a summary of changes for each file</strong>
+
+When you want to see a summary of changes for each file, such as how many lines were added and deleted, use `git diff --stat`.
+If you want to compare the current branch with `gh-pages` branch in `.github/` directory,
+
+```zsh
+% git diff --stat gh-pages .github/ 
+ .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++
+ .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++
+ .github/pull_request_template.md             | 25 +++++++++++++++++++++++++
+ .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++
+ .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++
+ 5 files changed, 142 insertions(+)
+```
+
+The number shows how many lines are modified for each files. 
+
+
+## Solution 2: Using `git difftool`
+
+`git difftool` is a Git command that lets you view differences between versions of files in an external, graphical diff tool.
+It’s particularly useful if you want to view the differences in an editor.
+
+The syntax of `git difftool` is similar to `git diff`. For example,
+
+|`git difftool` commands|`git diff` commands|
+|---|---|
+|`git difftool`|`git diff`|
+|`git difftool --staged`<br>`git difftool --cached`|`git diff --staged`|
+|`git difftool <commit1> <commit2>`|`git diff <commit1> <commit2>`|
+|`git difftool main feature-branch`|`git diff main feature-branch`|
+|`git difftool HEAD <file/directory-path>`|`git diff HEAD <file/directory-path>`|
+
+<strong > &#9654;&nbsp; Choosing an editor </strong>
+
+You can set your preferred tool globally so it opens automatically each time you use the command.
+The setup syntax is
+
+```zsh
+git config --global diff.tool your_preferred_tool
+```
+
+For example, if you prefer to vscode,
+
+```zsh
+git config --global diff.tool vscode
+```
+
+To check if you successfully configure difftool editor,
+
+```zsh
+git config -l
+```
+
+then, you can check what editor is you default git difftool editor.
+
+<strong > &#9654;&nbsp; Choosing an editor temporarily</strong>
+
+If you temporarily show the diff in vimdiff, 
+
+```zsh
+git difftool HEAD~1 HEAD --tool=vimdiff
+```
