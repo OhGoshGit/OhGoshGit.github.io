@@ -10,7 +10,193 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.6.39</generator>
-<lastBuildDate>Wed, 06 Nov 2024 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 04 Dec 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How can I modify the GitHub repository name?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-12-04-chnage-remote-uri/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Suppose you are working on a GitHub-hosted repository <code>myproject</code>. As your project evolves, you start wondering the original name is ambiguous or unclear to potential users or collaborators.</p>
+<p>So, you’ve decided to rename <code>myproject</code> to <code>assembled-kalmanfilter-coremodel</code>.</p>
+<p><strong> ▶&nbsp; Current Status</strong></p>
+<ul>
+<li>current repository url: <code>https://github.com/OhGoshGit/myproject.git</code></li>
+<li>remote name: <code>origin</code></li>
+</ul>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git remote <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-v</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">origin</span>  https://github.com/OhGoshGit/myproject.git <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fetch</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">origin</span>  https://github.com/OhGoshGit/myproject.git <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">push</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span></code></pre></div>
+<p><strong> ▶&nbsp; ToBe</strong></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git remote <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-v</span></span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">origin</span>  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fetch</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb2-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">origin</span>  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">push</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span></code></pre></div>
+</section>
+<section id="solutions" class="level2">
+<h2 class="anchored" data-anchor-id="solutions">Solutions</h2>
+<p>When you rename a repository, all existing information, with the exception of project site URLs, is automatically redirected to the new name, including:</p>
+<ul>
+<li>Issues</li>
+<li>Wikis</li>
+<li>Stars</li>
+<li>Followers</li>
+</ul>
+<p>However, it’s still a good idea to update any references.</p>
+<div style="padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;">
+<p><strong style="color:#ffa657">Warning !</strong> <br></p>
+<p>If you create a new repository under your account in the future, do not reuse the original name of the renamed repository. If you do, redirects to the renamed repository will no longer work.</p>
+</div>
+<div class="blog-custom-border">
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li><p>Log in to GitHub and navigate to the Repository</p>
+<ul>
+<li>Go to GitHub and log in to your account.</li>
+<li>Go to the repository you want to rename.</li>
+</ul></li>
+<li><p>Access Repository Settings:</p>
+<ul>
+<li>On the repository’s main page, click the <code>Settings</code> tab</li>
+</ul></li>
+<li><p>Edit the Repository Name:</p>
+<ul>
+<li>In the <code>General</code> section, you’ll see the <code>Repository name</code> field.</li>
+<li>Enter the new name for your repository in the text box.</li>
+</ul></li>
+<li><p>Confirm the Change:</p>
+<ul>
+<li>Click <code>Rename</code></li>
+</ul></li>
+<li><p>Update Your Local Repository:</p>
+<ul>
+<li>change an existing remote repository URL in your local repository by running <code>git remote set-url</code> command</li>
+</ul>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># When you use HTTPS</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote set-url origin https://github.com/your-username/new-repository-name.git</span>
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># When you use SSH</span></span>
+<span id="cb3-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote set-url origin git@github.com:your-username/new-repository-name.git</span></code></pre></div></li>
+<li><p>Confirmation</p>
+<ul>
+<li>Test pushing or pulling to ensure the updated remote URL works correctly:</li>
+</ul>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-v</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> pull origin main</span></code></pre></div></li>
+<li><p>notify your collaborators</p>
+<ul>
+<li>If others are using the repository, notify them about the name change.</li>
+</ul></li>
+</ol>
+</div>
+<section id="git-remote-set-url-command" class="level3">
+<h3 class="anchored" data-anchor-id="git-remote-set-url-command"><code>git remote set-url</code> command</h3>
+<p>The <code>git remote set-url</code> command is used to update the URL of a remote repository in your local Git configuration. This is often necessary when the remote repository’s URL changes (e.g., due to renaming, migration, or switching protocols).</p>
+<p><strong> ▶&nbsp; Syntax</strong></p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote set-url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-url<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<ul>
+<li><code>&lt;remote-name&gt;</code>: The name of the remote (commonly <code>origin</code>)</li>
+<li><code>&lt;new-url&gt;</code>: The new URL for the remote repository</li>
+</ul>
+<p>The <code>git remote set-url</code> command only updates the URL; it does not create a new remote. If the remote name (e.g., <code>origin</code>) doesn’t exist, you’ll need to add it using <code>git remote add</code> first.</p>
+<p><strong> ▶&nbsp; Tips</strong></p>
+<p>If you’ve accidentally made a wrong <code>&lt;remote-name&gt;</code>, you can remove by the following command:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote rm <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>wrong-remote-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories">GitHub Docs &gt; Managing remote repositories</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git remote</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-12-04-chnage-remote-uri/</guid>
+  <pubDate>Wed, 04 Dec 2024 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I check unstaged differences with the latest commit?</title>
   <dc:creator>Ryo Nakagami</dc:creator>

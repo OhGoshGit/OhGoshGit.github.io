@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2024-12-04">
 
-<title>Gitってむずかしいわぁ．．．でもヘコタレへん – OhGoshGit!?!</title>
+<title>OGG… How can I modify the GitHub repository name? – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -31,8 +67,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,35 +105,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -120,38 +125,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed">
 
@@ -210,16 +186,36 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Gitってむずかしいわぁ．．．でもヘコタレへん</h1>
-            <p class="subtitle lead">日常の分析/開発場面で直面したトラブルとその解決方法を平易な日本語で紹介します</p>
-                      </div>
+      <h1 class="title">OGG… How can I modify the GitHub repository name?</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">git remote</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta column-page-left">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2024-12-04</p>
+      </div>
+    </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2024-12-04</p>
+      </div>
+    </div>
       
     </div>
     
@@ -228,8 +224,19 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(8)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a>
+  <ul class="collapse">
+  <li><a href="#git-remote-set-url-command" id="toc-git-remote-set-url-command" class="nav-link" data-scroll-target="#git-remote-set-url-command"><code>git remote set-url</code> command</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -237,120 +244,104 @@ window.Quarto = {
 
 
 
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-<th>
-Date
-</th>
-<th>
-Title
-</th>
-<th>
-Reading Time
-</th>
-</tr>
-</thead>
-<tbody class="list">
-<tr data-index="0" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-06</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html" class="title listing-title">OGG… How do I check unstaged differences with the latest commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-</tr>
-<tr data-index="1" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/index.html" class="title listing-title">OGG… Should I use git rebase?</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-</tr>
-<tr data-index="2" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I push my repository to githab and gitlab remote at once?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">OGG… How can I push my repository to githab and gitlab remote at once?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-</tr>
-<tr data-index="3" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="3" data-listing-word-count-sort="524" data-listing-title-sort="OGG... I just want to push a local git branch to a remote with a different name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">OGG… I just want to push a local git branch to a remote with a different name…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-</tr>
-<tr data-index="4" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="OGG... I just want to save the current repository into another remote..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">OGG… I just want to save the current repository into another remote…</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-</tr>
-<tr data-index="5" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="5" data-listing-word-count-sort="865" data-listing-title-sort="OGG... I cannot push to remote branch and cannot pull the remote changes..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">OGG… I cannot push to remote branch and cannot pull the remote changes…</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-</tr>
-<tr data-index="6" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="1" data-listing-word-count-sort="78" data-listing-title-sort="あぁぁ... 間違ったbranch nameつけてしもうた..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">あぁぁ… 間違ったbranch nameつけてしもうた…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-</tr>
-<tr data-index="7" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1733324420259" data-listing-date-modified-sort="1733324420000" data-listing-reading-time-sort="2" data-listing-word-count-sort="229" data-listing-title-sort="あぁぁ... 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="listing-no-matching d-none">
-No matching items
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Suppose you are working on a GitHub-hosted repository <code>myproject</code>. As your project evolves, you start wondering the original name is ambiguous or unclear to potential users or collaborators.</p>
+<p>So, you’ve decided to rename <code>myproject</code> to <code>assembled-kalmanfilter-coremodel</code>.</p>
+<p><strong> ▶&nbsp; Current Status</strong></p>
+<ul>
+<li>current repository url: <code>https://github.com/OhGoshGit/myproject.git</code></li>
+<li>remote name: <code>origin</code></li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git remote <span class="at">-v</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">origin</span>  https://github.com/OhGoshGit/myproject.git <span class="er">(</span><span class="ex">fetch</span><span class="kw">)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">origin</span>  https://github.com/OhGoshGit/myproject.git <span class="er">(</span><span class="ex">push</span><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong> ▶&nbsp; ToBe</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git remote <span class="at">-v</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">origin</span>  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git <span class="er">(</span><span class="ex">fetch</span><span class="kw">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">origin</span>  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git <span class="er">(</span><span class="ex">push</span><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="solutions" class="level2">
+<h2 class="anchored" data-anchor-id="solutions">Solutions</h2>
+<p>When you rename a repository, all existing information, with the exception of project site URLs, is automatically redirected to the new name, including:</p>
+<ul>
+<li>Issues</li>
+<li>Wikis</li>
+<li>Stars</li>
+<li>Followers</li>
+</ul>
+<p>However, it’s still a good idea to update any references.</p>
+<div style="padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;">
+<p><strong style="color:#ffa657">Warning !</strong> <br></p>
+<p>If you create a new repository under your account in the future, do not reuse the original name of the renamed repository. If you do, redirects to the renamed repository will no longer work.</p>
 </div>
-</div></main> <!-- /main -->
+<div class="blog-custom-border">
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li><p>Log in to GitHub and navigate to the Repository</p>
+<ul>
+<li>Go to GitHub and log in to your account.</li>
+<li>Go to the repository you want to rename.</li>
+</ul></li>
+<li><p>Access Repository Settings:</p>
+<ul>
+<li>On the repository’s main page, click the <code>Settings</code> tab</li>
+</ul></li>
+<li><p>Edit the Repository Name:</p>
+<ul>
+<li>In the <code>General</code> section, you’ll see the <code>Repository name</code> field.</li>
+<li>Enter the new name for your repository in the text box.</li>
+</ul></li>
+<li><p>Confirm the Change:</p>
+<ul>
+<li>Click <code>Rename</code></li>
+</ul></li>
+<li><p>Update Your Local Repository:</p>
+<ul>
+<li>change an existing remote repository URL in your local repository by running <code>git remote set-url</code> command</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># When you use HTTPS</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote set-url origin https://github.com/your-username/new-repository-name.git</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># When you use SSH</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote set-url origin git@github.com:your-username/new-repository-name.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Confirmation</p>
+<ul>
+<li>Test pushing or pulling to ensure the updated remote URL works correctly:</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>notify your collaborators</p>
+<ul>
+<li>If others are using the repository, notify them about the name change.</li>
+</ul></li>
+</ol>
+</div>
+<section id="git-remote-set-url-command" class="level3">
+<h3 class="anchored" data-anchor-id="git-remote-set-url-command"><code>git remote set-url</code> command</h3>
+<p>The <code>git remote set-url</code> command is used to update the URL of a remote repository in your local Git configuration. This is often necessary when the remote repository’s URL changes (e.g., due to renaming, migration, or switching protocols).</p>
+<p><strong> ▶&nbsp; Syntax</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote set-url <span class="op">&lt;</span>remote-name<span class="op">&gt;</span> <span class="op">&lt;</span>new-url<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>&lt;remote-name&gt;</code>: The name of the remote (commonly <code>origin</code>)</li>
+<li><code>&lt;new-url&gt;</code>: The new URL for the remote repository</li>
+</ul>
+<p>The <code>git remote set-url</code> command only updates the URL; it does not create a new remote. If the remote name (e.g., <code>origin</code>) doesn’t exist, you’ll need to add it using <code>git remote add</code> first.</p>
+<p><strong> ▶&nbsp; Tips</strong></p>
+<p>If you’ve accidentally made a wrong <code>&lt;remote-name&gt;</code>, you can remove by the following command:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote rm <span class="op">&lt;</span>wrong-remote-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories">GitHub Docs &gt; Managing remote repositories</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
 <script>
     document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
         let modName = title.innerHTML;
@@ -921,6 +912,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -938,7 +931,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
