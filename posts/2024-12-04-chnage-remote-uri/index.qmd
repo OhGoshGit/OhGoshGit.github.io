@@ -1,0 +1,135 @@
+---
+title: "OGG... How can I modify the GitHub repository name?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-12-04"
+date-modified: last-modified
+categories: [git remote]
+---
+
+## Problem
+
+Suppose you are working on a GitHub-hosted repository `myproject`. As your project evolves,
+you start wondering the original name is ambiguous or unclear to potential users or collaborators.
+
+So, you've decided to rename `myproject` to `assembled-kalmanfilter-coremodel`.
+
+<strong > &#9654;&nbsp; Current Status</strong>
+
+- current repository url: `https://github.com/OhGoshGit/myproject.git`
+- remote name: `origin`
+
+```{.bash}
+% git remote -v
+origin  https://github.com/OhGoshGit/myproject.git (fetch)
+origin  https://github.com/OhGoshGit/myproject.git (push)
+```
+
+<strong > &#9654;&nbsp; ToBe</strong>
+
+```{.bash}
+% git remote -v
+origin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (fetch)
+origin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (push)
+```
+
+
+## Solutions
+
+When you rename a repository, all existing information, with the exception of project site URLs, is automatically redirected to the new name, including:
+
+- Issues
+- Wikis
+- Stars
+- Followers
+
+However, it’s still a good idea to update any references.
+
+<div style='padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;'>
+<strong style="color:#ffa657">Warning !</strong> <br> 
+
+If you create a new repository under your account in the future, do not reuse the original name of the renamed repository. 
+If you do, redirects to the renamed repository will no longer work.
+
+</div>
+
+
+
+<div class="blog-custom-border">
+<strong > &#9654;&nbsp; Steps</strong>
+
+1. Log in to GitHub and navigate to the Repository
+
+    - Go to GitHub and log in to your account.
+    - Go to the repository you want to rename.
+
+2. Access Repository Settings:
+
+    - On the repository's main page, click the `Settings` tab
+
+3. Edit the Repository Name:
+
+    - In the `General` section, you'll see the `Repository name` field.
+    - Enter the new name for your repository in the text box.
+
+4. Confirm the Change:
+
+    - Click `Rename`
+
+5. Update Your Local Repository:
+
+    - change an existing remote repository URL in your local repository by running `git remote set-url` command
+
+    ```{.bash}
+    # When you use HTTPS
+    git remote set-url origin https://github.com/your-username/new-repository-name.git
+
+    # When you use SSH
+    git remote set-url origin git@github.com:your-username/new-repository-name.git
+    ```
+
+6. Confirmation
+
+    - Test pushing or pulling to ensure the updated remote URL works correctly:
+
+    ```{.bash}
+    git remote -v
+    git pull origin main
+    ```
+
+7. notify your collaborators
+
+    - If others are using the repository, notify them about the name change.
+
+</div>
+
+### `git remote set-url` command
+
+The `git remote set-url` command is used to update the URL of a remote repository in your local Git configuration.
+This is often necessary when the remote repository's URL changes (e.g., due to renaming, migration, or switching protocols).
+
+<strong > &#9654;&nbsp; Syntax</strong>
+
+```{.bash}
+git remote set-url <remote-name> <new-url>
+```
+
+- `<remote-name>`: The name of the remote (commonly `origin`)
+- `<new-url>`: The new URL for the remote repository
+
+The `git remote set-url` command only updates the URL; it does not create a new remote.
+If the remote name (e.g., `origin`) doesn't exist, you’ll need to add it using `git remote add` first.
+
+<strong > &#9654;&nbsp; Tips</strong>
+
+If you've accidentally made a wrong `<remote-name>`, you can remove by the following command:
+
+```{.bash}
+git remote rm <wrong-remote-name>
+```
+
+
+References
+----------
+- [GitHub Docs > Managing remote repositories](https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories)

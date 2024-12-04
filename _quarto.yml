@@ -45,12 +45,12 @@ format:
     theme: 
       light: 
         - cosmo
-        - include/custom.scss
-        - include/light.scss
+        - _include/custom.scss
+        - _include/light.scss
       dark: 
         - darkly
-        - include/custom.scss
-        - include/dark.scss
+        - _include/custom.scss
+        - _include/dark.scss
     code-copy: true
     code-fold: true
     code-overflow: wrap
