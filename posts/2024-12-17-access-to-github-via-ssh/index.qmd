@@ -1,0 +1,86 @@
+---
+title: "OGG... How can I set up ssh connection to GitHub repository?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-12-17"
+date-modified: last-modified
+categories: [ssh]
+---
+
+## Problem
+
+- I want to set up an SSH connection for a GitHub repository with my macOS
+
+
+## Solution
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+1. Generate a new ssh key
+2. Add the SSH Key to the SSH Agent
+3. Register the public key to GitHub
+4. test ssh connection
+5. update the ssh config file
+
+
+<strong > &#9654;&nbsp; Setup</strong>
+
+```{.bash filename="1. Generate a new ssh key"}
+ssh-keygen -t ed25519 -C "hoshinokirby@gmail.com" -f ~/.ssh/kirby_github_key
+```
+
+Option `-t` specifies the type of key to generate. `ed25519` is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.
+
+Option `-C` adds a comment to the key for identification purposes.
+
+`-f` specifies the filename and location for the generated key pair. This will generate two files
+
+- `kirby_github_key`: The private key (keep this secure! **do not share!**).
+- `kirby_github_key.pub`: The public key (you upload this to GitHub).
+
+
+```{.bash filename="2. Add the SSH Key to the SSH Agent"}
+eval "$(ssh-agent -s)"
+ssh-add ./.ssh/kirby_github_key
+```
+
+The ssh-add command adds your private SSH key to the SSH authentication agent (`ssh-agent`) so it can be used for SSH connections without repeatedly asking for the key’s passphrase.
+If the key (`kirby_github_key`) isn’t added to `ssh-agent`, SSH won't know to use it. You might encounter the error like this;
+
+```{.bash}
+Permission denied (publickey).
+```
+
+```{.bash filename="3. Register the public key to GitHub"}
+cat ~/.ssh/kirby_github_key.pub
+```
+
+After opening the file, copy the strings and register it at the Github at `Settings > SSH and GPG keys > New SSH key`
+
+Then, test your connection by 
+
+```{.bash filename="4. test ssh connection"}
+$ ssh -T git@github.com
+```
+
+if connection established successfully, the following message will pop up
+
+```{.bash}
+Enter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': 
+Hi Kirby! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+<strong > &#9654;&nbsp; Update the ssh config file</strong>
+
+Running `ssh-add` munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your `~/.ssh/config` file:
+
+```{.bash filename="~/.ssh/config"}
+Host github github.com
+  HostName github.com
+  User git
+  Port 22
+  IdentityFile ~/.ssh/kirby_github_key
+  IdentitiesOnly yes
+  TCPKeepAlive yes
+```
