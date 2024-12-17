@@ -10,7 +10,161 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.6.39</generator>
-<lastBuildDate>Wed, 04 Dec 2024 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 17 Dec 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How can I set up ssh connection to GitHub repository?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2024-12-17-access-to-github-via-ssh/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<ul>
+<li>I want to set up an SSH connection for a GitHub repository with my macOS</li>
+</ul>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Generate a new ssh key</li>
+<li>Add the SSH Key to the SSH Agent</li>
+<li>Register the public key to GitHub</li>
+<li>test ssh connection</li>
+<li>update the ssh config file</li>
+</ol>
+<p><strong> ▶&nbsp; Setup</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>1. Generate a new ssh key</strong></pre>
+</div>
+<div class="sourceCode" id="cb1" data-filename="1. Generate a new ssh key" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh-keygen</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-t</span> ed25519 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-C</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hoshinokirby@gmail.com"</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f</span> ~/.ssh/kirby_github_key</span></code></pre></div>
+</div>
+<p>Option <code>-t</code> specifies the type of key to generate. <code>ed25519</code> is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.</p>
+<p>Option <code>-C</code> adds a comment to the key for identification purposes.</p>
+<p><code>-f</code> specifies the filename and location for the generated key pair. This will generate two files</p>
+<ul>
+<li><code>kirby_github_key</code>: The private key (keep this secure! <strong>do not share!</strong>).</li>
+<li><code>kirby_github_key.pub</code>: The public key (you upload this to GitHub).</li>
+</ul>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>2. Add the SSH Key to the SSH Agent</strong></pre>
+</div>
+<div class="sourceCode" id="cb2" data-filename="2. Add the SSH Key to the SSH Agent" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">eval</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh-agent</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-s</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh-add</span> ./.ssh/kirby_github_key</span></code></pre></div>
+</div>
+<p>The ssh-add command adds your private SSH key to the SSH authentication agent (<code>ssh-agent</code>) so it can be used for SSH connections without repeatedly asking for the key’s passphrase. If the key (<code>kirby_github_key</code>) isn’t added to <code>ssh-agent</code>, SSH won’t know to use it. You might encounter the error like this;</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Permission</span> denied <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">publickey</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">.</span></span></code></pre></div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>3. Register the public key to GitHub</strong></pre>
+</div>
+<div class="sourceCode" id="cb4" data-filename="3. Register the public key to GitHub" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> ~/.ssh/kirby_github_key.pub</span></code></pre></div>
+</div>
+<p>After opening the file, copy the strings and register it at the Github at <code>Settings &gt; SSH and GPG keys &gt; New SSH key</code></p>
+<p>Then, test your connection by</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>4. test ssh connection</strong></pre>
+</div>
+<div class="sourceCode" id="cb5" data-filename="4. test ssh connection" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> ssh <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-T</span> git@github.com</span></code></pre></div>
+</div>
+<p>if connection established successfully, the following message will pop up</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Enter</span> passphrase for key <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'/Users/hosinokkirby/.ssh/kirby_github_key'</span>: </span>
+<span id="cb6-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Hi</span> Kirby! You<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'ve successfully authenticated, but GitHub does not provide shell access.</span></span></code></pre></div>
+<p><strong> ▶&nbsp; Update the ssh config file</strong></p>
+<p>Running <code>ssh-add</code> munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your <code>~/.ssh/config</code> file:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config</strong></pre>
+</div>
+<div class="sourceCode" id="cb7" data-filename="~/.ssh/config" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Host</span> github github.com</span>
+<span id="cb7-2">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HostName</span> github.com</span>
+<span id="cb7-3">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">User</span> git</span>
+<span id="cb7-4">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Port</span> 22</span>
+<span id="cb7-5">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">IdentityFile</span> ~/.ssh/kirby_github_key</span>
+<span id="cb7-6">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">IdentitiesOnly</span> yes</span>
+<span id="cb7-7">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">TCPKeepAlive</span> yes</span></code></pre></div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>ssh</category>
+  <guid>https://ohgoshgit.github.io/posts/2024-12-17-access-to-github-via-ssh/</guid>
+  <pubDate>Tue, 17 Dec 2024 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How can I modify the GitHub repository name?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
