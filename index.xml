@@ -9,13 +9,75 @@
 <link>https://ohgoshgit.github.io/</link>
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.6.39</generator>
-<lastBuildDate>Tue, 17 Dec 2024 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.7.31</generator>
+<lastBuildDate>Fri, 23 May 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I switch the connection method for git push from HTTPS to SSH??</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-05-23-switch-https-ssh/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation.</p>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<ol type="1">
+<li><p><strong>Check your current remote URL:</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-v</span></span></code></pre></div>
+<p>If the URL starts with <code>https://</code>, you are using HTTPS.</p></li>
+<li><p><strong>Find your SSH URL:</strong></p>
+<p>On GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., <code>git@github.com:username/repo.git</code>).</p></li>
+<li><p><strong>Change the remote URL to SSH:</strong></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote set-url origin git@github.com:username/repo.git</span></code></pre></div></li>
+<li><p><strong>Verify the change:</strong></p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-v</span></span></code></pre></div>
+<p>The URL should now start with <code>git@</code>.</p></li>
+</ol>
+<section id="tips" class="level3">
+<h3 class="anchored" data-anchor-id="tips">Tips</h3>
+<ul>
+<li><p>Make sure you have added your SSH key to your GitHub account. You can generate a key with <code>ssh-keygen</code> and add it using the GitHub SSH settings.</p></li>
+<li><p>Test your SSH connection with:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-T</span> git@github.com</span></code></pre></div></li>
+<li><p>If you use multiple remotes or repositories, repeat these steps for each one.</p></li>
+</ul>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>ssh</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-05-23-switch-https-ssh/</guid>
+  <pubDate>Fri, 23 May 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How can I set up ssh connection to GitHub repository?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-12-17-access-to-github-via-ssh/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -170,6 +232,7 @@ font-style: inherit;">TCPKeepAlive</span> yes</span></code></pre></div>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-12-04-chnage-remote-uri/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -356,6 +419,7 @@ font-style: inherit;">&gt;</span></span></code></pre></div>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -608,6 +672,7 @@ font-style: inherit;">=</span>vimdiff</span></code></pre></div>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-11-05-when-do-i-use-git-rebase/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -1501,6 +1566,7 @@ font-style: inherit;">A</span></span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
@@ -1819,6 +1885,7 @@ font-style: inherit;">&gt;</span></span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
@@ -1830,9 +1897,9 @@ font-style: inherit;">&gt;</span></span></code></pre></div>
 <li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
 <li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
 </ol>
-<section id="solution-1-rename-your-local-branch-name" class="level3">
-<h3 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">Solution 1: rename your local branch name</h3>
-<hr>
+</section>
+<section id="solution-1-rename-your-local-branch-name" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">### Solution 1: rename your local branch name</h2>
 <p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
 <p><strong> ▶&nbsp; Commands</strong></p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
@@ -1861,9 +1928,8 @@ font-style: inherit;">git</span> push <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">-u</span> origin HEAD</span></code></pre></div>
 </section>
-<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level3">
-<h3 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">Solution 2: Push a local git branch to a remote with a different name</h3>
-<hr>
+<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">### Solution 2: Push a local git branch to a remote with a different name</h2>
 <p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
 <p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
 <p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
@@ -1909,7 +1975,6 @@ font-style: inherit;">git</span> push origin local-branch-name:remote-branch-nam
 </div>
 </div>
 </section>
-</section>
 <section id="use-cases" class="level2">
 <h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
 <p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
@@ -1945,6 +2010,7 @@ font-style: inherit;">=</span>origin/new-feature</span></code></pre></div>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -2033,6 +2099,7 @@ font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Let’s say you are working on a local development branch, <code>eda/data-sanity-check</code>. After some modifications and commits on the local, you realized that you cannot push to the remote branch.</p>
@@ -2097,9 +2164,6 @@ font-style: inherit;">'git push --help'</span> for details.</span></code></pre><
 <section id="what-is-happening" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-happening">What is happening</h2>
 <p>Generally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.</p>
-<div>
-
-</div>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -2302,6 +2366,7 @@ font-style: inherit;">%</span> git push origin HEAD</span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Let’s say you made a local development branch, <code>feature/inverse-matrix-calculation</code>. After some commits and pushes to remote, you realized that you had named the branch the wrong way.</p>
@@ -2390,6 +2455,7 @@ font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/invers
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/</link>
   <description><![CDATA[ 
+
 
 
 

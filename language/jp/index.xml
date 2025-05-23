@@ -9,13 +9,14 @@
 <link>https://ohgoshgit.github.io/language/jp/</link>
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.6.39</generator>
+<generator>quarto-1.7.31</generator>
 <lastBuildDate>Wed, 06 Nov 2024 00:00:00 GMT</lastBuildDate>
 <item>
   <title>OGG… How do I check unstaged differences with the latest commit?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -268,6 +269,7 @@ font-style: inherit;">=</span>vimdiff</span></code></pre></div>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -1161,6 +1163,7 @@ font-style: inherit;">A</span></span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
@@ -1479,6 +1482,7 @@ font-style: inherit;">&gt;</span></span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
@@ -1490,9 +1494,9 @@ font-style: inherit;">&gt;</span></span></code></pre></div>
 <li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
 <li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
 </ol>
-<section id="solution-1-rename-your-local-branch-name" class="level3">
-<h3 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">Solution 1: rename your local branch name</h3>
-<hr>
+</section>
+<section id="solution-1-rename-your-local-branch-name" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">### Solution 1: rename your local branch name</h2>
 <p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
 <p><strong> ▶&nbsp; Commands</strong></p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
@@ -1521,9 +1525,8 @@ font-style: inherit;">git</span> push <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">-u</span> origin HEAD</span></code></pre></div>
 </section>
-<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level3">
-<h3 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">Solution 2: Push a local git branch to a remote with a different name</h3>
-<hr>
+<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">### Solution 2: Push a local git branch to a remote with a different name</h2>
 <p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
 <p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
 <p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
@@ -1569,7 +1572,6 @@ font-style: inherit;">git</span> push origin local-branch-name:remote-branch-nam
 </div>
 </div>
 </section>
-</section>
 <section id="use-cases" class="level2">
 <h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
 <p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
@@ -1605,6 +1607,7 @@ font-style: inherit;">=</span>origin/new-feature</span></code></pre></div>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -1693,6 +1696,7 @@ font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Let’s say you are working on a local development branch, <code>eda/data-sanity-check</code>. After some modifications and commits on the local, you realized that you cannot push to the remote branch.</p>
@@ -1757,9 +1761,6 @@ font-style: inherit;">'git push --help'</span> for details.</span></code></pre><
 <section id="what-is-happening" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-happening">What is happening</h2>
 <p>Generally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.</p>
-<div>
-
-</div>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -1962,6 +1963,7 @@ font-style: inherit;">%</span> git push origin HEAD</span></code></pre></div>
 
 
 
+
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p><code>feature/inverse-matrix-calculation</code> というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．</p>
@@ -2051,6 +2053,7 @@ font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/invers
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/</link>
   <description><![CDATA[ 
+
 
 
 

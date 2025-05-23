@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2024-10-31">
+<meta name="dcterms.date" content="2025-05-23">
 
-<title>OGG… I just want to push a local git branch to a remote with a different name… – OhGoshGit!?!</title>
+<title>OGG… How do I switch the connection method for git push from HTTPS to SSH?? – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,28 +60,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../../">
-<link href="../../../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../../site_libs/bootstrap/bootstrap-773d2dc6028f3d3080fe85c14b651326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../../site_libs/bootstrap/bootstrap-dark-91a34f9238839f4b40444ea45ca231d9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../../../site_libs/bootstrap/bootstrap-773d2dc6028f3d3080fe85c14b651326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-773d2dc6028f3d3080fe85c14b651326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-91a34f9238839f4b40444ea45ca231d9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-773d2dc6028f3d3080fe85c14b651326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -130,7 +130,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
 
-<link rel="stylesheet" href="../../../../styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -302,7 +302,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../../../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -317,17 +317,17 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../../../about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../../.././language/jp/"> 
+    <a class="nav-link" href="../.././language/jp/"> 
 <span class="menu-text">日本語</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../../.././"> 
+    <a class="nav-link" href="../.././"> 
 <span class="menu-text">English</span></a>
   </li>  
   <li class="nav-item compact">
@@ -336,7 +336,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../../../index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -352,9 +352,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… I just want to push a local git branch to a remote with a different name…</h1>
+      <h1 class="title">OGG… How do I switch the connection method for git push from HTTPS to SSH??</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git branch</div>
+                <div class="quarto-category">ssh</div>
               </div>
                   </div>
   </div>
@@ -372,7 +372,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-10-31</p>
+        <p class="date">2025-05-23</p>
       </div>
     </div>
     
@@ -395,10 +395,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#solution-1-rename-your-local-branch-name" id="toc-solution-1-rename-your-local-branch-name" class="nav-link" data-scroll-target="#solution-1-rename-your-local-branch-name">### Solution 1: rename your local branch name</a></li>
-  <li><a href="#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" id="toc-solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="nav-link" data-scroll-target="#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">### Solution 2: Push a local git branch to a remote with a different name</a></li>
-  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use-cases</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a>
+  <ul class="collapse">
+  <li><a href="#tips" id="toc-tips" class="nav-link" data-scroll-target="#tips">Tips</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -412,72 +412,33 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
+<p>You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation.</p>
 </section>
 <section id="solution" class="level2">
 <h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<p>There are two ways to resolve this:</p>
 <ol type="1">
-<li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
-<li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
+<li><p><strong>Check your current remote URL:</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the URL starts with <code>https://</code>, you are using HTTPS.</p></li>
+<li><p><strong>Find your SSH URL:</strong></p>
+<p>On GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., <code>git@github.com:username/repo.git</code>).</p></li>
+<li><p><strong>Change the remote URL to SSH:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote set-url origin git@github.com:username/repo.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Verify the change:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The URL should now start with <code>git@</code>.</p></li>
 </ol>
-</section>
-<section id="solution-1-rename-your-local-branch-name" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">### Solution 1: rename your local branch name</h2>
-<p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: rename your local branch</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-m</span> <span class="op">&lt;</span>old-name<span class="op">&gt;</span> <span class="op">&lt;</span>new-name<span class="op">&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: push to the remote</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin HEAD</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level2">
-<h2 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">### Solution 2: Push a local git branch to a remote with a different name</h2>
-<p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
-<p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
-<p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: git fetch and check your remote</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Make sure your new remote name will not cause a problem</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-a</span>  </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Push your local branch with different remote name</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin local-branch-name:remote-branch-name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-🍵 Green Tea Break: why use <code>git fetch</code> not <code>git pull</code>?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong> ▶&nbsp; <code>git fetch</code> keeps your local work untouched</strong></p>
+<section id="tips" class="level3">
+<h3 class="anchored" data-anchor-id="tips">Tips</h3>
 <ul>
-<li><code>git fetch</code> only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.</li>
-<li><code>git pull</code> combines <code>git fetch</code> and <code>git merge</code>, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.</li>
+<li><p>Make sure you have added your SSH key to your GitHub account. You can generate a key with <code>ssh-keygen</code> and add it using the GitHub SSH settings.</p></li>
+<li><p>Test your SSH connection with:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-T</span> git@github.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>If you use multiple remotes or repositories, repeat these steps for each one.</p></li>
 </ul>
-<p>If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use <code>git fetch</code> because it helps avoid unexpected merges.</p>
-</div>
-</div>
+
+
 </section>
-<section id="use-cases" class="level2">
-<h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
-<p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
-<p>If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like <code>temp/20241031-login-test</code>.</p>
-<p><strong> ▶&nbsp; Avoid Naming Conflicts</strong></p>
-<p>If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called <code>feature/login</code> on the remote, you might push you local <code>feature/login</code> branch as <code>feature/login-update</code>.</p>
-<p>In this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-vvv</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and if the result is not what you expect, you can run</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">--set-upstream-to</span><span class="op">=</span>origin/new-feature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>to set your upstream branch to the correct one.</p>
-
-
 </section>
 
 </main> <!-- /main -->
@@ -916,7 +877,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="../../../../LICENSE">
+    <a class="nav-link" href="../../LICENSE">
 <p>License</p>
 </a>
   </li>  
