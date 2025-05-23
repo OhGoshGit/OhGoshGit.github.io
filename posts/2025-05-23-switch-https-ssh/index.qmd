@@ -1,0 +1,53 @@
+---
+title: "OGG... How do I switch the connection method for git push from HTTPS to SSH??"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-05-23"
+date-modified: last-modified
+categories: [ssh]
+---
+
+
+## Problem
+
+You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation.
+
+## Solution
+
+1. **Check your current remote URL:**
+
+   ```bash
+   git remote -v
+   ```
+
+   If the URL starts with `https://`, you are using HTTPS.
+
+2. **Find your SSH URL:**
+
+   On GitHub, go to your repository page, click the "Code" button, and select "SSH" to copy the SSH URL (e.g., `git@github.com:username/repo.git`).
+
+3. **Change the remote URL to SSH:**
+
+   ```bash
+   git remote set-url origin git@github.com:username/repo.git
+   ```
+
+4. **Verify the change:**
+
+   ```bash
+   git remote -v
+   ```
+
+   The URL should now start with `git@`.
+
+### Tips
+
+- Make sure you have added your SSH key to your GitHub account. You can generate a key with `ssh-keygen` and add it using the GitHub SSH settings.
+- Test your SSH connection with:
+
+  ```bash
+  ssh -T git@github.com
+  ```
+
+- If you use multiple remotes or repositories, repeat these steps for each one.
