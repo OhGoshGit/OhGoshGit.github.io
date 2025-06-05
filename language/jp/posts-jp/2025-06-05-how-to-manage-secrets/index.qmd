@@ -1,0 +1,140 @@
+---
+title: "あぁぁ... Gitで設定ファイルや秘密情報をどう管理すればええんや？"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-06-05"
+date-modified: last-modified
+categories: [gitignore, bfg]
+---
+
+## Objective
+
+GitリポジトリにAPIキーやパスワードなどの秘密情報をうっかりコミットしてしまうことを防ぎ，安全に設定ファイルや認証情報を扱えるようにする．
+
+## Goal
+
+秘密情報を Gitのバージョン管理から除外しつつ，チームやデプロイ環境で 再現性のある設定方法を提供する．
+
+
+## Guidline
+
+1. **`.gitignore` に秘密情報のあるファイルやディレクトリを追加する**
+
+    `config.yml`，`.env`，`secrets.json` などのファイルを `.gitignore` に追加します
+
+2. **設定ファイルのテンプレート（雛形）をリポジトリに含める**
+
+    `config/config_template.yml` や `.env.example` のような中身がダミーのファイルを追加し，必要な構造を共有します．その後，READMEなどに，実際の設定ファイルの作成方法を記載します
+
+3. **コードでは環境変数を使って設定を読み込む**
+
+    ソースコードにAPIキーのような機密情報をハードコーディングする代わりに，実行時に環境変数から読み込むようにします
+
+    ```python
+    import yaml
+
+    with open("../config/config.yml", "r") as file:
+        config = yaml.safe_load(file)
+    ```
+
+
+3. **もし秘密情報を誤ってコミットしてしまったら？**
+
+    APIキーなどの秘密情報を誤ってコミットしてしまった場合，ファイルを削除したりキーを更新しても，Gitの履歴には依然として残っており，他人がアクセスできる可能性があります．履歴から完全に削除する必要があり，そのためには `BFG Repo-Cleaner` のようなツールを使うことが推奨されます．
+
+
+## Example in my project
+
+[開発環境におけるシークレット管理]{.mini-section}
+
+1. **`.gitignore`に`config/`を記載**
+
+    ```bash
+    # .gitignore
+    config/
+    ```
+
+
+
+2. **テンプレートファイルの準備: `config/config_template.yml`**
+
+    実際の認証情報の構造を示す，安全で機密情報を含まないサンプルの設定ファイルを作成します
+
+    ```yaml
+    # config/config_template.yml
+    api_config:
+      api_url: "https://hogehoge"
+      api_key_id: "hogehoge"
+      api_secret: "hogehoge"
+    ```
+
+    `.gitignore` で無視されているフォルダ内にあるため，`-f`（強制）オプションを付けて手動でコミットします
+
+    ```bash
+    git add -f config/config_template.yml
+    git commit -m "ENV: Add config template for API config"
+    ```
+
+3. **`config.yml`の作成方法手順書作成**
+
+    実際の設定ファイルの作成方法を簡単に説明したメモ（例：READMEファイル内）を用意します．
+
+    ```bash
+    cp config/config_template.yml config/config.yml
+    ```
+
+    その後，`config.yml` を手動で編集し，各プレースホルダーの値を実際の秘密情報に置き換えます．
+
+    ```yaml
+    api_config:
+      api_url: "https://your.api.endpoint"
+      api_key_id: "your_api_key_id"
+      api_secret: "your_secret_token"
+    ```
+
+4. **Create passwords.txt under config/ for use with BFG Repo-Cleaner**
+
+    もし秘密情報を誤ってコミットしてしまった場合に備え，Git履歴から削除するための秘密情報リストを準備します
+
+    ```txt
+    your_api_key_here==>REMOVED
+    secret_token_123==>REMOVED
+    ```
+
+    BFG Repo-Cleaner用`password.txt`のフォーマットは以下
+
+    ```txt
+    original_string==>replacement_string
+    ```
+
+
+[もし秘密情報を誤ってコミットしてしまったら？]{.mini-section}
+
+:::{style="padding-left:2em;"}
+
+Gitの履歴から機密情報を削除するためのBFGの使い方は以下の通りです：
+
+
+```bash
+bfg --replace-text config/passwords.txt
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push -f
+```
+
+:::{.no-border-top-table }
+
+| コマンド                     | 説明                                        |
+| ------------------------ | ----------------------------------------- |
+| `bfg --replace-text ...` | リポジトリの履歴内の秘密情報を置き換えます                     |
+| `git reflog expire`      | 内部のバックアップ参照を削除します                         |
+| `git gc`                 | 不要なコミットをガベージコレクト（削除）します                   |
+| `git push -f`            | クリーンな履歴を強制的にリモートにプッシュします（⚠️ チームと調整してください） |
+
+
+: {tbl-colwidths="[25,75]"}
+
+:::
+
+:::

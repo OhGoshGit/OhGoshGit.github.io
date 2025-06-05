@@ -1,1 +1,22 @@
 /* css styles */
+.mini-section {
+  font-weight: bold;
+  font-size: 1.1em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.mini-section::before {
+  content: "▶";
+  margin-right: 0.4em;
+}
+
+/* --------------------------*/
+/*          Table            */
+/* --------------------------*/
+/* Remove top border from header cells */
+.no-border-top-table table,
+.no-border-top-table table th,
+.no-border-top-table table td {
+  border-top: none;
+}

@@ -1,0 +1,137 @@
+---
+title: "OGG... How do I manage config and secret information in Git?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-06-05"
+date-modified: last-modified
+categories: [gitignore, bfg]
+---
+
+## Objective
+
+Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects.
+
+## Goal
+
+Ensure sensitive information is excluded from version control while still allowing safe configuration in development and production environments.
+
+
+## Guidline
+
+1. **Use `.gitignore` to exclude sensitive files**
+
+    Add entries like `config.yml`, `.env`, or `secrets.json` to `.gitignore`.
+
+2. **Store templates of sensitive files**
+
+    Include `config.sample.yml` or `.env.example` in the repo to show required structure. It would be nice to add a document about how to use the template.
+
+3. **Use environment variables in your code**
+
+    Instead of hardcoding sensitive values like API keys in your source code, load them from environment variables at runtime.
+
+    ```python
+    import yaml
+
+    with open("../config/config.yml", "r") as file:
+        config = yaml.safe_load(file)
+    ```
+
+
+3. **Audit and remove accidental commits:**
+
+    If you accidentally committed a secret (like an API key), even after deleting the file or rotating the key, it might still exist in Git history and be accessible to others. You need to remove recrets from history Use a tool like `BFG Repo-Cleaner`.
+
+
+## Example in my project
+
+[manageing secrets in development]{.mini-section}
+
+1. **Add `config/` to `.gitignore`**
+
+    ```
+    # .gitignore
+    config/
+    ```
+
+
+
+2. **Add a template file: `config/config_template.yml`**
+
+    Create a safe, non-sensitive example config file that shows the expected structure of real credentials:
+
+    ```yaml
+    # config/config_template.yml
+    api_config:
+      api_url: "https://hogehoge"
+      api_key_id: "hogehoge"
+      api_secret: "hogehoge"
+    ```
+
+    Then commit it manually with `-f` (force), since it lives inside an ignored folder:
+
+    ```bash
+    git add -f config/config_template.yml
+    git commit -m "ENV: Add config template for API config"
+    ```
+
+3. **Document how to create a real config.yml from the template**
+
+    Provide a short note (e.g. in your README) explaining how to set up the actual config file:
+
+    ```bash
+    cp config/config_template.yml config/config.yml
+    ```
+
+    Then edit `config.yml` **manually** and replace each placeholder value with your actual secrets:
+
+    ```yaml
+    api_config:
+      api_url: "https://your.api.endpoint"
+      api_key_id: "your_api_key_id"
+      api_secret: "your_secret_token"
+    ```
+
+4. **Create passwords.txt under config/ for use with BFG Repo-Cleaner**
+
+    If you accidentally commit secrets, prepare a list of them to clean from your Git history.
+
+    ```txt
+    your_api_key_here==>REMOVED
+    secret_token_123==>REMOVED
+    ```
+
+    Each line follows the format:
+
+    ```txt
+    original_string==>replacement_string
+    ```
+
+
+[If you accidentally commit secrets]{.mini-section}
+
+:::{style="padding-left:2em;"}
+Here’s how to use BFG to remove sensitive values from Git history:
+
+```bash
+bfg --replace-text config/passwords.txt
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push -f
+```
+
+:::{.no-border-top-table }
+
+|command|explanation|
+|----|----|
+|`bfg --replace-text ...` | replaces secrets in your repo history|
+|`git reflog expire` | drops internal backup references|
+|`git gc` | garbage collects dangling commits|
+|`git push -f` | force-pushes the cleaned history (⚠️ coordinate with team!)|
+
+: {tbl-colwidths="[25,75]"}
+
+:::
+
+:::
