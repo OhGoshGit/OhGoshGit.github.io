@@ -10,11 +10,11 @@
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Wed, 04 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 05 Jun 2025 00:00:00 GMT</lastBuildDate>
 <item>
   <title>あぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？</title>
   <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-04-how-to-manage-secrets/</link>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-05-how-to-manage-secrets/</link>
   <description><![CDATA[ 
 
 
@@ -263,8 +263,8 @@ font-style: inherit;">-f</span></span></code></pre></div>
  ]]></description>
   <category>gitignore</category>
   <category>bfg</category>
-  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-04-how-to-manage-secrets/</guid>
-  <pubDate>Wed, 04 Jun 2025 00:00:00 GMT</pubDate>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-05-how-to-manage-secrets/</guid>
+  <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>OGG… How do I check unstaged differences with the latest commit?</title>
