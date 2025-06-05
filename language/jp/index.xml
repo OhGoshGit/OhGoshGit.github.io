@@ -199,7 +199,7 @@ font-style: inherit;">"your_secret_token"</span></span></code></pre></div></li>
 background-color: null;
 font-style: inherit;">bfg</span> <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">--replace-text</span> config/passwords.txt</span>
+font-style: inherit;">--replace-text</span> .bfg/passwords.txt</span>
 <span id="cb9-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">git</span> reflog expire <span class="at" style="color: #657422;
