@@ -4,7 +4,6 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2025-06-05"
-date-modified: last-modified
 categories: [gitignore, bfg]
 ---
 
@@ -117,7 +116,7 @@ Gitの履歴から機密情報を削除するためのBFGの使い方は以下�
 
 
 ```bash
-bfg --replace-text config/passwords.txt
+bfg --replace-text .bfg/passwords.txt
 git reflog expire --expire=now --all
 git gc --prune=now --aggressive
 git push -f
@@ -138,3 +137,52 @@ git push -f
 :::
 
 :::
+
+
+## Appendix: ：BFG Repo-Cleaner のインストール方法
+
+2025年6月3日現在、最新バージョンは v1.15.0 です。
+
+1. **BFG JAR ファイルのダウンロード**
+
+    `wget` コマンドを使って、BFG バージョン 1.15.0 の JAR（Java ARchive）ファイルを Maven Central（公式のJavaパッケージリポジトリ）からダウンロードします。
+
+    ```bash
+    % cd <your-target-directory>
+    % wget https://repo1.maven.org/maven2/com/madgag/bfg/1.15.0/bfg-1.15.0.jar
+    ```
+
+    ダウンロードが完了すると、次のようにファイルが確認できます：
+
+    ```
+    % ls
+    bfg-1.15.0.jar
+    ```
+
+2. **（任意）ツール用ディレクトリに移動してエイリアスを作成する**
+
+    macOS や多くの Linux 環境で一般的な Zsh を使用している場合は、`.zshrc` にエイリアスを追加します：
+
+    ```bash
+    % echo "alias bfg='java -jar <your-target-directory>/bfg-1.15.0.jar'" >> ~/.zshrc
+    % source ~/.zshrc
+    ```
+
+    Bash を使用している場合は、代わりに `.bashrc` を編集してください：
+
+    ```bash
+    % echo "alias bfg='java -jar ~/.tool.d/bfg-1.15.0.jar'" >> ~/.bashrc
+    % source ~/.bashrc
+    ```
+
+3. **設定が正しく動作するか確認**
+
+    以下のコマンドを実行して、bfg エイリアスが正しく機能するかを確認します：
+
+    ```bash
+    % bfg --help
+    ```
+
+References
+----------
+- [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/)

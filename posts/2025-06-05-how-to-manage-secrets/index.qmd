@@ -115,7 +115,7 @@ Ensure sensitive information is excluded from version control while still allowi
 Here’s how to use BFG to remove sensitive values from Git history:
 
 ```bash
-bfg --replace-text config/passwords.txt
+bfg --replace-text .bfg/passwords.txt
 git reflog expire --expire=now --all
 git gc --prune=now --aggressive
 git push -f
@@ -135,3 +135,51 @@ git push -f
 :::
 
 :::
+
+
+## Appendix: How to install BFG Repo-Cleaner
+
+AS of 2025-06-03, v1.15.0 is the lastest.
+
+1. **Download the BFG JAR File**
+
+    Use `wget` to download the JAR (Java ARchive) file of BFG version 1.15.0 from Maven Central (an official Java package repository).
+
+    ```bash
+    % cd <your-target-directory>
+    % wget https://repo1.maven.org/maven2/com/madgag/bfg/1.15.0/bfg-1.15.0.jar
+    ```
+
+    After download, you’ll see this file:
+
+    ```bash
+    % ls
+    bfg-1.15.0.jar
+    ```
+2. **(Optional) Move the JAR to a Tool Directory and Create a Shell Alias**
+
+    If you're using Zsh (common on macOS and many Linux setups), add the alias to `.zshrc`:
+
+    ```bash
+    % echo "alias bfg='java -jar <your-target-directory>/bfg-1.15.0.jar'" >> ~/.zshrc
+    % source ~/.zshrc
+    ```
+
+    If you’re using Bash, modify `.bashrc` instead:
+
+    ```bash
+    % echo "alias bfg='java -jar ~/.tool.d/bfg-1.15.0.jar'" >> ~/.bashrc
+    % source ~/.bashrc
+    ```
+
+    Then, check if your setting works properly
+
+    ```bash
+    % bfg --help
+    ```
+
+
+
+References
+----------
+- [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/)
