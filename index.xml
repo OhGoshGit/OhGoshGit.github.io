@@ -195,7 +195,7 @@ font-style: inherit;">"your_secret_token"</span></span></code></pre></div></li>
 background-color: null;
 font-style: inherit;">bfg</span> <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">--replace-text</span> config/passwords.txt</span>
+font-style: inherit;">--replace-text</span> .bfg/passwords.txt</span>
 <span id="cb9-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">git</span> reflog expire <span class="at" style="color: #657422;
@@ -252,6 +252,66 @@ font-style: inherit;">-f</span></span></code></pre></div>
 </table>
 </div>
 </div>
+</section>
+<section id="appendix-how-to-install-bfg-repo-cleaner" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-how-to-install-bfg-repo-cleaner">Appendix: How to install BFG Repo-Cleaner</h2>
+<p>AS of 2025-06-03, v1.15.0 is the lastest.</p>
+<ol type="1">
+<li><p><strong>Download the BFG JAR File</strong></p>
+<p>Use <code>wget</code> to download the JAR (Java ARchive) file of BFG version 1.15.0 from Maven Central (an official Java package repository).</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> cd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>your-target-directory<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb10-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> wget https://repo1.maven.org/maven2/com/madgag/bfg/1.15.0/bfg-1.15.0.jar</span></code></pre></div>
+<p>After download, you’ll see this file:</p>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> ls</span>
+<span id="cb11-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">bfg-1.15.0.jar</span></span></code></pre></div></li>
+<li><p><strong>(Optional) Move the JAR to a Tool Directory and Create a Shell Alias</strong></p>
+<p>If you’re using Zsh (common on macOS and many Linux setups), add the alias to <code>.zshrc</code>:</p>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> echo <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"alias bfg='java -jar &lt;your-target-directory&gt;/bfg-1.15.0.jar'"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> ~/.zshrc</span>
+<span id="cb12-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> source ~/.zshrc</span></code></pre></div>
+<p>If you’re using Bash, modify <code>.bashrc</code> instead:</p>
+<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> echo <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"alias bfg='java -jar ~/.tool.d/bfg-1.15.0.jar'"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> ~/.bashrc</span>
+<span id="cb13-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> source ~/.bashrc</span></code></pre></div>
+<p>Then, check if your setting works properly</p>
+<div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> bfg <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--help</span></span></code></pre></div></li>
+</ol>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://rtyley.github.io/bfg-repo-cleaner/">BFG Repo-Cleaner</a></li>
+</ul>
 
 
 </section>

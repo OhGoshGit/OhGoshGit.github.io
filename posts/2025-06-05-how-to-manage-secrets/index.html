@@ -399,6 +399,8 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
   <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">Goal</a></li>
   <li><a href="#guidline" id="toc-guidline" class="nav-link" data-scroll-target="#guidline">Guidline</a></li>
   <li><a href="#example-in-my-project" id="toc-example-in-my-project" class="nav-link" data-scroll-target="#example-in-my-project">Example in my project</a></li>
+  <li><a href="#appendix-how-to-install-bfg-repo-cleaner" id="toc-appendix-how-to-install-bfg-repo-cleaner" class="nav-link" data-scroll-target="#appendix-how-to-install-bfg-repo-cleaner">Appendix: How to install BFG Repo-Cleaner</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -470,7 +472,7 @@ config/</code></pre></li>
 <p><span class="mini-section">If you accidentally commit secrets</span></p>
 <div style="padding-left:2em;">
 <p>Here’s how to use BFG to remove sensitive values from Git history:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bfg</span> <span class="at">--replace-text</span> config/passwords.txt</span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bfg</span> <span class="at">--replace-text</span> .bfg/passwords.txt</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> reflog expire <span class="at">--expire</span><span class="op">=</span>now <span class="at">--all</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> gc <span class="at">--prune</span><span class="op">=</span>now <span class="at">--aggressive</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-f</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -507,6 +509,34 @@ config/</code></pre></li>
 </table>
 </div>
 </div>
+</section>
+<section id="appendix-how-to-install-bfg-repo-cleaner" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-how-to-install-bfg-repo-cleaner">Appendix: How to install BFG Repo-Cleaner</h2>
+<p>AS of 2025-06-03, v1.15.0 is the lastest.</p>
+<ol type="1">
+<li><p><strong>Download the BFG JAR File</strong></p>
+<p>Use <code>wget</code> to download the JAR (Java ARchive) file of BFG version 1.15.0 from Maven Central (an official Java package repository).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> cd <span class="op">&lt;</span>your-target-directory<span class="op">&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> wget https://repo1.maven.org/maven2/com/madgag/bfg/1.15.0/bfg-1.15.0.jar</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After download, you’ll see this file:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> ls</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">bfg-1.15.0.jar</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>(Optional) Move the JAR to a Tool Directory and Create a Shell Alias</strong></p>
+<p>If you’re using Zsh (common on macOS and many Linux setups), add the alias to <code>.zshrc</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> echo <span class="st">"alias bfg='java -jar &lt;your-target-directory&gt;/bfg-1.15.0.jar'"</span> <span class="op">&gt;&gt;</span> ~/.zshrc</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> source ~/.zshrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you’re using Bash, modify <code>.bashrc</code> instead:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> echo <span class="st">"alias bfg='java -jar ~/.tool.d/bfg-1.15.0.jar'"</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> source ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then, check if your setting works properly</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> bfg <span class="at">--help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://rtyley.github.io/bfg-repo-cleaner/">BFG Repo-Cleaner</a></li>
+</ul>
 
 
 </section>
