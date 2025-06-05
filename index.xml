@@ -10,7 +10,258 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Fri, 23 May 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 04 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I manage config and secret information in Git?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-06-04-how-to-manage-secrets/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">Objective</h2>
+<p>Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects.</p>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">Goal</h2>
+<p>Ensure sensitive information is excluded from version control while still allowing safe configuration in development and production environments.</p>
+</section>
+<section id="guidline" class="level2">
+<h2 class="anchored" data-anchor-id="guidline">Guidline</h2>
+<ol type="1">
+<li><p><strong>Use <code>.gitignore</code> to exclude sensitive files</strong></p>
+<p>Add entries like <code>config.yml</code>, <code>.env</code>, or <code>secrets.json</code> to <code>.gitignore</code>.</p></li>
+<li><p><strong>Store templates of sensitive files</strong></p>
+<p>Include <code>config.sample.yml</code> or <code>.env.example</code> in the repo to show required structure. It would be nice to add a document about how to use the template.</p></li>
+<li><p><strong>Use environment variables in your code</strong></p>
+<p>Instead of hardcoding sensitive values like API keys in your source code, load them from environment variables at runtime.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> yaml</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"../config/config.yml"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"r"</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>:</span>
+<span id="cb1-4">    config <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> yaml.safe_load(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>)</span></code></pre></div></li>
+<li><p><strong>Audit and remove accidental commits:</strong></p>
+<p>If you accidentally committed a secret (like an API key), even after deleting the file or rotating the key, it might still exist in Git history and be accessible to others. You need to remove recrets from history Use a tool like <code>BFG Repo-Cleaner</code>.</p></li>
+</ol>
+</section>
+<section id="example-in-my-project" class="level2">
+<h2 class="anchored" data-anchor-id="example-in-my-project">Example in my project</h2>
+<p><span class="mini-section">manageing secrets in development</span></p>
+<ol type="1">
+<li><p><strong>Add <code>config/</code> to <code>.gitignore</code></strong></p>
+<pre><code># .gitignore
+config/</code></pre></li>
+<li><p><strong>Add a template file: <code>config/config_template.yml</code></strong></p>
+<p>Create a safe, non-sensitive example config file that shows the expected structure of real credentials:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># config/config_template.yml</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_config</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb3-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_url</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://hogehoge"</span></span>
+<span id="cb3-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_key_id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hogehoge"</span></span>
+<span id="cb3-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_secret</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hogehoge"</span></span></code></pre></div>
+<p>Then commit it manually with <code>-f</code> (force), since it lives inside an ignored folder:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f</span> config/config_template.yml</span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ENV: Add config template for API config"</span></span></code></pre></div></li>
+<li><p><strong>Document how to create a real config.yml from the template</strong></p>
+<p>Provide a short note (e.g.&nbsp;in your README) explaining how to set up the actual config file:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cp</span> config/config_template.yml config/config.yml</span></code></pre></div>
+<p>Then edit <code>config.yml</code> <strong>manually</strong> and replace each placeholder value with your actual secrets:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_config</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb6-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_url</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://your.api.endpoint"</span></span>
+<span id="cb6-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_key_id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"your_api_key_id"</span></span>
+<span id="cb6-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">api_secret</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"your_secret_token"</span></span></code></pre></div></li>
+<li><p><strong>Create passwords.txt under config/ for use with BFG Repo-Cleaner</strong></p>
+<p>If you accidentally commit secrets, prepare a list of them to clean from your Git history.</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb7-1">your_api_key_here==&gt;REMOVED</span>
+<span id="cb7-2">secret_token_123==&gt;REMOVED</span></code></pre></div>
+<p>Each line follows the format:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb8-1">original_string==&gt;replacement_string</span></code></pre></div></li>
+</ol>
+<p><span class="mini-section">If you accidentally commit secrets</span></p>
+<div style="padding-left:2em;">
+<p>Here’s how to use BFG to remove sensitive values from Git history:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">bfg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--replace-text</span> config/passwords.txt</span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> reflog expire <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--expire</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>now <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--all</span></span>
+<span id="cb9-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> gc <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--prune</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>now <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--aggressive</span></span>
+<span id="cb9-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f</span></span></code></pre></div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>command</th>
+<th>explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bfg --replace-text ...</code></td>
+<td>replaces secrets in your repo history</td>
+</tr>
+<tr class="even">
+<td><code>git reflog expire</code></td>
+<td>drops internal backup references</td>
+</tr>
+<tr class="odd">
+<td><code>git gc</code></td>
+<td>garbage collects dangling commits</td>
+</tr>
+<tr class="even">
+<td><code>git push -f</code></td>
+<td>force-pushes the cleaned history (⚠️ coordinate with team!)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>gitignore</category>
+  <category>bfg</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-06-04-how-to-manage-secrets/</guid>
+  <pubDate>Wed, 04 Jun 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I switch the connection method for git push from HTTPS to SSH??</title>
   <dc:creator>Ryo Nakagami</dc:creator>

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2024-11-01">
+<meta name="dcterms.date" content="2025-06-04">
 
-<title>OGG… How can I push my repository to githab and gitlab remote at once? – OhGoshGit!?!</title>
+<title>OGG… How do I manage config and secret information in Git? – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -352,9 +352,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… How can I push my repository to githab and gitlab remote at once?</h1>
+      <h1 class="title">OGG… How do I manage config and secret information in Git?</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git push</div>
+                <div class="quarto-category">gitignore</div>
+                <div class="quarto-category">bfg</div>
               </div>
                   </div>
   </div>
@@ -372,7 +373,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-11-01</p>
+        <p class="date">2025-06-04</p>
       </div>
     </div>
     
@@ -394,11 +395,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a>
-  <ul class="collapse">
-  <li><a href="#automate-pushing-to-both-remotes-by-shellscript" id="toc-automate-pushing-to-both-remotes-by-shellscript" class="nav-link" data-scroll-target="#automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</a></li>
-  </ul></li>
+  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">Objective</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">Goal</a></li>
+  <li><a href="#guidline" id="toc-guidline" class="nav-link" data-scroll-target="#guidline">Guidline</a></li>
+  <li><a href="#example-in-my-project" id="toc-example-in-my-project" class="nav-link" data-scroll-target="#example-in-my-project">Example in my project</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -410,110 +410,105 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
-<p><strong> ▶&nbsp; Example</strong></p>
-<ul>
-<li>you might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application.</li>
-</ul>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">Objective</h2>
+<p>Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects.</p>
 </section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<p>In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.</p>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<p>Here’s how you can set this up:</p>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">Goal</h2>
+<p>Ensure sensitive information is excluded from version control while still allowing safe configuration in development and production environments.</p>
+</section>
+<section id="guidline" class="level2">
+<h2 class="anchored" data-anchor-id="guidline">Guidline</h2>
 <ol type="1">
-<li>Add Multiple Remotes by using <code>git remote add</code> command</li>
-<li>Check Your Remotes with <code>git remote -v</code></li>
-<li>Pushing to Multiple Remotes</li>
+<li><p><strong>Use <code>.gitignore</code> to exclude sensitive files</strong></p>
+<p>Add entries like <code>config.yml</code>, <code>.env</code>, or <code>secrets.json</code> to <code>.gitignore</code>.</p></li>
+<li><p><strong>Store templates of sensitive files</strong></p>
+<p>Include <code>config.sample.yml</code> or <code>.env.example</code> in the repo to show required structure. It would be nice to add a document about how to use the template.</p></li>
+<li><p><strong>Use environment variables in your code</strong></p>
+<p>Instead of hardcoding sensitive values like API keys in your source code, load them from environment variables at runtime.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yaml</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../config/config.yml"</span>, <span class="st">"r"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> yaml.safe_load(<span class="bu">file</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Audit and remove accidental commits:</strong></p>
+<p>If you accidentally committed a secret (like an API key), even after deleting the file or rotating the key, it might still exist in Git history and be accessible to others. You need to remove recrets from history Use a tool like <code>BFG Repo-Cleaner</code>.</p></li>
 </ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<p>Suppose you’re working on a local Git project named <code>hoshinokirby</code>. You want to push this project to both GitHub and GitLab.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Add multiple Remotes</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add github https://github.com/user-name/hoshinokirby.git</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add gitlab https://gitlab.com/user-name/hoshinokirby.git</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Check Your Remotes</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>output should be like below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">github</span>    https://github.com/user-name/hoshinokirby.git <span class="op">(fe</span>tch)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>github    https://github.com/user-name/hoshinokirby.git (push)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>gitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>gitlab    https://gitlab.com/user-name/hoshinokirby.git (push)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Then,</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Push to Both Remotes:</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push github feature/ml-prediction-enhancement</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push gitlab feature/ml-prediction-enhancement</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-🍵 Green Tea Break: <strong>Delete a Remote</strong>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>f you have added the wrong remote in your Git repository and want to delete it, you can do so using the <code>git remote remove</code> command. Removing a remote only affects your local configuration and does not impact the remote repository itself.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the remote</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote remove <span class="op">&lt;</span>remote-name<span class="op">&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># shorthand version</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote rm <span class="op">&lt;</span>remote-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Before running the above commands, make sure to double-check the remote name to avoid accidental deletions.</p>
-</div>
-</div>
-<section id="automate-pushing-to-both-remotes-by-shellscript" class="level3">
-<h3 class="anchored" data-anchor-id="automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</h3>
-<p>The following script is designed to push a specified branch to all configured Git remotes.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------------------------</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Description</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   The script iterates over each remote and pushes the specified branch to it </span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   using the git push command. The script retrieves the list of configured Git remotes </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   using the git remote command and stores it in the variable REMOTES.</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   If no remotes are found, the script prints an error message and exits with a status code of 1.</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------------------------</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if branch name is provided</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$1</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Usage: </span><span class="va">$0</span><span class="st"> &lt;branch-name&gt;"</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the branch name</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="va">BRANCH_NAME</span><span class="op">=</span><span class="va">$1</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the list of remotes</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="va">REMOTES</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> remote<span class="va">)</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if there are any remotes configured</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$REMOTES</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"No remotes found. Please configure a remote repository."</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Push to each remote</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$REMOTES</span><span class="st">"</span> <span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">REMOTE</span><span class="kw">;</span> <span class="cf">do</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">git</span> push <span class="st">"</span><span class="va">$REMOTE</span><span class="st">"</span> <span class="st">"</span><span class="va">$BRANCH_NAME</span><span class="st">"</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span> 0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>To use this script, follow these steps:</p>
+</section>
+<section id="example-in-my-project" class="level2">
+<h2 class="anchored" data-anchor-id="example-in-my-project">Example in my project</h2>
+<p><span class="mini-section">manageing secrets in development</span></p>
 <ol type="1">
-<li>Save the script to a file, e.g., <code>push_to_remotes.sh</code></li>
-<li>Make the script executable:</li>
+<li><p><strong>Add <code>config/</code> to <code>.gitignore</code></strong></p>
+<pre><code># .gitignore
+config/</code></pre></li>
+<li><p><strong>Add a template file: <code>config/config_template.yml</code></strong></p>
+<p>Create a safe, non-sensitive example config file that shows the expected structure of real credentials:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># config/config_template.yml</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">api_config</span><span class="kw">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_url</span><span class="kw">:</span><span class="at"> </span><span class="st">"https://hogehoge"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_key_id</span><span class="kw">:</span><span class="at"> </span><span class="st">"hogehoge"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_secret</span><span class="kw">:</span><span class="at"> </span><span class="st">"hogehoge"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then commit it manually with <code>-f</code> (force), since it lives inside an ignored folder:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-f</span> config/config_template.yml</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"ENV: Add config template for API config"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Document how to create a real config.yml from the template</strong></p>
+<p>Provide a short note (e.g.&nbsp;in your README) explaining how to set up the actual config file:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> config/config_template.yml config/config.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then edit <code>config.yml</code> <strong>manually</strong> and replace each placeholder value with your actual secrets:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">api_config</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_url</span><span class="kw">:</span><span class="at"> </span><span class="st">"https://your.api.endpoint"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_key_id</span><span class="kw">:</span><span class="at"> </span><span class="st">"your_api_key_id"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_secret</span><span class="kw">:</span><span class="at"> </span><span class="st">"your_secret_token"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Create passwords.txt under config/ for use with BFG Repo-Cleaner</strong></p>
+<p>If you accidentally commit secrets, prepare a list of them to clean from your Git history.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>your_api_key_here==&gt;REMOVED</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>secret_token_123==&gt;REMOVED</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Each line follows the format:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>original_string==&gt;replacement_string</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ol>
-<div class="sourceCode" id="cb6"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x push_to_remotes.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol start="3" type="1">
-<li>Run the script with the branch name as an argument:</li>
-</ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./push_to_remotes.sh</span> <span class="op">&lt;</span>branch-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="mini-section">If you accidentally commit secrets</span></p>
+<div style="padding-left:2em;">
+<p>Here’s how to use BFG to remove sensitive values from Git history:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bfg</span> <span class="at">--replace-text</span> config/passwords.txt</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> reflog expire <span class="at">--expire</span><span class="op">=</span>now <span class="at">--all</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> gc <span class="at">--prune</span><span class="op">=</span>now <span class="at">--aggressive</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-f</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>command</th>
+<th>explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bfg --replace-text ...</code></td>
+<td>replaces secrets in your repo history</td>
+</tr>
+<tr class="even">
+<td><code>git reflog expire</code></td>
+<td>drops internal backup references</td>
+</tr>
+<tr class="odd">
+<td><code>git gc</code></td>
+<td>garbage collects dangling commits</td>
+</tr>
+<tr class="even">
+<td><code>git push -f</code></td>
+<td>force-pushes the cleaned history (⚠️ coordinate with team!)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
