@@ -10,7 +10,212 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Thu, 05 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 06 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I consolidate multiple temporary commits into a single meaningful one?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-06-06-organize-commits-using-git-rebase/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
+<ul>
+<li>Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.</li>
+<li>This is especially useful before code review or merging into the main branch to ensure a clean and understandable history.</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Consolidate multiple recent commits into a single, well-described commit.</label></li>
+<li><label><input type="checkbox">Remove unnecessary intermediate commits (e.g., typo fixes, debug logs) by squashing them.</label></li>
+<li><label><input type="checkbox">Make commit history easier to understand for reviewers, increasing review efficiency and clarity.</label></li>
+</ul>
+</section>
+<section id="guideline" class="level2">
+<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Preferably, ensure the following conditions:</p>
+<ul>
+<li>Commits have not yet been pushed to the remote repository (e.g., GitHub).</li>
+<li>The work is done on a local branch.</li>
+</ul>
+<p>Otherwise, you will likely need to use a force push (<code>git push -f</code>) after rebasing, which can overwrite history on the remote. Please proceed with caution because <span class="regmonkey_bold">rewriting commit history on pushed commits can disrupt collaboration</span>.</p>
+</div>
+</div>
+<section id="steps-for-consolidating-commits" class="level3">
+<h3 class="anchored" data-anchor-id="steps-for-consolidating-commits">Steps for consolidating commits</h3>
+<ol type="1">
+<li><p><strong>Check recent commits</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span></span></code></pre></div></li>
+<li><p><strong>Start interactive rebase</strong></p>
+<p>To squash the last 3 commits, run:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-i</span> HEAD~3</span></code></pre></div></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Syntax
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The syntax is</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-i</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>base-commit<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<ul>
+<li>You can only specify a single base commit to rebase onto</li>
+<li>You cannot run a commad which is working as <code>git rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;</code></li>
+</ul>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p><strong>Edit the rebase instruction list</strong></p>
+<p>After running the <code>git rebase</code>, the output would be</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb4-1">pick abc123 fix typo</span>
+<span id="cb4-2">pick def456 add <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">new</span> test <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">case</span></span>
+<span id="cb4-3">pick ghi789 finalize logic</span></code></pre></div>
+<p>commit ids are sorted by top to bottom = older to newer. In the above example, the first line (<code>abc123</code>) is the oldest of the commits being rebased.</p>
+<p>If you want to squash the latest two commits into the oldest one, modify it to:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb5-1">pick abc123 fix typo</span>
+<span id="cb5-2">squash def456 add <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">new</span> test <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">case</span></span>
+<span id="cb5-3">squash ghi789 finalize logic</span></code></pre></div></li>
+<li><p><strong>Edit the commit message</strong></p>
+<p>A new editor screen will prompt you to combine the commit messages. Edit as needed, e.g.:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Finalize</span> logic with test case</span>
+<span id="cb6-2"></span>
+<span id="cb6-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> Fixed typo</span>
+<span id="cb6-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> Added test case</span>
+<span id="cb6-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> Finalized core logic</span></code></pre></div>
+<p>Then, save and exit. It would be recommended to verify the new commit history by</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span></span></code></pre></div></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tips
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If something goes wrong during the rebase, you can cancel it:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--abort</span></span></code></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="appendix-what-git-rebase-operations-are-possible" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-what-git-rebase-operations-are-possible">Appendix: What <code>git rebase</code> operations are possible?</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pick</code></td>
+<td>Use the commit as-is (no changes to message or content).</td>
+</tr>
+<tr class="even">
+<td><code>reword</code></td>
+<td>Keep the commit content, but edit the commit message.</td>
+</tr>
+<tr class="odd">
+<td><code>edit</code></td>
+<td>Pause and allow you to amend the commit (edit files, message, etc.).</td>
+</tr>
+<tr class="even">
+<td><code>squash</code></td>
+<td>Combine this commit with the <strong>previous one</strong>, and edit the message.</td>
+</tr>
+<tr class="odd">
+<td><code>fixup</code></td>
+<td>Like <code>squash</code>, but discard this commit’s message (use previous message).</td>
+</tr>
+<tr class="even">
+<td><code>drop</code></td>
+<td>Completely remove this commit from history.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>git rebase</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-06-06-organize-commits-using-git-rebase/</guid>
+  <pubDate>Fri, 06 Jun 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I manage config and secret information in Git?</title>
   <dc:creator>Ryo Nakagami</dc:creator>

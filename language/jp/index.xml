@@ -10,7 +10,212 @@
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Thu, 05 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 06 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
+<ul>
+<li>Gitのcommit履歴の可読性と保守性を向上させるため，複数の小さな中間commitを1つの意味のあるまとまりに統合する</li>
+<li>コードレビューやメインブランチへのマージの前に，履歴をクリーンで理解しやすいものにする</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">複数の最近のcommitを1つの，適切に説明されたcommitにまとめる</label></li>
+<li><label><input type="checkbox">不要な中間commit（タイプミスの修正，デバッグログなど）をsquashして削除する</label></li>
+<li><label><input type="checkbox">レビュアーにとってcommit履歴をより理解しやすくし，レビューの効率性と明確性を向上させる．</label></li>
+</ul>
+</section>
+<section id="guideline" class="level2">
+<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>以下の条件を満たしていることが望ましいです：</p>
+<ul>
+<li>commitがまだリモートリポジトリ（GitHubなど）にプッシュされていない．</li>
+<li>ローカルブランチで作業している．</li>
+</ul>
+<p>そうでない場合，<code>git rebase</code>後に強制プッシュ（<code>git push -f</code>）が必要になる可能性が高く，リモートの履歴が上書きされる可能性があります． <span class="regmonkey_bold">プッシュ済みのcommitの履歴を書き換えると，コラボレーションに支障をきたす可能性がある</span>ため，注意して進めてください．</p>
+</div>
+</div>
+<section id="commitを統合するための手順" class="level3">
+<h3 class="anchored" data-anchor-id="commitを統合するための手順">commitを統合するための手順</h3>
+<ol type="1">
+<li><p><strong>最近のcommitを確認</strong></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span></span></code></pre></div></li>
+<li><p><strong>対話型<code>git rebase</code>を開始</strong></p>
+<p>最後の3つのcommitをsquashするには：</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-i</span> HEAD~3</span></code></pre></div></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+構文
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>構文は以下の通りです：</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-i</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>base-commit<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<ul>
+<li><code>git rebase</code>先として指定できるベースcommitは1つだけです</li>
+<li><code>git rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;</code>のように動作するコマンドは実行できません</li>
+</ul>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p><strong><code>git rebase</code>指示リストを編集</strong></p>
+<p><code>git rebase</code>を実行すると，以下のような出力が表示されます：</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb4-1">pick abc123 fix typo</span>
+<span id="cb4-2">pick def456 add <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">new</span> test <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">case</span></span>
+<span id="cb4-3">pick ghi789 finalize logic</span></code></pre></div>
+<p>commitIDは上から下へ = 古いものから新しいものへとソートされています．上記の例では，最初の行（<code>abc123</code>）が<code>git rebase</code>対象のcommitの中で最も古いものです．</p>
+<p>最新の2つのcommitを最も古いものにsquashする場合は，以下のように修正します：</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb5-1">pick abc123 fix typo</span>
+<span id="cb5-2">squash def456 add <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">new</span> test <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">case</span></span>
+<span id="cb5-3">squash ghi789 finalize logic</span></code></pre></div></li>
+<li><p><strong>commitメッセージを編集</strong></p>
+<p>新しいエディタ画面でcommitメッセージの結合を求められます．必要に応じて編集してください：</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Finalize</span> logic with test case</span>
+<span id="cb6-2"></span>
+<span id="cb6-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> Fixed typo</span>
+<span id="cb6-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> Added test case</span>
+<span id="cb6-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> Finalized core logic</span></code></pre></div>
+<p>その後，保存して終了します．新しいcommit履歴を以下のコマンドで確認することをお勧めします：</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span></span></code></pre></div></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+ヒント
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>git rebase</code>中に何か問題が発生した場合は，キャンセルできます：</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--abort</span></span></code></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="appendix-git-rebaseで可能な操作は" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-git-rebaseで可能な操作は">Appendix: <code>git rebase</code>で可能な操作は？</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>コマンド</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pick</code></td>
+<td>commitをそのまま使用（メッセージや内容の変更なし）</td>
+</tr>
+<tr class="even">
+<td><code>reword</code></td>
+<td>commitの内容はそのままで，commitメッセージを編集</td>
+</tr>
+<tr class="odd">
+<td><code>edit</code></td>
+<td>一時停止してcommitの修正を可能にする（ファイル，メッセージなど）</td>
+</tr>
+<tr class="even">
+<td><code>squash</code></td>
+<td>このcommitを<strong>前のcommit</strong>と結合し，メッセージを編集</td>
+</tr>
+<tr class="odd">
+<td><code>fixup</code></td>
+<td><code>squash</code>と同様だが，このcommitのメッセージは破棄（前のメッセージを使用）</td>
+</tr>
+<tr class="even">
+<td><code>drop</code></td>
+<td>このcommitを履歴から完全に削除</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>git rebase</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/</guid>
+  <pubDate>Fri, 06 Jun 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>あぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？</title>
   <dc:creator>Ryo Nakagami</dc:creator>

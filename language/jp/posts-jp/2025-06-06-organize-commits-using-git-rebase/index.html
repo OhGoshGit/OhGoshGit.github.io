@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2024-07-13">
+<meta name="dcterms.date" content="2025-06-06">
 
-<title>OGG… I accidentally named the branch the wrong name… – OhGoshGit!?!</title>
+<title>あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？ – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,28 +60,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-b4d153c3d7d871294e5bd35380329e9e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../site_libs/bootstrap/bootstrap-dark-b4d153c3d7d871294e5bd35380329e9e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -130,7 +130,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -302,7 +302,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../../../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -317,17 +317,17 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
+    <a class="nav-link" href="../../../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../.././language/jp/"> 
+    <a class="nav-link" href="../../../.././language/jp/"> 
 <span class="menu-text">日本語</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../.././"> 
+    <a class="nav-link" href="../../../.././"> 
 <span class="menu-text">English</span></a>
   </li>  
   <li class="nav-item compact">
@@ -336,7 +336,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -352,9 +352,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… I accidentally named the branch the wrong name…</h1>
+      <h1 class="title">あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git branch</div>
+                <div class="quarto-category">git rebase</div>
               </div>
                   </div>
   </div>
@@ -372,16 +372,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-07-13</p>
+        <p class="date">2025-06-06</p>
       </div>
     </div>
     
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">2025-06-06</p>
-      </div>
-    </div>
       
     </div>
     
@@ -394,9 +388,13 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution-1-checkout-a-new-branch-and-delete-the-old" id="toc-solution-1-checkout-a-new-branch-and-delete-the-old" class="nav-link" data-scroll-target="#solution-1-checkout-a-new-branch-and-delete-the-old">Solution 1: checkout a new branch and delete the old</a></li>
-  <li><a href="#solution-2-rename-the-branch" id="toc-solution-2-rename-the-branch" class="nav-link" data-scroll-target="#solution-2-rename-the-branch">Solution 2: rename the branch</a></li>
+  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">✅ Objective</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#guideline" id="toc-guideline" class="nav-link" data-scroll-target="#guideline">📘 Guideline</a>
+  <ul class="collapse">
+  <li><a href="#commitを統合するための手順" id="toc-commitを統合するための手順" class="nav-link" data-scroll-target="#commitを統合するための手順">commitを統合するための手順</a></li>
+  </ul></li>
+  <li><a href="#appendix-git-rebaseで可能な操作は" id="toc-appendix-git-rebaseで可能な操作は" class="nav-link" data-scroll-target="#appendix-git-rebaseで可能な操作は">Appendix: <code>git rebase</code>で可能な操作は？</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -408,40 +406,147 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you made a local development branch, <code>feature/inverse-matrix-calculation</code>. After some commits and pushes to remote, you realized that you had named the branch the wrong way.</p>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
 <ul>
-<li>the correct name: <code>feature/inverse-matrix-calculation</code></li>
-<li>the current name: <code>future-inverse-matrix-calculation</code></li>
+<li>Gitのcommit履歴の可読性と保守性を向上させるため，複数の小さな中間commitを1つの意味のあるまとまりに統合する</li>
+<li>コードレビューやメインブランチへのマージの前に，履歴をクリーンで理解しやすいものにする</li>
 </ul>
 </section>
-<section id="solution-1-checkout-a-new-branch-and-delete-the-old" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1-checkout-a-new-branch-and-delete-the-old">Solution 1: checkout a new branch and delete the old</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<ol type="1">
-<li>Create a new branch based on the current HEAD state at the <code>future-inverse-matrix-calculation</code>.</li>
-<li>Switch to the <code>future-inverse-matrix-calculation</code> branch</li>
-<li>Delete the old one</li>
-<li>Set the correct upstream branch</li>
-</ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1 &amp; 2</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git switch <span class="at">-c</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch <span class="at">-D</span> future-inverse-matrix-calculation</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 4</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch feature/inverse-matrix-calculation <span class="at">-u</span> <span class="op">&lt;</span>remote branch<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">複数の最近のcommitを1つの，適切に説明されたcommitにまとめる</label></li>
+<li><label><input type="checkbox">不要な中間commit（タイプミスの修正，デバッグログなど）をsquashして削除する</label></li>
+<li><label><input type="checkbox">レビュアーにとってcommit履歴をより理解しやすくし，レビューの効率性と明確性を向上させる．</label></li>
+</ul>
 </section>
-<section id="solution-2-rename-the-branch" class="level2">
-<h2 class="anchored" data-anchor-id="solution-2-rename-the-branch">Solution 2: rename the branch</h2>
-<p>With the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch <span class="at">-m</span> <span class="op">&lt;</span>old-name<span class="op">&gt;</span> <span class="op">&lt;</span>new-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## rename using -m/--move option</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch <span class="at">-m</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="guideline" class="level2">
+<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>以下の条件を満たしていることが望ましいです：</p>
+<ul>
+<li>commitがまだリモートリポジトリ（GitHubなど）にプッシュされていない．</li>
+<li>ローカルブランチで作業している．</li>
+</ul>
+<p>そうでない場合，<code>git rebase</code>後に強制プッシュ（<code>git push -f</code>）が必要になる可能性が高く，リモートの履歴が上書きされる可能性があります． <span class="regmonkey_bold">プッシュ済みのcommitの履歴を書き換えると，コラボレーションに支障をきたす可能性がある</span>ため，注意して進めてください．</p>
+</div>
+</div>
+<section id="commitを統合するための手順" class="level3">
+<h3 class="anchored" data-anchor-id="commitを統合するための手順">commitを統合するための手順</h3>
+<ol type="1">
+<li><p><strong>最近のcommitを確認</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>対話型<code>git rebase</code>を開始</strong></p>
+<p>最後の3つのcommitをsquashするには：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase <span class="at">-i</span> HEAD~3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+構文
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>構文は以下の通りです：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase <span class="at">-i</span> <span class="op">&lt;</span>base-commit<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>git rebase</code>先として指定できるベースcommitは1つだけです</li>
+<li><code>git rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;</code>のように動作するコマンドは実行できません</li>
+</ul>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p><strong><code>git rebase</code>指示リストを編集</strong></p>
+<p><code>git rebase</code>を実行すると，以下のような出力が表示されます：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pick abc123 fix typo</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pick def456 add <span class="kw">new</span> test <span class="kw">case</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pick ghi789 finalize logic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>commitIDは上から下へ = 古いものから新しいものへとソートされています．上記の例では，最初の行（<code>abc123</code>）が<code>git rebase</code>対象のcommitの中で最も古いものです．</p>
+<p>最新の2つのcommitを最も古いものにsquashする場合は，以下のように修正します：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pick abc123 fix typo</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>squash def456 add <span class="kw">new</span> test <span class="kw">case</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>squash ghi789 finalize logic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>commitメッセージを編集</strong></p>
+<p>新しいエディタ画面でcommitメッセージの結合を求められます．必要に応じて編集してください：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Finalize</span> logic with test case</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Fixed typo</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Added test case</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Finalized core logic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>その後，保存して終了します．新しいcommit履歴を以下のコマンドで確認することをお勧めします：</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+ヒント
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>git rebase</code>中に何か問題が発生した場合は，キャンセルできます：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase <span class="at">--abort</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="appendix-git-rebaseで可能な操作は" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-git-rebaseで可能な操作は">Appendix: <code>git rebase</code>で可能な操作は？</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>コマンド</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pick</code></td>
+<td>commitをそのまま使用（メッセージや内容の変更なし）</td>
+</tr>
+<tr class="even">
+<td><code>reword</code></td>
+<td>commitの内容はそのままで，commitメッセージを編集</td>
+</tr>
+<tr class="odd">
+<td><code>edit</code></td>
+<td>一時停止してcommitの修正を可能にする（ファイル，メッセージなど）</td>
+</tr>
+<tr class="even">
+<td><code>squash</code></td>
+<td>このcommitを<strong>前のcommit</strong>と結合し，メッセージを編集</td>
+</tr>
+<tr class="odd">
+<td><code>fixup</code></td>
+<td><code>squash</code>と同様だが，このcommitのメッセージは破棄（前のメッセージを使用）</td>
+</tr>
+<tr class="even">
+<td><code>drop</code></td>
+<td>このcommitを履歴から完全に削除</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 
 </section>
@@ -882,7 +987,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="../../LICENSE">
+    <a class="nav-link" href="../../../../LICENSE">
 <p>License</p>
 </a>
   </li>  
