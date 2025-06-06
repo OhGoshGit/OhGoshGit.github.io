@@ -1,0 +1,134 @@
+---
+title: "OGG... How do I consolidate multiple temporary commits into a single meaningful one?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-06-06"
+categories: [git rebase]
+---
+
+## ✅ Objective
+
+- Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.
+- This is especially useful before code review or merging into the main branch to ensure a clean and understandable history.
+
+## 🎯 Goal
+
+
+- [ ] Consolidate multiple recent commits into a single, well-described commit.
+- [ ] Remove unnecessary intermediate commits (e.g., typo fixes, debug logs) by squashing them.
+- [ ] Make commit history easier to understand for reviewers, increasing review efficiency and clarity.
+
+
+## 📘 Guideline
+
+::: {.callout-note}
+
+Preferably, ensure the following conditions:
+
+- Commits have not yet been pushed to the remote repository (e.g., GitHub).
+- The work is done on a local branch.
+
+Otherwise, you will likely need to use a force push (`git push -f`) after rebasing, which can overwrite history on the remote.
+Please proceed with caution because [rewriting commit history on pushed commits can disrupt collaboration]{.regmonkey_bold}.
+
+:::
+
+### Steps for consolidating commits 
+
+1. **Check recent commits**
+
+    ```bash
+    git log --oneline
+    ```
+
+2. **Start interactive rebase**
+
+    To squash the last 3 commits, run:
+
+    ```bash
+    git rebase -i HEAD~3
+    ```
+
+:::{.callout-note style="margin-left:2em"}
+### Syntax
+
+The syntax is
+
+```bash
+git rebase -i <base-commit>
+```
+
+- You can only specify a single base commit to rebase onto
+- You cannot run a commad which is working as `git rebase -i <commit-id1> to <commit-id2>`
+
+
+:::
+
+3. **Edit the rebase instruction list**
+
+    After running the `git rebase`, the output would be
+
+    ```csharp
+    pick abc123 fix typo
+    pick def456 add new test case
+    pick ghi789 finalize logic
+    ```
+
+    commit ids are sorted by top to bottom = older to newer. In the above example, the first line (`abc123`) is the oldest of the commits being rebased.
+
+    If you want to squash the latest two commits into the oldest one, modify it to:
+
+    ```csharp
+    pick abc123 fix typo
+    squash def456 add new test case
+    squash ghi789 finalize logic
+    ```
+
+4. **Edit the commit message**
+
+    A new editor screen will prompt you to combine the commit messages. Edit as needed, e.g.:
+
+    ```bash
+    Finalize logic with test case
+
+    - Fixed typo
+    - Added test case
+    - Finalized core logic
+    ```
+
+    Then, save and exit. It would be recommended to verify the new commit history by
+
+    ```bash
+    git log --oneline
+    ```
+
+
+:::{.callout-note style="margin-left:2em"}
+### Tips
+
+If something goes wrong during the rebase, you can cancel it:
+
+```bash
+git rebase --abort
+```
+:::
+
+
+
+## Appendix: What `git rebase` operations are possible?
+
+:::{.no-border-top-table}
+
+| Command  | Description                                                              |
+| -------- | ------------------------------------------------------------------------ |
+| `pick`   | Use the commit as-is (no changes to message or content).                 |
+| `reword` | Keep the commit content, but edit the commit message.                    |
+| `edit`   | Pause and allow you to amend the commit (edit files, message, etc.).     |
+| `squash` | Combine this commit with the **previous one**, and edit the message.     |
+| `fixup`  | Like `squash`, but discard this commit’s message (use previous message). |
+| `drop`   | Completely remove this commit from history.                              |
+
+: {tbl-colwidths="[25,75]"}
+
+:::

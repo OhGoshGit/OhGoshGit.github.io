@@ -11,6 +11,26 @@
   margin-right: 0.4em;
 }
 
+
+.regmonkey_bold {
+  color: #206f83;
+  font-weight: bold !important; /*Mckinsey green*/
+}
+/* --------------------------*/
+/*          Code             */
+/* --------------------------*/
+/* task list */
+.task-list {
+  list-style-type: none;
+  padding-left: 2em !important;
+}
+
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.4em 0.2em -1em;
+  vertical-align: middle;
+}
+
 /* --------------------------*/
 /*          Table            */
 /* --------------------------*/

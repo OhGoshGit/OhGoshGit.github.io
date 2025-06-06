@@ -56,6 +56,7 @@ format:
     code-overflow: wrap
     date-format: "iso"
     css: styles.css
+    fontsize: 21px
     mainfont: "Noto Sans JP"
     monofont: monospace
     toc: true

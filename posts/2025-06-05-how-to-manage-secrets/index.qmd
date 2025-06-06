@@ -4,7 +4,6 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2025-06-05"
-date-modified: last-modified
 categories: [gitignore, bfg]
 ---
 

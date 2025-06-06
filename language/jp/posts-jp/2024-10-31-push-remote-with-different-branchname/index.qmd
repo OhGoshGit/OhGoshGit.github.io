@@ -1,33 +1,31 @@
 ---
-title: "OGG... I just want to push a local git branch to a remote with a different name..."
+title: "あぁぁ... ローカルのGitブランチを異なる名前でリモートにプッシュしたい..."
 author: 
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2024-10-31"
-date-modified: last-modified
 categories: [git branch]
 ---
 
-## Problem
+## 問題
 
-Suppose you're working on a local Git branch named `feature/ml-prediction-enhancement`. 
-. When you attempt to push this branch to the remote repository, 
-you realize that it doesn’t follow the branch naming convention.
-The correct format should be `dev-2.2.x-0001/ml-prediction-enhancement`.
+ローカルのGitブランチ名が `feature/ml-prediction-enhancement` だとします．
+このブランチをリモートリポジトリにプッシュしようとした時，ブランチの命名規則に従っていないことに気付きました．
+正しい形式は `dev-2.2.x-0001/ml-prediction-enhancement` であるべきでした．
 
-## Solution
+## 解決策
 
-There are two ways to resolve this:
+この問題を解決するには2つの方法があります：
 
-1. Rename your local branch to follow the naming convention, then push it to the remote.
-2. Push your current branch to the remote using the correct branch name without renaming it locally.
+1. ローカルブランチ名を命名規則に従って変更してからリモートにプッシュする
+2. ローカルブランチ名は変更せずに，正しいブランチ名でリモートにプッシュする
 
-### Solution 1: rename your local branch name
+### 解決策1：ローカルブランチ名を変更する
 ---
 
-Renaming your local branch is explained on [this post](https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html).
+ローカルブランチの名前変更については[こちらの投稿](https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html)で説明しています．
 
-<strong > &#9654;&nbsp; Commands</strong>
+<strong > &#9654;&nbsp; コマンド</strong>
 
 ```zsh
 # Step 1: rename your local branch
@@ -37,20 +35,20 @@ git branch -m <old-name> <new-name>
 git push -u origin HEAD
 ```
 
-### Solution 2: Push a local git branch to a remote with a different name
+### 解決策2：ローカルGitブランチを異なる名前でリモートにプッシュ
 ---
 
-`git push origin local-branch-name:remote-branch-name` tells Git to push the local branch `local-branch-name`
-to the remote repository `origin` and create/update the branch named `remote-branch-name` there.
+`git push origin local-branch-name:remote-branch-name` は，ローカルブランチ `local-branch-name` を
+リモートリポジトリ `origin` に `remote-branch-name` という名前でプッシュ（作成/更新）するようGitに指示します．
 
-But be aware the command carry some risks. If `remote-branch-name` already exists on the remote repository, 
-this command will update it with the contents of your local branch. 
-If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.
+ただし，このコマンドにはリスクが伴うことに注意してください．もし `remote-branch-name` が既にリモートリポジトリに存在する場合，
+このコマンドはそのブランチをローカルブランチの内容で上書きします．
+他の人がそのリモートブランチを使用している場合，あなたのプッシュが彼らの変更を上書きし，潜在的な競合や作業の損失を引き起こす可能性があります．
 
-To mitigate the above risk, it's better to check the status of the remnote branch first with `git fetch` and `git branch -a`. 
-DO NOT USE `git push --force`.
+上記のリスクを軽減するため，`git fetch` と `git branch -a` でリモートブランチの状態を先に確認することをお勧めします．
+`git push --force` は使用しないでください．
 
-<strong > &#9654;&nbsp; Commands</strong>
+<strong > &#9654;&nbsp; コマンド</strong>
 
 ```zsh
 # Step 1: git fetch and check your remote
@@ -64,40 +62,40 @@ git push origin local-branch-name:remote-branch-name
 ```
 
 ::: {.nte- .callout-tip icon="false"}
-# 🍵 Green Tea Break: why use `git fetch` not `git pull`?
+# 🍵 Green Tea Break: なぜ `git pull` ではなく `git fetch` を使用するのか？
 
-<strong > &#9654;&nbsp; `git fetch` keeps your local work untouched</strong>
+<strong > &#9654;&nbsp; `git fetch` はローカルの作業を変更しません</strong>
 
-- `git fetch` only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.
-- `git pull` combines `git fetch` and `git merge`, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.
+- `git fetch` はリモートリポジトリからの更新をダウンロードするだけで，作業ディレクトリを変更したり，これらの変更を現在のブランチにマージしたりしません．
+- `git pull` は `git fetch` と `git merge` を組み合わせたもので，リモートから変更を取得し，すぐにそれらを現在のブランチにマージします．ブランチ間に差異がある場合，これは競合を引き起こす可能性があります．
 
-If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use `git fetch` because it helps avoid unexpected merges.
+名前の競合を避けるためにリモート情報を取得したいだけで，リモートの変更をローカルブランチに取り込む意図がない場合は，予期しないマージを避けるために `git fetch` を使用する方が良いでしょう．
 
 :::
 
 
-## Use-cases
+## ユースケース
 
-<strong > &#9654;&nbsp; Temporarily Sharing Work</strong>
+<strong > &#9654;&nbsp; 一時的な作業の共有</strong>
 
-If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like `temp/20241031-login-test`.
+レビューや助言を求めるために一時的に作業を共有したい場合，既存のリモートブランチを上書きしたくないかもしれません．その場合，`temp/20241031-login-test` のような一時的な名前でローカルブランチをプッシュすることをお勧めします．
 
-<strong > &#9654;&nbsp; Avoid Naming Conflicts</strong>
+<strong > &#9654;&nbsp; 名前の競合を避ける</strong>
 
-If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called `feature/login` on the remote, 
-you might push you local `feature/login` branch as `feature/login-update`.
+リモートに同じ名前のブランチが既に存在する場合，競合を避けるために異なる名前でローカルブランチをプッシュしたい場合があります．例えば，リモートに既に `feature/login` というブランチが存在する場合，
+ローカルの `feature/login` ブランチを `feature/login-update` としてプッシュすることができます．
 
-In this case, after pushing to the remote, make sure the upstream branch points to your intended branch.
-It’s a good idea to run 
+この場合，リモートへのプッシュ後，upstreamブランチが意図したブランチを指していることを確認してください．
+以下のコマンドを実行することをお勧めします：
 
 ```zsh
 git branch -vvv
 ```
 
-and if the result is not what you expect, you can run 
+そして，結果が期待通りでない場合は，以下のコマンドを実行して：
 
 ```zsh
 git branch --set-upstream-to=origin/new-feature
 ```
 
-to set your upstream branch to the correct one.
+upstreamブランチを正しいものに設定することができます．

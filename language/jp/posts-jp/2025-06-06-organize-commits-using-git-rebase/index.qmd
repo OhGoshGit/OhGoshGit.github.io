@@ -1,0 +1,133 @@
+---
+title: "あぁぁ... 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-06-06"
+categories: [git rebase]
+---
+
+## ✅ Objective
+
+- Gitのcommit履歴の可読性と保守性を向上させるため，複数の小さな中間commitを1つの意味のあるまとまりに統合する
+- コードレビューやメインブランチへのマージの前に，履歴をクリーンで理解しやすいものにする
+
+## 🎯 Goal
+
+
+- [ ] 複数の最近のcommitを1つの，適切に説明されたcommitにまとめる
+- [ ] 不要な中間commit（タイプミスの修正，デバッグログなど）をsquashして削除する
+- [ ] レビュアーにとってcommit履歴をより理解しやすくし，レビューの効率性と明確性を向上させる．
+
+
+## 📘 Guideline
+
+::: {.callout-note}
+
+以下の条件を満たしていることが望ましいです：
+
+- commitがまだリモートリポジトリ（GitHubなど）にプッシュされていない．
+- ローカルブランチで作業している．
+
+そうでない場合，`git rebase`後に強制プッシュ（`git push -f`）が必要になる可能性が高く，リモートの履歴が上書きされる可能性があります．
+[プッシュ済みのcommitの履歴を書き換えると，コラボレーションに支障をきたす可能性がある]{.regmonkey_bold}ため，注意して進めてください．
+
+:::
+
+### commitを統合するための手順
+
+1. **最近のcommitを確認**
+
+    ```bash
+    git log --oneline
+    ```
+
+2. **対話型`git rebase`を開始**
+
+    最後の3つのcommitをsquashするには：
+
+    ```bash
+    git rebase -i HEAD~3
+    ```
+
+:::{.callout-note style="margin-left:2em"}
+### 構文
+
+構文は以下の通りです：
+
+```bash
+git rebase -i <base-commit>
+```
+
+- `git rebase`先として指定できるベースcommitは1つだけです
+- `git rebase -i <commit-id1> to <commit-id2>`のように動作するコマンドは実行できません
+
+
+:::
+
+3. **`git rebase`指示リストを編集**
+
+    `git rebase`を実行すると，以下のような出力が表示されます：
+
+    ```csharp
+    pick abc123 fix typo
+    pick def456 add new test case
+    pick ghi789 finalize logic
+    ```
+
+    commitIDは上から下へ = 古いものから新しいものへとソートされています．上記の例では，最初の行（`abc123`）が`git rebase`対象のcommitの中で最も古いものです．
+
+    最新の2つのcommitを最も古いものにsquashする場合は，以下のように修正します：
+
+    ```csharp
+    pick abc123 fix typo
+    squash def456 add new test case
+    squash ghi789 finalize logic
+    ```
+
+4. **commitメッセージを編集**
+
+    新しいエディタ画面でcommitメッセージの結合を求められます．必要に応じて編集してください：
+
+    ```bash
+    Finalize logic with test case
+
+    - Fixed typo
+    - Added test case
+    - Finalized core logic
+    ```
+
+    その後，保存して終了します．新しいcommit履歴を以下のコマンドで確認することをお勧めします：
+
+    ```bash
+    git log --oneline
+    ```
+
+
+:::{.callout-note style="margin-left:2em"}
+### ヒント
+
+`git rebase`中に何か問題が発生した場合は，キャンセルできます：
+
+```bash
+git rebase --abort
+```
+:::
+
+
+## Appendix: `git rebase`で可能な操作は？
+
+:::{.no-border-top-table}
+
+| コマンド  | 説明                                                           |
+| -------- | ------------------------------------------------------------- |
+| `pick`   | commitをそのまま使用（メッセージや内容の変更なし）              |
+| `reword` | commitの内容はそのままで，commitメッセージを編集              |
+| `edit`   | 一時停止してcommitの修正を可能にする（ファイル，メッセージなど） |
+| `squash` | このcommitを**前のcommit**と結合し，メッセージを編集          |
+| `fixup`  | `squash`と同様だが，このcommitのメッセージは破棄（前のメッセージを使用）|
+| `drop`   | このcommitを履歴から完全に削除                                |
+
+: {tbl-colwidths="[25,75]"}
+
+:::
