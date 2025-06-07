@@ -9,7 +9,7 @@
 <meta name="author" content="Ryo Nakagami">
 <meta name="dcterms.date" content="2024-10-31">
 
-<title>OGG… I just want to push a local git branch to a remote with a different name… – OhGoshGit!?!</title>
+<title>あぁぁ… ローカルのGitブランチを異なる名前でリモートにプッシュしたい… – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -352,7 +352,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… I just want to push a local git branch to a remote with a different name…</h1>
+      <h1 class="title">あぁぁ… ローカルのGitブランチを異なる名前でリモートにプッシュしたい…</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">git branch</div>
               </div>
@@ -376,12 +376,6 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       </div>
     </div>
     
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">2025-06-06</p>
-      </div>
-    </div>
       
     </div>
     
@@ -394,11 +388,11 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#solution-1-rename-your-local-branch-name" id="toc-solution-1-rename-your-local-branch-name" class="nav-link" data-scroll-target="#solution-1-rename-your-local-branch-name">### Solution 1: rename your local branch name</a></li>
-  <li><a href="#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" id="toc-solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="nav-link" data-scroll-target="#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">### Solution 2: Push a local git branch to a remote with a different name</a></li>
-  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use-cases</a></li>
+  <li><a href="#問題" id="toc-問題" class="nav-link active" data-scroll-target="#問題">問題</a></li>
+  <li><a href="#解決策" id="toc-解決策" class="nav-link" data-scroll-target="#解決策">解決策</a></li>
+  <li><a href="#解決策1ローカルブランチ名を変更する" id="toc-解決策1ローカルブランチ名を変更する" class="nav-link" data-scroll-target="#解決策1ローカルブランチ名を変更する">### 解決策1：ローカルブランチ名を変更する</a></li>
+  <li><a href="#解決策2ローカルgitブランチを異なる名前でリモートにプッシュ" id="toc-解決策2ローカルgitブランチを異なる名前でリモートにプッシュ" class="nav-link" data-scroll-target="#解決策2ローカルgitブランチを異なる名前でリモートにプッシュ">### 解決策2：ローカルGitブランチを異なる名前でリモートにプッシュ</a></li>
+  <li><a href="#ユースケース" id="toc-ユースケース" class="nav-link" data-scroll-target="#ユースケース">ユースケース</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -410,34 +404,34 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
+<section id="問題" class="level2">
+<h2 class="anchored" data-anchor-id="問題">問題</h2>
+<p>ローカルのGitブランチ名が <code>feature/ml-prediction-enhancement</code> だとします． このブランチをリモートリポジトリにプッシュしようとした時，ブランチの命名規則に従っていないことに気付きました． 正しい形式は <code>dev-2.2.x-0001/ml-prediction-enhancement</code> であるべきでした．</p>
 </section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<p>There are two ways to resolve this:</p>
+<section id="解決策" class="level2">
+<h2 class="anchored" data-anchor-id="解決策">解決策</h2>
+<p>この問題を解決するには2つの方法があります：</p>
 <ol type="1">
-<li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
-<li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
+<li>ローカルブランチ名を命名規則に従って変更してからリモートにプッシュする</li>
+<li>ローカルブランチ名は変更せずに，正しいブランチ名でリモートにプッシュする</li>
 </ol>
 </section>
-<section id="solution-1-rename-your-local-branch-name" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">### Solution 1: rename your local branch name</h2>
-<p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
-<p><strong> ▶&nbsp; Commands</strong></p>
+<section id="解決策1ローカルブランチ名を変更する" class="level2">
+<h2 class="anchored" data-anchor-id="解決策1ローカルブランチ名を変更する">### 解決策1：ローカルブランチ名を変更する</h2>
+<p>ローカルブランチの名前変更については<a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">こちらの投稿</a>で説明しています．</p>
+<p><strong> ▶&nbsp; コマンド</strong></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: rename your local branch</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-m</span> <span class="op">&lt;</span>old-name<span class="op">&gt;</span> <span class="op">&lt;</span>new-name<span class="op">&gt;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: push to the remote</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin HEAD</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level2">
-<h2 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">### Solution 2: Push a local git branch to a remote with a different name</h2>
-<p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
-<p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
-<p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
-<p><strong> ▶&nbsp; Commands</strong></p>
+<section id="解決策2ローカルgitブランチを異なる名前でリモートにプッシュ" class="level2">
+<h2 class="anchored" data-anchor-id="解決策2ローカルgitブランチを異なる名前でリモートにプッシュ">### 解決策2：ローカルGitブランチを異なる名前でリモートにプッシュ</h2>
+<p><code>git push origin local-branch-name:remote-branch-name</code> は，ローカルブランチ <code>local-branch-name</code> を リモートリポジトリ <code>origin</code> に <code>remote-branch-name</code> という名前でプッシュ（作成/更新）するようGitに指示します．</p>
+<p>ただし，このコマンドにはリスクが伴うことに注意してください．もし <code>remote-branch-name</code> が既にリモートリポジトリに存在する場合， このコマンドはそのブランチをローカルブランチの内容で上書きします． 他の人がそのリモートブランチを使用している場合，あなたのプッシュが彼らの変更を上書きし，潜在的な競合や作業の損失を引き起こす可能性があります．</p>
+<p>上記のリスクを軽減するため，<code>git fetch</code> と <code>git branch -a</code> でリモートブランチの状態を先に確認することをお勧めします． <code>git push --force</code> は使用しないでください．</p>
+<p><strong> ▶&nbsp; コマンド</strong></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: git fetch and check your remote</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -452,30 +446,30 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-🍵 Green Tea Break: why use <code>git fetch</code> not <code>git pull</code>?
+🍵 Green Tea Break: なぜ <code>git pull</code> ではなく <code>git fetch</code> を使用するのか？
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong> ▶&nbsp; <code>git fetch</code> keeps your local work untouched</strong></p>
+<p><strong> ▶&nbsp; <code>git fetch</code> はローカルの作業を変更しません</strong></p>
 <ul>
-<li><code>git fetch</code> only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.</li>
-<li><code>git pull</code> combines <code>git fetch</code> and <code>git merge</code>, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.</li>
+<li><code>git fetch</code> はリモートリポジトリからの更新をダウンロードするだけで，作業ディレクトリを変更したり，これらの変更を現在のブランチにマージしたりしません．</li>
+<li><code>git pull</code> は <code>git fetch</code> と <code>git merge</code> を組み合わせたもので，リモートから変更を取得し，すぐにそれらを現在のブランチにマージします．ブランチ間に差異がある場合，これは競合を引き起こす可能性があります．</li>
 </ul>
-<p>If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use <code>git fetch</code> because it helps avoid unexpected merges.</p>
+<p>名前の競合を避けるためにリモート情報を取得したいだけで，リモートの変更をローカルブランチに取り込む意図がない場合は，予期しないマージを避けるために <code>git fetch</code> を使用する方が良いでしょう．</p>
 </div>
 </div>
 </section>
-<section id="use-cases" class="level2">
-<h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
-<p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
-<p>If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like <code>temp/20241031-login-test</code>.</p>
-<p><strong> ▶&nbsp; Avoid Naming Conflicts</strong></p>
-<p>If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called <code>feature/login</code> on the remote, you might push you local <code>feature/login</code> branch as <code>feature/login-update</code>.</p>
-<p>In this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run</p>
+<section id="ユースケース" class="level2">
+<h2 class="anchored" data-anchor-id="ユースケース">ユースケース</h2>
+<p><strong> ▶&nbsp; 一時的な作業の共有</strong></p>
+<p>レビューや助言を求めるために一時的に作業を共有したい場合，既存のリモートブランチを上書きしたくないかもしれません．その場合，<code>temp/20241031-login-test</code> のような一時的な名前でローカルブランチをプッシュすることをお勧めします．</p>
+<p><strong> ▶&nbsp; 名前の競合を避ける</strong></p>
+<p>リモートに同じ名前のブランチが既に存在する場合，競合を避けるために異なる名前でローカルブランチをプッシュしたい場合があります．例えば，リモートに既に <code>feature/login</code> というブランチが存在する場合， ローカルの <code>feature/login</code> ブランチを <code>feature/login-update</code> としてプッシュすることができます．</p>
+<p>この場合，リモートへのプッシュ後，upstreamブランチが意図したブランチを指していることを確認してください． 以下のコマンドを実行することをお勧めします：</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-vvv</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and if the result is not what you expect, you can run</p>
+<p>そして，結果が期待通りでない場合は，以下のコマンドを実行して：</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">--set-upstream-to</span><span class="op">=</span>origin/new-feature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>to set your upstream branch to the correct one.</p>
+<p>upstreamブランチを正しいものに設定することができます．</p>
 
 
 </section>

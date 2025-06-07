@@ -9,7 +9,7 @@
 <meta name="author" content="Ryo Nakagami">
 <meta name="dcterms.date" content="2024-11-01">
 
-<title>OGG… How can I push my repository to githab and gitlab remote at once? – OhGoshGit!?!</title>
+<title>あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？ – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -352,7 +352,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… How can I push my repository to githab and gitlab remote at once?</h1>
+      <h1 class="title">あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">git push</div>
               </div>
@@ -376,12 +376,6 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       </div>
     </div>
     
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">2025-06-06</p>
-      </div>
-    </div>
       
     </div>
     
@@ -394,10 +388,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a>
+  <li><a href="#問題" id="toc-問題" class="nav-link active" data-scroll-target="#問題">問題</a></li>
+  <li><a href="#解決策" id="toc-解決策" class="nav-link" data-scroll-target="#解決策">解決策</a>
   <ul class="collapse">
-  <li><a href="#automate-pushing-to-both-remotes-by-shellscript" id="toc-automate-pushing-to-both-remotes-by-shellscript" class="nav-link" data-scroll-target="#automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</a></li>
+  <li><a href="#シェルスクリプトで両方のリモートへのプッシュを自動化" id="toc-シェルスクリプトで両方のリモートへのプッシュを自動化" class="nav-link" data-scroll-target="#シェルスクリプトで両方のリモートへのプッシュを自動化">シェルスクリプトで両方のリモートへのプッシュを自動化</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -410,38 +404,38 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
-<p><strong> ▶&nbsp; Example</strong></p>
+<section id="問題" class="level2">
+<h2 class="anchored" data-anchor-id="問題">問題</h2>
+<p>ローカルのGitブランチ <code>feature/ml-prediction-enhancement</code> で作業をしているとします． このプロジェクトをGitHubとGitLabの両方にプッシュしたいと考えています．</p>
+<p><strong> ▶&nbsp; 例</strong></p>
 <ul>
-<li>you might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application.</li>
+<li>バージョン管理とコラボレーションのためにGitHubにコードをプッシュしながら，アプリケーションのホスティングのためにHerokuサーバーにもデプロイしたい場合</li>
 </ul>
 </section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<p>In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.</p>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<p>Here’s how you can set this up:</p>
+<section id="解決策" class="level2">
+<h2 class="anchored" data-anchor-id="解決策">解決策</h2>
+<p>Gitでは，1つのプロジェクトに対して複数のリモートリポジトリを設定することができます．これにより，GitHubやGitLabなど，異なるホスティングサービスに同時にプロジェクトをプッシュすることが可能になります．</p>
+<p><strong> ▶&nbsp; 手順</strong></p>
+<p>セットアップ方法は以下の通りです：</p>
 <ol type="1">
-<li>Add Multiple Remotes by using <code>git remote add</code> command</li>
-<li>Check Your Remotes with <code>git remote -v</code></li>
-<li>Pushing to Multiple Remotes</li>
+<li><code>git remote add</code> コマンドを使用して複数のリモートを追加</li>
+<li><code>git remote -v</code> でリモートを確認</li>
+<li>複数のリモートにプッシュ</li>
 </ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<p>Suppose you’re working on a local Git project named <code>hoshinokirby</code>. You want to push this project to both GitHub and GitLab.</p>
+<p><strong> ▶&nbsp; コマンド</strong></p>
+<p><code>hoshinokirby</code> という名前のローカルGitプロジェクトで作業していて，このプロジェクトをGitHubとGitLabの両方にプッシュしたいとします．</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Add multiple Remotes</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add github https://github.com/user-name/hoshinokirby.git</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add gitlab https://gitlab.com/user-name/hoshinokirby.git</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Check Your Remotes</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>output should be like below:</p>
+<p>出力は以下のようになります：</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">github</span>    https://github.com/user-name/hoshinokirby.git <span class="op">(fe</span>tch)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>github    https://github.com/user-name/hoshinokirby.git (push)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>gitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>gitlab    https://gitlab.com/user-name/hoshinokirby.git (push)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Then,</p>
+<p>その後，</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Push to Both Remotes:</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push github feature/ml-prediction-enhancement</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push gitlab feature/ml-prediction-enhancement</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -451,22 +445,22 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-🍵 Green Tea Break: <strong>Delete a Remote</strong>
+🍵 Green Tea Break: <strong>リモートの削除</strong>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>f you have added the wrong remote in your Git repository and want to delete it, you can do so using the <code>git remote remove</code> command. Removing a remote only affects your local configuration and does not impact the remote repository itself.</p>
+<p>Gitリポジトリに誤ったリモートを追加してしまい，削除したい場合は，<code>git remote remove</code> コマンドを使用できます．リモートを削除すると，ローカルの設定のみが影響を受け，リモートリポジトリ自体には影響しません．</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the remote</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote remove <span class="op">&lt;</span>remote-name<span class="op">&gt;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># shorthand version</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote rm <span class="op">&lt;</span>remote-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Before running the above commands, make sure to double-check the remote name to avoid accidental deletions.</p>
+<p>上記のコマンドを実行する前に，誤って削除しないよう，リモート名を必ず確認してください．</p>
 </div>
 </div>
-<section id="automate-pushing-to-both-remotes-by-shellscript" class="level3">
-<h3 class="anchored" data-anchor-id="automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</h3>
-<p>The following script is designed to push a specified branch to all configured Git remotes.</p>
+<section id="シェルスクリプトで両方のリモートへのプッシュを自動化" class="level3">
+<h3 class="anchored" data-anchor-id="シェルスクリプトで両方のリモートへのプッシュを自動化">シェルスクリプトで両方のリモートへのプッシュを自動化</h3>
+<p>以下のスクリプトは，設定されているすべてのGitリモートに指定されたブランチをプッシュするように設計されています．</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------------------------</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Description</span></span>
@@ -501,16 +495,16 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
 <span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span> 0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>To use this script, follow these steps:</p>
+<p>このスクリプトを使用するには，以下の手順に従ってください：</p>
 <ol type="1">
-<li>Save the script to a file, e.g., <code>push_to_remotes.sh</code></li>
-<li>Make the script executable:</li>
+<li>スクリプトをファイルに保存します（例：<code>push_to_remotes.sh</code>）</li>
+<li>スクリプトを実行可能にします：</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x push_to_remotes.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol start="3" type="1">
-<li>Run the script with the branch name as an argument:</li>
+<li>ブランチ名を引数として指定してスクリプトを実行します：</li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./push_to_remotes.sh</span> <span class="op">&lt;</span>branch-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>```zsh ./push_to_remotes.sh <branch-name></branch-name></p>
 
 
 </section>
