@@ -607,7 +607,7 @@ font-style: inherit;">-T</span> git@github.com</span></code></pre></div></li>
 </section>
 <section id="solution" class="level2">
 <h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
+<p><span class="mini-section">Steps</span></p>
 <ol type="1">
 <li>Generate a new ssh key</li>
 <li>Add the SSH Key to the SSH Agent</li>
@@ -615,7 +615,7 @@ font-style: inherit;">-T</span> git@github.com</span></code></pre></div></li>
 <li>test ssh connection</li>
 <li>update the ssh config file</li>
 </ol>
-<p><strong> ▶&nbsp; Setup</strong></p>
+<p><span class="mini-section">Setup</span></p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>1. Generate a new ssh key</strong></pre>
@@ -706,7 +706,7 @@ background-color: null;
 font-style: inherit;">Hi</span> Kirby! You<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'ve successfully authenticated, but GitHub does not provide shell access.</span></span></code></pre></div>
-<p><strong> ▶&nbsp; Update the ssh config file</strong></p>
+<p><span class="mini-section">Update the ssh config file</span></p>
 <p>Running <code>ssh-add</code> munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your <code>~/.ssh/config</code> file:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -734,6 +734,53 @@ font-style: inherit;">IdentitiesOnly</span> yes</span>
 background-color: null;
 font-style: inherit;">TCPKeepAlive</span> yes</span></code></pre></div>
 </div>
+</section>
+<section id="appendix-trouble-connecting-via-ssh-with-a-private-key" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-trouble-connecting-via-ssh-with-a-private-key">Appendix: ❗ Trouble Connecting via SSH with a Private Key</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+summary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>SSH is strict about private key security to protect against unauthorized access.</li>
+<li>Always keep your private keys readable only by you.</li>
+<li>Use <code>chmod 600 your_key_file</code> to ensure proper permission settings.</li>
+</ul>
+</div>
+</div>
+<p><span class="mini-section">Trouble</span></p>
+<p>When trying to connect using a SSH command, You might encounter an error like:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">WARNING:</span> UNPROTECTED PRIVATE KEY FILE!</span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">It</span> is required that your private key files are NOT accessible by others.</span>
+<span id="cb8-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">This</span> private key will be ignored.</span></code></pre></div>
+<p>As a result, the SSH connection fails.</p>
+<p><span class="mini-section">Root Cause</span></p>
+<ul>
+<li>This error happens because the file permissions of the private key file are too loose.</li>
+<li>For example, if the file permissions are set to <code>666</code> (readable and writable by everyone), SSH refuses to use the key for security reasons.</li>
+</ul>
+<p><span class="mini-section">Solution</span></p>
+<p>You can fix the issue by restricting the file’s permissions so that <strong>only the owner can read/write the file</strong>:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> chmod 600 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>your-private-key-path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p>After changing the permissions, try running the same SSH command again.</p>
 
 
 </section>

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2024-07-13">
+<meta name="dcterms.date" content="2024-12-17">
 
-<title>OGG… I accidentally named the branch the wrong name… – OhGoshGit!?!</title>
+<title>あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？ – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,28 +60,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-b4d153c3d7d871294e5bd35380329e9e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../site_libs/bootstrap/bootstrap-dark-b4d153c3d7d871294e5bd35380329e9e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../../site_libs/bootstrap/bootstrap-d3084b95c0c47ea8778acdefe76d68c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -130,7 +130,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -302,7 +302,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../../../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -317,17 +317,17 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
+    <a class="nav-link" href="../../../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../.././language/jp/"> 
+    <a class="nav-link" href="../../../.././language/jp/"> 
 <span class="menu-text">日本語</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../.././"> 
+    <a class="nav-link" href="../../../.././"> 
 <span class="menu-text">English</span></a>
   </li>  
   <li class="nav-item compact">
@@ -336,7 +336,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -352,9 +352,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… I accidentally named the branch the wrong name…</h1>
+      <h1 class="title">あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git branch</div>
+                <div class="quarto-category">ssh</div>
               </div>
                   </div>
   </div>
@@ -372,16 +372,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-07-13</p>
+        <p class="date">2024-12-17</p>
       </div>
     </div>
     
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">2025-06-08</p>
-      </div>
-    </div>
       
     </div>
     
@@ -394,9 +388,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution-1-checkout-a-new-branch-and-delete-the-old" id="toc-solution-1-checkout-a-new-branch-and-delete-the-old" class="nav-link" data-scroll-target="#solution-1-checkout-a-new-branch-and-delete-the-old">Solution 1: checkout a new branch and delete the old</a></li>
-  <li><a href="#solution-2-rename-the-branch" id="toc-solution-2-rename-the-branch" class="nav-link" data-scroll-target="#solution-2-rename-the-branch">Solution 2: rename the branch</a></li>
+  <li><a href="#問題" id="toc-問題" class="nav-link active" data-scroll-target="#問題">問題</a></li>
+  <li><a href="#解決方法" id="toc-解決方法" class="nav-link" data-scroll-target="#解決方法">解決方法</a></li>
+  <li><a href="#appendix-プライベートキーでのssh接続のトラブル" id="toc-appendix-プライベートキーでのssh接続のトラブル" class="nav-link" data-scroll-target="#appendix-プライベートキーでのssh接続のトラブル">Appendix：❗ プライベートキーでのSSH接続のトラブル</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -408,40 +402,111 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you made a local development branch, <code>feature/inverse-matrix-calculation</code>. After some commits and pushes to remote, you realized that you had named the branch the wrong way.</p>
+<section id="問題" class="level2">
+<h2 class="anchored" data-anchor-id="問題">問題</h2>
 <ul>
-<li>the correct name: <code>feature/inverse-matrix-calculation</code></li>
-<li>the current name: <code>future-inverse-matrix-calculation</code></li>
+<li>macOSでGitHubリポジトリへのSSH接続を設定したい</li>
 </ul>
 </section>
-<section id="solution-1-checkout-a-new-branch-and-delete-the-old" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1-checkout-a-new-branch-and-delete-the-old">Solution 1: checkout a new branch and delete the old</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
+<section id="解決方法" class="level2">
+<h2 class="anchored" data-anchor-id="解決方法">解決方法</h2>
+<p><span class="mini-section">ステップ</span></p>
 <ol type="1">
-<li>Create a new branch based on the current HEAD state at the <code>future-inverse-matrix-calculation</code>.</li>
-<li>Switch to the <code>future-inverse-matrix-calculation</code> branch</li>
-<li>Delete the old one</li>
-<li>Set the correct upstream branch</li>
+<li>新しいSSHキーを生成する</li>
+<li>SSHキーをSSHエージェントに追加する</li>
+<li>GitHubに公開キーを登録する</li>
+<li>SSH接続をテストする</li>
+<li>SSHの設定ファイルを更新する</li>
 </ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1 &amp; 2</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git switch <span class="at">-c</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch <span class="at">-D</span> future-inverse-matrix-calculation</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 4</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch feature/inverse-matrix-calculation <span class="at">-u</span> <span class="op">&lt;</span>remote branch<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="mini-section">実践解説</span></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>1. 新しいSSHキーを生成する</strong></pre>
+</div>
+<div class="sourceCode" id="cb1" data-filename="1. 新しいSSHキーを生成する"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-keygen</span> <span class="at">-t</span> ed25519 <span class="at">-C</span> <span class="st">"hoshinokirby@gmail.com"</span> <span class="at">-f</span> ~/.ssh/kirby_github_key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>オプション <code>-t</code> は生成するキーの種類を指定します．<code>ed25519</code> は古いRSAなどのアルゴリズムより高速で安全であり，強力なセキュリティを維持しながらより短いキーを生成します．</p>
+<p>オプション <code>-C</code> は識別のためにキーにコメントを追加します．</p>
+<p><code>-f</code> は生成されるキーペアのファイル名と場所を指定します．これにより2つのファイルが生成されます：</p>
+<ul>
+<li><code>kirby_github_key</code>: プライベートキー（安全に保管してください！<strong>共有しないでください！</strong>）</li>
+<li><code>kirby_github_key.pub</code>: パブリックキー（GitHubにアップロードするもの）</li>
+</ul>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>2. SSHキーをSSHエージェントに追加する</strong></pre>
+</div>
+<div class="sourceCode" id="cb2" data-filename="2. SSHキーをSSHエージェントに追加する"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">eval</span> <span class="st">"</span><span class="va">$(</span><span class="fu">ssh-agent</span> <span class="at">-s</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> ./.ssh/kirby_github_key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>ssh-addコマンドは，プライベートSSHキーをSSH認証エージェント（<code>ssh-agent</code>）に追加し，SSH接続時にキーのパスフレーズを繰り返し要求されることなく使用できるようにします． キー（<code>kirby_github_key</code>）が<code>ssh-agent</code>に追加されていない場合，SSHはそれを使用することができません．このようなエラーが発生する可能性があります：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Permission</span> denied <span class="er">(</span><span class="ex">publickey</span><span class="kw">)</span><span class="bu">.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>3. GitHubに公開キーを登録する</strong></pre>
+</div>
+<div class="sourceCode" id="cb4" data-filename="3. GitHubに公開キーを登録する"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.ssh/kirby_github_key.pub</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>ファイルを開いた後，文字列をコピーしてGitHubの<code>Settings &gt; SSH and GPG keys &gt; New SSH key</code>で登録します．</p>
+<p>その後，以下のコマンドで接続をテストします：</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>4. SSH接続をテスト</strong></pre>
+</div>
+<div class="sourceCode" id="cb5" data-filename="4. SSH接続をテスト"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ssh <span class="at">-T</span> git@github.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>接続が正常に確立された場合，以下のようなメッセージが表示されます：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Enter</span> passphrase for key <span class="st">'/Users/hosinokkirby/.ssh/kirby_github_key'</span>: </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Hi</span> Kirby! You<span class="st">'ve successfully authenticated, but GitHub does not provide shell access.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="mini-section">SSHの設定ファイルを更新する</span></p>
+<p>毎回手動で<code>ssh-add</code>を実行するのは面倒です．これを避けるため，<code>~/.ssh/config</code>ファイルを編集してSSHが自動的にキーを使用するように設定できます：</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config</strong></pre>
+</div>
+<div class="sourceCode" id="cb7" data-filename="~/.ssh/config"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Host</span> github github.com</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">HostName</span> github.com</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">User</span> git</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Port</span> 22</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">IdentityFile</span> ~/.ssh/kirby_github_key</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">IdentitiesOnly</span> yes</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">TCPKeepAlive</span> yes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="solution-2-rename-the-branch" class="level2">
-<h2 class="anchored" data-anchor-id="solution-2-rename-the-branch">Solution 2: rename the branch</h2>
-<p>With the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch <span class="at">-m</span> <span class="op">&lt;</span>old-name<span class="op">&gt;</span> <span class="op">&lt;</span>new-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## rename using -m/--move option</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git branch <span class="at">-m</span> future-inverse-matrix-calculation feature/inverse-matrix-calculation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="appendix-プライベートキーでのssh接続のトラブル" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-プライベートキーでのssh接続のトラブル">Appendix：❗ プライベートキーでのSSH接続のトラブル</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+概要
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>SSHは不正アクセスから保護するため，プライベートキーのセキュリティについて厳格です．</li>
+<li>プライベートキーは常にあなただけが読み取れる状態に保ってください．</li>
+<li><code>chmod 600 your_key_file</code>を使用して，適切なパーミッション設定を確保してください．</li>
+</ul>
+</div>
+</div>
+<p><span class="mini-section">トラブル</span></p>
+<p>SSHコマンドを使用して接続を試みる際，以下のようなエラーが発生することがあります：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">WARNING:</span> UNPROTECTED PRIVATE KEY FILE!</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">It</span> is required that your private key files are NOT accessible by others.</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">This</span> private key will be ignored.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>その結果，SSH接続が失敗します．</p>
+<p><span class="mini-section">原因</span></p>
+<ul>
+<li>このエラーは，プライベートキーファイルのファイルパーミッションが緩すぎることが原因です．</li>
+<li>例えば，ファイルパーミッションが<code>666</code>（誰もが読み書き可能）に設定されている場合，SSHはセキュリティ上の理由でキーの使用を拒否します．</li>
+</ul>
+<p><span class="mini-section">解決方法</span></p>
+<p><strong>所有者のみがファイルを読み書きできるように</strong>ファイルのパーミッションを制限することで問題を解決できます：</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> chmod 600 <span class="op">&lt;</span>your-private-key-path<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>パーミッションを変更した後，同じSSHコマンドを再度実行してみてください．</p>
 
 
 </section>
@@ -882,7 +947,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="../../LICENSE">
+    <a class="nav-link" href="../../../../LICENSE">
 <p>License</p>
 </a>
   </li>  

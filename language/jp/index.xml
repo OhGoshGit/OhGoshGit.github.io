@@ -529,6 +529,208 @@ font-style: inherit;">--help</span></span></code></pre></div></li>
   <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="問題" class="level2">
+<h2 class="anchored" data-anchor-id="問題">問題</h2>
+<ul>
+<li>macOSでGitHubリポジトリへのSSH接続を設定したい</li>
+</ul>
+</section>
+<section id="解決方法" class="level2">
+<h2 class="anchored" data-anchor-id="解決方法">解決方法</h2>
+<p><span class="mini-section">ステップ</span></p>
+<ol type="1">
+<li>新しいSSHキーを生成する</li>
+<li>SSHキーをSSHエージェントに追加する</li>
+<li>GitHubに公開キーを登録する</li>
+<li>SSH接続をテストする</li>
+<li>SSHの設定ファイルを更新する</li>
+</ol>
+<p><span class="mini-section">実践解説</span></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>1. 新しいSSHキーを生成する</strong></pre>
+</div>
+<div class="sourceCode" id="cb1" data-filename="1. 新しいSSHキーを生成する" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh-keygen</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-t</span> ed25519 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-C</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hoshinokirby@gmail.com"</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f</span> ~/.ssh/kirby_github_key</span></code></pre></div>
+</div>
+<p>オプション <code>-t</code> は生成するキーの種類を指定します．<code>ed25519</code> は古いRSAなどのアルゴリズムより高速で安全であり，強力なセキュリティを維持しながらより短いキーを生成します．</p>
+<p>オプション <code>-C</code> は識別のためにキーにコメントを追加します．</p>
+<p><code>-f</code> は生成されるキーペアのファイル名と場所を指定します．これにより2つのファイルが生成されます：</p>
+<ul>
+<li><code>kirby_github_key</code>: プライベートキー（安全に保管してください！<strong>共有しないでください！</strong>）</li>
+<li><code>kirby_github_key.pub</code>: パブリックキー（GitHubにアップロードするもの）</li>
+</ul>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>2. SSHキーをSSHエージェントに追加する</strong></pre>
+</div>
+<div class="sourceCode" id="cb2" data-filename="2. SSHキーをSSHエージェントに追加する" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">eval</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh-agent</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-s</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh-add</span> ./.ssh/kirby_github_key</span></code></pre></div>
+</div>
+<p>ssh-addコマンドは，プライベートSSHキーをSSH認証エージェント（<code>ssh-agent</code>）に追加し，SSH接続時にキーのパスフレーズを繰り返し要求されることなく使用できるようにします． キー（<code>kirby_github_key</code>）が<code>ssh-agent</code>に追加されていない場合，SSHはそれを使用することができません．このようなエラーが発生する可能性があります：</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Permission</span> denied <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">publickey</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">.</span></span></code></pre></div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>3. GitHubに公開キーを登録する</strong></pre>
+</div>
+<div class="sourceCode" id="cb4" data-filename="3. GitHubに公開キーを登録する" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> ~/.ssh/kirby_github_key.pub</span></code></pre></div>
+</div>
+<p>ファイルを開いた後，文字列をコピーしてGitHubの<code>Settings &gt; SSH and GPG keys &gt; New SSH key</code>で登録します．</p>
+<p>その後，以下のコマンドで接続をテストします：</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>4. SSH接続をテスト</strong></pre>
+</div>
+<div class="sourceCode" id="cb5" data-filename="4. SSH接続をテスト" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> ssh <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-T</span> git@github.com</span></code></pre></div>
+</div>
+<p>接続が正常に確立された場合，以下のようなメッセージが表示されます：</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Enter</span> passphrase for key <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'/Users/hosinokkirby/.ssh/kirby_github_key'</span>: </span>
+<span id="cb6-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Hi</span> Kirby! You<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'ve successfully authenticated, but GitHub does not provide shell access.</span></span></code></pre></div>
+<p><span class="mini-section">SSHの設定ファイルを更新する</span></p>
+<p>毎回手動で<code>ssh-add</code>を実行するのは面倒です．これを避けるため，<code>~/.ssh/config</code>ファイルを編集してSSHが自動的にキーを使用するように設定できます：</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config</strong></pre>
+</div>
+<div class="sourceCode" id="cb7" data-filename="~/.ssh/config" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Host</span> github github.com</span>
+<span id="cb7-2">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HostName</span> github.com</span>
+<span id="cb7-3">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">User</span> git</span>
+<span id="cb7-4">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Port</span> 22</span>
+<span id="cb7-5">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">IdentityFile</span> ~/.ssh/kirby_github_key</span>
+<span id="cb7-6">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">IdentitiesOnly</span> yes</span>
+<span id="cb7-7">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">TCPKeepAlive</span> yes</span></code></pre></div>
+</div>
+</section>
+<section id="appendix-プライベートキーでのssh接続のトラブル" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-プライベートキーでのssh接続のトラブル">Appendix：❗ プライベートキーでのSSH接続のトラブル</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+概要
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>SSHは不正アクセスから保護するため，プライベートキーのセキュリティについて厳格です．</li>
+<li>プライベートキーは常にあなただけが読み取れる状態に保ってください．</li>
+<li><code>chmod 600 your_key_file</code>を使用して，適切なパーミッション設定を確保してください．</li>
+</ul>
+</div>
+</div>
+<p><span class="mini-section">トラブル</span></p>
+<p>SSHコマンドを使用して接続を試みる際，以下のようなエラーが発生することがあります：</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">WARNING:</span> UNPROTECTED PRIVATE KEY FILE!</span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">It</span> is required that your private key files are NOT accessible by others.</span>
+<span id="cb8-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">This</span> private key will be ignored.</span></code></pre></div>
+<p>その結果，SSH接続が失敗します．</p>
+<p><span class="mini-section">原因</span></p>
+<ul>
+<li>このエラーは，プライベートキーファイルのファイルパーミッションが緩すぎることが原因です．</li>
+<li>例えば，ファイルパーミッションが<code>666</code>（誰もが読み書き可能）に設定されている場合，SSHはセキュリティ上の理由でキーの使用を拒否します．</li>
+</ul>
+<p><span class="mini-section">解決方法</span></p>
+<p><strong>所有者のみがファイルを読み書きできるように</strong>ファイルのパーミッションを制限することで問題を解決できます：</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> chmod 600 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>your-private-key-path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p>パーミッションを変更した後，同じSSHコマンドを再度実行してみてください．</p>
+
+
+</section>
+
+ ]]></description>
+  <category>ssh</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/</guid>
+  <pubDate>Tue, 17 Dec 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>OGG… How do I check unstaged differences with the latest commit?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/</link>
