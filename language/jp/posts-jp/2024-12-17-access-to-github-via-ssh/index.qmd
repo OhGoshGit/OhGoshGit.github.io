@@ -1,0 +1,123 @@
+---
+title: "あぁぁ... GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2024-12-17"
+categories: [ssh]
+---
+
+## 問題
+
+- macOSでGitHubリポジトリへのSSH接続を設定したい
+
+## 解決方法
+
+[ステップ]{.mini-section}
+
+1. 新しいSSHキーを生成する
+2. SSHキーをSSHエージェントに追加する
+3. GitHubに公開キーを登録する
+4. SSH接続をテストする
+5. SSHの設定ファイルを更新する
+
+
+[実践解説]{.mini-section}
+
+```{.bash filename="1. 新しいSSHキーを生成する"}
+ssh-keygen -t ed25519 -C "hoshinokirby@gmail.com" -f ~/.ssh/kirby_github_key
+```
+
+オプション `-t` は生成するキーの種類を指定します．`ed25519` は古いRSAなどのアルゴリズムより高速で安全であり，強力なセキュリティを維持しながらより短いキーを生成します．
+
+オプション `-C` は識別のためにキーにコメントを追加します．
+
+`-f` は生成されるキーペアのファイル名と場所を指定します．これにより2つのファイルが生成されます：
+
+- `kirby_github_key`: プライベートキー（安全に保管してください！**共有しないでください！**）
+- `kirby_github_key.pub`: パブリックキー（GitHubにアップロードするもの）
+
+
+```{.bash filename="2. SSHキーをSSHエージェントに追加する"}
+eval "$(ssh-agent -s)"
+ssh-add ./.ssh/kirby_github_key
+```
+
+ssh-addコマンドは，プライベートSSHキーをSSH認証エージェント（`ssh-agent`）に追加し，SSH接続時にキーのパスフレーズを繰り返し要求されることなく使用できるようにします．
+キー（`kirby_github_key`）が`ssh-agent`に追加されていない場合，SSHはそれを使用することができません．このようなエラーが発生する可能性があります：
+
+```{.bash}
+Permission denied (publickey).
+```
+
+```{.bash filename="3. GitHubに公開キーを登録する"}
+cat ~/.ssh/kirby_github_key.pub
+```
+
+ファイルを開いた後，文字列をコピーしてGitHubの`Settings > SSH and GPG keys > New SSH key`で登録します．
+
+その後，以下のコマンドで接続をテストします：
+
+```{.bash filename="4. SSH接続をテスト"}
+$ ssh -T git@github.com
+```
+
+接続が正常に確立された場合，以下のようなメッセージが表示されます：
+
+```{.bash}
+Enter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': 
+Hi Kirby! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+[SSHの設定ファイルを更新する]{.mini-section}
+
+毎回手動で`ssh-add`を実行するのは面倒です．これを避けるため，`~/.ssh/config`ファイルを編集してSSHが自動的にキーを使用するように設定できます：
+
+```{.bash filename="~/.ssh/config"}
+Host github github.com
+  HostName github.com
+  User git
+  Port 22
+  IdentityFile ~/.ssh/kirby_github_key
+  IdentitiesOnly yes
+  TCPKeepAlive yes
+```
+
+
+## Appendix：❗ プライベートキーでのSSH接続のトラブル
+
+::: {.callout-note icon="false"}
+## 概要
+
+- SSHは不正アクセスから保護するため，プライベートキーのセキュリティについて厳格です．
+- プライベートキーは常にあなただけが読み取れる状態に保ってください．
+- `chmod 600 your_key_file`を使用して，適切なパーミッション設定を確保してください．
+
+:::
+
+[トラブル]{.mini-section}
+
+SSHコマンドを使用して接続を試みる際，以下のようなエラーが発生することがあります：
+
+```bash
+WARNING: UNPROTECTED PRIVATE KEY FILE!
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+```
+
+その結果，SSH接続が失敗します．
+
+[原因]{.mini-section}
+
+- このエラーは，プライベートキーファイルのファイルパーミッションが緩すぎることが原因です．
+- 例えば，ファイルパーミッションが`666`（誰もが読み書き可能）に設定されている場合，SSHはセキュリティ上の理由でキーの使用を拒否します．
+
+[解決方法]{.mini-section}
+
+**所有者のみがファイルを読み書きできるように**ファイルのパーミッションを制限することで問題を解決できます：
+
+```zsh
+% chmod 600 <your-private-key-path>
+```
+
+パーミッションを変更した後，同じSSHコマンドを再度実行してみてください．

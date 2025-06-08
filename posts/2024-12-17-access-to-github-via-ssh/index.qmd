@@ -4,7 +4,6 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2024-12-17"
-date-modified: last-modified
 categories: [ssh]
 ---
 
@@ -15,7 +14,7 @@ categories: [ssh]
 
 ## Solution
 
-<strong > &#9654;&nbsp; Steps</strong>
+[Steps]{.mini-section}
 
 1. Generate a new ssh key
 2. Add the SSH Key to the SSH Agent
@@ -24,7 +23,7 @@ categories: [ssh]
 5. update the ssh config file
 
 
-<strong > &#9654;&nbsp; Setup</strong>
+[Setup]{.mini-section}
 
 ```{.bash filename="1. Generate a new ssh key"}
 ssh-keygen -t ed25519 -C "hoshinokirby@gmail.com" -f ~/.ssh/kirby_github_key
@@ -71,7 +70,7 @@ Enter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key':
 Hi Kirby! You've successfully authenticated, but GitHub does not provide shell access.
 ```
 
-<strong > &#9654;&nbsp; Update the ssh config file</strong>
+[Update the ssh config file]{.mini-section}
 
 Running `ssh-add` munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your `~/.ssh/config` file:
 
@@ -84,3 +83,42 @@ Host github github.com
   IdentitiesOnly yes
   TCPKeepAlive yes
 ```
+
+
+## Appendix: ❗ Trouble Connecting via SSH with a Private Key
+
+::: {.callout-note icon="false"}
+## summary
+
+- SSH is strict about private key security to protect against unauthorized access.
+- Always keep your private keys readable only by you.
+- Use `chmod 600 your_key_file` to ensure proper permission settings.
+
+:::
+
+[Trouble]{.mini-section}
+
+When trying to connect using a SSH command, You might encounter an error like:
+
+```bash
+WARNING: UNPROTECTED PRIVATE KEY FILE!
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+```
+
+As a result, the SSH connection fails.
+
+[Root Cause]{.mini-section}
+
+- This error happens because the file permissions of the private key file are too loose.
+- For example, if the file permissions are set to `666` (readable and writable by everyone), SSH refuses to use the key for security reasons.
+
+[Solution]{.mini-section}
+
+You can fix the issue by restricting the file's permissions so that **only the owner can read/write the file**:
+
+```zsh
+% chmod 600 <your-private-key-path>
+```
+
+After changing the permissions, try running the same SSH command again.
