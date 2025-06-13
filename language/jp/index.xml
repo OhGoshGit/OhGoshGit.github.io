@@ -10,7 +10,171 @@
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Fri, 13 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 14 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>あぁぁ… git reset –hard と –mixed と –soft の違いは何？</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="目標" class="level2">
+<h2 class="anchored" data-anchor-id="目標">✅ 目標</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"><code>git reset</code>とは何かを理解する</label></li>
+<li><label><input type="checkbox"><code>git reset --hard</code>と<code>--mixed</code>と<code>--soft</code>の違いを理解する</label></li>
+</ul>
+</section>
+<section id="git-resetとは" class="level2">
+<h2 class="anchored" data-anchor-id="git-resetとは">🔧 <code>git reset</code>とは？</h2>
+<div class="blog-custom-border">
+<p><strong>Definition: git reset</strong><br> <code>git reset</code>は，<code>HEAD</code>を移動させ，必要に応じて変更のステージングを解除したり，変更を削除したりするコマンド</p>
+</div>
+<section id="soft-vs---mixed-vs--hardの比較表" class="level3">
+<h3 class="anchored" data-anchor-id="soft-vs---mixed-vs--hardの比較表"><code>--soft</code> vs <code>--mixed</code> vs<code>--hard</code>の比較表</h3>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 14%">
+<col style="width: 33%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>領域</th>
+<th><code>--soft</code></th>
+<th><code>--mixed</code> (デフォルト)</th>
+<th><code>--hard</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>HEAD</code> (コミットポインタ)</td>
+<td>✔️ 移動</td>
+<td>✔️ 移動</td>
+<td>✔️ 移動</td>
+</tr>
+<tr class="even">
+<td>ステージング領域 (Index)</td>
+<td>✅ 保持</td>
+<td>❌ クリア</td>
+<td>❌ クリア</td>
+</tr>
+<tr class="odd">
+<td>作業ディレクトリのファイル</td>
+<td>✅ 保持</td>
+<td>✅ 保持</td>
+<td>❌ クリア</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="mini-section">git resetのシーケンス図</span></p>
+<p>以下の図は，異なる<code>git reset</code>モードがGitの3つの領域にどのように影響を与えるかを段階的に示したものです：</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant Before as commit-id A
+    participant Working as Working Area
+    participant Staging as Staging(Index)
+    participant HEAD as commit-id B
+
+    Before-&gt;&gt;Working: editing files
+
+    Working-&gt;&gt;Staging: git add
+
+    Staging-&gt;&gt;HEAD: git commit
+
+    HEAD-&gt;&gt;Staging: git reset --soft HEAD~1
+    HEAD-&gt;&gt;Working: git reset --mixed HEAD~1
+    HEAD-&gt;&gt;Before: git reset --hard HEAD~1
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="本当に-git-reset---hard-が必要か" class="level2">
+<h2 class="anchored" data-anchor-id="本当に-git-reset---hard-が必要か">❓ 本当に <code>git reset --hard</code> が必要か？</h2>
+<p>Gitを使用していると，最新のコミットでバグが発生したため，以前のコミットから新しいブランチを作成する必要が出てくることがあります． 例えば，現在の<code>HEAD</code>の1つ前のコミットから<code>HOTFIX</code>ブランチを作成したい場合などです．</p>
+<p><code>git reset --hard</code>と<code>git switch</code>を使用することを考えるかもしれませんが，もう一度考えてみましょう．その場合，</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> HOTFIX HEAD~1</span></code></pre></div>
+<p>の方が良い選択です．</p>
+<p><span class="mini-section">このコマンドの動作</span></p>
+<ul>
+<li><code>HEAD</code>の1つ前のコミットから<code>HOTFIX</code>という名前の新しいブランチを作成</li>
+<li>HOTFIXブランチに切り替え</li>
+<li>現在のブランチとコミット履歴は変更されません</li>
+</ul>
+<p><span class="mini-section">メリット</span></p>
+<ul>
+<li>非破壊的：全てのコミットが保持されます</li>
+<li>クリーンな分離：現在のブランチを変更することなく<code>HOTFIX</code>に取り組めます</li>
+</ul>
+</section>
+<section id="ベストプラクティスのガイドラインまとめ" class="level2">
+<h2 class="anchored" data-anchor-id="ベストプラクティスのガイドラインまとめ">👍 ベストプラクティスのガイドラインまとめ</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>やりたいこと</th>
+<th>使用するコマンド</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>コミット履歴を書き換えるが作業内容は保持</td>
+<td><code>git reset --soft HEAD~1</code></td>
+</tr>
+<tr class="even">
+<td>ファイルのステージングを解除し，変更は保持</td>
+<td><code>git reset --mixed HEAD~1</code> (デフォルト)</td>
+</tr>
+<tr class="odd">
+<td>全ての変更を完全に破棄してリセット</td>
+<td><code>git reset --hard HEAD~1</code></td>
+</tr>
+<tr class="even">
+<td><code>HEAD~1</code>から新しいブランチ<code>HOTFIX</code>を作成して切り替え</td>
+<td><code>git switch -c HOTFIX HEAD~1</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">📘 参考文献</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-reset">Git DOcumentation &gt; git-reset</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git reset</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/</guid>
+  <pubDate>Sat, 14 Jun 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>あぁぁ… とあるファイルについてgit addを取り消したい．．．</title>
   <dc:creator>Ryo Nakagami</dc:creator>

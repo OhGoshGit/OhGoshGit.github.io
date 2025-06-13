@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2025-06-14">
 
-<title>Git is hard, but we need to handle it – OhGoshGit!?!</title>
+<title>あぁぁ… git reset –hard と –mixed と –soft の違いは何？ – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,33 +22,66 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-289e7dfcc1b77c4e2170f3f4ac94daa5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7b9d8f22f9818b768ca0340bba1c7ec6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-289e7dfcc1b77c4e2170f3f4ac94daa5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-289e7dfcc1b77c4e2170f3f4ac94daa5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../site_libs/bootstrap/bootstrap-dark-7b9d8f22f9818b768ca0340bba1c7ec6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../../site_libs/bootstrap/bootstrap-289e7dfcc1b77c4e2170f3f4ac94daa5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,35 +109,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -122,39 +128,13 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
+<script src="../../../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -325,7 +305,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -340,17 +320,17 @@ window.Quarto = {
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="././language/jp/"> 
+    <a class="nav-link" href="../../../.././language/jp/"> 
 <span class="menu-text">日本語</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="././"> 
+    <a class="nav-link" href="../../../.././"> 
 <span class="menu-text">English</span></a>
   </li>  
   <li class="nav-item compact">
@@ -359,7 +339,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -375,15 +355,29 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Git is hard, but we need to handle it</h1>
-            <p class="subtitle lead">Here are some bad situations I’ve gotten myself into, and how I eventually got myself out of them in plain english.</p>
-                      </div>
+      <h1 class="title">あぁぁ… git reset –hard と –mixed と –soft の違いは何？</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">git reset</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta column-page-left">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2025-06-14</p>
+      </div>
+    </div>
     
       
     </div>
@@ -393,8 +387,21 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(15)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVtb3Rl">git remote <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#目標" id="toc-目標" class="nav-link active" data-scroll-target="#目標">✅ 目標</a></li>
+  <li><a href="#git-resetとは" id="toc-git-resetとは" class="nav-link" data-scroll-target="#git-resetとは">🔧 <code>git reset</code>とは？</a>
+  <ul class="collapse">
+  <li><a href="#soft-vs---mixed-vs--hardの比較表" id="toc-soft-vs---mixed-vs--hardの比較表" class="nav-link" data-scroll-target="#soft-vs---mixed-vs--hardの比較表"><code>--soft</code> vs <code>--mixed</code> vs<code>--hard</code>の比較表</a></li>
+  </ul></li>
+  <li><a href="#本当に-git-reset---hard-が必要か" id="toc-本当に-git-reset---hard-が必要か" class="nav-link" data-scroll-target="#本当に-git-reset---hard-が必要か">❓ 本当に <code>git reset --hard</code> が必要か？</a></li>
+  <li><a href="#ベストプラクティスのガイドラインまとめ" id="toc-ベストプラクティスのガイドラインまとめ" class="nav-link" data-scroll-target="#ベストプラクティスのガイドラインまとめ">👍 ベストプラクティスのガイドラインまとめ</a></li>
+  <li><a href="#参考文献" id="toc-参考文献" class="nav-link" data-scroll-target="#参考文献">📘 参考文献</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -403,230 +410,151 @@ window.Quarto = {
 
 
 
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
+<section id="目標" class="level2">
+<h2 class="anchored" data-anchor-id="目標">✅ 目標</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"><code>git reset</code>とは何かを理解する</label></li>
+<li><label><input type="checkbox"><code>git reset --hard</code>と<code>--mixed</code>と<code>--soft</code>の違いを理解する</label></li>
+</ul>
+</section>
+<section id="git-resetとは" class="level2">
+<h2 class="anchored" data-anchor-id="git-resetとは">🔧 <code>git reset</code>とは？</h2>
+<div class="blog-custom-border">
+<p><strong>Definition: git reset</strong><br> <code>git reset</code>は，<code>HEAD</code>を移動させ，必要に応じて変更のステージングを解除したり，変更を削除したりするコマンド</p>
+</div>
+<section id="soft-vs---mixed-vs--hardの比較表" class="level3">
+<h3 class="anchored" data-anchor-id="soft-vs---mixed-vs--hardの比較表"><code>--soft</code> vs <code>--mixed</code> vs<code>--hard</code>の比較表</h3>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 14%">
+<col style="width: 33%">
+<col style="width: 16%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-Date
-</th>
-
-<th>
-Title
-</th>
-
-<th>
-Reading Time
-</th>
-
+<tr class="header">
+<th>領域</th>
+<th><code>--soft</code></th>
+<th><code>--mixed</code> (デフォルト)</th>
+<th><code>--hard</code></th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1749828552224" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="547" data-listing-title-sort="OGG... What's difference between git reset --hard vs --mixed vs --soft?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-14</span>
-</td>
-<td>
-<a href="./posts/2025-06-14-git-reset-hard-mixed-soft/index.html" class="title listing-title">OGG… What’s difference between git reset –hard vs –mixed vs –soft?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
+<tbody>
+<tr class="odd">
+<td><code>HEAD</code> (コミットポインタ)</td>
+<td>✔️ 移動</td>
+<td>✔️ 移動</td>
+<td>✔️ 移動</td>
 </tr>
-
-<tr data-index="1" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1749828552224" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="266" data-listing-title-sort="OGG... How to unstage files in Git?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-13</span>
-</td>
-<td>
-<a href="./posts/2025-06-13-how-to-unstage-files/index.html" class="title listing-title">OGG… How to unstage files in Git?</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tr class="even">
+<td>ステージング領域 (Index)</td>
+<td>✅ 保持</td>
+<td>❌ クリア</td>
+<td>❌ クリア</td>
 </tr>
-
-<tr data-index="2" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1749828552224" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="696" data-listing-title-sort="OGG... How do I consolidate multiple temporary commits into a single meaningful one?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-06</span>
-</td>
-<td>
-<a href="./posts/2025-06-06-organize-commits-using-git-rebase/index.html" class="title listing-title">OGG… How do I consolidate multiple temporary commits into a single meaningful one?</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
+<tr class="odd">
+<td>作業ディレクトリのファイル</td>
+<td>✅ 保持</td>
+<td>✅ 保持</td>
+<td>❌ クリア</td>
 </tr>
-
-<tr data-index="3" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="758" data-listing-title-sort="OGG... How do I manage config and secret information in Git?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-05</span>
-</td>
-<td>
-<a href="./posts/2025-06-05-how-to-manage-secrets/index.html" class="title listing-title">OGG… How do I manage config and secret information in Git?</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="4" data-categories="c3No" data-listing-date-sort="1747958400000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="1" data-listing-word-count-sort="187" data-listing-title-sort="OGG... How do I switch the connection method for git push from HTTPS to SSH??" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-05-23</span>
-</td>
-<td>
-<a href="./posts/2025-05-23-switch-https-ssh/index.html" class="title listing-title">OGG… How do I switch the connection method for git push from HTTPS to SSH??</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="5" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I set up ssh connection to GitHub repository?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-17</span>
-</td>
-<td>
-<a href="./posts/2024-12-17-access-to-github-via-ssh/index.html" class="title listing-title">OGG… How can I set up ssh connection to GitHub repository?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="6" data-categories="Z2l0JTIwcmVtb3Rl" data-listing-date-sort="1733270400000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="3" data-listing-word-count-sort="484" data-listing-title-sort="OGG... How can I modify the GitHub repository name?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-04</span>
-</td>
-<td>
-<a href="./posts/2024-12-04-chnage-remote-uri/index.html" class="title listing-title">OGG… How can I modify the GitHub repository name?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="7" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-06</span>
-</td>
-<td>
-<a href="./posts/2024-11-06-check-diff-with-git-difftool/index.html" class="title listing-title">OGG… How do I check unstaged differences with the latest commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="8" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-05</span>
-</td>
-<td>
-<a href="./posts/2024-11-05-when-do-i-use-git-rebase/index.html" class="title listing-title">OGG… Should I use git rebase?</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-
-</tr>
-
-<tr data-index="9" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I push my repository to githab and gitlab remote at once?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="./posts/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">OGG… How can I push my repository to githab and gitlab remote at once?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="10" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1749828552223" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="3" data-listing-word-count-sort="524" data-listing-title-sort="OGG... I just want to push a local git branch to a remote with a different name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="./posts/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">OGG… I just want to push a local git branch to a remote with a different name…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="11" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1749828552222" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="OGG... I just want to save the current repository into another remote..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="./posts/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">OGG… I just want to save the current repository into another remote…</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="12" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1749828552222" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="5" data-listing-word-count-sort="865" data-listing-title-sort="OGG... I cannot push to remote branch and cannot pull the remote changes..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="./posts/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">OGG… I cannot push to remote branch and cannot pull the remote changes…</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-
-</tr>
-
-<tr data-index="13" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1749828552222" data-listing-date-modified-sort="1749828552000" data-listing-reading-time-sort="1" data-listing-word-count-sort="143" data-listing-title-sort="OGG... I accidentally named the branch the wrong name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="./posts/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">OGG… I accidentally named the branch the wrong name…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="14" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1749828552222" data-listing-date-modified-sort="1720742400000" data-listing-reading-time-sort="2" data-listing-word-count-sort="389" data-listing-title-sort="OGG... I accidentally committed something to main that should have been on a brand new branch!" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="./posts/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">OGG… I accidentally committed something to main that should have been on a brand new branch!</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div>
+<p><span class="mini-section">git resetのシーケンス図</span></p>
+<p>以下の図は，異なる<code>git reset</code>モードがGitの3つの領域にどのように影響を与えるかを段階的に示したものです：</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant Before as commit-id A
+    participant Working as Working Area
+    participant Staging as Staging(Index)
+    participant HEAD as commit-id B
+
+    Before-&gt;&gt;Working: editing files
+
+    Working-&gt;&gt;Staging: git add
+
+    Staging-&gt;&gt;HEAD: git commit
+
+    HEAD-&gt;&gt;Staging: git reset --soft HEAD~1
+    HEAD-&gt;&gt;Working: git reset --mixed HEAD~1
+    HEAD-&gt;&gt;Before: git reset --hard HEAD~1
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="本当に-git-reset---hard-が必要か" class="level2">
+<h2 class="anchored" data-anchor-id="本当に-git-reset---hard-が必要か">❓ 本当に <code>git reset --hard</code> が必要か？</h2>
+<p>Gitを使用していると，最新のコミットでバグが発生したため，以前のコミットから新しいブランチを作成する必要が出てくることがあります． 例えば，現在の<code>HEAD</code>の1つ前のコミットから<code>HOTFIX</code>ブランチを作成したい場合などです．</p>
+<p><code>git reset --hard</code>と<code>git switch</code>を使用することを考えるかもしれませんが，もう一度考えてみましょう．その場合，</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> HOTFIX HEAD~1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>の方が良い選択です．</p>
+<p><span class="mini-section">このコマンドの動作</span></p>
+<ul>
+<li><code>HEAD</code>の1つ前のコミットから<code>HOTFIX</code>という名前の新しいブランチを作成</li>
+<li>HOTFIXブランチに切り替え</li>
+<li>現在のブランチとコミット履歴は変更されません</li>
+</ul>
+<p><span class="mini-section">メリット</span></p>
+<ul>
+<li>非破壊的：全てのコミットが保持されます</li>
+<li>クリーンな分離：現在のブランチを変更することなく<code>HOTFIX</code>に取り組めます</li>
+</ul>
+</section>
+<section id="ベストプラクティスのガイドラインまとめ" class="level2">
+<h2 class="anchored" data-anchor-id="ベストプラクティスのガイドラインまとめ">👍 ベストプラクティスのガイドラインまとめ</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>やりたいこと</th>
+<th>使用するコマンド</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>コミット履歴を書き換えるが作業内容は保持</td>
+<td><code>git reset --soft HEAD~1</code></td>
+</tr>
+<tr class="even">
+<td>ファイルのステージングを解除し，変更は保持</td>
+<td><code>git reset --mixed HEAD~1</code> (デフォルト)</td>
+</tr>
+<tr class="odd">
+<td>全ての変更を完全に破棄してリセット</td>
+<td><code>git reset --hard HEAD~1</code></td>
+</tr>
+<tr class="even">
+<td><code>HEAD~1</code>から新しいブランチ<code>HOTFIX</code>を作成して切り替え</td>
+<td><code>git switch -c HOTFIX HEAD~1</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">📘 参考文献</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-reset">Git DOcumentation &gt; git-reset</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
 <script>
     document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
         let modName = title.innerHTML;
@@ -1048,6 +976,8 @@ Reading Time
     }
   });
   </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1060,12 +990,12 @@ Reading Time
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="./LICENSE">
+    <a class="nav-link" href="../../../../LICENSE">
 <p>License</p>
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

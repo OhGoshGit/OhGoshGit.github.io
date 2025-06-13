@@ -10,7 +10,165 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Fri, 13 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 14 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What’s difference between git reset –hard vs –mixed vs –soft?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-06-14-git-reset-hard-mixed-soft/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Understand what <code>git reset</code> is</label></li>
+<li><label><input type="checkbox">Understand the difference between <code>git reset --hard</code> vs <code>--mixed</code> vs <code>--soft</code></label></li>
+</ul>
+</section>
+<section id="what-is-git-reset" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-git-reset">🔧 What is <code>git reset</code>?</h2>
+<div class="blog-custom-border">
+<p><strong>Definition: git reset</strong><br> <code>git reset</code> is a command used to move <code>HEAD</code> and optionally unstage or delete changes.</p>
+</div>
+<section id="comparison-table-between---soft---mixed-and---hard" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-table-between---soft---mixed-and---hard">Comparison Table between <code>--soft</code>, <code>--mixed</code>, and <code>--hard</code></h3>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Area</th>
+<th><code>--soft</code></th>
+<th><code>--mixed</code> (default)</th>
+<th><code>--hard</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>HEAD</code> (commit ptr)</td>
+<td>✔️ moved</td>
+<td>✔️ moved</td>
+<td>✔️ moved</td>
+</tr>
+<tr class="even">
+<td>Staging area (Index)</td>
+<td>✅ kept</td>
+<td>❌ cleared</td>
+<td>❌ cleared</td>
+</tr>
+<tr class="odd">
+<td>Working dir files</td>
+<td>✅ kept</td>
+<td>✅ kept</td>
+<td>❌ cleared</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="mini-section">git reset sequence diagram</span></p>
+<p>The following diagram is a step-by-step visualization of how different <code>git reset</code> modes affect Git’s three areas:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant Before as commit-id A
+    participant Working as Working Area
+    participant Staging as Staging(Index)
+    participant HEAD as commit-id B
+
+    Before-&gt;&gt;Working: editing files
+
+    Working-&gt;&gt;Staging: git add
+
+    Staging-&gt;&gt;HEAD: git commit
+
+    HEAD-&gt;&gt;Staging: git reset --soft HEAD~1
+    HEAD-&gt;&gt;Working: git reset --mixed HEAD~1
+    HEAD-&gt;&gt;Before: git reset --hard HEAD~1
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="do-i-need-to-run-git-reset---hard-think-again" class="level2">
+<h2 class="anchored" data-anchor-id="do-i-need-to-run-git-reset---hard-think-again">❓ Do I need to run <code>git reset --hard</code>? Think again</h2>
+<p>When working with Git, you may find yourself needing to create a new branch from a previous commit becasue a bug was introduced in the most recent commit. For example, you might want to create a <code>HOTFIX</code> branch from one commit before the current <code>HEAD</code>.</p>
+<p>You may be thinking of <code>git reset --hard</code> and <code>git switch</code> for checkout, but think again. In that case,</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> HOTFIX HEAD~1</span></code></pre></div>
+<p>is better.</p>
+<p><span class="mini-section">What It Does</span></p>
+<ul>
+<li>Creates a new branch named <code>HOTFIX</code> starting from the commit before <code>HEAD</code>.</li>
+<li>Switches you to the HOTFIX branch.</li>
+<li>Leaves your current branch and commit history unchanged.</li>
+</ul>
+<p><span class="mini-section">Benefits</span></p>
+<ul>
+<li>Non-destructive: All commits are preserved.</li>
+<li>Clean separation: You work on the hotfix branch without altering your current one.</li>
+</ul>
+</section>
+<section id="best-practice-guideline-summary" class="level2">
+<h2 class="anchored" data-anchor-id="best-practice-guideline-summary">👍 Best Practice Guideline Summary</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>If you want to…</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rewrite commit history but keep work</td>
+<td><code>git reset --soft HEAD~1</code></td>
+</tr>
+<tr class="even">
+<td>Unstage files, keep changes in files</td>
+<td><code>git reset --mixed HEAD~1</code> (default)</td>
+</tr>
+<tr class="odd">
+<td>Fully discard all changes and reset everything</td>
+<td><code>git reset --hard HEAD~1</code></td>
+</tr>
+<tr class="even">
+<td>Create and switch to a new branch <code>HOTFIX</code> from <code>HEAD~1</code></td>
+<td><code>git switch -c HOTFIX HEAD~1</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-reset">Git DOcumentation &gt; git-reset</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git reset</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-06-14-git-reset-hard-mixed-soft/</guid>
+  <pubDate>Sat, 14 Jun 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How to unstage files in Git?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
