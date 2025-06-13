@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2025-06-06">
+<meta name="dcterms.date" content="2025-06-13">
 
-<title>OGG… How do I consolidate multiple temporary commits into a single meaningful one? – OhGoshGit!?!</title>
+<title>OGG… How to unstage files in Git? – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -352,9 +352,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… How do I consolidate multiple temporary commits into a single meaningful one?</h1>
+      <h1 class="title">OGG… How to unstage files in Git?</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git rebase</div>
+                <div class="quarto-category">git restore</div>
               </div>
                   </div>
   </div>
@@ -372,7 +372,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025-06-06</p>
+        <p class="date">2025-06-13</p>
       </div>
     </div>
     
@@ -392,9 +392,8 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
   <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">🎯 Goal</a></li>
   <li><a href="#guideline" id="toc-guideline" class="nav-link" data-scroll-target="#guideline">📘 Guideline</a>
   <ul class="collapse">
-  <li><a href="#steps-for-consolidating-commits" id="toc-steps-for-consolidating-commits" class="nav-link" data-scroll-target="#steps-for-consolidating-commits">Steps for consolidating commits</a></li>
+  <li><a href="#custom-alias-setup-for-git-unstage" id="toc-custom-alias-setup-for-git-unstage" class="nav-link" data-scroll-target="#custom-alias-setup-for-git-unstage">💻 custom alias setup for git unstage</a></li>
   </ul></li>
-  <li><a href="#appendix-what-git-rebase-operations-are-possible" id="toc-appendix-what-git-rebase-operations-are-possible" class="nav-link" data-scroll-target="#appendix-what-git-rebase-operations-are-possible">Appendix: What <code>git rebase</code> operations are possible?</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -408,147 +407,52 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 <section id="objective" class="level2">
 <h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
-<ul>
-<li>Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.</li>
-<li>This is especially useful before code review or merging into the main branch to ensure a clean and understandable history.</li>
-</ul>
+<ol type="1">
+<li>To reverse the git add operation for specific files, moving them from the staging area back to the working directory</li>
+<li>not modifying the content of the files themselves</li>
+</ol>
 </section>
 <section id="goal" class="level2">
 <h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
 <ul class="task-list">
-<li><label><input type="checkbox">Consolidate multiple recent commits into a single, well-described commit.</label></li>
-<li><label><input type="checkbox">Remove unnecessary intermediate commits (e.g., typo fixes, debug logs) by squashing them.</label></li>
-<li><label><input type="checkbox">Make commit history easier to understand for reviewers, increasing review efficiency and clarity.</label></li>
+<li><label><input type="checkbox">unstage one or more files that were previously added to the staging area</label></li>
 </ul>
 </section>
 <section id="guideline" class="level2">
 <h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Preferably, ensure the following conditions:</p>
+<p>When you stage a file using <code>git add</code>, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:</p>
 <ul>
-<li>Commits have not yet been pushed to the remote repository (e.g., GitHub).</li>
-<li>The work is done on a local branch.</li>
+<li><code>git restore --staged &lt;file&gt;</code></li>
+<li><code>git reset &lt;file&gt;</code></li>
 </ul>
-<p>Otherwise, you will likely need to use a force push (<code>git push -f</code>) after rebasing, which can overwrite history on the remote. Please proceed with caution because <span class="regmonkey_bold">rewriting commit history on pushed commits can disrupt collaboration</span>.</p>
-</div>
-</div>
-<section id="steps-for-consolidating-commits" class="level3">
-<h3 class="anchored" data-anchor-id="steps-for-consolidating-commits">Steps for consolidating commits</h3>
-<ol type="1">
-<li><p><strong>Check recent commits</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p><strong>Start interactive rebase</strong></p>
-<p>To squash the last 3 commits, run:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase <span class="at">-i</span> HEAD~3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-</ol>
-<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Syntax
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The syntax is</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase <span class="at">-i</span> <span class="op">&lt;</span>base-commit<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here I will explain of the first one <code>git restore</code>, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of <code>git reset</code>, which can also affect commit history when used in other forms.</p>
+<p><span class="mini-section">To unstage a specific file</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--staged</span> <span class="op">&lt;</span>file_name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="mini-section">To unstage multiple specific files</span></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--staged</span> <span class="op">&lt;</span>file_name1<span class="op">&gt;</span> <span class="op">&lt;</span>file_name2<span class="op">&gt;</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li>You can only specify a single base commit to rebase onto</li>
-<li>You cannot run a commad which is working as <code>git rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;</code></li>
+<li>List all the files you want to unstage, separated by spaces.</li>
 </ul>
-</div>
-</div>
-<ol start="3" type="1">
-<li><p><strong>Edit the rebase instruction list</strong></p>
-<p>After running the <code>git rebase</code>, the output would be</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pick abc123 fix typo</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pick def456 add <span class="kw">new</span> test <span class="kw">case</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pick ghi789 finalize logic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>commit ids are sorted by top to bottom = older to newer. In the above example, the first line (<code>abc123</code>) is the oldest of the commits being rebased.</p>
-<p>If you want to squash the latest two commits into the oldest one, modify it to:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pick abc123 fix typo</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>squash def456 add <span class="kw">new</span> test <span class="kw">case</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>squash ghi789 finalize logic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p><strong>Edit the commit message</strong></p>
-<p>A new editor screen will prompt you to combine the commit messages. Edit as needed, e.g.:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Finalize</span> logic with test case</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Fixed typo</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Added test case</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Finalized core logic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Then, save and exit. It would be recommended to verify the new commit history by</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-</ol>
-<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tips
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If something goes wrong during the rebase, you can cancel it:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase <span class="at">--abort</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</section>
-</section>
-<section id="appendix-what-git-rebase-operations-are-possible" class="level2">
-<h2 class="anchored" data-anchor-id="appendix-what-git-rebase-operations-are-possible">Appendix: What <code>git rebase</code> operations are possible?</h2>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Command</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>pick</code></td>
-<td>Use the commit as-is (no changes to message or content).</td>
-</tr>
-<tr class="even">
-<td><code>reword</code></td>
-<td>Keep the commit content, but edit the commit message.</td>
-</tr>
-<tr class="odd">
-<td><code>edit</code></td>
-<td>Pause and allow you to amend the commit (edit files, message, etc.).</td>
-</tr>
-<tr class="even">
-<td><code>squash</code></td>
-<td>Combine this commit with the <strong>previous one</strong>, and edit the message.</td>
-</tr>
-<tr class="odd">
-<td><code>fixup</code></td>
-<td>Like <code>squash</code>, but discard this commit’s message (use previous message).</td>
-</tr>
-<tr class="even">
-<td><code>drop</code></td>
-<td>Completely remove this commit from history.</td>
-</tr>
-</tbody>
-</table>
-</div>
+<p><span class="mini-section">To confirm the result after running</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="custom-alias-setup-for-git-unstage" class="level3">
+<h3 class="anchored" data-anchor-id="custom-alias-setup-for-git-unstage">💻 custom alias setup for git unstage</h3>
+<p>Git lets you define shortcuts (aliases) for longer commands via the <code>[alias]</code> section of <code>.gitconfig</code>.</p>
+<p><span class="mini-section">Setup Syntax</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[alias]</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>shortcut<span class="op">&gt;</span> = <span class="op">&lt;</span>actual <span class="fu">git</span> command<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul class="task-list">
+<li><label><input type="checkbox">Do not include git in the actual command — Git automatically prefixes it.</label></li>
+<li><label><input type="checkbox">You may need quotes if the command includes spaces or options.</label></li>
+</ul>
+<p><span class="mini-section">Alias Setup</span></p>
+<p>The following setup defines a Git subcommand alias called <code>git unstage</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[alias]</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">unstage</span> = <span class="st">"restore --staged"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then, <code>git unstage &lt;file&gt;</code> works the same as <code>git restore --staged &lt;file_name&gt;</code></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

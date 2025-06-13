@@ -10,7 +10,113 @@
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Fri, 06 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 13 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>あぁぁ… とあるファイルについてgit addを取り消したい．．．</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-13-how-to-unstage-files/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
+<ol type="1">
+<li>特定のファイルに対するgit addの操作を取り消し、ステージングエリアからワーキングディレクトリに戻す</li>
+<li>ファイルの内容自体は変更しない</li>
+</ol>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">以前にステージングエリアに追加された1つまたは複数のファイルをunstageする</label></li>
+</ul>
+</section>
+<section id="guideline" class="level2">
+<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
+<p><code>git add</code>でファイルをステージングすると、そのファイルはステージングエリア（インデックス）に移動し、コミットの準備が整います。もし考えが変わってunstageしたい場合（変更内容を失うことなく）、一般的に2つの選択肢があります：</p>
+<ul>
+<li><code>git restore --staged &lt;file&gt;</code></li>
+<li><code>git reset &lt;file&gt;</code></li>
+</ul>
+<p>ここでは、より新しいタスク特化型のGitコマンドの一部である<code>git restore</code>について説明します。このコマンドは、より直感的で分かりやすく、インデックスの状態を「復元」する動作に特化しています。他の形式で使用した場合にコミット履歴にも影響を与える可能性がある<code>git reset</code>の、より広範で潜在的に混乱を招く影響を避けることができます。</p>
+<p><span class="mini-section">特定のファイルをunstageする</span></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--staged</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>file_name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p><span class="mini-section">複数の特定のファイルをunstageする</span></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--staged</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>file_name1<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>file_name2<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> ...</span></code></pre></div>
+<ul>
+<li>unstageしたいファイルをスペースで区切って列挙します。</li>
+</ul>
+<p><span class="mini-section">実行後の結果を確認する</span></p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> status</span></code></pre></div>
+<section id="git-unstage-用のカスタムエイリアス設定" class="level3">
+<h3 class="anchored" data-anchor-id="git-unstage-用のカスタムエイリアス設定">💻 git unstage 用のカスタムエイリアス設定</h3>
+<p>Gitでは、<code>.gitconfig</code>の<code>[alias]</code>セクションを通じて、長いコマンドのショートカット（Alias）を定義できます。</p>
+<p><span class="mini-section">設定の構文</span></p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[alias]</span></span>
+<span id="cb4-2">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>shortcut<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> = <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>actual <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> command<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<ul class="task-list">
+<li><label><input type="checkbox">実際のコマンドにgitを含めないでください — Gitは自動的にそれを付加します</label></li>
+<li><label><input type="checkbox">コマンドにスペースやオプションが含まれる場合は、引用符が必要かもしれません</label></li>
+</ul>
+<p><span class="mini-section">Aliasの設定</span></p>
+<p>以下の設定で、<code>git unstage</code>というGitサブコマンドのAliasを定義します。</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[alias]</span></span>
+<span id="cb5-2">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">unstage</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"restore --staged"</span></span></code></pre></div>
+<p>これにより、<code>git unstage &lt;file&gt;</code>が<code>git restore --staged &lt;file_name&gt;</code>と同じように機能します。</p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>git restore</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-13-how-to-unstage-files/</guid>
+  <pubDate>Fri, 13 Jun 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？</title>
   <dc:creator>Ryo Nakagami</dc:creator>

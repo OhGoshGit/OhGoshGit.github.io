@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2025-06-13-how-to-unstage-files/index.html",
       "/posts/2025-06-06-organize-commits-using-git-rebase/index.html",
       "/posts/2025-06-05-how-to-manage-secrets/index.html",
       "/posts/2025-05-23-switch-https-ssh/index.html",
@@ -20,6 +21,7 @@
   {
     "listing": "/language/jp/index.html",
     "items": [
+      "/language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html",
       "/language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html",
       "/language/jp/posts-jp/2025-06-05-how-to-manage-secrets/index.html",
       "/language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html",

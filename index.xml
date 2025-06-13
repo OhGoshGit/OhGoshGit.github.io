@@ -10,7 +10,113 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Fri, 06 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 13 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How to unstage files in Git?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-06-13-how-to-unstage-files/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
+<ol type="1">
+<li>To reverse the git add operation for specific files, moving them from the staging area back to the working directory</li>
+<li>not modifying the content of the files themselves</li>
+</ol>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">unstage one or more files that were previously added to the staging area</label></li>
+</ul>
+</section>
+<section id="guideline" class="level2">
+<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
+<p>When you stage a file using <code>git add</code>, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:</p>
+<ul>
+<li><code>git restore --staged &lt;file&gt;</code></li>
+<li><code>git reset &lt;file&gt;</code></li>
+</ul>
+<p>Here I will explain of the first one <code>git restore</code>, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of <code>git reset</code>, which can also affect commit history when used in other forms.</p>
+<p><span class="mini-section">To unstage a specific file</span></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--staged</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>file_name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p><span class="mini-section">To unstage multiple specific files</span></p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--staged</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>file_name1<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>file_name2<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> ...</span></code></pre></div>
+<ul>
+<li>List all the files you want to unstage, separated by spaces.</li>
+</ul>
+<p><span class="mini-section">To confirm the result after running</span></p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> status</span></code></pre></div>
+<section id="custom-alias-setup-for-git-unstage" class="level3">
+<h3 class="anchored" data-anchor-id="custom-alias-setup-for-git-unstage">💻 custom alias setup for git unstage</h3>
+<p>Git lets you define shortcuts (aliases) for longer commands via the <code>[alias]</code> section of <code>.gitconfig</code>.</p>
+<p><span class="mini-section">Setup Syntax</span></p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[alias]</span></span>
+<span id="cb4-2">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>shortcut<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> = <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>actual <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> command<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<ul class="task-list">
+<li><label><input type="checkbox">Do not include git in the actual command — Git automatically prefixes it.</label></li>
+<li><label><input type="checkbox">You may need quotes if the command includes spaces or options.</label></li>
+</ul>
+<p><span class="mini-section">Alias Setup</span></p>
+<p>The following setup defines a Git subcommand alias called <code>git unstage</code></p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[alias]</span></span>
+<span id="cb5-2">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">unstage</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"restore --staged"</span></span></code></pre></div>
+<p>Then, <code>git unstage &lt;file&gt;</code> works the same as <code>git restore --staged &lt;file_name&gt;</code></p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>git restore</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-06-13-how-to-unstage-files/</guid>
+  <pubDate>Fri, 13 Jun 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I consolidate multiple temporary commits into a single meaningful one?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
