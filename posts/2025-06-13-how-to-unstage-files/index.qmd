@@ -1,0 +1,71 @@
+---
+title: "OGG... How to unstage files in Git?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-06-13"
+categories: [git restore]
+---
+
+## ✅ Objective
+
+1. To reverse the git add operation for specific files, moving them from the staging area back to the working directory
+2. not modifying the content of the files themselves
+
+## 🎯 Goal
+
+- [ ] unstage one or more files that were previously added to the staging area
+
+## 📘 Guideline
+
+When you stage a file using `git add`, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:
+
+- `git restore --staged <file>`
+- `git reset <file>`
+
+Here I will explain of the first one `git restore`, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of "restoring" the index state. It avoids the broader and potentially confusing implications of `git reset`, which can also affect commit history when used in other forms.
+
+[To unstage a specific file]{.mini-section}
+
+```bash
+git restore --staged <file_name>
+```
+
+[To unstage multiple specific files]{.mini-section}
+
+```bash
+git restore --staged <file_name1> <file_name2> ...
+```
+
+- List all the files you want to unstage, separated by spaces.
+
+[To confirm the result after running]{.mini-section}
+
+```bash
+git status
+```
+
+### 💻 custom alias setup for git unstage
+
+Git lets you define shortcuts (aliases) for longer commands via the `[alias]` section of `.gitconfig`.
+
+[Setup Syntax]{.mini-section}
+
+```bash
+[alias]
+    <shortcut> = <actual git command>
+```
+
+- [ ] Do not include git in the actual command — Git automatically prefixes it.
+- [ ] You may need quotes if the command includes spaces or options.
+
+[Alias Setup]{.mini-section}
+
+The following setup defines a Git subcommand alias called `git unstage`
+
+```bash
+[alias]
+	unstage = "restore --staged"
+```
+
+Then, `git unstage <file>` works the same as `git restore --staged <file_name>`

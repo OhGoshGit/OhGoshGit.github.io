@@ -1,0 +1,71 @@
+---
+title: "あぁぁ... とあるファイルについてgit addを取り消したい．．．"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-06-13"
+categories: [git restore]
+---
+
+## ✅ Objective
+
+1. 特定のファイルに対するgit addの操作を取り消し、ステージングエリアからワーキングディレクトリに戻す
+2. ファイルの内容自体は変更しない
+
+## 🎯 Goal
+
+- [ ] 以前にステージングエリアに追加された1つまたは複数のファイルをunstageする
+
+## 📘 Guideline
+
+`git add`でファイルをステージングすると、そのファイルはステージングエリア（インデックス）に移動し、コミットの準備が整います。もし考えが変わってunstageしたい場合（変更内容を失うことなく）、一般的に2つの選択肢があります：
+
+- `git restore --staged <file>`
+- `git reset <file>`
+
+ここでは、より新しいタスク特化型のGitコマンドの一部である`git restore`について説明します。このコマンドは、より直感的で分かりやすく、インデックスの状態を「復元」する動作に特化しています。他の形式で使用した場合にコミット履歴にも影響を与える可能性がある`git reset`の、より広範で潜在的に混乱を招く影響を避けることができます。
+
+[特定のファイルをunstageする]{.mini-section}
+
+```bash
+git restore --staged <file_name>
+```
+
+[複数の特定のファイルをunstageする]{.mini-section}
+
+```bash
+git restore --staged <file_name1> <file_name2> ...
+```
+
+- unstageしたいファイルをスペースで区切って列挙します。
+
+[実行後の結果を確認する]{.mini-section}
+
+```bash
+git status
+```
+
+### 💻 git unstage 用のカスタムエイリアス設定
+
+Gitでは、`.gitconfig`の`[alias]`セクションを通じて、長いコマンドのショートカット（Alias）を定義できます。
+
+[設定の構文]{.mini-section}
+
+```bash
+[alias]
+    <shortcut> = <actual git command>
+```
+
+- [ ] 実際のコマンドにgitを含めないでください — Gitは自動的にそれを付加します
+- [ ] コマンドにスペースやオプションが含まれる場合は、引用符が必要かもしれません
+
+[Aliasの設定]{.mini-section}
+
+以下の設定で、`git unstage`というGitサブコマンドのAliasを定義します。
+
+```bash
+[alias]
+	unstage = "restore --staged"
+```
+
+これにより、`git unstage <file>`が`git restore --staged <file_name>`と同じように機能します。

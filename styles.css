@@ -1,4 +1,13 @@
 /* css styles */
+h3 {
+  font-size: 1.45rem;
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5em;
+}
+
+
+
 .mini-section {
   font-weight: bold;
   font-size: 1.1em;
@@ -10,7 +19,6 @@
   content: "▶";
   margin-right: 0.4em;
 }
-
 
 .regmonkey_bold {
   color: #206f83;
