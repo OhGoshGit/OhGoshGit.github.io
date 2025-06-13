@@ -9,7 +9,7 @@
 <meta name="author" content="Ryo Nakagami">
 <meta name="dcterms.date" content="2024-07-26">
 
-<title>OGG… I just want to save the current repository into another remote… – OhGoshGit!?!</title>
+<title>あぁぁ… 現在のリポジトリを別のリモートに保存したい… – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -352,7 +352,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… I just want to save the current repository into another remote…</h1>
+      <h1 class="title">あぁぁ… 現在のリポジトリを別のリモートに保存したい…</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">git clone</div>
               </div>
@@ -379,7 +379,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">2025-06-13</p>
+        <p class="date-modified">2025-06-14</p>
       </div>
     </div>
       
@@ -394,12 +394,12 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution-git-clone-bare" id="toc-solution-git-clone-bare" class="nav-link" data-scroll-target="#solution-git-clone-bare">Solution: git clone –bare</a>
+  <li><a href="#問題" id="toc-問題" class="nav-link active" data-scroll-target="#問題">問題</a></li>
+  <li><a href="#解決策-git-clone---bare" id="toc-解決策-git-clone---bare" class="nav-link" data-scroll-target="#解決策-git-clone---bare">解決策: <code>git clone --bare</code></a>
   <ul class="collapse">
-  <li><a href="#why-not-no-bare-git-clone-and-git-push-mirror" id="toc-why-not-no-bare-git-clone-and-git-push-mirror" class="nav-link" data-scroll-target="#why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</a></li>
+  <li><a href="#なぜ通常のgit-clone-と-git-push---mirrorを使わないのか" id="toc-なぜ通常のgit-clone-と-git-push---mirrorを使わないのか" class="nav-link" data-scroll-target="#なぜ通常のgit-clone-と-git-push---mirrorを使わないのか">なぜ通常の<code>git clone</code> と <code>git push --mirror</code>を使わないのか？</a></li>
   </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">📘 References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -411,45 +411,45 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
+<section id="問題" class="level2">
+<h2 class="anchored" data-anchor-id="問題">問題</h2>
+<p>GitHubでホストされているリポジトリ<code>LinearModels</code>で，同僚とリモートおよび/またはローカルで作業をしているとします． 現在のリポジトリで開発が進行中ですが，上司から現時点での履歴を保持したまま， Gitlabリポジトリ<code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>にミラーリングするよう依頼されました．</p>
 </section>
-<section id="solution-git-clone-bare" class="level2">
-<h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
+<section id="解決策-git-clone---bare" class="level2">
+<h2 class="anchored" data-anchor-id="解決策-git-clone---bare">解決策: <code>git clone --bare</code></h2>
+<p><strong> ▶&nbsp; 手順</strong></p>
 <ol type="1">
-<li>Create a bare clone of the repository</li>
-<li>Mirror-push to the new repository</li>
-<li>Remove the temporary old local repository</li>
+<li>リポジトリのベアクローンを作成</li>
+<li>新しいリポジトリにミラーpush</li>
+<li>一時的な古いローカルリポジトリを削除</li>
 </ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1</span></span>
+<p><strong> ▶&nbsp; コマンド</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ステップ1</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git clone <span class="at">--bare</span> https://github.com/EXAMPLE-USER/LinearModels.git</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ステップ2</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> cd LinearModels.git</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git push <span class="at">--mirror</span> https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ステップ3</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> cd ..</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> rm <span class="at">-rf</span> LinearModels.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="blog-custom-border">
-<p><strong>📘 REMARKS</strong> <br></p>
+<p><strong>REAMRKS</strong> <br></p>
 <ul>
-<li>A non-bare <code>git clone</code> downloads both the snapshot and history to the local machine. However, a <code>git clone --bare</code> only copies the history, allowing for a quicker transfer to a new remote repository.</li>
-<li>Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．</li>
-<li>The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.</li>
+<li>通常の<code>git clone</code>はスナップショットと履歴の両方をローカルマシンにダウンロードしますが，<code>git clone --bare</code>は履歴のみをコピーするため，新しいリモートリポジトリへの転送が迅速に行えます．</li>
+<li>また，ベアリポジトリから通常のリポジトリを作成することもできます．ほとんどの場合，push先の新しいリポジトリは通常のリポジトリである必要があります．</li>
+<li>ミラーリングプロセスはローカルと新しいリモートリポジトリ間の通信を通じて行われるため，古いリモートリポジトリは新しいリポジトリの通知や更新を受け取りません．</li>
 </ul>
 </div>
-<section id="why-not-no-bare-git-clone-and-git-push-mirror" class="level3">
-<h3 class="anchored" data-anchor-id="why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</h3>
-<p>When running <code>git clone origin-url</code>, you will get all of the tags copied, a local branch master (<code>HEAD</code>) tracking a remote branch <code>origin/master</code>, and remote branches <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>.</p>
-<p>If you do <code>git push --mirror</code> a non-bare cloned repository, it also pushes your remote branches, <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>, because mirror implies everything. Then, you would get branches named <code>origin/origin/test1</code>.</p>
+<section id="なぜ通常のgit-clone-と-git-push---mirrorを使わないのか" class="level3">
+<h3 class="anchored" data-anchor-id="なぜ通常のgit-clone-と-git-push---mirrorを使わないのか">なぜ通常の<code>git clone</code> と <code>git push --mirror</code>を使わないのか？</h3>
+<p><code>git clone &lt;origin-url&gt;</code>を実行すると，すべてのタグがコピーされ， リモートブランチ<code>origin/master</code>を追跡するローカルブランチmaster（<code>HEAD</code>）と，リモート ブランチ<code>origin/test1</code>，<code>origin/test2</code>，<code>origin/test3</code>が作成されます．</p>
+<p>通常のクローンリポジトリに対して<code>git push --mirror</code>を実行すると，mirrorは全てを意味するため， リモートブランチ<code>origin/test1</code>，<code>origin/test2</code>，<code>origin/test3</code>もpushされます． その結果，<code>origin/origin/test1</code>という名前のブランチが作成されてしまいます．</p>
 </section>
 </section>
 <section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
 <ul>
 <li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository">GitHub Docs &gt; Duplicating a repository</a></li>
 </ul>

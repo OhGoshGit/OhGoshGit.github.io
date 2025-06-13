@@ -2586,7 +2586,7 @@ font-style: inherit;">=</span>origin/new-feature</span></code></pre></div>
   <pubDate>Thu, 31 Oct 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>OGG… I just want to save the current repository into another remote…</title>
+  <title>あぁぁ… 現在のリポジトリを別のリモートに保存したい…</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/</link>
   <description><![CDATA[ 
@@ -2596,22 +2596,22 @@ font-style: inherit;">=</span>origin/new-feature</span></code></pre></div>
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
+<section id="問題" class="level2">
+<h2 class="anchored" data-anchor-id="問題">問題</h2>
+<p>GitHubでホストされているリポジトリ<code>LinearModels</code>で，同僚とリモートおよび/またはローカルで作業をしているとします． 現在のリポジトリで開発が進行中ですが，上司から現時点での履歴を保持したまま， Gitlabリポジトリ<code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>にミラーリングするよう依頼されました．</p>
 </section>
-<section id="solution-git-clone-bare" class="level2">
-<h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
+<section id="解決策-git-clone---bare" class="level2">
+<h2 class="anchored" data-anchor-id="解決策-git-clone---bare">解決策: <code>git clone --bare</code></h2>
+<p><strong> ▶&nbsp; 手順</strong></p>
 <ol type="1">
-<li>Create a bare clone of the repository</li>
-<li>Mirror-push to the new repository</li>
-<li>Remove the temporary old local repository</li>
+<li>リポジトリのベアクローンを作成</li>
+<li>新しいリポジトリにミラーpush</li>
+<li>一時的な古いローカルリポジトリを削除</li>
 </ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
+<p><strong> ▶&nbsp; コマンド</strong></p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Step 1</span></span>
+font-style: inherit;"># ステップ1</span></span>
 <span id="cb1-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git clone <span class="at" style="color: #657422;
@@ -2620,7 +2620,7 @@ font-style: inherit;">--bare</span> https://github.com/EXAMPLE-USER/LinearModels
 <span id="cb1-3"></span>
 <span id="cb1-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Step 2</span></span>
+font-style: inherit;"># ステップ2</span></span>
 <span id="cb1-5"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> cd LinearModels.git</span>
@@ -2632,7 +2632,7 @@ font-style: inherit;">--mirror</span> https://gitlab.econometrics.com/EXAMPLE-US
 <span id="cb1-7"></span>
 <span id="cb1-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Step 3</span></span>
+font-style: inherit;"># ステップ3</span></span>
 <span id="cb1-9"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> cd ..</span>
@@ -2642,21 +2642,21 @@ font-style: inherit;">%</span> rm <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div>
 <div class="blog-custom-border">
-<p><strong>📘 REMARKS</strong> <br></p>
+<p><strong>REAMRKS</strong> <br></p>
 <ul>
-<li>A non-bare <code>git clone</code> downloads both the snapshot and history to the local machine. However, a <code>git clone --bare</code> only copies the history, allowing for a quicker transfer to a new remote repository.</li>
-<li>Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．</li>
-<li>The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.</li>
+<li>通常の<code>git clone</code>はスナップショットと履歴の両方をローカルマシンにダウンロードしますが，<code>git clone --bare</code>は履歴のみをコピーするため，新しいリモートリポジトリへの転送が迅速に行えます．</li>
+<li>また，ベアリポジトリから通常のリポジトリを作成することもできます．ほとんどの場合，push先の新しいリポジトリは通常のリポジトリである必要があります．</li>
+<li>ミラーリングプロセスはローカルと新しいリモートリポジトリ間の通信を通じて行われるため，古いリモートリポジトリは新しいリポジトリの通知や更新を受け取りません．</li>
 </ul>
 </div>
-<section id="why-not-no-bare-git-clone-and-git-push-mirror" class="level3">
-<h3 class="anchored" data-anchor-id="why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</h3>
-<p>When running <code>git clone origin-url</code>, you will get all of the tags copied, a local branch master (<code>HEAD</code>) tracking a remote branch <code>origin/master</code>, and remote branches <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>.</p>
-<p>If you do <code>git push --mirror</code> a non-bare cloned repository, it also pushes your remote branches, <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>, because mirror implies everything. Then, you would get branches named <code>origin/origin/test1</code>.</p>
+<section id="なぜ通常のgit-clone-と-git-push---mirrorを使わないのか" class="level3">
+<h3 class="anchored" data-anchor-id="なぜ通常のgit-clone-と-git-push---mirrorを使わないのか">なぜ通常の<code>git clone</code> と <code>git push --mirror</code>を使わないのか？</h3>
+<p><code>git clone &lt;origin-url&gt;</code>を実行すると，すべてのタグがコピーされ， リモートブランチ<code>origin/master</code>を追跡するローカルブランチmaster（<code>HEAD</code>）と，リモート ブランチ<code>origin/test1</code>，<code>origin/test2</code>，<code>origin/test3</code>が作成されます．</p>
+<p>通常のクローンリポジトリに対して<code>git push --mirror</code>を実行すると，mirrorは全てを意味するため， リモートブランチ<code>origin/test1</code>，<code>origin/test2</code>，<code>origin/test3</code>もpushされます． その結果，<code>origin/origin/test1</code>という名前のブランチが作成されてしまいます．</p>
 </section>
 </section>
 <section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
 <ul>
 <li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository">GitHub Docs &gt; Duplicating a repository</a></li>
 </ul>
@@ -2670,7 +2670,7 @@ font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div>
   <pubDate>Fri, 26 Jul 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>OGG… I cannot push to remote branch and cannot pull the remote changes…</title>
+  <title>あぁぁ… リモートブランチにpushも，リモート変更も，pullもできない…</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/</link>
   <description><![CDATA[ 
@@ -2680,10 +2680,10 @@ font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div>
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a local development branch, <code>eda/data-sanity-check</code>. After some modifications and commits on the local, you realized that you cannot push to the remote branch.</p>
-<p>When you hit <code>git push</code>, you’ve got the following error:</p>
+<section id="問題" class="level2">
+<h2 class="anchored" data-anchor-id="問題">問題</h2>
+<p>ローカルの開発ブランチ<code>eda/data-sanity-check</code>で作業をしているとします．ローカルでいくつかの変更をコミットした後，リモートブランチにpushしようとしたところ， pushできないことに気づきました．</p>
+<p><code>git push</code>を実行すると，以下のようなエラーが表示されます：</p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git push</span>
@@ -2741,9 +2741,9 @@ font-style: inherit;">'Note about fast-forwards'</span> in <span class="st" styl
 background-color: null;
 font-style: inherit;">'git push --help'</span> for details.</span></code></pre></div>
 </section>
-<section id="what-is-happening" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-happening">What is happening</h2>
-<p>Generally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.</p>
+<section id="何が起きているのか" class="level2">
+<h2 class="anchored" data-anchor-id="何が起きているのか">何が起きているのか</h2>
+<p>一般的に，pushする前にリモートの変更をpullして最新の状態を保つ必要があります． しかし，現在のブランチで既にいくつかの変更をコミットしている状態で，リモートブランチにも コミットがある場合，履歴のコンフリクトによってリモートの変更をpullすることもできません．</p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -2762,10 +2762,10 @@ font-style: inherit;">'git push --help'</span> for details.</span></code></pre><
        commit id: "local-mod-2"
        commit id: "local-mod-3"
        checkout remote
-       merge local id:"❗️failed to push"
+       merge local id:"❗️push失敗"
 </pre>
 </div>
-<p></p><figcaption> Fig 1. Conflict between the local and the remote</figcaption> </figure><p></p>
+<p></p><figcaption> 図1. ローカルとリモートのコンフリクト</figcaption> </figure><p></p>
 </div>
 </div>
 </div>
@@ -2784,43 +2784,43 @@ font-style: inherit;">'git push --help'</span> for details.</span></code></pre><
        checkout local
        commit id: "local-mod-2"
        commit id: "local-mod-3"
-       merge remote id:"❗️failed to pull"
+       merge remote id:"❗️pull失敗"
 </pre>
 </div>
-<p></p><figcaption> Fig 2. You cannot pull the remote either</figcaption> </figure><p></p>
+<p></p><figcaption> 図2. リモートのpullもできない</figcaption> </figure><p></p>
 </div>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="solution-git-pull---rebase" class="level2">
-<h2 class="anchored" data-anchor-id="solution-git-pull---rebase">Solution: git pull --rebase</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
+<section id="解決策-git-pull---rebase" class="level2">
+<h2 class="anchored" data-anchor-id="解決策-git-pull---rebase">解決策: <code>git pull --rebase</code></h2>
+<p><strong> ▶&nbsp; 手順</strong></p>
 <ol type="1">
-<li>Check the difference between the local and the romote</li>
-<li>Resolve the local-remote conflict</li>
-<li>push top the remote after solving the conflict</li>
+<li>ローカルとリモートの差分を確認</li>
+<li>ローカル-リモート間のコンフリクトを解決</li>
+<li>コンフリクト解決後にリモートにpush</li>
 </ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
+<p><strong> ▶&nbsp; コマンド</strong></p>
 <div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## fetch the remote info</span></span>
+font-style: inherit;">## リモートの情報を取得</span></span>
 <span id="cb2-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git fetch</span>
 <span id="cb2-3"></span>
 <span id="cb2-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## check which files are different from the remote</span></span>
+font-style: inherit;">## リモートとの差分があるファイルを確認</span></span>
 <span id="cb2-5"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git difftool eda/data-sanity-check origin</span></code></pre></div>
-<p>The above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.</p>
-<p>Then, let’s solve the conflict.</p>
+<p>上記のコマンドはリモート-ローカル間の差分を確認するためのものです． 問題を素早く解決したい場合は，このプロセスをスキップしても構いません．</p>
+<p>では，コンフリクトを解決しましょう．</p>
 <div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## Step 2</span></span>
+font-style: inherit;">## ステップ2</span></span>
 <span id="cb3-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git pull <span class="at" style="color: #657422;
@@ -2880,15 +2880,15 @@ font-style: inherit;">&gt;</span>... eda: add histogram</span>
 <span id="cb3-12"></span>
 <span id="cb3-13"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## after resolving the conflict</span></span>
+font-style: inherit;">## コンフリクト解決後</span></span>
 <span id="cb3-14"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git rebase <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--continue</span></span></code></pre></div>
-<p>The <code>git pull --rebase</code> commands is the same as <code>git pull</code> + <code>git rebase</code>. Aftrer hitting <code>git pull --rebase</code>, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.</p>
-<p>After resolving the conflict, do not foregt to run <code>git rebase --continue</code>, otherwise you continue to stay in the conflict-resolution mode.</p>
-<p>Your git history will look like the following;</p>
+<p><code>git pull --rebase</code>コマンドは<code>git pull</code>と<code>git rebase</code>を組み合わせたものです． <code>git pull --rebase</code>を実行すると，コンフリクトがある場合はコンフリクト解決プロセスに入ります． 通常のマージコンフリクトと同様に，コンフリクトが発生したファイルを開いて手動で修正する必要があります．</p>
+<p>コンフリクトを解決した後は，必ず<code>git rebase --continue</code>を実行してください． 実行しないと，コンフリクト解決モードのままになってしまいます．</p>
+<p>あなたのGit履歴は以下のようになります：</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -2906,26 +2906,26 @@ font-style: inherit;">--continue</span></span></code></pre></div>
        commit id: "conflict-resolve"
 </pre>
 </div>
-<p></p><figcaption> Fig 3. git pull –rebase</figcaption> </figure><p></p>
+<p></p><figcaption> 図3. git pull –rebase</figcaption> </figure><p></p>
 </div>
 </div>
 </div>
-<p>At the above <code>conflict-resolve</code> node, you choose which local modifications should stay in the repository history.</p>
-<p>Then, now that you are able to push to the remote.</p>
+<p>上記の<code>conflict-resolve</code>ノードで，リポジトリの履歴に残すローカルの変更を選択します．</p>
+<p>これで，リモートにpushできるようになりました．</p>
 <div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">## Step 3: push to the remote</span></span>
+font-style: inherit;">## ステップ3：リモートにpush</span></span>
 <span id="cb4-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">%</span> git push origin HEAD</span></code></pre></div>
 <p><strong> ▶&nbsp; REMARKS</strong></p>
 <ul>
-<li>When hitting <code>git pull --rebase</code>, it’s possible that all differences automatically are resoloved.
+<li><code>git pull --rebase</code>を実行した際，すべての差分が自動的に解決されることもあります．
 <ul>
-<li>For example, you modified some files but ther remote changes are not related to the files you’ve chnaged.</li>
-<li><code>git pull --rebase</code> automatically resolved the difference which does not cause the conflict.</li>
+<li>例えば，あなたが変更したファイルとリモートの変更が関係ない場合など．</li>
+<li><code>git pull --rebase</code>はコンフリクトを引き起こさない差分を自動的に解決します．</li>
 </ul></li>
-<li>When you get confused and want to get out of the conflict-resolution mode without saving, hit the <code>git rebase --abort</code></li>
+<li>混乱してしまい，保存せずにコンフリクト解決モードを抜けたい場合は，<code>git rebase --abort</code>を実行してください．</li>
 </ul>
 
 

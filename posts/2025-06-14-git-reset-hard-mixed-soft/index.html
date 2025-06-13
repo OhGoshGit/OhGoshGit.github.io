@@ -391,13 +391,13 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">✅ Objective</a></li>
-  <li><a href="#what-is-git-reset" id="toc-what-is-git-reset" class="nav-link" data-scroll-target="#what-is-git-reset">🔧 What is <code>git reset</code>?</a>
+  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">Objective</a></li>
+  <li><a href="#what-is-git-reset" id="toc-what-is-git-reset" class="nav-link" data-scroll-target="#what-is-git-reset">What is <code>git reset</code>?</a>
   <ul class="collapse">
   <li><a href="#comparison-table-between---soft---mixed-and---hard" id="toc-comparison-table-between---soft---mixed-and---hard" class="nav-link" data-scroll-target="#comparison-table-between---soft---mixed-and---hard">Comparison Table between <code>--soft</code>, <code>--mixed</code>, and <code>--hard</code></a></li>
   </ul></li>
-  <li><a href="#do-i-need-to-run-git-reset---hard-think-again" id="toc-do-i-need-to-run-git-reset---hard-think-again" class="nav-link" data-scroll-target="#do-i-need-to-run-git-reset---hard-think-again">❓ Do I need to run <code>git reset --hard</code>? Think again</a></li>
-  <li><a href="#best-practice-guideline-summary" id="toc-best-practice-guideline-summary" class="nav-link" data-scroll-target="#best-practice-guideline-summary">👍 Best Practice Guideline Summary</a></li>
+  <li><a href="#do-i-need-to-run-git-reset---hard-think-again" id="toc-do-i-need-to-run-git-reset---hard-think-again" class="nav-link" data-scroll-target="#do-i-need-to-run-git-reset---hard-think-again">Do I need to run <code>git reset --hard</code>? Think again</a></li>
+  <li><a href="#best-practice-guideline-summary" id="toc-best-practice-guideline-summary" class="nav-link" data-scroll-target="#best-practice-guideline-summary">Best Practice Guideline Summary</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">📘 References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -411,14 +411,14 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 <section id="objective" class="level2">
-<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
+<h2 class="anchored" data-anchor-id="objective">Objective</h2>
 <ul class="task-list">
 <li><label><input type="checkbox">Understand what <code>git reset</code> is</label></li>
 <li><label><input type="checkbox">Understand the difference between <code>git reset --hard</code> vs <code>--mixed</code> vs <code>--soft</code></label></li>
 </ul>
 </section>
 <section id="what-is-git-reset" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-git-reset">🔧 What is <code>git reset</code>?</h2>
+<h2 class="anchored" data-anchor-id="what-is-git-reset">What is <code>git reset</code>?</h2>
 <div class="blog-custom-border">
 <p><strong>Definition: git reset</strong><br> <code>git reset</code> is a command used to move <code>HEAD</code> and optionally unstage or delete changes.</p>
 </div>
@@ -487,7 +487,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </section>
 </section>
 <section id="do-i-need-to-run-git-reset---hard-think-again" class="level2">
-<h2 class="anchored" data-anchor-id="do-i-need-to-run-git-reset---hard-think-again">❓ Do I need to run <code>git reset --hard</code>? Think again</h2>
+<h2 class="anchored" data-anchor-id="do-i-need-to-run-git-reset---hard-think-again">Do I need to run <code>git reset --hard</code>? Think again</h2>
 <p>When working with Git, you may find yourself needing to create a new branch from a previous commit becasue a bug was introduced in the most recent commit. For example, you might want to create a <code>HOTFIX</code> branch from one commit before the current <code>HEAD</code>.</p>
 <p>You may be thinking of <code>git reset --hard</code> and <code>git switch</code> for checkout, but think again. In that case,</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> HOTFIX HEAD~1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -505,7 +505,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </ul>
 </section>
 <section id="best-practice-guideline-summary" class="level2">
-<h2 class="anchored" data-anchor-id="best-practice-guideline-summary">👍 Best Practice Guideline Summary</h2>
+<h2 class="anchored" data-anchor-id="best-practice-guideline-summary">Best Practice Guideline Summary</h2>
 <div class="no-border-top-table">
 <table class="caption-top table">
 <colgroup>
