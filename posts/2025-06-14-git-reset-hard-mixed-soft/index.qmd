@@ -1,0 +1,106 @@
+---
+title: "OGG... What's difference between git reset --hard vs --mixed vs --soft?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-06-14"
+categories: [git reset]
+---
+
+## ✅ Objective
+
+- [ ] Understand what `git reset` is
+- [ ] Understand the difference between `git reset --hard` vs `--mixed` vs `--soft`
+
+
+## 🔧 What is `git reset`?
+
+:::{.blog-custom-border}
+**Definition: git reset**<br>
+`git reset` is a command used to move `HEAD` and optionally unstage or delete changes. 
+
+:::
+
+
+### Comparison Table between `--soft`, `--mixed`, and `--hard`
+
+:::{.no-border-top-table .pb-3}
+
+| Area                 | `--soft` | `--mixed` (default) | `--hard`  |
+| -------------------- | -------- | ------------------- | --------- |
+| `HEAD` (commit ptr)  | ✔️ moved | ✔️ moved            | ✔️ moved  |
+| Staging area (Index) | ✅ kept   | ❌ cleared           | ❌ cleared |
+| Working dir files    | ✅ kept   | ✅ kept              | ❌ cleared |
+
+:::
+
+[git reset sequence diagram]{.mini-section}
+
+The following diagram is a step-by-step visualization of how different `git reset` modes affect Git's three areas:
+
+```{mermaid}
+sequenceDiagram
+    participant Before as commit-id A
+    participant Working as Working Area
+    participant Staging as Staging(Index)
+    participant HEAD as commit-id B
+
+    Before->>Working: editing files
+
+    Working->>Staging: git add
+
+    Staging->>HEAD: git commit
+
+    HEAD->>Staging: git reset --soft HEAD~1
+    HEAD->>Working: git reset --mixed HEAD~1
+    HEAD->>Before: git reset --hard HEAD~1
+```
+
+## ❓ Do I need to run `git reset --hard`? Think again
+
+When working with Git, you may find yourself needing to create a new branch from a previous commit becasue a bug was introduced in the most recent commit. 
+For example, you might want to create a `HOTFIX` branch from one commit before the current `HEAD`.
+
+You may be thinking of `git reset --hard` and `git switch` for checkout, but think again. In that case, 
+
+```bash
+git switch -c HOTFIX HEAD~1
+``` 
+
+is better.
+
+[What It Does]{.mini-section}
+
+- Creates a new branch named `HOTFIX` starting from the commit before `HEAD`.
+- Switches you to the HOTFIX branch.
+- Leaves your current branch and commit history unchanged.
+
+[Benefits]{.mini-section}
+
+- Non-destructive: All commits are preserved.
+- Clean separation: You work on the hotfix branch without altering your current one.
+
+
+
+
+## 👍 Best Practice Guideline Summary
+
+:::{.no-border-top-table}
+
+| If you want to...                              | Use                 |
+| ---------------------------------------------- | ------------------- |
+| Rewrite commit history but keep work           | `git reset --soft HEAD~1`            |
+| Unstage files, keep changes in files           | `git reset --mixed HEAD~1` (default) |
+| Fully discard all changes and reset everything | `git reset --hard HEAD~1`            |
+| Create and switch to a new branch `HOTFIX` from `HEAD~1` |`git switch -c HOTFIX HEAD~1`|
+
+: {tbl-colwidths="[50,50]"}
+
+:::
+
+
+
+📘 References
+---------
+
+- [Git DOcumentation > git-reset](https://git-scm.com/docs/git-reset)
