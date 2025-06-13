@@ -7,13 +7,13 @@ date: "2025-06-14"
 categories: [git reset]
 ---
 
-## ✅ Objective
+## Objective
 
 - [ ] Understand what `git reset` is
 - [ ] Understand the difference between `git reset --hard` vs `--mixed` vs `--soft`
 
 
-## 🔧 What is `git reset`?
+## What is `git reset`?
 
 :::{.blog-custom-border}
 **Definition: git reset**<br>
@@ -56,7 +56,7 @@ sequenceDiagram
     HEAD->>Before: git reset --hard HEAD~1
 ```
 
-## ❓ Do I need to run `git reset --hard`? Think again
+## Do I need to run `git reset --hard`? Think again
 
 When working with Git, you may find yourself needing to create a new branch from a previous commit becasue a bug was introduced in the most recent commit. 
 For example, you might want to create a `HOTFIX` branch from one commit before the current `HEAD`.
@@ -83,7 +83,7 @@ is better.
 
 
 
-## 👍 Best Practice Guideline Summary
+## Best Practice Guideline Summary
 
 :::{.no-border-top-table}
 

@@ -1,61 +1,61 @@
 ---
-title: "OGG... I just want to save the current repository into another remote..."
+title: "あぁぁ... 現在のリポジトリを別のリモートに保存したい..."
 author: 
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2024-07-26"
-date-modified: last-modified
+date-modified: "2025-06-14"
 categories: [git clone]
 ---
 
-## Problem
+## 問題
 
-Let’s say you are working on a GitHub-hosted repository, `LinearModels`, remotely and/or locally with your colleagues.
-Development is going on at the current repository, but your boss has asked you to mirror the current
-repository into gitlab repository, `https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git`, while keeping the history as of now.
+GitHubでホストされているリポジトリ`LinearModels`で，同僚とリモートおよび/またはローカルで作業をしているとします．
+現在のリポジトリで開発が進行中ですが，上司から現時点での履歴を保持したまま，
+Gitlabリポジトリ`https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git`にミラーリングするよう依頼されました．
 
-## Solution: git clone --bare
+## 解決策: `git clone --bare`
 
-<strong > &#9654;&nbsp; Steps</strong>
+<strong > &#9654;&nbsp; 手順</strong>
 
-1. Create a bare clone of the repository
-2. Mirror-push to the new repository
-3. Remove the temporary old local repository 
+1. リポジトリのベアクローンを作成
+2. 新しいリポジトリにミラーpush
+3. 一時的な古いローカルリポジトリを削除
 
-<strong > &#9654;&nbsp; Commands</strong>
+<strong > &#9654;&nbsp; コマンド</strong>
 
 ```zsh
-# Step 1
+# ステップ1
 % git clone --bare https://github.com/EXAMPLE-USER/LinearModels.git
 
-# Step 2
+# ステップ2
 % cd LinearModels.git
 % git push --mirror https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git
 
-# Step 3
+# ステップ3
 % cd ..
 % rm -rf LinearModels.git
 ```
 
 <div class="blog-custom-border">
-<strong >📘 REMARKS</strong> <br>
+<strong >REAMRKS</strong> <br>
 
-- A non-bare `git clone` downloads both the snapshot and history to the local machine. However, a `git clone --bare` only copies the history, allowing for a quicker transfer to a new remote repository.
-- Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．
-- The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.
+- 通常の`git clone`はスナップショットと履歴の両方をローカルマシンにダウンロードしますが，`git clone --bare`は履歴のみをコピーするため，新しいリモートリポジトリへの転送が迅速に行えます．
+- また，ベアリポジトリから通常のリポジトリを作成することもできます．ほとんどの場合，push先の新しいリポジトリは通常のリポジトリである必要があります．
+- ミラーリングプロセスはローカルと新しいリモートリポジトリ間の通信を通じて行われるため，古いリモートリポジトリは新しいリポジトリの通知や更新を受け取りません．
 
 </div>
 
-### Why not no-bare git clone and git push --mirror?
+### なぜ通常の`git clone` と `git push --mirror`を使わないのか？
 
-When running `git clone origin-url`, you will get all of the tags copied,
-a local branch master (`HEAD`) tracking a remote branch `origin/master`, and remote
-branches `origin/test1`, `origin/test2`, and `origin/test3`. 
+`git clone <origin-url>`を実行すると，すべてのタグがコピーされ，
+リモートブランチ`origin/master`を追跡するローカルブランチmaster（`HEAD`）と，リモート
+ブランチ`origin/test1`，`origin/test2`，`origin/test3`が作成されます．
 
-If you do `git push --mirror` a non-bare cloned repository, it also pushes your remote branches,
-`origin/test1`, `origin/test2`, and `origin/test3`, because mirror implies everything.
-Then, you would get branches named `origin/origin/test1`. 
+通常のクローンリポジトリに対して`git push --mirror`を実行すると，mirrorは全てを意味するため，
+リモートブランチ`origin/test1`，`origin/test2`，`origin/test3`もpushされます．
+その結果，`origin/origin/test1`という名前のブランチが作成されてしまいます．
 
-References
+📘 References
 ----------
 - [GitHub Docs > Duplicating a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository)

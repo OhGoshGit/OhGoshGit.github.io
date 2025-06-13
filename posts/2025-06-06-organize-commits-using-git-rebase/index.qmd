@@ -7,12 +7,12 @@ date: "2025-06-06"
 categories: [git rebase]
 ---
 
-## ✅ Objective
+## Objective
 
 - Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.
 - This is especially useful before code review or merging into the main branch to ensure a clean and understandable history.
 
-## 🎯 Goal
+## Goal
 
 
 - [ ] Consolidate multiple recent commits into a single, well-described commit.
@@ -20,7 +20,7 @@ categories: [git rebase]
 - [ ] Make commit history easier to understand for reviewers, increasing review efficiency and clarity.
 
 
-## 📘 Guideline
+## Guideline
 
 ::: {.callout-note}
 

@@ -7,16 +7,16 @@ date: "2025-06-13"
 categories: [git restore]
 ---
 
-## ✅ Objective
+## Objective
 
 1. To reverse the git add operation for specific files, moving them from the staging area back to the working directory
 2. not modifying the content of the files themselves
 
-## 🎯 Goal
+## Goal
 
 - [ ] unstage one or more files that were previously added to the staging area
 
-## 📘 Guideline
+## Guideline
 
 When you stage a file using `git add`, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:
 

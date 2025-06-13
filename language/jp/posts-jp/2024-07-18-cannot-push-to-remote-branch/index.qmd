@@ -1,5 +1,5 @@
 ---
-title: "OGG... I cannot push to remote branch and cannot pull the remote changes..."
+title: "あぁぁ... リモートブランチにpushも，リモート変更も，pullもできない..."
 author: 
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
@@ -8,13 +8,12 @@ date-modified: last-modified
 categories: [git branch]
 ---
 
-## Problem
+## 問題
 
-Let's say you are working on a local development branch, `eda/data-sanity-check`. 
-After some modifications and commits on the local, you realized that you cannot push to
-the remote branch.
+ローカルの開発ブランチ`eda/data-sanity-check`で作業をしているとします．ローカルでいくつかの変更をコミットした後，リモートブランチにpushしようとしたところ，
+pushできないことに気づきました．
 
-When you hit `git push`, you've got the following error:
+`git push`を実行すると，以下のようなエラーが表示されます：
 
 ```zsh
 % git push
@@ -29,17 +28,16 @@ hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 
-## What is happening
+## 何が起きているのか
 
-Generally speaking, you need to pull the remote and stay up-to-date before pushing.
-But the problem is you've already git commited on some modifications at the current branch
-while there are some commits at the remote branch too, and that's why you cannot pull
-the remote because of the history conflict.
+一般的に，pushする前にリモートの変更をpullして最新の状態を保つ必要があります．
+しかし，現在のブランチで既にいくつかの変更をコミットしている状態で，リモートブランチにも
+コミットがある場合，履歴のコンフリクトによってリモートの変更をpullすることもできません．
 
 ::: {layout-ncol=2}
 
 ```{mermaid}
-%%| fig-cap: Fig 1. Conflict between the local and the remote
+%%| fig-cap: 図1. ローカルとリモートのコンフリクト
 %%{init: { 'logLevel': 'debug', 'theme': 'base', 
             'gitGraph': {'rotateCommitLabel': true,
                          'mainBranchName': 'local'}}}%%
@@ -51,11 +49,11 @@ the remote because of the history conflict.
        commit id: "local-mod-2"
        commit id: "local-mod-3"
        checkout remote
-       merge local id:"❗️failed to push"
+       merge local id:"❗️push失敗"
 ```
 
 ```{mermaid}
-%%| fig-cap: Fig 2. You cannot pull the remote either
+%%| fig-cap: 図2. リモートのpullもできない
 %%{init: { 'logLevel': 'debug', 'theme': 'base', 
             'gitGraph': {'rotateCommitLabel': true,
                          'mainBranchName': 'local'}}}%%
@@ -66,36 +64,36 @@ the remote because of the history conflict.
        checkout local
        commit id: "local-mod-2"
        commit id: "local-mod-3"
-       merge remote id:"❗️failed to pull"
+       merge remote id:"❗️pull失敗"
 ```
 
 :::
 
-## Solution: git pull -\-rebase
+## 解決策: `git pull --rebase`
 
-<strong > &#9654;&nbsp; Steps</strong>
+<strong > &#9654;&nbsp; 手順</strong>
 
-1. Check the difference between the local and the romote
-2. Resolve the local-remote conflict
-3. push top the remote after solving the conflict
+1. ローカルとリモートの差分を確認
+2. ローカル-リモート間のコンフリクトを解決
+3. コンフリクト解決後にリモートにpush
 
-<strong > &#9654;&nbsp; Commands</strong>
+<strong > &#9654;&nbsp; コマンド</strong>
 
 ```zsh
-## fetch the remote info
+## リモートの情報を取得
 % git fetch
 
-## check which files are different from the remote
+## リモートとの差分があるファイルを確認
 % git difftool eda/data-sanity-check origin
 ```
 
-The above commands are just for checking the remote-local difference.
-If you want to solve the problem quickly, it's alright to skip the process.
+上記のコマンドはリモート-ローカル間の差分を確認するためのものです．
+問題を素早く解決したい場合は，このプロセスをスキップしても構いません．
 
-Then, let's solve the conflict.
+では，コンフリクトを解決しましょう．
 
 ```zsh
-## Step 2
+## ステップ2
 % git pull --rebase
 ...
 Auto-merging eda/check_datasanity.py
@@ -107,22 +105,21 @@ hint: You can instead skip this commit: run "git rebase --skip".
 hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
 Could not apply <your-current HEAD commit-id>... eda: add histogram
 
-## after resolving the conflict
+## コンフリクト解決後
 % git rebase --continue
 ```
 
-The `git pull --rebase` commands is the same as `git pull` + `git rebase`.
-Aftrer hitting `git pull --rebase`, you are now in the conflict-resolution process 
-when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do
-in a usual merge-conflict.
+`git pull --rebase`コマンドは`git pull`と`git rebase`を組み合わせたものです．
+`git pull --rebase`を実行すると，コンフリクトがある場合はコンフリクト解決プロセスに入ります．
+通常のマージコンフリクトと同様に，コンフリクトが発生したファイルを開いて手動で修正する必要があります．
 
-After resolving the conflict, do not foregt to run `git rebase --continue`, otherwise 
-you continue to stay in the conflict-resolution mode.
+コンフリクトを解決した後は，必ず`git rebase --continue`を実行してください．
+実行しないと，コンフリクト解決モードのままになってしまいます．
 
-Your git history will look like the following;
+あなたのGit履歴は以下のようになります：
 
 ```{mermaid}
-%%| fig-cap: Fig 3. git pull --rebase
+%%| fig-cap: 図3. git pull --rebase
 %%{init: { 'logLevel': 'debug', 'theme': 'base', 
             'gitGraph': {'rotateCommitLabel': true,
                          'mainBranchName': 'local'}}}%%
@@ -135,19 +132,18 @@ Your git history will look like the following;
        commit id: "conflict-resolve"
 ```
 
-At the above `conflict-resolve` node, you choose which local modifications should stay 
-in the repository history.
+上記の`conflict-resolve`ノードで，リポジトリの履歴に残すローカルの変更を選択します．
 
-Then, now that you are able to push to the remote.
+これで，リモートにpushできるようになりました．
 
 ```zsh
-## Step 3: push to the remote
+## ステップ3：リモートにpush
 % git push origin HEAD
 ```
 
 <strong > &#9654;&nbsp; REMARKS</strong>
 
-- When hitting `git pull --rebase`, it's possible that all differences automatically are resoloved.
-    -  For example, you modified some files but ther remote changes are not related to the files you've chnaged.
-    - `git pull --rebase` automatically resolved the difference which does not cause the conflict.
-- When you get confused and want to get out of the conflict-resolution mode without saving, hit the `git rebase --abort`
+- `git pull --rebase`を実行した際，すべての差分が自動的に解決されることもあります．
+    - 例えば，あなたが変更したファイルとリモートの変更が関係ない場合など．
+    - `git pull --rebase`はコンフリクトを引き起こさない差分を自動的に解決します．
+- 混乱してしまい，保存せずにコンフリクト解決モードを抜けたい場合は，`git rebase --abort`を実行してください．
