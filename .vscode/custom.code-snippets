@@ -10,6 +10,7 @@
       "   - name: \"Ryo Nakagami\"",
       "     url: https://github.com/RyoNakagami",
       "date: \"2025-06-05\"",
+      "date-modified: \"2025-06-05\"",
       "categories: [gitignore, bfg]",
       "---",
     ],
@@ -97,5 +98,23 @@
       ":::",
     ],
     "description": "foldable solution block"
+  },
+  // --------------------------------------------
+  // sections
+  // --------------------------------------------
+  "checkmark-header": {
+    "scope": "quarto",
+    "prefix": "checkmark-header",
+    "body": [
+      "{.checkmark-header}",
+    ],
+    "description": "adding checkmark please use it in inline scope like [test]{.checkmark-header}"
+  },
+  "mini-section": {
+    "prefix": "section",
+    "body": [
+      "[section]{.mini-section}"
+    ],
+    "description": ""
   },
 }

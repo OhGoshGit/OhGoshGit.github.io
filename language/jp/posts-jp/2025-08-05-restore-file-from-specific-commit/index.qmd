@@ -1,0 +1,54 @@
+---
+title: "あぁぁ... 特定のコミットからファイルを復元するにはどうすればいいんだ？"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-08-05"
+date-modified: "2025-08-05"
+categories: [git restore]
+---
+
+## 🔎 目的
+
+- ブランチを切り替えたり，リポジトリ全体を元に戻したりすることなく，過去のコミットからファイルの特定バージョンを復元する．
+
+## 🎯 ゴール
+
+- commitされていない変更を保持しながら，過去のバージョンの個々のファイルを復元または確認できるようにする
+
+## 📘 ガイドライン
+
+`git restore`が導入されたGit 2.23以降を使用していることを確認してください．
+
+[使用するタイミング]{.mini-section}  
+
+- 削除または変更されたファイルを過去のコミットから取得する場合
+- 他の作業を破棄することなくファイルのローカル変更を元に戻す場合
+- 比較やパッチ適用のために特定のコンテンツを復元する場合
+
+[使用方法]{.mini-section}
+
+1. `git log`または`git blame`を使用して対象のcommit-hashを特定する
+
+```bash
+git log <filepath>  # 履歴を確認
+```
+
+2. 以下のコマンドを実行：
+
+```bash
+## git restore バージョン
+git restore --source=<commit-hash> <filepath>
+
+## git checkout バージョン
+git checkout <commit-hash> <filepath>
+```
+
+[特定のコミットIDバージョンからの復元を元に戻す方法]{.mini-section}
+
+| 状況                      | 復元オプション                                    |
+| ------------------------ | ---------------------------------------------- |
+| まだステージングされていない   | `git restore <filepath>`                       |
+| ステージング済みだが未コミット | `git restore --staged <filepath>` その後restore |
+| すでにコミット済み          | `git reflog` + `git reset` を使用               |
+| 予防措置                  | 復元前に現在の状態を `git stash`            |

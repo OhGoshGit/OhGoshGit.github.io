@@ -1,0 +1,54 @@
+---
+title: "OGG... How Can I restore a file from specific commit?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-08-05"
+date-modified: "2025-08-05"
+categories: [git restore]
+---
+
+## 🔎 Objective
+
+- Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository.
+
+## 🎯 Goal
+
+- Enable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes.
+
+## 📘 Guidline
+
+Ensure you're using Git 2.23+, where `git restore` was introduced.
+
+[When to Use]{.mini-section}  
+
+- To retrieve a deleted or modified file from a past commit.
+- To undo local changes to a file without discarding other work.
+- To recover specific content for comparison or patching.
+
+[How to Use]{.mini-section}
+
+1. Use `git log` or `git blame` to identify the target commit hash
+
+```bash
+git log <filepath>  # check history
+```
+
+2. Run the command:
+
+```bash
+## git restore version
+git restore --source=<commit-hash> <filepath>
+
+## git checkout version
+git checkout <commit-hash> <filepath>
+```
+
+[Undo git restore specific commit id version]{.mini-section}
+
+| Situation                | Recovery Option                                |
+| ------------------------ | ---------------------------------------------- |
+| Not staged yet           | `git restore <filepath>`                       |
+| Staged but not committed | `git restore --staged <filepath>` then restore |
+| Already committed        | Use `git reflog` + `git reset`                 |
+| Preventive measure       | Use `git stash` before risky restores          |
