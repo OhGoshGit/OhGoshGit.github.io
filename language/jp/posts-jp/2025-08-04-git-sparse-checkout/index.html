@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2025-08-04">
 
-<title>Git is hard, but we need to handle it – OhGoshGit!?!</title>
+<title>あぁぁ… 特定のディレクトリに対してgit sparse-checkoutを実行したい – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,33 +22,66 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-81058a171fbd23f6d294604e43ab58d1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-df41eb8bfbc04f0858ebad79a05028a6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-81058a171fbd23f6d294604e43ab58d1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-81058a171fbd23f6d294604e43ab58d1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../site_libs/bootstrap/bootstrap-dark-df41eb8bfbc04f0858ebad79a05028a6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../../site_libs/bootstrap/bootstrap-81058a171fbd23f6d294604e43ab58d1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,35 +109,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -123,38 +129,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -325,7 +302,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -340,17 +317,17 @@ window.Quarto = {
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="././language/jp/"> 
+    <a class="nav-link" href="../../../.././language/jp/"> 
 <span class="menu-text">日本語</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="././"> 
+    <a class="nav-link" href="../../../.././"> 
 <span class="menu-text">English</span></a>
   </li>  
   <li class="nav-item compact">
@@ -359,7 +336,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -375,16 +352,36 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Git is hard, but we need to handle it</h1>
-            <p class="subtitle lead">Here are some bad situations I’ve gotten myself into, and how I eventually got myself out of them in plain english.</p>
-                      </div>
+      <h1 class="title">あぁぁ… 特定のディレクトリに対してgit sparse-checkoutを実行したい</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">git checkout</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta column-page-left">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2025-08-04</p>
+      </div>
+    </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2025-08-05</p>
+      </div>
+    </div>
       
     </div>
     
@@ -393,8 +390,20 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(17)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVtb3Rl">git remote <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ゴール" id="toc-ゴール" class="nav-link active" data-scroll-target="#ゴール">🎯 ゴール</a></li>
+  <li><a href="#使用方法" id="toc-使用方法" class="nav-link" data-scroll-target="#使用方法">✅ 使用方法</a>
+  <ul class="collapse">
+  <li><a href="#使用例" id="toc-使用例" class="nav-link" data-scroll-target="#使用例">使用例</a></li>
+  </ul></li>
+  <li><a href="#シェルスクリプトの詳細解説" id="toc-シェルスクリプトの詳細解説" class="nav-link" data-scroll-target="#シェルスクリプトの詳細解説">🔍 シェルスクリプトの詳細解説</a></li>
+  <li><a href="#参考文献" id="toc-参考文献" class="nav-link" data-scroll-target="#参考文献">参考文献</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -403,256 +412,162 @@ window.Quarto = {
 
 
 
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
+<section id="ゴール" class="level2">
+<h2 class="anchored" data-anchor-id="ゴール">🎯 ゴール</h2>
+<ul>
+<li><a href="https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-sparse-checkout"><code>git-sparse-checkout</code></a>スクリプトの解説</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-euo</span> pipefail</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">usage()</span> <span class="kw">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Usage: </span><span class="va">$0</span><span class="st"> -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt;"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">getopts</span> <span class="st">"u:d:b:p:"</span> <span class="va">opt</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="va">$opt</span> <span class="kw">in</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="ss">u</span><span class="kw">)</span> <span class="va">CLONE_URL</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="ss">d</span><span class="kw">)</span> <span class="va">TARGET_DIR</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="ss">b</span><span class="kw">)</span> <span class="va">BRANCH</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="ss">p</span><span class="kw">)</span> <span class="va">SPARSE_PATH</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="pp">*</span><span class="kw">)</span> <span class="ex">usage</span> <span class="cf">;;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">esac</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$BRANCH</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="ex">usage</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--filter</span><span class="op">=</span>blob:none <span class="at">--no-checkout</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config core.sparseCheckout true</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="at">-e</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="st">"</span><span class="va">$BRANCH</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="使用方法" class="level2">
+<h2 class="anchored" data-anchor-id="使用方法">✅ 使用方法</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">git-sparse-checkout</span> <span class="at">-u</span> <span class="op">&lt;</span>clone_url<span class="op">&gt;</span> -d <span class="op">&lt;</span>target_dir<span class="op">&gt;</span> -b <span class="op">&lt;</span>branch<span class="op">&gt;</span> -p <span class="op">&lt;</span>sparse_path<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="min-section">パラメータ</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 79%">
+<col style="width: 11%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-Date
-</th>
-
-<th>
-Title
-</th>
-
-<th>
-Reading Time
-</th>
-
+<tr class="header">
+<th>オプション</th>
+<th>説明</th>
+<th>必須</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1754352000000" data-listing-file-modified-sort="1754332237417" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="298" data-listing-title-sort="OGG... How Can I restore a file from specific commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-05</span>
-</td>
-<td>
-<a href="./posts/2025-08-05-restore-file-from-specific-commit/index.html" class="title listing-title">OGG… How Can I restore a file from specific commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tbody>
+<tr class="odd">
+<td><code>-u</code></td>
+<td>Gitクローン用URL</td>
+<td>✅ はい</td>
 </tr>
-
-<tr data-index="1" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1754265600000" data-listing-file-modified-sort="1754332237417" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="3" data-listing-word-count-sort="483" data-listing-title-sort="OGG... How do you git sparse-checkout a specific directory?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-04</span>
-</td>
-<td>
-<a href="./posts/2025-08-04-git-sparse-checkout/index.html" class="title listing-title">OGG… How do you git sparse-checkout a specific directory?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
+<tr class="even">
+<td><code>-d</code></td>
+<td>クローン先のターゲットディレクトリ</td>
+<td>✅ はい</td>
 </tr>
-
-<tr data-index="2" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1754332237417" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="544" data-listing-title-sort="OGG... What's difference between git reset --hard vs --mixed vs --soft?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-14</span>
-</td>
-<td>
-<a href="./posts/2025-06-14-git-reset-hard-mixed-soft/index.html" class="title listing-title">OGG… What’s difference between git reset –hard vs –mixed vs –soft?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
+<tr class="odd">
+<td><code>-b</code></td>
+<td>チェックアウトするブランチ</td>
+<td>✅ はい</td>
 </tr>
-
-<tr data-index="3" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1754332237417" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="264" data-listing-title-sort="OGG... How to unstage files in Git?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-13</span>
-</td>
-<td>
-<a href="./posts/2025-06-13-how-to-unstage-files/index.html" class="title listing-title">OGG… How to unstage files in Git?</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tr class="even">
+<td><code>-p</code></td>
+<td>リポジトリ内でチェックアウトするパス．ディレクトリは<code>:</code>で区切ります</td>
+<td>✅ はい</td>
 </tr>
-
-<tr data-index="4" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1754332237417" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="694" data-listing-title-sort="OGG... How do I consolidate multiple temporary commits into a single meaningful one?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-06</span>
-</td>
-<td>
-<a href="./posts/2025-06-06-organize-commits-using-git-rebase/index.html" class="title listing-title">OGG… How do I consolidate multiple temporary commits into a single meaningful one?</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="5" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="758" data-listing-title-sort="OGG... How do I manage config and secret information in Git?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-05</span>
-</td>
-<td>
-<a href="./posts/2025-06-05-how-to-manage-secrets/index.html" class="title listing-title">OGG… How do I manage config and secret information in Git?</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="6" data-categories="c3No" data-listing-date-sort="1747958400000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="1" data-listing-word-count-sort="187" data-listing-title-sort="OGG... How do I switch the connection method for git push from HTTPS to SSH??" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-05-23</span>
-</td>
-<td>
-<a href="./posts/2025-05-23-switch-https-ssh/index.html" class="title listing-title">OGG… How do I switch the connection method for git push from HTTPS to SSH??</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="7" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I set up ssh connection to GitHub repository?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-17</span>
-</td>
-<td>
-<a href="./posts/2024-12-17-access-to-github-via-ssh/index.html" class="title listing-title">OGG… How can I set up ssh connection to GitHub repository?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="8" data-categories="Z2l0JTIwcmVtb3Rl" data-listing-date-sort="1733270400000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="3" data-listing-word-count-sort="484" data-listing-title-sort="OGG... How can I modify the GitHub repository name?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-04</span>
-</td>
-<td>
-<a href="./posts/2024-12-04-chnage-remote-uri/index.html" class="title listing-title">OGG… How can I modify the GitHub repository name?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="9" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-06</span>
-</td>
-<td>
-<a href="./posts/2024-11-06-check-diff-with-git-difftool/index.html" class="title listing-title">OGG… How do I check unstaged differences with the latest commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="10" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-05</span>
-</td>
-<td>
-<a href="./posts/2024-11-05-when-do-i-use-git-rebase/index.html" class="title listing-title">OGG… Should I use git rebase?</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-
-</tr>
-
-<tr data-index="11" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I push my repository to githab and gitlab remote at once?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="./posts/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">OGG… How can I push my repository to githab and gitlab remote at once?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="12" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1754332237416" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="3" data-listing-word-count-sort="524" data-listing-title-sort="OGG... I just want to push a local git branch to a remote with a different name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="./posts/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">OGG… I just want to push a local git branch to a remote with a different name…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="13" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1754332237415" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="OGG... I just want to save the current repository into another remote..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="./posts/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">OGG… I just want to save the current repository into another remote…</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="14" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1754332237415" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="5" data-listing-word-count-sort="865" data-listing-title-sort="OGG... I cannot push to remote branch and cannot pull the remote changes..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="./posts/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">OGG… I cannot push to remote branch and cannot pull the remote changes…</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-
-</tr>
-
-<tr data-index="15" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1754332237415" data-listing-date-modified-sort="1754332237000" data-listing-reading-time-sort="1" data-listing-word-count-sort="143" data-listing-title-sort="OGG... I accidentally named the branch the wrong name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="./posts/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">OGG… I accidentally named the branch the wrong name…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="16" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1754332237415" data-listing-date-modified-sort="1720742400000" data-listing-reading-time-sort="2" data-listing-word-count-sort="389" data-listing-title-sort="OGG... I accidentally committed something to main that should have been on a brand new branch!" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="./posts/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">OGG… I accidentally committed something to main that should have been on a brand new branch!</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<section id="使用例" class="level3">
+<h3 class="anchored" data-anchor-id="使用例">使用例</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">git-sparse-checkout</span> <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-u</span> https://github.com/RyoNakagami/PythonCompetitiveProgramming <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> ./checkout_sandbox <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> main <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> /Leetcode:/projecteuler/data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>これにより：</p>
+<ol type="1">
+<li>完全な履歴やblobなしでリポジトリをクローン</li>
+<li>スパースチェックアウトモードを有効化</li>
+<li><code>main</code>ブランチから<code>/Leetcode</code>と<code>/projecteuler/data</code>ディレクトリのみをチェックアウト</li>
+<li>結果を<code>./checkout_sandbox</code>に書き込みまむ</li>
+</ol>
+</section>
+</section>
+<section id="シェルスクリプトの詳細解説" class="level2">
+<h2 class="anchored" data-anchor-id="シェルスクリプトの詳細解説">🔍 シェルスクリプトの詳細解説</h2>
+<p>ファイルコンテンツをダウンロードせず，効率的にリポジトリをクローンします．</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--filter</span><span class="op">=</span>blob:none <span class="at">--no-checkout</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>オプション</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--filter=blob:none</code></td>
+<td>初期段階でファイルコンテンツ（blob）を除外し，リポジトリのメタデータ（コミット，ツリー）のみをダウンロードするフィルタを使用した部分クローンを行います．これにより，ディスク使用量が削減されます．</td>
+</tr>
+<tr class="even">
+<td><code>--no-checkout</code></td>
+<td>リポジトリをクローンするが，作業ディレクトリにファイルをチェックアウトしない．つまり，作業ディレクトリは空の状態になります（ファイルはチェックアウトされていません）．</td>
+</tr>
+</tbody>
+</table>
+<p>次に，このローカルリポジトリに対してスパースチェックアウトを有効にします．これにより，リポジトリから作業ディレクトリに特定のパスのみを選択的にチェックアウトすることをGitに指示します．</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config core.sparseCheckout true</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>続いて，</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="at">-e</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>コマンド</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>echo -e "$SPARSE_PATH"</code></td>
+<td>エスケープシーケンス（<code>\n</code>など）を解釈して<code>SPARSE_PATH</code>変数の値を出力します．</td>
+</tr>
+<tr class="even">
+<td><code>tr ':' '\n'</code></td>
+<td>コロン（<code>:</code>）文字を改行文字（<code>\n</code>）に変換し，コロン区切りのリストを行区切りのリストに効果的に変換します．</td>
+</tr>
+<tr class="odd">
+<td><code>&gt; .git/info/sparse-checkout</code></td>
+<td>このパスのリスト（1行に1つ）を特別なsparse-checkout設定ファイルに書き込みます</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ul>
+<li><a href="https://github.com/RyoNakagami/regmonkey_gitcommand">regmonkey_gitcommand</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
 <script>
     document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
         let modName = title.innerHTML;
@@ -1074,6 +989,8 @@ Reading Time
     }
   });
   </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1086,12 +1003,12 @@ Reading Time
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="./LICENSE">
+    <a class="nav-link" href="../../../../LICENSE">
 <p>License</p>
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

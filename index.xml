@@ -131,6 +131,495 @@ font-style: inherit;">&gt;</span></span></code></pre></div>
   <pubDate>Tue, 05 Aug 2025 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>OGG… How do you git sparse-checkout a specific directory?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-08-04-git-sparse-checkout/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul>
+<li>Explaining of <a href="https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-sparse-checkout"><code>git-sparse-checkout</code></a>script</li>
+</ul>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#!/bin/bash</span></span>
+<span id="cb1-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-euo</span> pipefail</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">usage()</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">{</span></span>
+<span id="cb1-5">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Usage: </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$0</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt;"</span></span>
+<span id="cb1-6">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">exit</span> 1</span>
+<span id="cb1-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">}</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">while</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">getopts</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"u:d:b:p:"</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">opt</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">do</span></span>
+<span id="cb1-10">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">case</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$opt</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span></span>
+<span id="cb1-11">    <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">u</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">CLONE_URL</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$OPTARG</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;;</span></span>
+<span id="cb1-12">    <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">d</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">TARGET_DIR</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$OPTARG</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;;</span></span>
+<span id="cb1-13">    <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">BRANCH</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$OPTARG</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;;</span></span>
+<span id="cb1-14">    <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">p</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SPARSE_PATH</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$OPTARG</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;;</span></span>
+<span id="cb1-15">    <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">usage</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;;</span></span>
+<span id="cb1-16">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">esac</span></span>
+<span id="cb1-17"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">done</span></span>
+<span id="cb1-18"></span>
+<span id="cb1-19"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">[[</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$CLONE_URL</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">||</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TARGET_DIR</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">||</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$BRANCH</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">||</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$SPARSE_PATH</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">]];</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">then</span></span>
+<span id="cb1-20">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">usage</span></span>
+<span id="cb1-21"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">fi</span></span>
+<span id="cb1-22"></span>
+<span id="cb1-23"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--filter</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>blob:none <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-checkout</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$CLONE_URL</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TARGET_DIR</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-24"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TARGET_DIR</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-25"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config core.sparseCheckout true</span>
+<span id="cb1-26"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$SPARSE_PATH</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tr</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'\n'</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> .git/info/sparse-checkout</span>
+<span id="cb1-27"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$BRANCH</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span></code></pre></div>
+</section>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">✅ Usage</h2>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">git-sparse-checkout</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>clone_url<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> -d <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>target_dir<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> -b <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> -p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>sparse_path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p><span class="min-section">Parameters</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 73%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-u</code></td>
+<td>Git clone URL</td>
+<td>✅ Yes</td>
+</tr>
+<tr class="even">
+<td><code>-d</code></td>
+<td>Target directory to clone into</td>
+<td>✅ Yes</td>
+</tr>
+<tr class="odd">
+<td><code>-b</code></td>
+<td>Branch to check out</td>
+<td>✅ Yes</td>
+</tr>
+<tr class="even">
+<td><code>-p</code></td>
+<td>Path to check out within the repository. Directories are seperated by <code>:</code></td>
+<td>✅ Yes</td>
+</tr>
+</tbody>
+</table>
+<section id="exmaple" class="level3">
+<h3 class="anchored" data-anchor-id="exmaple">Exmaple</h3>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">git-sparse-checkout</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> https://github.com/RyoNakagami/PythonCompetitiveProgramming <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-d</span> ./checkout_sandbox <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> main <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> /Leetcode:/projecteuler/data</span></code></pre></div>
+<p>This will:</p>
+<ol type="1">
+<li>Clone the repository without full history or blobs</li>
+<li>Enable sparse-checkout mode</li>
+<li>Checkout only both of <code>/Leetcode</code> and <code>/projecteuler/data</code> directory from the <code>main</code> branch</li>
+<li>Write the result to <code>./checkout_sandbox</code></li>
+</ol>
+</section>
+</section>
+<section id="diving-into-the-shell-script" class="level2">
+<h2 class="anchored" data-anchor-id="diving-into-the-shell-script">🔍 Diving into the shell script</h2>
+<p>Efficiently clone a repo without downloading file contents or populating the working directory immediately.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--filter</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>blob:none <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-checkout</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$CLONE_URL</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TARGET_DIR</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span></code></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>options</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--filter=blob:none</code></td>
+<td>Use partial clone with a filter to exclude all file contents (blobs) initially, downloading only repository metadata (commits, trees). This reduces bandwidth and disk usage.</td>
+</tr>
+<tr class="even">
+<td><code>--no-checkout</code></td>
+<td>Clone the repository but do not check out any files to the working directory yet. This means the working directory will be empty (no files checked out).</td>
+</tr>
+</tbody>
+</table>
+<p>Then, enable sparse checkout for this local repository. The following tells Git you want to selectively check out only certain paths from the repository into your working directory.</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config core.sparseCheckout true</span></code></pre></div>
+<p>Next,</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$SPARSE_PATH</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tr</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'\n'</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> .git/info/sparse-checkout</span></code></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>command</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>echo -e "$SPARSE_PATH"</code></td>
+<td>Output the value of the variable <code>SPARSE_PATH</code> with escape sequences (like <code>\n)</code> interpreted.</td>
+</tr>
+<tr class="even">
+<td><code>tr ':' '\n'</code></td>
+<td>Translate all colon (<code>:</code>) characters into newline characters (<code>\n</code>), effectively converting a colon-separated list into a line-separated list.</td>
+</tr>
+<tr class="odd">
+<td><code>&gt; .git/info/sparse-checkout</code></td>
+<td>Write this list of paths (one per line) into the special sparse-checkout config file</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://github.com/RyoNakagami/regmonkey_gitcommand">regmonkey_gitcommand</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>gitignore</category>
+  <category>bfg</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-08-04-git-sparse-checkout/</guid>
+  <pubDate>Mon, 04 Aug 2025 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>OGG… What’s difference between git reset –hard vs –mixed vs –soft?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2025-06-14-git-reset-hard-mixed-soft/</link>
