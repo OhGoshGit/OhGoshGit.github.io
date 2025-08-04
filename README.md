@@ -42,4 +42,4 @@ Whne you have ideas for pull-request template, issue-template, etc, feel free to
 
 ## Questions? Problems?
 
-Feel free to raise an issue 
+Feel free to raise an issue
