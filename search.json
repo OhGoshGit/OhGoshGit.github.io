@@ -1,54 +1,5 @@
 [
   {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "",
-    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
-  },
-  {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#problem",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html#problem",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "",
-    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
-  },
-  {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#solution",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html#solution",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "Solution",
-    "text": "Solution\n\nCheck your current remote URL:\ngit remote -v\nIf the URL starts with https://, you are using HTTPS.\nFind your SSH URL:\nOn GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., git@github.com:username/repo.git).\nChange the remote URL to SSH:\ngit remote set-url origin git@github.com:username/repo.git\nVerify the change:\ngit remote -v\nThe URL should now start with git@.\n\n\nTips\n\nMake sure you have added your SSH key to your GitHub account. You can generate a key with ssh-keygen and add it using the GitHub SSH settings.\nTest your SSH connection with:\nssh -T git@github.com\nIf you use multiple remotes or repositories, repeat these steps for each one."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
-    "section": "",
-    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
-    "section": "",
-    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
-    "section": "Solution 1: Using git diff",
-    "text": "Solution 1: Using git diff\ngit diff allows you to inspect changes in your code, from minor edits to major branch comparisons.\n ▶  Key Takeaways\n\n\n\n\n\n\n\nCommands\nExplaination\n\n\n\n\ngit diff\nCheck unstaged changes with HEAD\n\n\ngit diff --staged\nCheck staged changes with HEAD\n\n\ngit diff &lt;commit1&gt; &lt;commit2&gt;\nCompare two specific commits\n\n\ngit diff main feature-branch\nCompare branches\n\n\ngit diff HEAD &lt;file/directory-path&gt;\nCheck single file/directory changes with HEAD\n\n\ngit diff --stat\nShows a summary of changes for each file, such as how many lines were added and deleted\n\n\n\n ▶  Viewing Changes in the Working Directory\nTo see all changes in your working directory that haven’t been staged,\ngit diff\nThis command shows the differences between your working directory and the last commit in your terminal display.\nIf you want to see staged changes with your latest commit,\ngit diff --staged\n ▶  Comparing with a Specific Commit\nTo see differences between your current state and a specific commit,\n## (1) Compared with latest commit\ngit diff\ngit diff HEAD\n\n## (2) Compared with specific commit\ngit diff &lt;commit-hash&gt;\n\n## (3) Comparing two specific commits\ngit diff &lt;commit-hash1&gt; &lt;commit-hash2&gt;\n\n## (4) Comparing the HEAD with the HEAD~1\ngit diff HEAD~1 HEAD\n ▶  Comparing Branches\nYou can also use git diff to compare different branches.\ngit diff main feature-branch\n ▶  Shows a summary of changes for each file\nWhen you want to see a summary of changes for each file, such as how many lines were added and deleted, use git diff --stat. If you want to compare the current branch with gh-pages branch in .github/ directory,\n% git diff --stat gh-pages .github/ \n .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++\n .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++\n .github/pull_request_template.md             | 25 +++++++++++++++++++++++++\n .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++\n .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++\n 5 files changed, 142 insertions(+)\nThe number shows how many lines are modified for each files."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
-    "section": "Solution 2: Using git difftool",
-    "text": "Solution 2: Using git difftool\ngit difftool is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.\nThe syntax of git difftool is similar to git diff. For example,\n\n\n\n\n\n\n\ngit difftool commands\ngit diff commands\n\n\n\n\ngit difftool\ngit diff\n\n\ngit difftool --stagedgit difftool --cached\ngit diff --staged\n\n\ngit difftool &lt;commit1&gt; &lt;commit2&gt;\ngit diff &lt;commit1&gt; &lt;commit2&gt;\n\n\ngit difftool main feature-branch\ngit diff main feature-branch\n\n\ngit difftool HEAD &lt;file/directory-path&gt;\ngit diff HEAD &lt;file/directory-path&gt;\n\n\n\n ▶  Choosing an editor \nYou can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is\ngit config --global diff.tool your_preferred_tool\nFor example, if you prefer to vscode,\ngit config --global diff.tool vscode\nTo check if you successfully configure difftool editor,\ngit config -l\nthen, you can check what editor is you default git difftool editor.\n ▶  Choosing an editor temporarily\nIf you temporarily show the diff in vimdiff,\ngit difftool HEAD~1 HEAD --tool=vimdiff"
-  },
-  {
     "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html",
     "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html",
     "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
@@ -84,6 +35,139 @@
     "text": "Appendix: What git rebase operations are possible?\n\n\n\n\n\n\n\n\nCommand\nDescription\n\n\n\n\npick\nUse the commit as-is (no changes to message or content).\n\n\nreword\nKeep the commit content, but edit the commit message.\n\n\nedit\nPause and allow you to amend the commit (edit files, message, etc.).\n\n\nsquash\nCombine this commit with the previous one, and edit the message.\n\n\nfixup\nLike squash, but discard this commit’s message (use previous message).\n\n\ndrop\nCompletely remove this commit from history."
   },
   {
+    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html",
+    "href": "posts/2025-06-05-how-to-manage-secrets/index.html",
+    "title": "OGG… How do I manage config and secret information in Git?",
+    "section": "",
+    "text": "Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects."
+  },
+  {
+    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#objective",
+    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#objective",
+    "title": "OGG… How do I manage config and secret information in Git?",
+    "section": "",
+    "text": "Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects."
+  },
+  {
+    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#goal",
+    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#goal",
+    "title": "OGG… How do I manage config and secret information in Git?",
+    "section": "Goal",
+    "text": "Goal\nEnsure sensitive information is excluded from version control while still allowing safe configuration in development and production environments."
+  },
+  {
+    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#guidline",
+    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#guidline",
+    "title": "OGG… How do I manage config and secret information in Git?",
+    "section": "Guidline",
+    "text": "Guidline\n\nUse .gitignore to exclude sensitive files\nAdd entries like config.yml, .env, or secrets.json to .gitignore.\nStore templates of sensitive files\nInclude config.sample.yml or .env.example in the repo to show required structure. It would be nice to add a document about how to use the template.\nUse environment variables in your code\nInstead of hardcoding sensitive values like API keys in your source code, load them from environment variables at runtime.\nimport yaml\n\nwith open(\"../config/config.yml\", \"r\") as file:\n    config = yaml.safe_load(file)\nAudit and remove accidental commits:\nIf you accidentally committed a secret (like an API key), even after deleting the file or rotating the key, it might still exist in Git history and be accessible to others. You need to remove recrets from history Use a tool like BFG Repo-Cleaner."
+  },
+  {
+    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#example-in-my-project",
+    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#example-in-my-project",
+    "title": "OGG… How do I manage config and secret information in Git?",
+    "section": "Example in my project",
+    "text": "Example in my project\nmanageing secrets in development\n\nAdd config/ to .gitignore\n# .gitignore\nconfig/\nAdd a template file: config/config_template.yml\nCreate a safe, non-sensitive example config file that shows the expected structure of real credentials:\n# config/config_template.yml\napi_config:\n  api_url: \"https://hogehoge\"\n  api_key_id: \"hogehoge\"\n  api_secret: \"hogehoge\"\nThen commit it manually with -f (force), since it lives inside an ignored folder:\ngit add -f config/config_template.yml\ngit commit -m \"ENV: Add config template for API config\"\nDocument how to create a real config.yml from the template\nProvide a short note (e.g. in your README) explaining how to set up the actual config file:\ncp config/config_template.yml config/config.yml\nThen edit config.yml manually and replace each placeholder value with your actual secrets:\napi_config:\n  api_url: \"https://your.api.endpoint\"\n  api_key_id: \"your_api_key_id\"\n  api_secret: \"your_secret_token\"\nCreate passwords.txt under config/ for use with BFG Repo-Cleaner\nIf you accidentally commit secrets, prepare a list of them to clean from your Git history.\nyour_api_key_here==&gt;REMOVED\nsecret_token_123==&gt;REMOVED\nEach line follows the format:\noriginal_string==&gt;replacement_string\n\nIf you accidentally commit secrets\n\nHere’s how to use BFG to remove sensitive values from Git history:\nbfg --replace-text .bfg/passwords.txt\ngit reflog expire --expire=now --all\ngit gc --prune=now --aggressive\ngit push -f\n\n\n\n\n\n\n\n\ncommand\nexplanation\n\n\n\n\nbfg --replace-text ...\nreplaces secrets in your repo history\n\n\ngit reflog expire\ndrops internal backup references\n\n\ngit gc\ngarbage collects dangling commits\n\n\ngit push -f\nforce-pushes the cleaned history (⚠️ coordinate with team!)"
+  },
+  {
+    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#appendix-how-to-install-bfg-repo-cleaner",
+    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#appendix-how-to-install-bfg-repo-cleaner",
+    "title": "OGG… How do I manage config and secret information in Git?",
+    "section": "Appendix: How to install BFG Repo-Cleaner",
+    "text": "Appendix: How to install BFG Repo-Cleaner\nAS of 2025-06-03, v1.15.0 is the lastest.\n\nDownload the BFG JAR File\nUse wget to download the JAR (Java ARchive) file of BFG version 1.15.0 from Maven Central (an official Java package repository).\n% cd &lt;your-target-directory&gt;\n% wget https://repo1.maven.org/maven2/com/madgag/bfg/1.15.0/bfg-1.15.0.jar\nAfter download, you’ll see this file:\n% ls\nbfg-1.15.0.jar\n(Optional) Move the JAR to a Tool Directory and Create a Shell Alias\nIf you’re using Zsh (common on macOS and many Linux setups), add the alias to .zshrc:\n% echo \"alias bfg='java -jar &lt;your-target-directory&gt;/bfg-1.15.0.jar'\" &gt;&gt; ~/.zshrc\n% source ~/.zshrc\nIf you’re using Bash, modify .bashrc instead:\n% echo \"alias bfg='java -jar ~/.tool.d/bfg-1.15.0.jar'\" &gt;&gt; ~/.bashrc\n% source ~/.bashrc\nThen, check if your setting works properly\n% bfg --help"
+  },
+  {
+    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#references",
+    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#references",
+    "title": "OGG… How do I manage config and secret information in Git?",
+    "section": "References",
+    "text": "References\n\nBFG Repo-Cleaner"
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "",
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "",
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "Solution 1: Using git diff",
+    "text": "Solution 1: Using git diff\ngit diff allows you to inspect changes in your code, from minor edits to major branch comparisons.\n ▶  Key Takeaways\n\n\n\n\n\n\n\nCommands\nExplaination\n\n\n\n\ngit diff\nCheck unstaged changes with HEAD\n\n\ngit diff --staged\nCheck staged changes with HEAD\n\n\ngit diff &lt;commit1&gt; &lt;commit2&gt;\nCompare two specific commits\n\n\ngit diff main feature-branch\nCompare branches\n\n\ngit diff HEAD &lt;file/directory-path&gt;\nCheck single file/directory changes with HEAD\n\n\ngit diff --stat\nShows a summary of changes for each file, such as how many lines were added and deleted\n\n\n\n ▶  Viewing Changes in the Working Directory\nTo see all changes in your working directory that haven’t been staged,\ngit diff\nThis command shows the differences between your working directory and the last commit in your terminal display.\nIf you want to see staged changes with your latest commit,\ngit diff --staged\n ▶  Comparing with a Specific Commit\nTo see differences between your current state and a specific commit,\n## (1) Compared with latest commit\ngit diff\ngit diff HEAD\n\n## (2) Compared with specific commit\ngit diff &lt;commit-hash&gt;\n\n## (3) Comparing two specific commits\ngit diff &lt;commit-hash1&gt; &lt;commit-hash2&gt;\n\n## (4) Comparing the HEAD with the HEAD~1\ngit diff HEAD~1 HEAD\n ▶  Comparing Branches\nYou can also use git diff to compare different branches.\ngit diff main feature-branch\n ▶  Shows a summary of changes for each file\nWhen you want to see a summary of changes for each file, such as how many lines were added and deleted, use git diff --stat. If you want to compare the current branch with gh-pages branch in .github/ directory,\n% git diff --stat gh-pages .github/ \n .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++\n .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++\n .github/pull_request_template.md             | 25 +++++++++++++++++++++++++\n .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++\n .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++\n 5 files changed, 142 insertions(+)\nThe number shows how many lines are modified for each files."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "Solution 2: Using git difftool",
+    "text": "Solution 2: Using git difftool\ngit difftool is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.\nThe syntax of git difftool is similar to git diff. For example,\n\n\n\n\n\n\n\ngit difftool commands\ngit diff commands\n\n\n\n\ngit difftool\ngit diff\n\n\ngit difftool --stagedgit difftool --cached\ngit diff --staged\n\n\ngit difftool &lt;commit1&gt; &lt;commit2&gt;\ngit diff &lt;commit1&gt; &lt;commit2&gt;\n\n\ngit difftool main feature-branch\ngit diff main feature-branch\n\n\ngit difftool HEAD &lt;file/directory-path&gt;\ngit diff HEAD &lt;file/directory-path&gt;\n\n\n\n ▶  Choosing an editor \nYou can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is\ngit config --global diff.tool your_preferred_tool\nFor example, if you prefer to vscode,\ngit config --global diff.tool vscode\nTo check if you successfully configure difftool editor,\ngit config -l\nthen, you can check what editor is you default git difftool editor.\n ▶  Choosing an editor temporarily\nIf you temporarily show the diff in vimdiff,\ngit difftool HEAD~1 HEAD --tool=vimdiff"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "",
+    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "",
+    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "Solution",
+    "text": "Solution\nSteps\n\nGenerate a new ssh key\nAdd the SSH Key to the SSH Agent\nRegister the public key to GitHub\ntest ssh connection\nupdate the ssh config file\n\nSetup\n\n\n1. Generate a new ssh key\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nOption -t specifies the type of key to generate. ed25519 is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.\nOption -C adds a comment to the key for identification purposes.\n-f specifies the filename and location for the generated key pair. This will generate two files\n\nkirby_github_key: The private key (keep this secure! do not share!).\nkirby_github_key.pub: The public key (you upload this to GitHub).\n\n\n\n2. Add the SSH Key to the SSH Agent\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nThe ssh-add command adds your private SSH key to the SSH authentication agent (ssh-agent) so it can be used for SSH connections without repeatedly asking for the key’s passphrase. If the key (kirby_github_key) isn’t added to ssh-agent, SSH won’t know to use it. You might encounter the error like this;\nPermission denied (publickey).\n\n\n3. Register the public key to GitHub\n\ncat ~/.ssh/kirby_github_key.pub\n\nAfter opening the file, copy the strings and register it at the Github at Settings &gt; SSH and GPG keys &gt; New SSH key\nThen, test your connection by\n\n\n4. test ssh connection\n\n$ ssh -T git@github.com\n\nif connection established successfully, the following message will pop up\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nUpdate the ssh config file\nRunning ssh-add munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your ~/.ssh/config file:\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "Appendix: ❗ Trouble Connecting via SSH with a Private Key",
+    "text": "Appendix: ❗ Trouble Connecting via SSH with a Private Key\n\n\n\n\n\n\nsummary\n\n\n\n\nSSH is strict about private key security to protect against unauthorized access.\nAlways keep your private keys readable only by you.\nUse chmod 600 your_key_file to ensure proper permission settings.\n\n\n\nTrouble\nWhen trying to connect using a SSH command, You might encounter an error like:\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nAs a result, the SSH connection fails.\nRoot Cause\n\nThis error happens because the file permissions of the private key file are too loose.\nFor example, if the file permissions are set to 666 (readable and writable by everyone), SSH refuses to use the key for security reasons.\n\nSolution\nYou can fix the issue by restricting the file’s permissions so that only the owner can read/write the file:\n% chmod 600 &lt;your-private-key-path&gt;\nAfter changing the permissions, try running the same SSH command again."
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "",
+    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "",
+    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "What is happening",
+    "text": "What is happening\nGenerally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       checkout remote\n       merge local id:\"❗️failed to push\"\n\n\n Fig 1. Conflict between the local and the remote \n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       merge remote id:\"❗️failed to pull\"\n\n\n Fig 2. You cannot pull the remote either"
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "Solution: git pull --rebase",
+    "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
+  },
+  {
     "objectID": "posts/2024-12-04-chnage-remote-uri/index.html",
     "href": "posts/2024-12-04-chnage-remote-uri/index.html",
     "title": "OGG… How can I modify the GitHub repository name?",
@@ -110,62 +194,6 @@
     "title": "OGG… How can I modify the GitHub repository name?",
     "section": "References",
     "text": "References\n\nGitHub Docs &gt; Managing remote repositories"
-  },
-  {
-    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html",
-    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html",
-    "title": "OGG… Should I use git rebase?",
-    "section": "",
-    "text": "Let’s say you’re working on a project with a main branch and a feature branch. While you are making changes to feature branch, the main branch has received some new commits from other developers.\nYou want to incorporate these new commits into your feature branch, but not sure whether you should do it by git rebase or git merge.\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n       checkout main\n       commit id: \"A3\"\n       commit id: \"A4\"\n       checkout feature\n       merge main id:\"❓git merge or rebase?\"\n\n\n\n\nFigure 1: Fig 1. Changes in main branch\n\n\n\n\n\n ▶  Why not just ignore changes in the main branch for now?\nIgnoring updates on the main branch for now is sometimes feasible, but there are a few important disadvantages to consider.\n\nDelaying sync increases potential conflicts\n\nThe longer your feature branch diverges from main, the more changes accumulate. When you finally integrate with main, you’re more likely to encounter a large, complex set of merge conflicts. Resolving conflicts with many changes can be time-consuming and prone to errors.\n\nWorking in an outdated context\n\nIf main includes changes that affect the overall project (e.g., updates to libraries, modifications to shared components, or security fixes), ignoring them means you’re working in an increasingly outdated context. Your feature might develop incompatibilities that aren’t apparent until the final merge.\nPlus, Continuous Integration testing or Continuous Deployment　workflows typically run against the latest main code. By not keeping up with main, you risk your branch passing tests locally but failing in CI/CD because it lacks compatibility with newer changes.\n\n\n\n\n\n\n🍵 Might Be Okay to Ignore main Changes\n\n\n\nThere are situations where you can safely ignore main temporarily:\n\nIsolated feature\nShort-lived feature branch\nExperimental branches\n\n\n\n\n\nThere is no one-size-fits-all approach and it all comes down to what you value most.\n ▶  Pros and Cons\n\n\n\n\n\n\n\n\nCommand\nPros\nCons\n\n\n\n\nrebase\nClean, linear history; ideal for local branches\nIt’s possible that a “commit that was working fine” could turn into a “commit that doesn’t work.”\n\n\nmerge\nMaintains full history; safe for shared branches\nCreates new merge commits, making history less linear\n\n\n\nGenerally speaking,\n\ngit merge pull the latest changes from main into the feature branch, creating a new merge commit\ngit rebase changes the base of the feature branch to the latest commit and then replays the changes in the feature branch from there\n\n\n\n\nAt the branch development of Figure 1, you can rebase the feature branch with the following steps:\n# Step 1: Checkout the feature branch\ngit switch feature\n\n# Step 2: rebase onto main:\ngit rebase main\nThese commands tell Git to\n\nTemporarily remove B1, B2\nFast-forward the branch to main’s latest commit (A3, A4)\nApply B1, B2 on top of A4\n\nThen, git history will turn into the following\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       commit id: \"A3\"\n       commit id: \"A4\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n\n\n\n\nFigure 2: Fig 2. git rebase\n\n\n\n\n\n ▶  Conflicts caused by git rebase\nIf there are changes in main that modify the same parts of code as your commits, Git won’t know how to reconcile those differences automatically. These overlapping changes are what cause conflicts.\nFor example:\n\nLet’s say you edited file_A.py in your feature branch to add a new function.\nMeanwhile, another developer made a conflicting change to the same section of file_A.py in main.\n\nWhen rebase tries to apply your changes on top of main, Git encounters a conflict because it doesn’t know which version to keep. Instead, Git will list files with conflicts. You’ll see a message like\nCONFLICT (content): Merge conflict in file_A.py\nOpen each conflicted file. Git will add conflict markers to show where the differences are:\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n// Code from main branch\n=======\n// Code from your feature branch\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; your-commit-hash\nYou are expected to decide which parts of the code to keep and remove the conflict markers (&lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, &gt;&gt;&gt;&gt;&gt;&gt;&gt;) after resolving. Then,\n# git add the modified files\ngit add file_A.py\n\n# Continue the rebase\ngit rebase --continue\nIf you want to start over or quit rebasing, you can abort the rebase with\ngit rebase --abort\n ▶  “commit that was working fine” could turn into a “not working”\nWhen you rebase a branch, you’re reapplying commits onto a new base, which can potentially break previously functional code. So to minimize this risk, better to do the followings:\n\nTest after rebasing: After a rebase, test your feature branch to ensure that everything still works as expected.\nCheck each commit after conflicts: If you resolved conflicts during the rebase, double-check those areas to ensure the changes align with your intended functionality.\n\nIn summary, rebasing changes the context in which your commits operate, so it’s important to verify that they still work as intended in the new context."
-  },
-  {
-    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#problem",
-    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#problem",
-    "title": "OGG… Should I use git rebase?",
-    "section": "",
-    "text": "Let’s say you’re working on a project with a main branch and a feature branch. While you are making changes to feature branch, the main branch has received some new commits from other developers.\nYou want to incorporate these new commits into your feature branch, but not sure whether you should do it by git rebase or git merge.\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n       checkout main\n       commit id: \"A3\"\n       commit id: \"A4\"\n       checkout feature\n       merge main id:\"❓git merge or rebase?\"\n\n\n\n\nFigure 1: Fig 1. Changes in main branch\n\n\n\n\n\n ▶  Why not just ignore changes in the main branch for now?\nIgnoring updates on the main branch for now is sometimes feasible, but there are a few important disadvantages to consider.\n\nDelaying sync increases potential conflicts\n\nThe longer your feature branch diverges from main, the more changes accumulate. When you finally integrate with main, you’re more likely to encounter a large, complex set of merge conflicts. Resolving conflicts with many changes can be time-consuming and prone to errors.\n\nWorking in an outdated context\n\nIf main includes changes that affect the overall project (e.g., updates to libraries, modifications to shared components, or security fixes), ignoring them means you’re working in an increasingly outdated context. Your feature might develop incompatibilities that aren’t apparent until the final merge.\nPlus, Continuous Integration testing or Continuous Deployment　workflows typically run against the latest main code. By not keeping up with main, you risk your branch passing tests locally but failing in CI/CD because it lacks compatibility with newer changes.\n\n\n\n\n\n\n🍵 Might Be Okay to Ignore main Changes\n\n\n\nThere are situations where you can safely ignore main temporarily:\n\nIsolated feature\nShort-lived feature branch\nExperimental branches\n\n\n\n\n\nThere is no one-size-fits-all approach and it all comes down to what you value most.\n ▶  Pros and Cons\n\n\n\n\n\n\n\n\nCommand\nPros\nCons\n\n\n\n\nrebase\nClean, linear history; ideal for local branches\nIt’s possible that a “commit that was working fine” could turn into a “commit that doesn’t work.”\n\n\nmerge\nMaintains full history; safe for shared branches\nCreates new merge commits, making history less linear\n\n\n\nGenerally speaking,\n\ngit merge pull the latest changes from main into the feature branch, creating a new merge commit\ngit rebase changes the base of the feature branch to the latest commit and then replays the changes in the feature branch from there\n\n\n\n\nAt the branch development of Figure 1, you can rebase the feature branch with the following steps:\n# Step 1: Checkout the feature branch\ngit switch feature\n\n# Step 2: rebase onto main:\ngit rebase main\nThese commands tell Git to\n\nTemporarily remove B1, B2\nFast-forward the branch to main’s latest commit (A3, A4)\nApply B1, B2 on top of A4\n\nThen, git history will turn into the following\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       commit id: \"A3\"\n       commit id: \"A4\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n\n\n\n\nFigure 2: Fig 2. git rebase\n\n\n\n\n\n ▶  Conflicts caused by git rebase\nIf there are changes in main that modify the same parts of code as your commits, Git won’t know how to reconcile those differences automatically. These overlapping changes are what cause conflicts.\nFor example:\n\nLet’s say you edited file_A.py in your feature branch to add a new function.\nMeanwhile, another developer made a conflicting change to the same section of file_A.py in main.\n\nWhen rebase tries to apply your changes on top of main, Git encounters a conflict because it doesn’t know which version to keep. Instead, Git will list files with conflicts. You’ll see a message like\nCONFLICT (content): Merge conflict in file_A.py\nOpen each conflicted file. Git will add conflict markers to show where the differences are:\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n// Code from main branch\n=======\n// Code from your feature branch\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; your-commit-hash\nYou are expected to decide which parts of the code to keep and remove the conflict markers (&lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, &gt;&gt;&gt;&gt;&gt;&gt;&gt;) after resolving. Then,\n# git add the modified files\ngit add file_A.py\n\n# Continue the rebase\ngit rebase --continue\nIf you want to start over or quit rebasing, you can abort the rebase with\ngit rebase --abort\n ▶  “commit that was working fine” could turn into a “not working”\nWhen you rebase a branch, you’re reapplying commits onto a new base, which can potentially break previously functional code. So to minimize this risk, better to do the followings:\n\nTest after rebasing: After a rebase, test your feature branch to ensure that everything still works as expected.\nCheck each commit after conflicts: If you resolved conflicts during the rebase, double-check those areas to ensure the changes align with your intended functionality.\n\nIn summary, rebasing changes the context in which your commits operate, so it’s important to verify that they still work as intended in the new context."
-  },
-  {
-    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#undo-git-rebase",
-    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#undo-git-rebase",
-    "title": "OGG… Should I use git rebase?",
-    "section": "Undo git rebase",
-    "text": "Undo git rebase\nLet’s say you’re working on a feature branch. You rebased it onto the main branch to incorporate recent changes, but after the rebase, you realize that:\n\nYou made a mistake resolving a conflict. or\nSome tests are failing because of unexpected interactions with the latest changes from main.\n\nIn this case, You wants to undo the rebase and return the branch to its original state.\n ▶  Initial Setup\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A\"\n       commit id: \"B\"\n       branch feature\n       commit id: \"X\"\n       commit id: \"Y\"\n       checkout main\n       commit id: \"C\"\n       commit id: \"D\"\n\n\nFig 3. initial setup\n\n\n\n% git log --graph --all\n* commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 (HEAD -&gt; main)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:55 2024 +0900\n| \n|     D\n| \n* commit cd439d184bd0d5a2ad9dc6993a1675862cee6495\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:29 2024 +0900\n| \n|     C\n|   \n| * commit d4ac5504a56ee01fc7a62e09f0ed7dbdfc5a60d6 (feature)\n| | Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| | Date:   Tue Nov 5 19:26:51 2024 +0900\n| | \n| |     Y\n| | \n| * commit 4fbd2929aa96ef8b7d07388e27e6b2f23c615199\n|/  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n|   Date:   Tue Nov 5 19:26:20 2024 +0900\n|   \n|       X\n| \n* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:25:46 2024 +0900\n| \n|     B\n| \n* commit feadb03ae713ab05b828e066c09bacb339756df7\n  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n  Date:   Tue Nov 5 19:25:27 2024 +0900\nYou rebase feature onto D of the main by the following commands:\ngit switch feature\ngit rebase main\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A\"\n       commit id: \"B\"\n       commit id: \"C\"\n       commit id: \"D\"\n       branch feature\n       commit id: \"X\"\n       commit id: \"Y\"\n\n\nFig 4. git rebase with bugs\n\n\n\nBut after finishing the rebase, you realized that some tests are failing because of unexpected interactions with the latest changes from main.\n\nSolution: Undoing the Rebase\nOne way to undo a git rebase is by using git reflog, which keeps a history of where your branches have pointed over time, and git reset --hard\n ▶  Steps\nFirst, check the commit history at the feature branch by git log:\n% git log --graph      \n* commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 (HEAD -&gt; feature)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:51 2024 +0900\n| \n|     Y\n| \n* commit 110878e53b16fd10c0d044a3a9d9cdf46db44861\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:20 2024 +0900\n| \n|     X\n| \n* commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 (main)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:55 2024 +0900\n| \n|     D\n| \n* commit cd439d184bd0d5a2ad9dc6993a1675862cee6495\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:29 2024 +0900\n| \n|     C\n| \n* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:25:46 2024 +0900\n| \n|     B\n| \n* commit feadb03ae713ab05b828e066c09bacb339756df7\n  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n  Date:   Tue Nov 5 19:25:27 2024 +0900\n\n      A\nSadly, you have successfully rebased the feature branch onto commit-id D of the main. But no worried, run the git reflog command to see recent actions on your branch:\n% git reflog\n14b3c5d (HEAD -&gt; feature) HEAD@{0}: rebase (finish): returning to refs/heads/feature\n14b3c5d (HEAD -&gt; feature) HEAD@{1}: rebase (pick): Y\n110878e HEAD@{2}: rebase (pick): X\n1625fb5 (main) HEAD@{3}: rebase (start): checkout main\nd4ac550 HEAD@{4}: checkout: moving from feature to feature\nd4ac550 HEAD@{5}: checkout: moving from main to feature\n1625fb5 (main) HEAD@{6}: commit: D\ncd439d1 HEAD@{7}: commit: C\n963f1a1 HEAD@{8}: checkout: moving from feature to main\nd4ac550 HEAD@{9}: commit: Y\n4fbd292 HEAD@{10}: commit: X\n963f1a1 HEAD@{11}: checkout: moving from main to feature\n963f1a1 HEAD@{12}: commit: B\nfeadb03 HEAD@{13}: commit (initial): A\nThe line 1625fb5 (main) HEAD@{3}: rebase (start): checkout main indicates when Git started the rebase process. So, if you want to undo the rebase, just reset to the entry d4ac550 HEAD@{4}: to go back to your previous state before the rebase.\nUse git reset to move your branch pointer back to the commit just before the rebase:\n# Step 1: Undo git rebase\n% git reset --hard HEAD@{4}\n\n# Step 2: check history\n% git log --graph      \n* commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 (HEAD -&gt; feature)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:51 2024 +0900\n| \n|     Y\n| \n* commit 110878e53b16fd10c0d044a3a9d9cdf46db44861\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:20 2024 +0900\n| \n|     X\n| \n* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:25:46 2024 +0900\n| \n|     B\n| \n* commit feadb03ae713ab05b828e066c09bacb339756df7\n  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n  Date:   Tue Nov 5 19:25:27 2024 +0900\n\n      A"
-  },
-  {
-    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#git-rebase-or-git-merge",
-    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#git-rebase-or-git-merge",
-    "title": "OGG… Should I use git rebase?",
-    "section": "git rebase or git merge?",
-    "text": "git rebase or git merge?\nAs explined above, if your goal is to maintain a clean and linear commit history and you’re working primarily with your own branches, git rebase is often the best choice. On the other hand, if you’re collaborating closely with others and want to ensure that history is preserved, or if you want to avoid rewriting shared commits, git merge is likely the better option.\n ▶  General Recommendation\n\nIf your feature branch is not shared yet, go with git rebase for a cleaner, linear history.\nIf your feature branch is already shared or part of a collaborative workflow, stick with git merge to avoid potential conflicts for collaborators.\n\n\nVersioning and git rebase strategy\nLet’s say you are working on a repository with the following versioning strategy:\n\n\n\n\n\n\n\nVersion class\nexplained\n\n\n\n\nMajor Version (x)\nChanges in the major version indicate breaking changes or significant new features.\n\n\nMinor Version (y)\nChanges in the minor version often introduce new features that are backward-compatible.\n\n\nPatch Version (z)\nChanges in the patch version generally include bug fixes and minor improvements.\n\n\n\nThen, better to adopt the following git rebase strategy:\n ▶  Changes in x (Major Version):\n\nRecommendation: Always rebase.\nReason: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.\n\n ▶  Changes in y (Minor Version):\n\nRecommendation: Rebase as a precaution.\nReason: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.\n\n ▶  Changes in z (Patch Version):\n\nRecommendation: Rebase not required.\nReason: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase."
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Goal",
-    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Guideline",
-    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
   },
   {
     "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html",
@@ -210,123 +238,32 @@
     "text": "📘 References\n\nGit DOcumentation &gt; git-reset"
   },
   {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html",
+    "href": "posts/2024-11-01-push-to-multiple-origins/index.html",
+    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
     "section": "",
-    "text": "This post is based on Dangit, I accidentally committed something to master that should have been on a brand new branch!"
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
   },
   {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
-    "section": "Problem",
-    "text": "Problem\nLet’s say you have just set up a new git repository. Initially, you planned to create a new branch named test to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.\n ▶  What I originally planned to do\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       branch test\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\"\n\n\n\n\n\n\n ▶  What I’ve actually done…\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\""
-  },
-  {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
-    "section": "Solution: using git reset",
-    "text": "Solution: using git reset\n ▶  Steps\n\nCreate a new test branch based on the current HEAD state.\nReset the main branch to the state immediately after the first commit.\nSwitch to the test branch.\n\n ▶  Commands\n## Step 1: keep the current repository state into test branch\n% git branch test\n\n## Step 2: clean the main branch\n% git reset 813faa2 --hard\n\n## Step 3: moving to the test branch\n% git switch test\n ▶  Explains\n\nYou can create a new branch based on the current HEAD without switching using git branch &lt;branch-name&gt;.\nUsing git reset --hard instead of git reset --soft ensures that by default, changes are not left in the current branch’s index or files.\nIf changes remain in the current branch, you would need to execute git stash or git clean.\n\n\n!!WARNING \nIf you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers."
-  },
-  {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
-    "section": "References",
-    "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
-  },
-  {
-    "objectID": "language/jp/index.html",
-    "href": "language/jp/index.html",
-    "title": "Gitってむずかしいわぁ．．．でもヘコタレへん",
+    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
+    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
+    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
     "section": "",
-    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2025-06-14\n\n\nあぁぁ… git reset –hard と –mixed と –soft の違いは何？\n\n\n2 min\n\n\n\n\n\n\n2025-06-13\n\n\nあぁぁ… とあるファイルについてgit addを取り消したい．．．\n\n\n1 min\n\n\n\n\n\n\n2025-06-06\n\n\nあぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？\n\n\n2 min\n\n\n\n\n\n\n2025-06-05\n\n\nあぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？\n\n\n4 min\n\n\n\n\n\n\n2024-12-17\n\n\nあぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？\n\n\n1 min\n\n\n\n\n\n\n2024-11-06\n\n\nOGG… How do I check unstaged differences with the latest commit?\n\n\n3 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nあぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？\n\n\n2 min\n\n\n\n\n\n\n2024-10-31\n\n\nあぁぁ… ローカルのGitブランチを異なる名前でリモートにプッシュしたい…\n\n\n1 min\n\n\n\n\n\n\n2024-07-26\n\n\nあぁぁ… 現在のリポジトリを別のリモートに保存したい…\n\n\n1 min\n\n\n\n\n\n\n2024-07-18\n\n\nあぁぁ… リモートブランチにpushも，リモート変更も，pullもできない…\n\n\n3 min\n\n\n\n\n\n\n2024-07-13\n\n\nあぁぁ… 間違ったbranch nameつけてしもうた…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nあぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
   },
   {
-    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html",
-    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
+    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
+    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
+    "section": "Solution",
+    "text": "Solution\nIn Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.\n ▶  Steps\nHere’s how you can set this up:\n\nAdd Multiple Remotes by using git remote add command\nCheck Your Remotes with git remote -v\nPushing to Multiple Remotes\n\n ▶  Commands\nSuppose you’re working on a local Git project named hoshinokirby. You want to push this project to both GitHub and GitLab.\n# Step 1: Add multiple Remotes\ngit remote add github https://github.com/user-name/hoshinokirby.git\ngit remote add gitlab https://gitlab.com/user-name/hoshinokirby.git\n\n# Step 2: Check Your Remotes\ngit remote -v\noutput should be like below:\ngithub    https://github.com/user-name/hoshinokirby.git (fetch)\ngithub    https://github.com/user-name/hoshinokirby.git (push)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (push)\nThen,\n# Step 3: Push to Both Remotes:\ngit push github feature/ml-prediction-enhancement\ngit push gitlab feature/ml-prediction-enhancement\n\n\n\n\n\n\n🍵 Green Tea Break: Delete a Remote\n\n\n\nf you have added the wrong remote in your Git repository and want to delete it, you can do so using the git remote remove command. Removing a remote only affects your local configuration and does not impact the remote repository itself.\n# remove the remote\ngit remote remove &lt;remote-name&gt;\n\n# shorthand version\ngit remote rm &lt;remote-name&gt;\nBefore running the above commands, make sure to double-check the remote name to avoid accidental deletions.\n\n\n\nAutomate Pushing to Both Remotes by shellscript\nThe following script is designed to push a specified branch to all configured Git remotes.\n#!/bin/bash\n#--------------------------------------\n# Description\n#   The script iterates over each remote and pushes the specified branch to it \n#   using the git push command. The script retrieves the list of configured Git remotes \n#   using the git remote command and stores it in the variable REMOTES.\n#   If no remotes are found, the script prints an error message and exits with a status code of 1.\n#--------------------------------------\n\n\n# Check if branch name is provided\nif [ -z \"$1\" ]; then\n  echo \"Usage: $0 &lt;branch-name&gt;\"\n  exit 1\nfi\n\n# Define the branch name\nBRANCH_NAME=$1\n\n# Get the list of remotes\nREMOTES=$(git remote)\n\n# Check if there are any remotes configured\nif [ -z \"$REMOTES\" ]; then\n  echo \"No remotes found. Please configure a remote repository.\"\n  exit 1\nfi\n\n# Push to each remote\necho \"$REMOTES\" | while read -r REMOTE; do\n    git push \"$REMOTE\" \"$BRANCH_NAME\"\ndone\n\nexit 0\nTo use this script, follow these steps:\n\nSave the script to a file, e.g., push_to_remotes.sh\nMake the script executable:\n\nchmod +x push_to_remotes.sh\n\nRun the script with the branch name as an argument:\n\n./push_to_remotes.sh &lt;branch-name&gt;"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About OhGoshGit!?!",
     "section": "",
-    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
-  },
-  {
-    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#problem",
-    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#problem",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
-    "section": "",
-    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
-  },
-  {
-    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
-    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
-    "section": "Solution 1: Using git diff",
-    "text": "Solution 1: Using git diff\ngit diff allows you to inspect changes in your code, from minor edits to major branch comparisons.\n ▶  Key Takeaways\n\n\n\n\n\n\n\nCommands\nExplaination\n\n\n\n\ngit diff\nCheck unstaged changes with HEAD\n\n\ngit diff --staged\nCheck staged changes with HEAD\n\n\ngit diff &lt;commit1&gt; &lt;commit2&gt;\nCompare two specific commits\n\n\ngit diff main feature-branch\nCompare branches\n\n\ngit diff HEAD &lt;file/directory-path&gt;\nCheck single file/directory changes with HEAD\n\n\ngit diff --stat\nShows a summary of changes for each file, such as how many lines were added and deleted\n\n\n\n ▶  Viewing Changes in the Working Directory\nTo see all changes in your working directory that haven’t been staged,\ngit diff\nThis command shows the differences between your working directory and the last commit in your terminal display.\nIf you want to see staged changes with your latest commit,\ngit diff --staged\n ▶  Comparing with a Specific Commit\nTo see differences between your current state and a specific commit,\n## (1) Compared with latest commit\ngit diff\ngit diff HEAD\n\n## (2) Compared with specific commit\ngit diff &lt;commit-hash&gt;\n\n## (3) Comparing two specific commits\ngit diff &lt;commit-hash1&gt; &lt;commit-hash2&gt;\n\n## (4) Comparing the HEAD with the HEAD~1\ngit diff HEAD~1 HEAD\n ▶  Comparing Branches\nYou can also use git diff to compare different branches.\ngit diff main feature-branch\n ▶  Shows a summary of changes for each file\nWhen you want to see a summary of changes for each file, such as how many lines were added and deleted, use git diff --stat. If you want to compare the current branch with gh-pages branch in .github/ directory,\n% git diff --stat gh-pages .github/ \n .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++\n .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++\n .github/pull_request_template.md             | 25 +++++++++++++++++++++++++\n .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++\n .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++\n 5 files changed, 142 insertions(+)\nThe number shows how many lines are modified for each files."
-  },
-  {
-    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
-    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
-    "title": "OGG… How do I check unstaged differences with the latest commit?",
-    "section": "Solution 2: Using git difftool",
-    "text": "Solution 2: Using git difftool\ngit difftool is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.\nThe syntax of git difftool is similar to git diff. For example,\n\n\n\n\n\n\n\ngit difftool commands\ngit diff commands\n\n\n\n\ngit difftool\ngit diff\n\n\ngit difftool --stagedgit difftool --cached\ngit diff --staged\n\n\ngit difftool &lt;commit1&gt; &lt;commit2&gt;\ngit diff &lt;commit1&gt; &lt;commit2&gt;\n\n\ngit difftool main feature-branch\ngit diff main feature-branch\n\n\ngit difftool HEAD &lt;file/directory-path&gt;\ngit diff HEAD &lt;file/directory-path&gt;\n\n\n\n ▶  Choosing an editor \nYou can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is\ngit config --global diff.tool your_preferred_tool\nFor example, if you prefer to vscode,\ngit config --global diff.tool vscode\nTo check if you successfully configure difftool editor,\ngit config -l\nthen, you can check what editor is you default git difftool editor.\n ▶  Choosing an editor temporarily\nIf you temporarily show the diff in vimdiff,\ngit difftool HEAD~1 HEAD --tool=vimdiff"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html",
-    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html",
-    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
-    "section": "",
-    "text": "Gitのcommit履歴の可読性と保守性を向上させるため，複数の小さな中間commitを1つの意味のあるまとまりに統合する\nコードレビューやメインブランチへのマージの前に，履歴をクリーンで理解しやすいものにする"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
-    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
-    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
-    "section": "",
-    "text": "Gitのcommit履歴の可読性と保守性を向上させるため，複数の小さな中間commitを1つの意味のあるまとまりに統合する\nコードレビューやメインブランチへのマージの前に，履歴をクリーンで理解しやすいものにする"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
-    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
-    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
-    "section": "🎯 Goal",
-    "text": "🎯 Goal\n\n複数の最近のcommitを1つの，適切に説明されたcommitにまとめる\n不要な中間commit（タイプミスの修正，デバッグログなど）をsquashして削除する\nレビュアーにとってcommit履歴をより理解しやすくし，レビューの効率性と明確性を向上させる．"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
-    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
-    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
-    "section": "📘 Guideline",
-    "text": "📘 Guideline\n\n\n\n\n\n\nNote\n\n\n\n以下の条件を満たしていることが望ましいです：\n\ncommitがまだリモートリポジトリ（GitHubなど）にプッシュされていない．\nローカルブランチで作業している．\n\nそうでない場合，git rebase後に強制プッシュ（git push -f）が必要になる可能性が高く，リモートの履歴が上書きされる可能性があります． プッシュ済みのcommitの履歴を書き換えると，コラボレーションに支障をきたす可能性があるため，注意して進めてください．\n\n\n\ncommitを統合するための手順\n\n最近のcommitを確認\ngit log --oneline\n対話型git rebaseを開始\n最後の3つのcommitをsquashするには：\ngit rebase -i HEAD~3\n\n\n\n\n\n\n\n構文\n\n\n\n構文は以下の通りです：\ngit rebase -i &lt;base-commit&gt;\n\ngit rebase先として指定できるベースcommitは1つだけです\ngit rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;のように動作するコマンドは実行できません\n\n\n\n\ngit rebase指示リストを編集\ngit rebaseを実行すると，以下のような出力が表示されます：\npick abc123 fix typo\npick def456 add new test case\npick ghi789 finalize logic\ncommitIDは上から下へ = 古いものから新しいものへとソートされています．上記の例では，最初の行（abc123）がgit rebase対象のcommitの中で最も古いものです．\n最新の2つのcommitを最も古いものにsquashする場合は，以下のように修正します：\npick abc123 fix typo\nsquash def456 add new test case\nsquash ghi789 finalize logic\ncommitメッセージを編集\n新しいエディタ画面でcommitメッセージの結合を求められます．必要に応じて編集してください：\nFinalize logic with test case\n\n- Fixed typo\n- Added test case\n- Finalized core logic\nその後，保存して終了します．新しいcommit履歴を以下のコマンドで確認することをお勧めします：\ngit log --oneline\n\n\n\n\n\n\n\nヒント\n\n\n\ngit rebase中に何か問題が発生した場合は，キャンセルできます：\ngit rebase --abort"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-git-rebaseで可能な操作は",
-    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-git-rebaseで可能な操作は",
-    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
-    "section": "Appendix: git rebaseで可能な操作は？",
-    "text": "Appendix: git rebaseで可能な操作は？\n\n\n\n\n\n\n\n\nコマンド\n説明\n\n\n\n\npick\ncommitをそのまま使用（メッセージや内容の変更なし）\n\n\nreword\ncommitの内容はそのままで，commitメッセージを編集\n\n\nedit\n一時停止してcommitの修正を可能にする（ファイル，メッセージなど）\n\n\nsquash\nこのcommitを前のcommitと結合し，メッセージを編集\n\n\nfixup\nsquashと同様だが，このcommitのメッセージは破棄（前のメッセージを使用）\n\n\ndrop\nこのcommitを履歴から完全に削除"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html",
-    "href": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html",
-    "title": "あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？",
-    "section": "",
-    "text": "ローカルのGitブランチ feature/ml-prediction-enhancement で作業をしているとします． このプロジェクトをGitHubとGitLabの両方にプッシュしたいと考えています．\n ▶  例\n\nバージョン管理とコラボレーションのためにGitHubにコードをプッシュしながら，アプリケーションのホスティングのためにHerokuサーバーにもデプロイしたい場合"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#問題",
-    "href": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#問題",
-    "title": "あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？",
-    "section": "",
-    "text": "ローカルのGitブランチ feature/ml-prediction-enhancement で作業をしているとします． このプロジェクトをGitHubとGitLabの両方にプッシュしたいと考えています．\n ▶  例\n\nバージョン管理とコラボレーションのためにGitHubにコードをプッシュしながら，アプリケーションのホスティングのためにHerokuサーバーにもデプロイしたい場合"
-  },
-  {
-    "objectID": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#解決策",
-    "href": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#解決策",
-    "title": "あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？",
-    "section": "解決策",
-    "text": "解決策\nGitでは，1つのプロジェクトに対して複数のリモートリポジトリを設定することができます．これにより，GitHubやGitLabなど，異なるホスティングサービスに同時にプロジェクトをプッシュすることが可能になります．\n ▶  手順\nセットアップ方法は以下の通りです：\n\ngit remote add コマンドを使用して複数のリモートを追加\ngit remote -v でリモートを確認\n複数のリモートにプッシュ\n\n ▶  コマンド\nhoshinokirby という名前のローカルGitプロジェクトで作業していて，このプロジェクトをGitHubとGitLabの両方にプッシュしたいとします．\n# Step 1: Add multiple Remotes\ngit remote add github https://github.com/user-name/hoshinokirby.git\ngit remote add gitlab https://gitlab.com/user-name/hoshinokirby.git\n\n# Step 2: Check Your Remotes\ngit remote -v\n出力は以下のようになります：\ngithub    https://github.com/user-name/hoshinokirby.git (fetch)\ngithub    https://github.com/user-name/hoshinokirby.git (push)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (push)\nその後，\n# Step 3: Push to Both Remotes:\ngit push github feature/ml-prediction-enhancement\ngit push gitlab feature/ml-prediction-enhancement\n\n\n\n\n\n\n🍵 Green Tea Break: リモートの削除\n\n\n\nGitリポジトリに誤ったリモートを追加してしまい，削除したい場合は，git remote remove コマンドを使用できます．リモートを削除すると，ローカルの設定のみが影響を受け，リモートリポジトリ自体には影響しません．\n# remove the remote\ngit remote remove &lt;remote-name&gt;\n\n# shorthand version\ngit remote rm &lt;remote-name&gt;\n上記のコマンドを実行する前に，誤って削除しないよう，リモート名を必ず確認してください．\n\n\n\nシェルスクリプトで両方のリモートへのプッシュを自動化\n以下のスクリプトは，設定されているすべてのGitリモートに指定されたブランチをプッシュするように設計されています．\n#!/bin/bash\n#--------------------------------------\n# Description\n#   The script iterates over each remote and pushes the specified branch to it \n#   using the git push command. The script retrieves the list of configured Git remotes \n#   using the git remote command and stores it in the variable REMOTES.\n#   If no remotes are found, the script prints an error message and exits with a status code of 1.\n#--------------------------------------\n\n\n# Check if branch name is provided\nif [ -z \"$1\" ]; then\n  echo \"Usage: $0 &lt;branch-name&gt;\"\n  exit 1\nfi\n\n# Define the branch name\nBRANCH_NAME=$1\n\n# Get the list of remotes\nREMOTES=$(git remote)\n\n# Check if there are any remotes configured\nif [ -z \"$REMOTES\" ]; then\n  echo \"No remotes found. Please configure a remote repository.\"\n  exit 1\nfi\n\n# Push to each remote\necho \"$REMOTES\" | while read -r REMOTE; do\n    git push \"$REMOTE\" \"$BRANCH_NAME\"\ndone\n\nexit 0\nこのスクリプトを使用するには，以下の手順に従ってください：\n\nスクリプトをファイルに保存します（例：push_to_remotes.sh）\nスクリプトを実行可能にします：\n\nchmod +x push_to_remotes.sh\n\nブランチ名を引数として指定してスクリプトを実行します：\n\n```zsh ./push_to_remotes.sh"
+    "text": "About this blog"
   },
   {
     "objectID": "language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/index.html",
@@ -357,32 +294,32 @@
     "text": "📘 References\n\nGitHub Docs &gt; Duplicating a repository"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html",
-    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html",
-    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
     "section": "",
-    "text": "macOSでGitHubリポジトリへのSSH接続を設定したい"
+    "text": "feature/inverse-matrix-calculation というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．\n\n間違ったbranch name: feature/inverse-matrix-calculation\n正しいbranch name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#問題",
-    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#問題",
-    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
     "section": "",
-    "text": "macOSでGitHubリポジトリへのSSH接続を設定したい"
+    "text": "feature/inverse-matrix-calculation というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．\n\n間違ったbranch name: feature/inverse-matrix-calculation\n正しいbranch name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#解決方法",
-    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#解決方法",
-    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
-    "section": "解決方法",
-    "text": "解決方法\nステップ\n\n新しいSSHキーを生成する\nSSHキーをSSHエージェントに追加する\nGitHubに公開キーを登録する\nSSH接続をテストする\nSSHの設定ファイルを更新する\n\n実践解説\n\n\n1. 新しいSSHキーを生成する\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nオプション -t は生成するキーの種類を指定します．ed25519 は古いRSAなどのアルゴリズムより高速で安全であり，強力なセキュリティを維持しながらより短いキーを生成します．\nオプション -C は識別のためにキーにコメントを追加します．\n-f は生成されるキーペアのファイル名と場所を指定します．これにより2つのファイルが生成されます：\n\nkirby_github_key: プライベートキー（安全に保管してください！共有しないでください！）\nkirby_github_key.pub: パブリックキー（GitHubにアップロードするもの）\n\n\n\n2. SSHキーをSSHエージェントに追加する\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nssh-addコマンドは，プライベートSSHキーをSSH認証エージェント（ssh-agent）に追加し，SSH接続時にキーのパスフレーズを繰り返し要求されることなく使用できるようにします． キー（kirby_github_key）がssh-agentに追加されていない場合，SSHはそれを使用することができません．このようなエラーが発生する可能性があります：\nPermission denied (publickey).\n\n\n3. GitHubに公開キーを登録する\n\ncat ~/.ssh/kirby_github_key.pub\n\nファイルを開いた後，文字列をコピーしてGitHubのSettings &gt; SSH and GPG keys &gt; New SSH keyで登録します．\nその後，以下のコマンドで接続をテストします：\n\n\n4. SSH接続をテスト\n\n$ ssh -T git@github.com\n\n接続が正常に確立された場合，以下のようなメッセージが表示されます：\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nSSHの設定ファイルを更新する\n毎回手動でssh-addを実行するのは面倒です．これを避けるため，~/.ssh/configファイルを編集してSSHが自動的にキーを使用するように設定できます：\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "section": "Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する",
+    "text": "Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する\n ▶  方針\n\n現在の HEAD をベースに future-inverse-matrix-calculation を作成\nfuture-inverse-matrix-calculation branchへ移動\n誤った名前の古いbranchを削除\nfuture-inverse-matrix-calculation branchについて，upstream branchを作成\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#appendix-プライベートキーでのssh接続のトラブル",
-    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#appendix-プライベートキーでのssh接続のトラブル",
-    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
-    "section": "Appendix：❗ プライベートキーでのSSH接続のトラブル",
-    "text": "Appendix：❗ プライベートキーでのSSH接続のトラブル\n\n\n\n\n\n\n概要\n\n\n\n\nSSHは不正アクセスから保護するため，プライベートキーのセキュリティについて厳格です．\nプライベートキーは常にあなただけが読み取れる状態に保ってください．\nchmod 600 your_key_fileを使用して，適切なパーミッション設定を確保してください．\n\n\n\nトラブル\nSSHコマンドを使用して接続を試みる際，以下のようなエラーが発生することがあります：\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nその結果，SSH接続が失敗します．\n原因\n\nこのエラーは，プライベートキーファイルのファイルパーミッションが緩すぎることが原因です．\n例えば，ファイルパーミッションが666（誰もが読み書き可能）に設定されている場合，SSHはセキュリティ上の理由でキーの使用を拒否します．\n\n解決方法\n所有者のみがファイルを読み書きできるようにファイルのパーミッションを制限することで問題を解決できます：\n% chmod 600 &lt;your-private-key-path&gt;\nパーミッションを変更した後，同じSSHコマンドを再度実行してみてください．"
+    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-2-現在のブランチをリネームする",
+    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-2-現在のブランチをリネームする",
+    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "section": "Solution 2: 現在のブランチをリネームする",
+    "text": "Solution 2: 現在のブランチをリネームする\n ▶  方針\n現在のfeature/inverse-matrix-calculation branchをリネームすることでupstream branch設定を維持したまま，正しい名前へ変更することができます．\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
   },
   {
     "objectID": "language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/index.html",
@@ -427,13 +364,6 @@
     "text": "ユースケース\n ▶  一時的な作業の共有\nレビューや助言を求めるために一時的に作業を共有したい場合，既存のリモートブランチを上書きしたくないかもしれません．その場合，temp/20241031-login-test のような一時的な名前でローカルブランチをプッシュすることをお勧めします．\n ▶  名前の競合を避ける\nリモートに同じ名前のブランチが既に存在する場合，競合を避けるために異なる名前でローカルブランチをプッシュしたい場合があります．例えば，リモートに既に feature/login というブランチが存在する場合， ローカルの feature/login ブランチを feature/login-update としてプッシュすることができます．\nこの場合，リモートへのプッシュ後，upstreamブランチが意図したブランチを指していることを確認してください． 以下のコマンドを実行することをお勧めします：\ngit branch -vvv\nそして，結果が期待通りでない場合は，以下のコマンドを実行して：\ngit branch --set-upstream-to=origin/new-feature\nupstreamブランチを正しいものに設定することができます．"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About OhGoshGit!?!",
-    "section": "",
-    "text": "About this blog"
-  },
-  {
     "objectID": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html",
     "href": "language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html",
     "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
@@ -460,6 +390,34 @@
     "title": "あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた",
     "section": "References",
     "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html",
+    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html",
+    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
+    "section": "",
+    "text": "特定のファイルに対するgit addの操作を取り消し、ステージングエリアからワーキングディレクトリに戻す\nファイルの内容自体は変更しない"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#objective",
+    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#objective",
+    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
+    "section": "",
+    "text": "特定のファイルに対するgit addの操作を取り消し、ステージングエリアからワーキングディレクトリに戻す\nファイルの内容自体は変更しない"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#goal",
+    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#goal",
+    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\n以前にステージングエリアに追加された1つまたは複数のファイルをunstageする"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
+    "section": "📘 Guideline",
+    "text": "📘 Guideline\ngit addでファイルをステージングすると、そのファイルはステージングエリア（インデックス）に移動し、コミットの準備が整います。もし考えが変わってunstageしたい場合（変更内容を失うことなく）、一般的に2つの選択肢があります：\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nここでは、より新しいタスク特化型のGitコマンドの一部であるgit restoreについて説明します。このコマンドは、より直感的で分かりやすく、インデックスの状態を「復元」する動作に特化しています。他の形式で使用した場合にコミット履歴にも影響を与える可能性があるgit resetの、より広範で潜在的に混乱を招く影響を避けることができます。\n特定のファイルをunstageする\ngit restore --staged &lt;file_name&gt;\n複数の特定のファイルをunstageする\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nunstageしたいファイルをスペースで区切って列挙します。\n\n実行後の結果を確認する\ngit status\n\n💻 git unstage 用のカスタムエイリアス設定\nGitでは、.gitconfigの[alias]セクションを通じて、長いコマンドのショートカット（Alias）を定義できます。\n設定の構文\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\n実際のコマンドにgitを含めないでください — Gitは自動的にそれを付加します\nコマンドにスペースやオプションが含まれる場合は、引用符が必要かもしれません\n\nAliasの設定\n以下の設定で、git unstageというGitサブコマンドのAliasを定義します。\n[alias]\n    unstage = \"restore --staged\"\nこれにより、git unstage &lt;file&gt;がgit restore --staged &lt;file_name&gt;と同じように機能します。"
   },
   {
     "objectID": "language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html",
@@ -504,32 +462,32 @@
     "text": "📘 参考文献\n\nGit DOcumentation &gt; git-reset"
   },
   {
-    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html",
-    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html",
-    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
+    "objectID": "language/jp/index.html",
+    "href": "language/jp/index.html",
+    "title": "Gitってむずかしいわぁ．．．でもヘコタレへん",
     "section": "",
-    "text": "特定のファイルに対するgit addの操作を取り消し、ステージングエリアからワーキングディレクトリに戻す\nファイルの内容自体は変更しない"
+    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2025-06-14\n\n\nあぁぁ… git reset –hard と –mixed と –soft の違いは何？\n\n\n2 min\n\n\n\n\n\n\n2025-06-13\n\n\nあぁぁ… とあるファイルについてgit addを取り消したい．．．\n\n\n1 min\n\n\n\n\n\n\n2025-06-06\n\n\nあぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？\n\n\n2 min\n\n\n\n\n\n\n2025-06-05\n\n\nあぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？\n\n\n4 min\n\n\n\n\n\n\n2024-12-17\n\n\nあぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？\n\n\n1 min\n\n\n\n\n\n\n2024-11-06\n\n\nOGG… How do I check unstaged differences with the latest commit?\n\n\n3 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nあぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？\n\n\n2 min\n\n\n\n\n\n\n2024-10-31\n\n\nあぁぁ… ローカルのGitブランチを異なる名前でリモートにプッシュしたい…\n\n\n1 min\n\n\n\n\n\n\n2024-07-26\n\n\nあぁぁ… 現在のリポジトリを別のリモートに保存したい…\n\n\n1 min\n\n\n\n\n\n\n2024-07-18\n\n\nあぁぁ… リモートブランチにpushも，リモート変更も，pullもできない…\n\n\n3 min\n\n\n\n\n\n\n2024-07-13\n\n\nあぁぁ… 間違ったbranch nameつけてしもうた…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nあぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#objective",
-    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#objective",
-    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
+    "objectID": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html",
+    "href": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html",
+    "title": "あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？",
     "section": "",
-    "text": "特定のファイルに対するgit addの操作を取り消し、ステージングエリアからワーキングディレクトリに戻す\nファイルの内容自体は変更しない"
+    "text": "ローカルのGitブランチ feature/ml-prediction-enhancement で作業をしているとします． このプロジェクトをGitHubとGitLabの両方にプッシュしたいと考えています．\n ▶  例\n\nバージョン管理とコラボレーションのためにGitHubにコードをプッシュしながら，アプリケーションのホスティングのためにHerokuサーバーにもデプロイしたい場合"
   },
   {
-    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#goal",
-    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#goal",
-    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
-    "section": "🎯 Goal",
-    "text": "🎯 Goal\n\n以前にステージングエリアに追加された1つまたは複数のファイルをunstageする"
+    "objectID": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#問題",
+    "href": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#問題",
+    "title": "あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？",
+    "section": "",
+    "text": "ローカルのGitブランチ feature/ml-prediction-enhancement で作業をしているとします． このプロジェクトをGitHubとGitLabの両方にプッシュしたいと考えています．\n ▶  例\n\nバージョン管理とコラボレーションのためにGitHubにコードをプッシュしながら，アプリケーションのホスティングのためにHerokuサーバーにもデプロイしたい場合"
   },
   {
-    "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "href": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "title": "あぁぁ… とあるファイルについてgit addを取り消したい．．．",
-    "section": "📘 Guideline",
-    "text": "📘 Guideline\ngit addでファイルをステージングすると、そのファイルはステージングエリア（インデックス）に移動し、コミットの準備が整います。もし考えが変わってunstageしたい場合（変更内容を失うことなく）、一般的に2つの選択肢があります：\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nここでは、より新しいタスク特化型のGitコマンドの一部であるgit restoreについて説明します。このコマンドは、より直感的で分かりやすく、インデックスの状態を「復元」する動作に特化しています。他の形式で使用した場合にコミット履歴にも影響を与える可能性があるgit resetの、より広範で潜在的に混乱を招く影響を避けることができます。\n特定のファイルをunstageする\ngit restore --staged &lt;file_name&gt;\n複数の特定のファイルをunstageする\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nunstageしたいファイルをスペースで区切って列挙します。\n\n実行後の結果を確認する\ngit status\n\n💻 git unstage 用のカスタムエイリアス設定\nGitでは、.gitconfigの[alias]セクションを通じて、長いコマンドのショートカット（Alias）を定義できます。\n設定の構文\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\n実際のコマンドにgitを含めないでください — Gitは自動的にそれを付加します\nコマンドにスペースやオプションが含まれる場合は、引用符が必要かもしれません\n\nAliasの設定\n以下の設定で、git unstageというGitサブコマンドのAliasを定義します。\n[alias]\n    unstage = \"restore --staged\"\nこれにより、git unstage &lt;file&gt;がgit restore --staged &lt;file_name&gt;と同じように機能します。"
+    "objectID": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#解決策",
+    "href": "language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html#解決策",
+    "title": "あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？",
+    "section": "解決策",
+    "text": "解決策\nGitでは，1つのプロジェクトに対して複数のリモートリポジトリを設定することができます．これにより，GitHubやGitLabなど，異なるホスティングサービスに同時にプロジェクトをプッシュすることが可能になります．\n ▶  手順\nセットアップ方法は以下の通りです：\n\ngit remote add コマンドを使用して複数のリモートを追加\ngit remote -v でリモートを確認\n複数のリモートにプッシュ\n\n ▶  コマンド\nhoshinokirby という名前のローカルGitプロジェクトで作業していて，このプロジェクトをGitHubとGitLabの両方にプッシュしたいとします．\n# Step 1: Add multiple Remotes\ngit remote add github https://github.com/user-name/hoshinokirby.git\ngit remote add gitlab https://gitlab.com/user-name/hoshinokirby.git\n\n# Step 2: Check Your Remotes\ngit remote -v\n出力は以下のようになります：\ngithub    https://github.com/user-name/hoshinokirby.git (fetch)\ngithub    https://github.com/user-name/hoshinokirby.git (push)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (push)\nその後，\n# Step 3: Push to Both Remotes:\ngit push github feature/ml-prediction-enhancement\ngit push gitlab feature/ml-prediction-enhancement\n\n\n\n\n\n\n🍵 Green Tea Break: リモートの削除\n\n\n\nGitリポジトリに誤ったリモートを追加してしまい，削除したい場合は，git remote remove コマンドを使用できます．リモートを削除すると，ローカルの設定のみが影響を受け，リモートリポジトリ自体には影響しません．\n# remove the remote\ngit remote remove &lt;remote-name&gt;\n\n# shorthand version\ngit remote rm &lt;remote-name&gt;\n上記のコマンドを実行する前に，誤って削除しないよう，リモート名を必ず確認してください．\n\n\n\nシェルスクリプトで両方のリモートへのプッシュを自動化\n以下のスクリプトは，設定されているすべてのGitリモートに指定されたブランチをプッシュするように設計されています．\n#!/bin/bash\n#--------------------------------------\n# Description\n#   The script iterates over each remote and pushes the specified branch to it \n#   using the git push command. The script retrieves the list of configured Git remotes \n#   using the git remote command and stores it in the variable REMOTES.\n#   If no remotes are found, the script prints an error message and exits with a status code of 1.\n#--------------------------------------\n\n\n# Check if branch name is provided\nif [ -z \"$1\" ]; then\n  echo \"Usage: $0 &lt;branch-name&gt;\"\n  exit 1\nfi\n\n# Define the branch name\nBRANCH_NAME=$1\n\n# Get the list of remotes\nREMOTES=$(git remote)\n\n# Check if there are any remotes configured\nif [ -z \"$REMOTES\" ]; then\n  echo \"No remotes found. Please configure a remote repository.\"\n  exit 1\nfi\n\n# Push to each remote\necho \"$REMOTES\" | while read -r REMOTE; do\n    git push \"$REMOTE\" \"$BRANCH_NAME\"\ndone\n\nexit 0\nこのスクリプトを使用するには，以下の手順に従ってください：\n\nスクリプトをファイルに保存します（例：push_to_remotes.sh）\nスクリプトを実行可能にします：\n\nchmod +x push_to_remotes.sh\n\nブランチ名を引数として指定してスクリプトを実行します：\n\n```zsh ./push_to_remotes.sh"
   },
   {
     "objectID": "language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/index.html",
@@ -588,6 +546,62 @@
     "text": "解決策: git pull --rebase\n ▶  手順\n\nローカルとリモートの差分を確認\nローカル-リモート間のコンフリクトを解決\nコンフリクト解決後にリモートにpush\n\n ▶  コマンド\n## リモートの情報を取得\n% git fetch\n\n## リモートとの差分があるファイルを確認\n% git difftool eda/data-sanity-check origin\n上記のコマンドはリモート-ローカル間の差分を確認するためのものです． 問題を素早く解決したい場合は，このプロセスをスキップしても構いません．\nでは，コンフリクトを解決しましょう．\n## ステップ2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## コンフリクト解決後\n% git rebase --continue\ngit pull --rebaseコマンドはgit pullとgit rebaseを組み合わせたものです． git pull --rebaseを実行すると，コンフリクトがある場合はコンフリクト解決プロセスに入ります． 通常のマージコンフリクトと同様に，コンフリクトが発生したファイルを開いて手動で修正する必要があります．\nコンフリクトを解決した後は，必ずgit rebase --continueを実行してください． 実行しないと，コンフリクト解決モードのままになってしまいます．\nあなたのGit履歴は以下のようになります：\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n 図3. git pull –rebase \n\n\n\n上記のconflict-resolveノードで，リポジトリの履歴に残すローカルの変更を選択します．\nこれで，リモートにpushできるようになりました．\n## ステップ3：リモートにpush\n% git push origin HEAD\n ▶  REMARKS\n\ngit pull --rebaseを実行した際，すべての差分が自動的に解決されることもあります．\n\n例えば，あなたが変更したファイルとリモートの変更が関係ない場合など．\ngit pull --rebaseはコンフリクトを引き起こさない差分を自動的に解決します．\n\n混乱してしまい，保存せずにコンフリクト解決モードを抜けたい場合は，git rebase --abortを実行してください．"
   },
   {
+    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html",
+    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html",
+    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
+    "section": "",
+    "text": "macOSでGitHubリポジトリへのSSH接続を設定したい"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#問題",
+    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#問題",
+    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
+    "section": "",
+    "text": "macOSでGitHubリポジトリへのSSH接続を設定したい"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#解決方法",
+    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#解決方法",
+    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
+    "section": "解決方法",
+    "text": "解決方法\nステップ\n\n新しいSSHキーを生成する\nSSHキーをSSHエージェントに追加する\nGitHubに公開キーを登録する\nSSH接続をテストする\nSSHの設定ファイルを更新する\n\n実践解説\n\n\n1. 新しいSSHキーを生成する\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nオプション -t は生成するキーの種類を指定します．ed25519 は古いRSAなどのアルゴリズムより高速で安全であり，強力なセキュリティを維持しながらより短いキーを生成します．\nオプション -C は識別のためにキーにコメントを追加します．\n-f は生成されるキーペアのファイル名と場所を指定します．これにより2つのファイルが生成されます：\n\nkirby_github_key: プライベートキー（安全に保管してください！共有しないでください！）\nkirby_github_key.pub: パブリックキー（GitHubにアップロードするもの）\n\n\n\n2. SSHキーをSSHエージェントに追加する\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nssh-addコマンドは，プライベートSSHキーをSSH認証エージェント（ssh-agent）に追加し，SSH接続時にキーのパスフレーズを繰り返し要求されることなく使用できるようにします． キー（kirby_github_key）がssh-agentに追加されていない場合，SSHはそれを使用することができません．このようなエラーが発生する可能性があります：\nPermission denied (publickey).\n\n\n3. GitHubに公開キーを登録する\n\ncat ~/.ssh/kirby_github_key.pub\n\nファイルを開いた後，文字列をコピーしてGitHubのSettings &gt; SSH and GPG keys &gt; New SSH keyで登録します．\nその後，以下のコマンドで接続をテストします：\n\n\n4. SSH接続をテスト\n\n$ ssh -T git@github.com\n\n接続が正常に確立された場合，以下のようなメッセージが表示されます：\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nSSHの設定ファイルを更新する\n毎回手動でssh-addを実行するのは面倒です．これを避けるため，~/.ssh/configファイルを編集してSSHが自動的にキーを使用するように設定できます：\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#appendix-プライベートキーでのssh接続のトラブル",
+    "href": "language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html#appendix-プライベートキーでのssh接続のトラブル",
+    "title": "あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？",
+    "section": "Appendix：❗ プライベートキーでのSSH接続のトラブル",
+    "text": "Appendix：❗ プライベートキーでのSSH接続のトラブル\n\n\n\n\n\n\n概要\n\n\n\n\nSSHは不正アクセスから保護するため，プライベートキーのセキュリティについて厳格です．\nプライベートキーは常にあなただけが読み取れる状態に保ってください．\nchmod 600 your_key_fileを使用して，適切なパーミッション設定を確保してください．\n\n\n\nトラブル\nSSHコマンドを使用して接続を試みる際，以下のようなエラーが発生することがあります：\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nその結果，SSH接続が失敗します．\n原因\n\nこのエラーは，プライベートキーファイルのファイルパーミッションが緩すぎることが原因です．\n例えば，ファイルパーミッションが666（誰もが読み書き可能）に設定されている場合，SSHはセキュリティ上の理由でキーの使用を拒否します．\n\n解決方法\n所有者のみがファイルを読み書きできるようにファイルのパーミッションを制限することで問題を解決できます：\n% chmod 600 &lt;your-private-key-path&gt;\nパーミッションを変更した後，同じSSHコマンドを再度実行してみてください．"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html",
+    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "",
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "",
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "Solution 1: Using git diff",
+    "text": "Solution 1: Using git diff\ngit diff allows you to inspect changes in your code, from minor edits to major branch comparisons.\n ▶  Key Takeaways\n\n\n\n\n\n\n\nCommands\nExplaination\n\n\n\n\ngit diff\nCheck unstaged changes with HEAD\n\n\ngit diff --staged\nCheck staged changes with HEAD\n\n\ngit diff &lt;commit1&gt; &lt;commit2&gt;\nCompare two specific commits\n\n\ngit diff main feature-branch\nCompare branches\n\n\ngit diff HEAD &lt;file/directory-path&gt;\nCheck single file/directory changes with HEAD\n\n\ngit diff --stat\nShows a summary of changes for each file, such as how many lines were added and deleted\n\n\n\n ▶  Viewing Changes in the Working Directory\nTo see all changes in your working directory that haven’t been staged,\ngit diff\nThis command shows the differences between your working directory and the last commit in your terminal display.\nIf you want to see staged changes with your latest commit,\ngit diff --staged\n ▶  Comparing with a Specific Commit\nTo see differences between your current state and a specific commit,\n## (1) Compared with latest commit\ngit diff\ngit diff HEAD\n\n## (2) Compared with specific commit\ngit diff &lt;commit-hash&gt;\n\n## (3) Comparing two specific commits\ngit diff &lt;commit-hash1&gt; &lt;commit-hash2&gt;\n\n## (4) Comparing the HEAD with the HEAD~1\ngit diff HEAD~1 HEAD\n ▶  Comparing Branches\nYou can also use git diff to compare different branches.\ngit diff main feature-branch\n ▶  Shows a summary of changes for each file\nWhen you want to see a summary of changes for each file, such as how many lines were added and deleted, use git diff --stat. If you want to compare the current branch with gh-pages branch in .github/ directory,\n% git diff --stat gh-pages .github/ \n .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++\n .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++\n .github/pull_request_template.md             | 25 +++++++++++++++++++++++++\n .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++\n .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++\n 5 files changed, 142 insertions(+)\nThe number shows how many lines are modified for each files."
+  },
+  {
+    "objectID": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "href": "language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "title": "OGG… How do I check unstaged differences with the latest commit?",
+    "section": "Solution 2: Using git difftool",
+    "text": "Solution 2: Using git difftool\ngit difftool is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.\nThe syntax of git difftool is similar to git diff. For example,\n\n\n\n\n\n\n\ngit difftool commands\ngit diff commands\n\n\n\n\ngit difftool\ngit diff\n\n\ngit difftool --stagedgit difftool --cached\ngit diff --staged\n\n\ngit difftool &lt;commit1&gt; &lt;commit2&gt;\ngit diff &lt;commit1&gt; &lt;commit2&gt;\n\n\ngit difftool main feature-branch\ngit diff main feature-branch\n\n\ngit difftool HEAD &lt;file/directory-path&gt;\ngit diff HEAD &lt;file/directory-path&gt;\n\n\n\n ▶  Choosing an editor \nYou can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is\ngit config --global diff.tool your_preferred_tool\nFor example, if you prefer to vscode,\ngit config --global diff.tool vscode\nTo check if you successfully configure difftool editor,\ngit config -l\nthen, you can check what editor is you default git difftool editor.\n ▶  Choosing an editor temporarily\nIf you temporarily show the diff in vimdiff,\ngit difftool HEAD~1 HEAD --tool=vimdiff"
+  },
+  {
     "objectID": "language/jp/posts-jp/2025-06-05-how-to-manage-secrets/index.html",
     "href": "language/jp/posts-jp/2025-06-05-how-to-manage-secrets/index.html",
     "title": "あぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？",
@@ -637,32 +651,39 @@
     "text": "References\n\nBFG Repo-Cleaner"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html",
-    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html",
-    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html",
+    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html",
+    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
     "section": "",
-    "text": "feature/inverse-matrix-calculation というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．\n\n間違ったbranch name: feature/inverse-matrix-calculation\n正しいbranch name: future-inverse-matrix-calculation"
+    "text": "Gitのcommit履歴の可読性と保守性を向上させるため，複数の小さな中間commitを1つの意味のあるまとまりに統合する\nコードレビューやメインブランチへのマージの前に，履歴をクリーンで理解しやすいものにする"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
+    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
+    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
+    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
     "section": "",
-    "text": "feature/inverse-matrix-calculation というlocal branchを作成し，開発を進めていたとします． ある程度localでの開発が進んだ段階でbranch nameが間違っていたことに気づきました．\n\n間違ったbranch name: feature/inverse-matrix-calculation\n正しいbranch name: future-inverse-matrix-calculation"
+    "text": "Gitのcommit履歴の可読性と保守性を向上させるため，複数の小さな中間commitを1つの意味のあるまとまりに統合する\nコードレビューやメインブランチへのマージの前に，履歴をクリーンで理解しやすいものにする"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する",
-    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-1-新しく正しい名前でbranchを作成し古いbranchを削除する",
-    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
-    "section": "Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する",
-    "text": "Solution 1: 新しく正しい名前でbranchを作成し，古いbranchを削除する\n ▶  方針\n\n現在の HEAD をベースに future-inverse-matrix-calculation を作成\nfuture-inverse-matrix-calculation branchへ移動\n誤った名前の古いbranchを削除\nfuture-inverse-matrix-calculation branchについて，upstream branchを作成\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
+    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
+    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\n複数の最近のcommitを1つの，適切に説明されたcommitにまとめる\n不要な中間commit（タイプミスの修正，デバッグログなど）をsquashして削除する\nレビュアーにとってcommit履歴をより理解しやすくし，レビューの効率性と明確性を向上させる．"
   },
   {
-    "objectID": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-2-現在のブランチをリネームする",
-    "href": "language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html#solution-2-現在のブランチをリネームする",
-    "title": "あぁぁ… 間違ったbranch nameつけてしもうた…",
-    "section": "Solution 2: 現在のブランチをリネームする",
-    "text": "Solution 2: 現在のブランチをリネームする\n ▶  方針\n現在のfeature/inverse-matrix-calculation branchをリネームすることでupstream branch設定を維持したまま，正しい名前へ変更することができます．\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
+    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
+    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
+    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
+    "section": "📘 Guideline",
+    "text": "📘 Guideline\n\n\n\n\n\n\nNote\n\n\n\n以下の条件を満たしていることが望ましいです：\n\ncommitがまだリモートリポジトリ（GitHubなど）にプッシュされていない．\nローカルブランチで作業している．\n\nそうでない場合，git rebase後に強制プッシュ（git push -f）が必要になる可能性が高く，リモートの履歴が上書きされる可能性があります． プッシュ済みのcommitの履歴を書き換えると，コラボレーションに支障をきたす可能性があるため，注意して進めてください．\n\n\n\ncommitを統合するための手順\n\n最近のcommitを確認\ngit log --oneline\n対話型git rebaseを開始\n最後の3つのcommitをsquashするには：\ngit rebase -i HEAD~3\n\n\n\n\n\n\n\n構文\n\n\n\n構文は以下の通りです：\ngit rebase -i &lt;base-commit&gt;\n\ngit rebase先として指定できるベースcommitは1つだけです\ngit rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;のように動作するコマンドは実行できません\n\n\n\n\ngit rebase指示リストを編集\ngit rebaseを実行すると，以下のような出力が表示されます：\npick abc123 fix typo\npick def456 add new test case\npick ghi789 finalize logic\ncommitIDは上から下へ = 古いものから新しいものへとソートされています．上記の例では，最初の行（abc123）がgit rebase対象のcommitの中で最も古いものです．\n最新の2つのcommitを最も古いものにsquashする場合は，以下のように修正します：\npick abc123 fix typo\nsquash def456 add new test case\nsquash ghi789 finalize logic\ncommitメッセージを編集\n新しいエディタ画面でcommitメッセージの結合を求められます．必要に応じて編集してください：\nFinalize logic with test case\n\n- Fixed typo\n- Added test case\n- Finalized core logic\nその後，保存して終了します．新しいcommit履歴を以下のコマンドで確認することをお勧めします：\ngit log --oneline\n\n\n\n\n\n\n\nヒント\n\n\n\ngit rebase中に何か問題が発生した場合は，キャンセルできます：\ngit rebase --abort"
+  },
+  {
+    "objectID": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-git-rebaseで可能な操作は",
+    "href": "language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-git-rebaseで可能な操作は",
+    "title": "あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？",
+    "section": "Appendix: git rebaseで可能な操作は？",
+    "text": "Appendix: git rebaseで可能な操作は？\n\n\n\n\n\n\n\n\nコマンド\n説明\n\n\n\n\npick\ncommitをそのまま使用（メッセージや内容の変更なし）\n\n\nreword\ncommitの内容はそのままで，commitメッセージを編集\n\n\nedit\n一時停止してcommitの修正を可能にする（ファイル，メッセージなど）\n\n\nsquash\nこのcommitを前のcommitと結合し，メッセージを編集\n\n\nfixup\nsquashと同様だが，このcommitのメッセージは破棄（前のメッセージを使用）\n\n\ndrop\nこのcommitを履歴から完全に削除"
   },
   {
     "objectID": "index.html",
@@ -670,6 +691,111 @@
     "title": "Git is hard, but we need to handle it",
     "section": "",
     "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2025-06-14\n\n\nOGG… What’s difference between git reset –hard vs –mixed vs –soft?\n\n\n3 min\n\n\n\n\n\n\n2025-06-13\n\n\nOGG… How to unstage files in Git?\n\n\n2 min\n\n\n\n\n\n\n2025-06-06\n\n\nOGG… How do I consolidate multiple temporary commits into a single meaningful one?\n\n\n4 min\n\n\n\n\n\n\n2025-06-05\n\n\nOGG… How do I manage config and secret information in Git?\n\n\n4 min\n\n\n\n\n\n\n2025-05-23\n\n\nOGG… How do I switch the connection method for git push from HTTPS to SSH??\n\n\n1 min\n\n\n\n\n\n\n2024-12-17\n\n\nOGG… How can I set up ssh connection to GitHub repository?\n\n\n3 min\n\n\n\n\n\n\n2024-12-04\n\n\nOGG… How can I modify the GitHub repository name?\n\n\n3 min\n\n\n\n\n\n\n2024-11-06\n\n\nOGG… How do I check unstaged differences with the latest commit?\n\n\n3 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "",
+    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#problem",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html#problem",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "",
+    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#solution",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html#solution",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "Solution",
+    "text": "Solution\n\nCheck your current remote URL:\ngit remote -v\nIf the URL starts with https://, you are using HTTPS.\nFind your SSH URL:\nOn GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., git@github.com:username/repo.git).\nChange the remote URL to SSH:\ngit remote set-url origin git@github.com:username/repo.git\nVerify the change:\ngit remote -v\nThe URL should now start with git@.\n\n\nTips\n\nMake sure you have added your SSH key to your GitHub account. You can generate a key with ssh-keygen and add it using the GitHub SSH settings.\nTest your SSH connection with:\nssh -T git@github.com\nIf you use multiple remotes or repositories, repeat these steps for each one."
+  },
+  {
+    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html",
+    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html",
+    "title": "OGG… Should I use git rebase?",
+    "section": "",
+    "text": "Let’s say you’re working on a project with a main branch and a feature branch. While you are making changes to feature branch, the main branch has received some new commits from other developers.\nYou want to incorporate these new commits into your feature branch, but not sure whether you should do it by git rebase or git merge.\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n       checkout main\n       commit id: \"A3\"\n       commit id: \"A4\"\n       checkout feature\n       merge main id:\"❓git merge or rebase?\"\n\n\n\n\nFigure 1: Fig 1. Changes in main branch\n\n\n\n\n\n ▶  Why not just ignore changes in the main branch for now?\nIgnoring updates on the main branch for now is sometimes feasible, but there are a few important disadvantages to consider.\n\nDelaying sync increases potential conflicts\n\nThe longer your feature branch diverges from main, the more changes accumulate. When you finally integrate with main, you’re more likely to encounter a large, complex set of merge conflicts. Resolving conflicts with many changes can be time-consuming and prone to errors.\n\nWorking in an outdated context\n\nIf main includes changes that affect the overall project (e.g., updates to libraries, modifications to shared components, or security fixes), ignoring them means you’re working in an increasingly outdated context. Your feature might develop incompatibilities that aren’t apparent until the final merge.\nPlus, Continuous Integration testing or Continuous Deployment　workflows typically run against the latest main code. By not keeping up with main, you risk your branch passing tests locally but failing in CI/CD because it lacks compatibility with newer changes.\n\n\n\n\n\n\n🍵 Might Be Okay to Ignore main Changes\n\n\n\nThere are situations where you can safely ignore main temporarily:\n\nIsolated feature\nShort-lived feature branch\nExperimental branches\n\n\n\n\n\nThere is no one-size-fits-all approach and it all comes down to what you value most.\n ▶  Pros and Cons\n\n\n\n\n\n\n\n\nCommand\nPros\nCons\n\n\n\n\nrebase\nClean, linear history; ideal for local branches\nIt’s possible that a “commit that was working fine” could turn into a “commit that doesn’t work.”\n\n\nmerge\nMaintains full history; safe for shared branches\nCreates new merge commits, making history less linear\n\n\n\nGenerally speaking,\n\ngit merge pull the latest changes from main into the feature branch, creating a new merge commit\ngit rebase changes the base of the feature branch to the latest commit and then replays the changes in the feature branch from there\n\n\n\n\nAt the branch development of Figure 1, you can rebase the feature branch with the following steps:\n# Step 1: Checkout the feature branch\ngit switch feature\n\n# Step 2: rebase onto main:\ngit rebase main\nThese commands tell Git to\n\nTemporarily remove B1, B2\nFast-forward the branch to main’s latest commit (A3, A4)\nApply B1, B2 on top of A4\n\nThen, git history will turn into the following\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       commit id: \"A3\"\n       commit id: \"A4\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n\n\n\n\nFigure 2: Fig 2. git rebase\n\n\n\n\n\n ▶  Conflicts caused by git rebase\nIf there are changes in main that modify the same parts of code as your commits, Git won’t know how to reconcile those differences automatically. These overlapping changes are what cause conflicts.\nFor example:\n\nLet’s say you edited file_A.py in your feature branch to add a new function.\nMeanwhile, another developer made a conflicting change to the same section of file_A.py in main.\n\nWhen rebase tries to apply your changes on top of main, Git encounters a conflict because it doesn’t know which version to keep. Instead, Git will list files with conflicts. You’ll see a message like\nCONFLICT (content): Merge conflict in file_A.py\nOpen each conflicted file. Git will add conflict markers to show where the differences are:\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n// Code from main branch\n=======\n// Code from your feature branch\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; your-commit-hash\nYou are expected to decide which parts of the code to keep and remove the conflict markers (&lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, &gt;&gt;&gt;&gt;&gt;&gt;&gt;) after resolving. Then,\n# git add the modified files\ngit add file_A.py\n\n# Continue the rebase\ngit rebase --continue\nIf you want to start over or quit rebasing, you can abort the rebase with\ngit rebase --abort\n ▶  “commit that was working fine” could turn into a “not working”\nWhen you rebase a branch, you’re reapplying commits onto a new base, which can potentially break previously functional code. So to minimize this risk, better to do the followings:\n\nTest after rebasing: After a rebase, test your feature branch to ensure that everything still works as expected.\nCheck each commit after conflicts: If you resolved conflicts during the rebase, double-check those areas to ensure the changes align with your intended functionality.\n\nIn summary, rebasing changes the context in which your commits operate, so it’s important to verify that they still work as intended in the new context."
+  },
+  {
+    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#problem",
+    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#problem",
+    "title": "OGG… Should I use git rebase?",
+    "section": "",
+    "text": "Let’s say you’re working on a project with a main branch and a feature branch. While you are making changes to feature branch, the main branch has received some new commits from other developers.\nYou want to incorporate these new commits into your feature branch, but not sure whether you should do it by git rebase or git merge.\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n       checkout main\n       commit id: \"A3\"\n       commit id: \"A4\"\n       checkout feature\n       merge main id:\"❓git merge or rebase?\"\n\n\n\n\nFigure 1: Fig 1. Changes in main branch\n\n\n\n\n\n ▶  Why not just ignore changes in the main branch for now?\nIgnoring updates on the main branch for now is sometimes feasible, but there are a few important disadvantages to consider.\n\nDelaying sync increases potential conflicts\n\nThe longer your feature branch diverges from main, the more changes accumulate. When you finally integrate with main, you’re more likely to encounter a large, complex set of merge conflicts. Resolving conflicts with many changes can be time-consuming and prone to errors.\n\nWorking in an outdated context\n\nIf main includes changes that affect the overall project (e.g., updates to libraries, modifications to shared components, or security fixes), ignoring them means you’re working in an increasingly outdated context. Your feature might develop incompatibilities that aren’t apparent until the final merge.\nPlus, Continuous Integration testing or Continuous Deployment　workflows typically run against the latest main code. By not keeping up with main, you risk your branch passing tests locally but failing in CI/CD because it lacks compatibility with newer changes.\n\n\n\n\n\n\n🍵 Might Be Okay to Ignore main Changes\n\n\n\nThere are situations where you can safely ignore main temporarily:\n\nIsolated feature\nShort-lived feature branch\nExperimental branches\n\n\n\n\n\nThere is no one-size-fits-all approach and it all comes down to what you value most.\n ▶  Pros and Cons\n\n\n\n\n\n\n\n\nCommand\nPros\nCons\n\n\n\n\nrebase\nClean, linear history; ideal for local branches\nIt’s possible that a “commit that was working fine” could turn into a “commit that doesn’t work.”\n\n\nmerge\nMaintains full history; safe for shared branches\nCreates new merge commits, making history less linear\n\n\n\nGenerally speaking,\n\ngit merge pull the latest changes from main into the feature branch, creating a new merge commit\ngit rebase changes the base of the feature branch to the latest commit and then replays the changes in the feature branch from there\n\n\n\n\nAt the branch development of Figure 1, you can rebase the feature branch with the following steps:\n# Step 1: Checkout the feature branch\ngit switch feature\n\n# Step 2: rebase onto main:\ngit rebase main\nThese commands tell Git to\n\nTemporarily remove B1, B2\nFast-forward the branch to main’s latest commit (A3, A4)\nApply B1, B2 on top of A4\n\nThen, git history will turn into the following\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A1\"\n       commit id: \"A2\"\n       commit id: \"A3\"\n       commit id: \"A4\"\n       branch feature\n       commit id: \"B1\"\n       commit id: \"B2\"\n\n\n\n\nFigure 2: Fig 2. git rebase\n\n\n\n\n\n ▶  Conflicts caused by git rebase\nIf there are changes in main that modify the same parts of code as your commits, Git won’t know how to reconcile those differences automatically. These overlapping changes are what cause conflicts.\nFor example:\n\nLet’s say you edited file_A.py in your feature branch to add a new function.\nMeanwhile, another developer made a conflicting change to the same section of file_A.py in main.\n\nWhen rebase tries to apply your changes on top of main, Git encounters a conflict because it doesn’t know which version to keep. Instead, Git will list files with conflicts. You’ll see a message like\nCONFLICT (content): Merge conflict in file_A.py\nOpen each conflicted file. Git will add conflict markers to show where the differences are:\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n// Code from main branch\n=======\n// Code from your feature branch\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; your-commit-hash\nYou are expected to decide which parts of the code to keep and remove the conflict markers (&lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, &gt;&gt;&gt;&gt;&gt;&gt;&gt;) after resolving. Then,\n# git add the modified files\ngit add file_A.py\n\n# Continue the rebase\ngit rebase --continue\nIf you want to start over or quit rebasing, you can abort the rebase with\ngit rebase --abort\n ▶  “commit that was working fine” could turn into a “not working”\nWhen you rebase a branch, you’re reapplying commits onto a new base, which can potentially break previously functional code. So to minimize this risk, better to do the followings:\n\nTest after rebasing: After a rebase, test your feature branch to ensure that everything still works as expected.\nCheck each commit after conflicts: If you resolved conflicts during the rebase, double-check those areas to ensure the changes align with your intended functionality.\n\nIn summary, rebasing changes the context in which your commits operate, so it’s important to verify that they still work as intended in the new context."
+  },
+  {
+    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#undo-git-rebase",
+    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#undo-git-rebase",
+    "title": "OGG… Should I use git rebase?",
+    "section": "Undo git rebase",
+    "text": "Undo git rebase\nLet’s say you’re working on a feature branch. You rebased it onto the main branch to incorporate recent changes, but after the rebase, you realize that:\n\nYou made a mistake resolving a conflict. or\nSome tests are failing because of unexpected interactions with the latest changes from main.\n\nIn this case, You wants to undo the rebase and return the branch to its original state.\n ▶  Initial Setup\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A\"\n       commit id: \"B\"\n       branch feature\n       commit id: \"X\"\n       commit id: \"Y\"\n       checkout main\n       commit id: \"C\"\n       commit id: \"D\"\n\n\nFig 3. initial setup\n\n\n\n% git log --graph --all\n* commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 (HEAD -&gt; main)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:55 2024 +0900\n| \n|     D\n| \n* commit cd439d184bd0d5a2ad9dc6993a1675862cee6495\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:29 2024 +0900\n| \n|     C\n|   \n| * commit d4ac5504a56ee01fc7a62e09f0ed7dbdfc5a60d6 (feature)\n| | Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| | Date:   Tue Nov 5 19:26:51 2024 +0900\n| | \n| |     Y\n| | \n| * commit 4fbd2929aa96ef8b7d07388e27e6b2f23c615199\n|/  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n|   Date:   Tue Nov 5 19:26:20 2024 +0900\n|   \n|       X\n| \n* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:25:46 2024 +0900\n| \n|     B\n| \n* commit feadb03ae713ab05b828e066c09bacb339756df7\n  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n  Date:   Tue Nov 5 19:25:27 2024 +0900\nYou rebase feature onto D of the main by the following commands:\ngit switch feature\ngit rebase main\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'main'}}}%%\n    gitGraph\n       commit id: \"A\"\n       commit id: \"B\"\n       commit id: \"C\"\n       commit id: \"D\"\n       branch feature\n       commit id: \"X\"\n       commit id: \"Y\"\n\n\nFig 4. git rebase with bugs\n\n\n\nBut after finishing the rebase, you realized that some tests are failing because of unexpected interactions with the latest changes from main.\n\nSolution: Undoing the Rebase\nOne way to undo a git rebase is by using git reflog, which keeps a history of where your branches have pointed over time, and git reset --hard\n ▶  Steps\nFirst, check the commit history at the feature branch by git log:\n% git log --graph      \n* commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 (HEAD -&gt; feature)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:51 2024 +0900\n| \n|     Y\n| \n* commit 110878e53b16fd10c0d044a3a9d9cdf46db44861\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:20 2024 +0900\n| \n|     X\n| \n* commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 (main)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:55 2024 +0900\n| \n|     D\n| \n* commit cd439d184bd0d5a2ad9dc6993a1675862cee6495\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:27:29 2024 +0900\n| \n|     C\n| \n* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:25:46 2024 +0900\n| \n|     B\n| \n* commit feadb03ae713ab05b828e066c09bacb339756df7\n  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n  Date:   Tue Nov 5 19:25:27 2024 +0900\n\n      A\nSadly, you have successfully rebased the feature branch onto commit-id D of the main. But no worried, run the git reflog command to see recent actions on your branch:\n% git reflog\n14b3c5d (HEAD -&gt; feature) HEAD@{0}: rebase (finish): returning to refs/heads/feature\n14b3c5d (HEAD -&gt; feature) HEAD@{1}: rebase (pick): Y\n110878e HEAD@{2}: rebase (pick): X\n1625fb5 (main) HEAD@{3}: rebase (start): checkout main\nd4ac550 HEAD@{4}: checkout: moving from feature to feature\nd4ac550 HEAD@{5}: checkout: moving from main to feature\n1625fb5 (main) HEAD@{6}: commit: D\ncd439d1 HEAD@{7}: commit: C\n963f1a1 HEAD@{8}: checkout: moving from feature to main\nd4ac550 HEAD@{9}: commit: Y\n4fbd292 HEAD@{10}: commit: X\n963f1a1 HEAD@{11}: checkout: moving from main to feature\n963f1a1 HEAD@{12}: commit: B\nfeadb03 HEAD@{13}: commit (initial): A\nThe line 1625fb5 (main) HEAD@{3}: rebase (start): checkout main indicates when Git started the rebase process. So, if you want to undo the rebase, just reset to the entry d4ac550 HEAD@{4}: to go back to your previous state before the rebase.\nUse git reset to move your branch pointer back to the commit just before the rebase:\n# Step 1: Undo git rebase\n% git reset --hard HEAD@{4}\n\n# Step 2: check history\n% git log --graph      \n* commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 (HEAD -&gt; feature)\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:51 2024 +0900\n| \n|     Y\n| \n* commit 110878e53b16fd10c0d044a3a9d9cdf46db44861\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:26:20 2024 +0900\n| \n|     X\n| \n* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6\n| Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n| Date:   Tue Nov 5 19:25:46 2024 +0900\n| \n|     B\n| \n* commit feadb03ae713ab05b828e066c09bacb339756df7\n  Author: Kirby &lt;hoshinokirby@gmail.com&gt;\n  Date:   Tue Nov 5 19:25:27 2024 +0900\n\n      A"
+  },
+  {
+    "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#git-rebase-or-git-merge",
+    "href": "posts/2024-11-05-when-do-i-use-git-rebase/index.html#git-rebase-or-git-merge",
+    "title": "OGG… Should I use git rebase?",
+    "section": "git rebase or git merge?",
+    "text": "git rebase or git merge?\nAs explined above, if your goal is to maintain a clean and linear commit history and you’re working primarily with your own branches, git rebase is often the best choice. On the other hand, if you’re collaborating closely with others and want to ensure that history is preserved, or if you want to avoid rewriting shared commits, git merge is likely the better option.\n ▶  General Recommendation\n\nIf your feature branch is not shared yet, go with git rebase for a cleaner, linear history.\nIf your feature branch is already shared or part of a collaborative workflow, stick with git merge to avoid potential conflicts for collaborators.\n\n\nVersioning and git rebase strategy\nLet’s say you are working on a repository with the following versioning strategy:\n\n\n\n\n\n\n\nVersion class\nexplained\n\n\n\n\nMajor Version (x)\nChanges in the major version indicate breaking changes or significant new features.\n\n\nMinor Version (y)\nChanges in the minor version often introduce new features that are backward-compatible.\n\n\nPatch Version (z)\nChanges in the patch version generally include bug fixes and minor improvements.\n\n\n\nThen, better to adopt the following git rebase strategy:\n ▶  Changes in x (Major Version):\n\nRecommendation: Always rebase.\nReason: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.\n\n ▶  Changes in y (Minor Version):\n\nRecommendation: Rebase as a precaution.\nReason: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.\n\n ▶  Changes in z (Patch Version):\n\nRecommendation: Rebase not required.\nReason: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase."
+  },
+  {
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "",
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
+  },
+  {
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "",
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
+  },
+  {
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Goal",
+    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
+  },
+  {
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Guideline",
+    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "section": "",
+    "text": "This post is based on Dangit, I accidentally committed something to master that should have been on a brand new branch!"
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "section": "Problem",
+    "text": "Problem\nLet’s say you have just set up a new git repository. Initially, you planned to create a new branch named test to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.\n ▶  What I originally planned to do\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       branch test\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\"\n\n\n\n\n\n\n ▶  What I’ve actually done…\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\""
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "section": "Solution: using git reset",
+    "text": "Solution: using git reset\n ▶  Steps\n\nCreate a new test branch based on the current HEAD state.\nReset the main branch to the state immediately after the first commit.\nSwitch to the test branch.\n\n ▶  Commands\n## Step 1: keep the current repository state into test branch\n% git branch test\n\n## Step 2: clean the main branch\n% git reset 813faa2 --hard\n\n## Step 3: moving to the test branch\n% git switch test\n ▶  Explains\n\nYou can create a new branch based on the current HEAD without switching using git branch &lt;branch-name&gt;.\nUsing git reset --hard instead of git reset --soft ensures that by default, changes are not left in the current branch’s index or files.\nIf changes remain in the current branch, you would need to execute git stash or git clean.\n\n\n!!WARNING \nIf you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers."
+  },
+  {
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "section": "References",
+    "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
   },
   {
     "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
@@ -714,32 +840,32 @@
     "text": "Use-cases\n ▶  Temporarily Sharing Work\nIf you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like temp/20241031-login-test.\n ▶  Avoid Naming Conflicts\nIf there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called feature/login on the remote, you might push you local feature/login branch as feature/login-update.\nIn this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run\ngit branch -vvv\nand if the result is not what you expect, you can run\ngit branch --set-upstream-to=origin/new-feature\nto set your upstream branch to the correct one."
   },
   {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "",
-    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "",
-    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "Solution",
-    "text": "Solution\nSteps\n\nGenerate a new ssh key\nAdd the SSH Key to the SSH Agent\nRegister the public key to GitHub\ntest ssh connection\nupdate the ssh config file\n\nSetup\n\n\n1. Generate a new ssh key\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nOption -t specifies the type of key to generate. ed25519 is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.\nOption -C adds a comment to the key for identification purposes.\n-f specifies the filename and location for the generated key pair. This will generate two files\n\nkirby_github_key: The private key (keep this secure! do not share!).\nkirby_github_key.pub: The public key (you upload this to GitHub).\n\n\n\n2. Add the SSH Key to the SSH Agent\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nThe ssh-add command adds your private SSH key to the SSH authentication agent (ssh-agent) so it can be used for SSH connections without repeatedly asking for the key’s passphrase. If the key (kirby_github_key) isn’t added to ssh-agent, SSH won’t know to use it. You might encounter the error like this;\nPermission denied (publickey).\n\n\n3. Register the public key to GitHub\n\ncat ~/.ssh/kirby_github_key.pub\n\nAfter opening the file, copy the strings and register it at the Github at Settings &gt; SSH and GPG keys &gt; New SSH key\nThen, test your connection by\n\n\n4. test ssh connection\n\n$ ssh -T git@github.com\n\nif connection established successfully, the following message will pop up\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nUpdate the ssh config file\nRunning ssh-add munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your ~/.ssh/config file:\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 1: checkout a new branch and delete the old",
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
   },
   {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "Appendix: ❗ Trouble Connecting via SSH with a Private Key",
-    "text": "Appendix: ❗ Trouble Connecting via SSH with a Private Key\n\n\n\n\n\n\nsummary\n\n\n\n\nSSH is strict about private key security to protect against unauthorized access.\nAlways keep your private keys readable only by you.\nUse chmod 600 your_key_file to ensure proper permission settings.\n\n\n\nTrouble\nWhen trying to connect using a SSH command, You might encounter an error like:\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nAs a result, the SSH connection fails.\nRoot Cause\n\nThis error happens because the file permissions of the private key file are too loose.\nFor example, if the file permissions are set to 666 (readable and writable by everyone), SSH refuses to use the key for security reasons.\n\nSolution\nYou can fix the issue by restricting the file’s permissions so that only the owner can read/write the file:\n% chmod 600 &lt;your-private-key-path&gt;\nAfter changing the permissions, try running the same SSH command again."
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 2: rename the branch",
+    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
   },
   {
     "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
@@ -768,131 +894,5 @@
     "title": "OGG… I just want to save the current repository into another remote…",
     "section": "References",
     "text": "References\n\nGitHub Docs &gt; Duplicating a repository"
-  },
-  {
-    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html",
-    "href": "posts/2024-11-01-push-to-multiple-origins/index.html",
-    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
-    "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
-  },
-  {
-    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
-    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
-    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
-    "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
-  },
-  {
-    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
-    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
-    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
-    "section": "Solution",
-    "text": "Solution\nIn Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.\n ▶  Steps\nHere’s how you can set this up:\n\nAdd Multiple Remotes by using git remote add command\nCheck Your Remotes with git remote -v\nPushing to Multiple Remotes\n\n ▶  Commands\nSuppose you’re working on a local Git project named hoshinokirby. You want to push this project to both GitHub and GitLab.\n# Step 1: Add multiple Remotes\ngit remote add github https://github.com/user-name/hoshinokirby.git\ngit remote add gitlab https://gitlab.com/user-name/hoshinokirby.git\n\n# Step 2: Check Your Remotes\ngit remote -v\noutput should be like below:\ngithub    https://github.com/user-name/hoshinokirby.git (fetch)\ngithub    https://github.com/user-name/hoshinokirby.git (push)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (push)\nThen,\n# Step 3: Push to Both Remotes:\ngit push github feature/ml-prediction-enhancement\ngit push gitlab feature/ml-prediction-enhancement\n\n\n\n\n\n\n🍵 Green Tea Break: Delete a Remote\n\n\n\nf you have added the wrong remote in your Git repository and want to delete it, you can do so using the git remote remove command. Removing a remote only affects your local configuration and does not impact the remote repository itself.\n# remove the remote\ngit remote remove &lt;remote-name&gt;\n\n# shorthand version\ngit remote rm &lt;remote-name&gt;\nBefore running the above commands, make sure to double-check the remote name to avoid accidental deletions.\n\n\n\nAutomate Pushing to Both Remotes by shellscript\nThe following script is designed to push a specified branch to all configured Git remotes.\n#!/bin/bash\n#--------------------------------------\n# Description\n#   The script iterates over each remote and pushes the specified branch to it \n#   using the git push command. The script retrieves the list of configured Git remotes \n#   using the git remote command and stores it in the variable REMOTES.\n#   If no remotes are found, the script prints an error message and exits with a status code of 1.\n#--------------------------------------\n\n\n# Check if branch name is provided\nif [ -z \"$1\" ]; then\n  echo \"Usage: $0 &lt;branch-name&gt;\"\n  exit 1\nfi\n\n# Define the branch name\nBRANCH_NAME=$1\n\n# Get the list of remotes\nREMOTES=$(git remote)\n\n# Check if there are any remotes configured\nif [ -z \"$REMOTES\" ]; then\n  echo \"No remotes found. Please configure a remote repository.\"\n  exit 1\nfi\n\n# Push to each remote\necho \"$REMOTES\" | while read -r REMOTE; do\n    git push \"$REMOTE\" \"$BRANCH_NAME\"\ndone\n\nexit 0\nTo use this script, follow these steps:\n\nSave the script to a file, e.g., push_to_remotes.sh\nMake the script executable:\n\nchmod +x push_to_remotes.sh\n\nRun the script with the branch name as an argument:\n\n./push_to_remotes.sh &lt;branch-name&gt;"
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "",
-    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "",
-    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "What is happening",
-    "text": "What is happening\nGenerally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       checkout remote\n       merge local id:\"❗️failed to push\"\n\n\n Fig 1. Conflict between the local and the remote \n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       merge remote id:\"❗️failed to pull\"\n\n\n Fig 2. You cannot pull the remote either"
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "Solution: git pull --rebase",
-    "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
-  },
-  {
-    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html",
-    "href": "posts/2025-06-05-how-to-manage-secrets/index.html",
-    "title": "OGG… How do I manage config and secret information in Git?",
-    "section": "",
-    "text": "Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects."
-  },
-  {
-    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#objective",
-    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#objective",
-    "title": "OGG… How do I manage config and secret information in Git?",
-    "section": "",
-    "text": "Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects."
-  },
-  {
-    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#goal",
-    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#goal",
-    "title": "OGG… How do I manage config and secret information in Git?",
-    "section": "Goal",
-    "text": "Goal\nEnsure sensitive information is excluded from version control while still allowing safe configuration in development and production environments."
-  },
-  {
-    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#guidline",
-    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#guidline",
-    "title": "OGG… How do I manage config and secret information in Git?",
-    "section": "Guidline",
-    "text": "Guidline\n\nUse .gitignore to exclude sensitive files\nAdd entries like config.yml, .env, or secrets.json to .gitignore.\nStore templates of sensitive files\nInclude config.sample.yml or .env.example in the repo to show required structure. It would be nice to add a document about how to use the template.\nUse environment variables in your code\nInstead of hardcoding sensitive values like API keys in your source code, load them from environment variables at runtime.\nimport yaml\n\nwith open(\"../config/config.yml\", \"r\") as file:\n    config = yaml.safe_load(file)\nAudit and remove accidental commits:\nIf you accidentally committed a secret (like an API key), even after deleting the file or rotating the key, it might still exist in Git history and be accessible to others. You need to remove recrets from history Use a tool like BFG Repo-Cleaner."
-  },
-  {
-    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#example-in-my-project",
-    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#example-in-my-project",
-    "title": "OGG… How do I manage config and secret information in Git?",
-    "section": "Example in my project",
-    "text": "Example in my project\nmanageing secrets in development\n\nAdd config/ to .gitignore\n# .gitignore\nconfig/\nAdd a template file: config/config_template.yml\nCreate a safe, non-sensitive example config file that shows the expected structure of real credentials:\n# config/config_template.yml\napi_config:\n  api_url: \"https://hogehoge\"\n  api_key_id: \"hogehoge\"\n  api_secret: \"hogehoge\"\nThen commit it manually with -f (force), since it lives inside an ignored folder:\ngit add -f config/config_template.yml\ngit commit -m \"ENV: Add config template for API config\"\nDocument how to create a real config.yml from the template\nProvide a short note (e.g. in your README) explaining how to set up the actual config file:\ncp config/config_template.yml config/config.yml\nThen edit config.yml manually and replace each placeholder value with your actual secrets:\napi_config:\n  api_url: \"https://your.api.endpoint\"\n  api_key_id: \"your_api_key_id\"\n  api_secret: \"your_secret_token\"\nCreate passwords.txt under config/ for use with BFG Repo-Cleaner\nIf you accidentally commit secrets, prepare a list of them to clean from your Git history.\nyour_api_key_here==&gt;REMOVED\nsecret_token_123==&gt;REMOVED\nEach line follows the format:\noriginal_string==&gt;replacement_string\n\nIf you accidentally commit secrets\n\nHere’s how to use BFG to remove sensitive values from Git history:\nbfg --replace-text .bfg/passwords.txt\ngit reflog expire --expire=now --all\ngit gc --prune=now --aggressive\ngit push -f\n\n\n\n\n\n\n\n\ncommand\nexplanation\n\n\n\n\nbfg --replace-text ...\nreplaces secrets in your repo history\n\n\ngit reflog expire\ndrops internal backup references\n\n\ngit gc\ngarbage collects dangling commits\n\n\ngit push -f\nforce-pushes the cleaned history (⚠️ coordinate with team!)"
-  },
-  {
-    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#appendix-how-to-install-bfg-repo-cleaner",
-    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#appendix-how-to-install-bfg-repo-cleaner",
-    "title": "OGG… How do I manage config and secret information in Git?",
-    "section": "Appendix: How to install BFG Repo-Cleaner",
-    "text": "Appendix: How to install BFG Repo-Cleaner\nAS of 2025-06-03, v1.15.0 is the lastest.\n\nDownload the BFG JAR File\nUse wget to download the JAR (Java ARchive) file of BFG version 1.15.0 from Maven Central (an official Java package repository).\n% cd &lt;your-target-directory&gt;\n% wget https://repo1.maven.org/maven2/com/madgag/bfg/1.15.0/bfg-1.15.0.jar\nAfter download, you’ll see this file:\n% ls\nbfg-1.15.0.jar\n(Optional) Move the JAR to a Tool Directory and Create a Shell Alias\nIf you’re using Zsh (common on macOS and many Linux setups), add the alias to .zshrc:\n% echo \"alias bfg='java -jar &lt;your-target-directory&gt;/bfg-1.15.0.jar'\" &gt;&gt; ~/.zshrc\n% source ~/.zshrc\nIf you’re using Bash, modify .bashrc instead:\n% echo \"alias bfg='java -jar ~/.tool.d/bfg-1.15.0.jar'\" &gt;&gt; ~/.bashrc\n% source ~/.bashrc\nThen, check if your setting works properly\n% bfg --help"
-  },
-  {
-    "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html#references",
-    "href": "posts/2025-06-05-how-to-manage-secrets/index.html#references",
-    "title": "OGG… How do I manage config and secret information in Git?",
-    "section": "References",
-    "text": "References\n\nBFG Repo-Cleaner"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 1: checkout a new branch and delete the old",
-    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 2: rename the branch",
-    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
   }
 ]

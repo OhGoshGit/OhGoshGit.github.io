@@ -9,7 +9,7 @@
 <link>https://ohgoshgit.github.io/language/jp/</link>
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.7.31</generator>
+<generator>quarto-1.7.32</generator>
 <lastBuildDate>Sat, 14 Jun 2025 00:00:00 GMT</lastBuildDate>
 <item>
   <title>あぁぁ… git reset –hard と –mixed と –soft の違いは何？</title>
