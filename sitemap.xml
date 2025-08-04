@@ -2,142 +2,142 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ohgoshgit.github.io/posts/2025-06-06-organize-commits-using-git-rebase/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.417Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.156Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2025-08-05-restore-file-from-specific-commit/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.417Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.156Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-10-31-push-remote-with-different-branchname/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2025-06-13-how-to-unstage-files/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.417Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.156Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-11-05-when-do-i-use-git-rebase/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2025-08-04-git-sparse-checkout/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.417Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.156Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-11-01-push-to-multiple-origins/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/about.html</loc>
-    <lastmod>2025-08-04T18:30:37.412Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.152Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-05-how-to-manage-secrets/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.413Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-08-04-git-sparse-checkout/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.413Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.152Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.413Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.152Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.413Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.153Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-08-05-restore-file-from-specific-commit/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.414Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.413Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.152Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2025-05-23-switch-https-ssh/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2025-06-14-git-reset-hard-mixed-soft/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.417Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.156Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-12-04-chnage-remote-uri/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-07-18-cannot-push-to-remote-branch/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.154Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-12-17-access-to-github-via-ssh/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2025-06-05-how-to-manage-secrets/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.416Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.156Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/index.html</loc>
-    <lastmod>2025-08-04T18:30:37.415Z</lastmod>
+    <lastmod>2025-08-04T18:31:13.155Z</lastmod>
   </url>
 </urlset>

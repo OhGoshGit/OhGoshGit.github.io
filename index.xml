@@ -614,8 +614,7 @@ font-style: inherit;">&gt;</span> .git/info/sparse-checkout</span></code></pre><
 </section>
 
  ]]></description>
-  <category>gitignore</category>
-  <category>bfg</category>
+  <category>git checkout</category>
   <guid>https://ohgoshgit.github.io/posts/2025-08-04-git-sparse-checkout/</guid>
   <pubDate>Mon, 04 Aug 2025 00:00:00 GMT</pubDate>
 </item>
