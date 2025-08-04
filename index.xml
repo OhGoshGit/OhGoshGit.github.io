@@ -10,7 +10,126 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sat, 14 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 05 Aug 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How Can I restore a file from specific commit?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-08-05-restore-file-from-specific-commit/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository.</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul>
+<li>Enable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes.</li>
+</ul>
+</section>
+<section id="guidline" class="level2">
+<h2 class="anchored" data-anchor-id="guidline">📘 Guidline</h2>
+<p>Ensure you’re using Git 2.23+, where <code>git restore</code> was introduced.</p>
+<p><span class="mini-section">When to Use</span></p>
+<ul>
+<li>To retrieve a deleted or modified file from a past commit.</li>
+<li>To undo local changes to a file without discarding other work.</li>
+<li>To recover specific content for comparison or patching.</li>
+</ul>
+<p><span class="mini-section">How to Use</span></p>
+<ol type="1">
+<li>Use <code>git log</code> or <code>git blame</code> to identify the target commit hash</li>
+</ol>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check history</span></span></code></pre></div>
+<ol start="2" type="1">
+<li>Run the command:</li>
+</ol>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## git restore version</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## git checkout version</span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p><span class="mini-section">Undo git restore specific commit id version</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Situation</th>
+<th>Recovery Option</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Not staged yet</td>
+<td><code>git restore &lt;filepath&gt;</code></td>
+</tr>
+<tr class="even">
+<td>Staged but not committed</td>
+<td><code>git restore --staged &lt;filepath&gt;</code> then restore</td>
+</tr>
+<tr class="odd">
+<td>Already committed</td>
+<td>Use <code>git reflog</code> + <code>git reset</code></td>
+</tr>
+<tr class="even">
+<td>Preventive measure</td>
+<td>Use <code>git stash</code> before risky restores</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+ ]]></description>
+  <category>git restore</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-08-05-restore-file-from-specific-commit/</guid>
+  <pubDate>Tue, 05 Aug 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What’s difference between git reset –hard vs –mixed vs –soft?</title>
   <dc:creator>Ryo Nakagami</dc:creator>

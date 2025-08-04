@@ -10,7 +10,126 @@
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sat, 14 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 05 Aug 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>あぁぁ… 特定のコミットからファイルを復元するにはどうすればいいんだ？</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2025-08-05-restore-file-from-specific-commit/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="目的" class="level2">
+<h2 class="anchored" data-anchor-id="目的">🔎 目的</h2>
+<ul>
+<li>ブランチを切り替えたり，リポジトリ全体を元に戻したりすることなく，過去のコミットからファイルの特定バージョンを復元する．</li>
+</ul>
+</section>
+<section id="ゴール" class="level2">
+<h2 class="anchored" data-anchor-id="ゴール">🎯 ゴール</h2>
+<ul>
+<li>commitされていない変更を保持しながら，過去のバージョンの個々のファイルを復元または確認できるようにする</li>
+</ul>
+</section>
+<section id="ガイドライン" class="level2">
+<h2 class="anchored" data-anchor-id="ガイドライン">📘 ガイドライン</h2>
+<p><code>git restore</code>が導入されたGit 2.23以降を使用していることを確認してください．</p>
+<p><span class="mini-section">使用するタイミング</span></p>
+<ul>
+<li>削除または変更されたファイルを過去のコミットから取得する場合</li>
+<li>他の作業を破棄することなくファイルのローカル変更を元に戻す場合</li>
+<li>比較やパッチ適用のために特定のコンテンツを復元する場合</li>
+</ul>
+<p><span class="mini-section">使用方法</span></p>
+<ol type="1">
+<li><code>git log</code>または<code>git blame</code>を使用して対象のcommit-hashを特定する</li>
+</ol>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 履歴を確認</span></span></code></pre></div>
+<ol start="2" type="1">
+<li>以下のコマンドを実行：</li>
+</ol>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## git restore バージョン</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## git checkout バージョン</span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div>
+<p><span class="mini-section">特定のコミットIDバージョンからの復元を元に戻す方法</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>状況</th>
+<th>復元オプション</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>まだステージングされていない</td>
+<td><code>git restore &lt;filepath&gt;</code></td>
+</tr>
+<tr class="even">
+<td>ステージング済みだが未コミット</td>
+<td><code>git restore --staged &lt;filepath&gt;</code> その後restore</td>
+</tr>
+<tr class="odd">
+<td>すでにコミット済み</td>
+<td><code>git reflog</code> + <code>git reset</code> を使用</td>
+</tr>
+<tr class="even">
+<td>予防措置</td>
+<td>復元前に現在の状態を <code>git stash</code></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+ ]]></description>
+  <category>git restore</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2025-08-05-restore-file-from-specific-commit/</guid>
+  <pubDate>Tue, 05 Aug 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>あぁぁ… git reset –hard と –mixed と –soft の違いは何？</title>
   <dc:creator>Ryo Nakagami</dc:creator>
