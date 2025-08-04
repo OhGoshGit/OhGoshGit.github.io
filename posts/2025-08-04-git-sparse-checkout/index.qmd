@@ -1,0 +1,196 @@
+---
+title: "OGG... How do you git sparse-checkout a specific directory?"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-08-04"
+date-modified: "2025-08-05"
+categories: [git checkout]
+---
+
+## 🎯 Goal
+
+- Explaining of [`git-sparse-checkout`](https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-sparse-checkout)script
+
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+  echo "Usage: $0 -u <clone_url> -d <target_dir> -b <branch> -p <sparse_path> -s"
+  exit 1
+}
+
+BARE=false
+
+while getopts "su:d:b:p:" opt; do
+  case $opt in
+    s) BARE_STRUCTURE=true ;; 
+    u) CLONE_URL=$OPTARG ;;
+    d) TARGET_DIR=$OPTARG ;;
+    b) BRANCH=$OPTARG ;;
+    p) SPARSE_PATH=$OPTARG ;;
+    *) usage ;;
+  esac
+done
+
+if [[ -z "${CLONE_URL-}" || -z "${TARGET_DIR-}" || -z "${BRANCH-}" ]]; then
+  usage
+fi
+
+if [[ "$BARE_STRUCTURE" = false && -z "${SPARSE_PATH-}" ]]; then
+  echo "Error: -p <sparse_path> is required unless -s (bare mode) is specified."
+  usage
+fi
+
+git clone --filter=blob:none --no-checkout "$CLONE_URL" "$TARGET_DIR"
+cd "$TARGET_DIR"
+git config core.sparseCheckout true
+
+if $BARE_STRUCTURE; then
+  {
+    echo "/*"
+    echo "!/*/"
+  } > .git/info/sparse-checkout
+  git checkout "$BRANCH"
+  git ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p "{}"
+  exit 0
+fi
+
+echo -e "$SPARSE_PATH" | tr ':' '\n' > .git/info/sparse-checkout
+git checkout "$BRANCH"
+```
+
+
+## ✅ Usage
+
+```bash
+git-sparse-checkout -u <clone_url> -d <target_dir> -b <branch> -p <sparse_path> -s
+```
+
+[Parameters]{.min-section}
+
+| Option | Description                                                       | Required          |
+| ------ | ----------------------------------------------------------------- | ----------------- |
+| -u     | Git clone URL                                                    | ✅ Yes            |
+| -d     | Target directory to clone into                                   | ✅ Yes            |
+| -b     | Branch to check out                                              | ✅ Yes            |
+| -p     | Path(s) to check out within the repository. Directories separated by ':' | ✅ Yes unless -s specified |
+| -s     | Bare mode: clone only root files and create empty directories   | ❌ Optional       |
+
+
+### Exmaple 1
+
+```bash
+git-sparse-checkout \
+  -u https://github.com/RyoNakagami/regmonkey_gitcommand \
+  -d ./checkout_sandbox \
+  -b main \
+  -p /src:/docs
+```
+
+This will:
+
+1. Clone the repository without full history or blobs
+2. Enable sparse-checkout mode
+3. Checkout only both of `/src` and  `/docs` directory from the `main` branch
+4. Write the result to `./checkout_sandbox`
+
+### Exmaple 2
+
+```bash
+git-sparse-checkout \
+  -u https://github.com/RyoNakagami/regmonkey_gitcommand \
+  -d ./checkout_sandbox_bare \
+  -b main \
+  -s
+```
+
+This will:
+
+1. Clone the repository without full history or blobs
+2. Enable sparse-checkout mode with the setting to include only root-level files (exclude root directories)
+3. Create the directory structure as empty folders matching the repo’s directory tree
+4. Write the result to `./checkout_sandbox_bare`
+
+## 🔍 Diving into the shell script
+
+
+Efficiently clone a repo without downloading file contents or populating the working directory immediately.
+
+```bash
+git clone --filter=blob:none --no-checkout "$CLONE_URL" "$TARGET_DIR"
+```
+
+|options|comment|
+|-------|-------|
+|`--filter=blob:none`| Use partial clone with a filter to exclude all file contents (blobs) initially, downloading only repository metadata (commits, trees). This reduces bandwidth and disk usage.|
+|`--no-checkout`| Clone the repository but do not check out any files to the working directory yet. This means the working directory will be empty (no files checked out).|
+: {tbl-colwidths="[25,75]"}
+
+
+Then, enable sparse checkout for this local repository. The following tells Git you want to selectively check out only certain paths from the repository into your working directory.
+
+
+```bash
+git config core.sparseCheckout true
+```
+
+Next, 
+
+
+```bash
+echo -e "$SPARSE_PATH" | tr ':' '\n' > .git/info/sparse-checkout
+```
+
+|command|comment|
+|-------|-------|
+|`echo -e "$SPARSE_PATH"`| Output the value of the variable `SPARSE_PATH` with escape sequences (like `\n)` interpreted.|
+|`tr ':' '\n'`| Translate all colon (`:`) characters into newline characters (`\n`), effectively converting a colon-separated list into a line-separated list.|
+|`> .git/info/sparse-checkout`|Write this list of paths (one per line) into the special sparse-checkout config file|
+: {tbl-colwidths="[30,70]"}
+
+### `-s` option: Only files directly under the root of the repository are checked out
+
+[Writing to the sparse-checkout config file]{.mini-section}
+
+```bash
+{
+  echo "/*"
+  echo "!/*/"
+} > .git/info/sparse-checkout
+```
+
+| command                       |comment|
+| ----------------------------- | ------|
+| `{ echo "/*"; echo "!/*/"; }` | Outputs two patterns to stdout: `/*` to include all files and directories at the root level, and `!/*/` to exclude all directories at the root level. These together specify sparse-checkout rules to include only root files but exclude root directories. |
+| `> .git/info/sparse-checkout` | Redirects the above output into the sparse-checkout configuration file, setting the sparse checkout rules for the repository.                                                                                                                               |
+: {tbl-colwidths="[30,70]"}
+
+[Empty directory structure is recreated:]{.mini-section}
+
+```bash
+git ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p "{}"
+```
+
+- Git lists all directories in the repo (recursively).
+- For each directory, the script creates an empty directory on your filesystem.
+- This means folder structures exist locally but are empty (no files inside).
+
+### When you modify the sparse-checkout patterns
+
+```bash
+git add --sparse <paths>
+```
+
+The command `git add --sparse` tells Git:
+
+- "Update the sparse checkout patterns and adjust the working directory accordingly."
+- Add files/directories newly matching the pattern.
+
+
+
+References
+----------
+- [regmonkey_gitcommand](https://github.com/RyoNakagami/regmonkey_gitcommand)

@@ -1,0 +1,120 @@
+---
+title: "あぁぁ... 特定のディレクトリに対してgit sparse-checkoutを実行したい"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-08-04"
+date-modified: "2025-08-05"
+categories: [git checkout]
+---
+
+## 🎯 ゴール
+
+- [`git-sparse-checkout`](https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-sparse-checkout)スクリプトの解説
+
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+  echo "Usage: $0 -u <clone_url> -d <target_dir> -b <branch> -p <sparse_path>"
+  exit 1
+}
+
+while getopts "u:d:b:p:" opt; do
+  case $opt in
+    u) CLONE_URL=$OPTARG ;;
+    d) TARGET_DIR=$OPTARG ;;
+    b) BRANCH=$OPTARG ;;
+    p) SPARSE_PATH=$OPTARG ;;
+    *) usage ;;
+  esac
+done
+
+if [[ -z "$CLONE_URL" || -z "$TARGET_DIR" || -z "$BRANCH" || -z "$SPARSE_PATH" ]]; then
+  usage
+fi
+
+git clone --filter=blob:none --no-checkout "$CLONE_URL" "$TARGET_DIR"
+cd "$TARGET_DIR"
+git config core.sparseCheckout true
+echo -e "$SPARSE_PATH" | tr ':' '\n' > .git/info/sparse-checkout
+git checkout "$BRANCH"
+```
+
+
+## ✅ 使用方法
+
+```bash
+git-sparse-checkout -u <clone_url> -d <target_dir> -b <branch> -p <sparse_path>
+```
+
+[パラメータ]{.min-section}
+
+| オプション | 説明                                                     | 必須    |
+| ------ | ------------------------------------------------------- | -------- |
+| `-u`   | Gitクローン用URL                                          | ✅ はい   |
+| `-d`   | クローン先のターゲットディレクトリ                             | ✅ はい   |
+| `-b`   | チェックアウトするブランチ                                    | ✅ はい   |
+| `-p`   | リポジトリ内でチェックアウトするパス．ディレクトリは`:`で区切ります  | ✅ はい   |
+
+
+### 使用例
+
+```bash
+git-sparse-checkout \
+  -u https://github.com/RyoNakagami/PythonCompetitiveProgramming \
+  -d ./checkout_sandbox \
+  -b main \
+  -p /Leetcode:/projecteuler/data
+```
+
+これにより：
+
+1. 完全な履歴やblobなしでリポジトリをクローン
+2. スパースチェックアウトモードを有効化
+3. `main`ブランチから`/Leetcode`と`/projecteuler/data`ディレクトリのみをチェックアウト
+4. 結果を`./checkout_sandbox`に書き込みまむ
+
+## 🔍 シェルスクリプトの詳細解説
+
+
+ファイルコンテンツをダウンロードせず，効率的にリポジトリをクローンします．
+
+```bash
+git clone --filter=blob:none --no-checkout "$CLONE_URL" "$TARGET_DIR"
+```
+
+|オプション|説明|
+|-------|-------|
+|`--filter=blob:none`| 初期段階でファイルコンテンツ（blob）を除外し，リポジトリのメタデータ（コミット，ツリー）のみをダウンロードするフィルタを使用した部分クローンを行います．これにより，ディスク使用量が削減されます．|
+|`--no-checkout`| リポジトリをクローンするが，作業ディレクトリにファイルをチェックアウトしない．つまり，作業ディレクトリは空の状態になります（ファイルはチェックアウトされていません）．|
+: {tbl-colwidths="[25,75]"}
+
+
+次に，このローカルリポジトリに対してスパースチェックアウトを有効にします．これにより，リポジトリから作業ディレクトリに特定のパスのみを選択的にチェックアウトすることをGitに指示します．
+
+
+```bash
+git config core.sparseCheckout true
+```
+
+続いて，
+
+
+```bash
+echo -e "$SPARSE_PATH" | tr ':' '\n' > .git/info/sparse-checkout
+```
+
+|コマンド|説明|
+|-------|-------|
+|`echo -e "$SPARSE_PATH"`| エスケープシーケンス（`\n`など）を解釈して`SPARSE_PATH`変数の値を出力します．|
+|`tr ':' '\n'`| コロン（`:`）文字を改行文字（`\n`）に変換し，コロン区切りのリストを行区切りのリストに効果的に変換します．|
+|`> .git/info/sparse-checkout`|このパスのリスト（1行に1つ）を特別なsparse-checkout設定ファイルに書き込みます|
+: {tbl-colwidths="[30,70]"}
+
+
+参考文献
+----------
+- [regmonkey_gitcommand](https://github.com/RyoNakagami/regmonkey_gitcommand)
