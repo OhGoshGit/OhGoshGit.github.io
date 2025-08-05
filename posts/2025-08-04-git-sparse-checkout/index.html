@@ -397,9 +397,14 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
   <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">🎯 Goal</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">✅ Usage</a>
   <ul class="collapse">
-  <li><a href="#exmaple" id="toc-exmaple" class="nav-link" data-scroll-target="#exmaple">Exmaple</a></li>
+  <li><a href="#exmaple-1" id="toc-exmaple-1" class="nav-link" data-scroll-target="#exmaple-1">Exmaple 1</a></li>
+  <li><a href="#exmaple-2" id="toc-exmaple-2" class="nav-link" data-scroll-target="#exmaple-2">Exmaple 2</a></li>
   </ul></li>
-  <li><a href="#diving-into-the-shell-script" id="toc-diving-into-the-shell-script" class="nav-link" data-scroll-target="#diving-into-the-shell-script">🔍 Diving into the shell script</a></li>
+  <li><a href="#diving-into-the-shell-script" id="toc-diving-into-the-shell-script" class="nav-link" data-scroll-target="#diving-into-the-shell-script">🔍 Diving into the shell script</a>
+  <ul class="collapse">
+  <li><a href="#s-option-only-files-directly-under-the-root-of-the-repository-are-checked-out" id="toc-s-option-only-files-directly-under-the-root-of-the-repository-are-checked-out" class="nav-link" data-scroll-target="#s-option-only-files-directly-under-the-root-of-the-repository-are-checked-out"><code>-s</code> option: Only files directly under the root of the repository are checked out</a></li>
+  <li><a href="#when-you-modify-the-sparse-checkout-patterns" id="toc-when-you-modify-the-sparse-checkout-patterns" class="nav-link" data-scroll-target="#when-you-modify-the-sparse-checkout-patterns">When you modify the sparse-checkout patterns</a></li>
+  </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -421,39 +426,58 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-euo</span> pipefail</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">usage()</span> <span class="kw">{</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Usage: </span><span class="va">$0</span><span class="st"> -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt;"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Usage: </span><span class="va">$0</span><span class="st"> -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt; -s"</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">getopts</span> <span class="st">"u:d:b:p:"</span> <span class="va">opt</span><span class="kw">;</span> <span class="cf">do</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="va">$opt</span> <span class="kw">in</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="ss">u</span><span class="kw">)</span> <span class="va">CLONE_URL</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="ss">d</span><span class="kw">)</span> <span class="va">TARGET_DIR</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="ss">b</span><span class="kw">)</span> <span class="va">BRANCH</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="ss">p</span><span class="kw">)</span> <span class="va">SPARSE_PATH</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="pp">*</span><span class="kw">)</span> <span class="ex">usage</span> <span class="cf">;;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">esac</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$BRANCH</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">]];</span> <span class="cf">then</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="ex">usage</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--filter</span><span class="op">=</span>blob:none <span class="at">--no-checkout</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config core.sparseCheckout true</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="at">-e</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="st">"</span><span class="va">$BRANCH</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="va">BARE</span><span class="op">=</span>false</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">getopts</span> <span class="st">"su:d:b:p:"</span> <span class="va">opt</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="va">$opt</span> <span class="kw">in</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="ss">s</span><span class="kw">)</span> <span class="va">BARE_STRUCTURE</span><span class="op">=</span>true <span class="cf">;;</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="ss">u</span><span class="kw">)</span> <span class="va">CLONE_URL</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="ss">d</span><span class="kw">)</span> <span class="va">TARGET_DIR</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="ss">b</span><span class="kw">)</span> <span class="va">BRANCH</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="ss">p</span><span class="kw">)</span> <span class="va">SPARSE_PATH</span><span class="op">=</span><span class="va">$OPTARG</span> <span class="cf">;;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="pp">*</span><span class="kw">)</span> <span class="ex">usage</span> <span class="cf">;;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">esac</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">${CLONE_URL</span><span class="op">-</span><span class="va">}</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">${TARGET_DIR</span><span class="op">-</span><span class="va">}</span><span class="st">"</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">${BRANCH</span><span class="op">-</span><span class="va">}</span><span class="st">"</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="ex">usage</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">[[</span> <span class="st">"</span><span class="va">$BARE_STRUCTURE</span><span class="st">"</span> <span class="ot">=</span> false <span class="kw">&amp;&amp;</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">${SPARSE_PATH</span><span class="op">-</span><span class="va">}</span><span class="st">"</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Error: -p &lt;sparse_path&gt; is required unless -s (bare mode) is specified."</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="ex">usage</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--filter</span><span class="op">=</span>blob:none <span class="at">--no-checkout</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config core.sparseCheckout true</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">$BARE_STRUCTURE</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="kw">{</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"/*"</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"!/*/"</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="kw">}</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">git</span> checkout <span class="st">"</span><span class="va">$BRANCH</span><span class="st">"</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">git</span> ls-tree <span class="at">-r</span> <span class="at">-d</span> <span class="at">--name-only</span> HEAD <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-I{}</span> mkdir <span class="at">-p</span> <span class="st">"{}"</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 0</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="at">-e</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="st">"</span><span class="va">$BRANCH</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">✅ Usage</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">git-sparse-checkout</span> <span class="at">-u</span> <span class="op">&lt;</span>clone_url<span class="op">&gt;</span> -d <span class="op">&lt;</span>target_dir<span class="op">&gt;</span> -b <span class="op">&lt;</span>branch<span class="op">&gt;</span> -p <span class="op">&lt;</span>sparse_path<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">git-sparse-checkout</span> <span class="at">-u</span> <span class="op">&lt;</span>clone_url<span class="op">&gt;</span> -d <span class="op">&lt;</span>target_dir<span class="op">&gt;</span> -b <span class="op">&lt;</span>branch<span class="op">&gt;</span> -p <span class="op">&lt;</span>sparse_path<span class="op">&gt;</span> -s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="min-section">Parameters</span></p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
+<col style="width: 6%">
 <col style="width: 73%">
-<col style="width: 15%">
+<col style="width: 19%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -464,47 +488,67 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>-u</code></td>
+<td>-u</td>
 <td>Git clone URL</td>
 <td>✅ Yes</td>
 </tr>
 <tr class="even">
-<td><code>-d</code></td>
+<td>-d</td>
 <td>Target directory to clone into</td>
 <td>✅ Yes</td>
 </tr>
 <tr class="odd">
-<td><code>-b</code></td>
+<td>-b</td>
 <td>Branch to check out</td>
 <td>✅ Yes</td>
 </tr>
 <tr class="even">
-<td><code>-p</code></td>
-<td>Path to check out within the repository. Directories are seperated by <code>:</code></td>
-<td>✅ Yes</td>
+<td>-p</td>
+<td>Path(s) to check out within the repository. Directories separated by ‘:’</td>
+<td>✅ Yes unless -s specified</td>
+</tr>
+<tr class="odd">
+<td>-s</td>
+<td>Bare mode: clone only root files and create empty directories</td>
+<td>❌ Optional</td>
 </tr>
 </tbody>
 </table>
-<section id="exmaple" class="level3">
-<h3 class="anchored" data-anchor-id="exmaple">Exmaple</h3>
+<section id="exmaple-1" class="level3">
+<h3 class="anchored" data-anchor-id="exmaple-1">Exmaple 1</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">git-sparse-checkout</span> <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-u</span> https://github.com/RyoNakagami/PythonCompetitiveProgramming <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-u</span> https://github.com/RyoNakagami/regmonkey_gitcommand <span class="dt">\</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> ./checkout_sandbox <span class="dt">\</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> main <span class="dt">\</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> /Leetcode:/projecteuler/data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> /src:/docs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will:</p>
 <ol type="1">
 <li>Clone the repository without full history or blobs</li>
 <li>Enable sparse-checkout mode</li>
-<li>Checkout only both of <code>/Leetcode</code> and <code>/projecteuler/data</code> directory from the <code>main</code> branch</li>
+<li>Checkout only both of <code>/src</code> and <code>/docs</code> directory from the <code>main</code> branch</li>
 <li>Write the result to <code>./checkout_sandbox</code></li>
+</ol>
+</section>
+<section id="exmaple-2" class="level3">
+<h3 class="anchored" data-anchor-id="exmaple-2">Exmaple 2</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">git-sparse-checkout</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-u</span> https://github.com/RyoNakagami/regmonkey_gitcommand <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> ./checkout_sandbox_bare <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> main <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-s</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will:</p>
+<ol type="1">
+<li>Clone the repository without full history or blobs</li>
+<li>Enable sparse-checkout mode with the setting to include only root-level files (exclude root directories)</li>
+<li>Create the directory structure as empty folders matching the repo’s directory tree</li>
+<li>Write the result to <code>./checkout_sandbox_bare</code></li>
 </ol>
 </section>
 </section>
 <section id="diving-into-the-shell-script" class="level2">
 <h2 class="anchored" data-anchor-id="diving-into-the-shell-script">🔍 Diving into the shell script</h2>
 <p>Efficiently clone a repo without downloading file contents or populating the working directory immediately.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--filter</span><span class="op">=</span>blob:none <span class="at">--no-checkout</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--filter</span><span class="op">=</span>blob:none <span class="at">--no-checkout</span> <span class="st">"</span><span class="va">$CLONE_URL</span><span class="st">"</span> <span class="st">"</span><span class="va">$TARGET_DIR</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 25%">
@@ -528,9 +572,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </tbody>
 </table>
 <p>Then, enable sparse checkout for this local repository. The following tells Git you want to selectively check out only certain paths from the repository into your working directory.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config core.sparseCheckout true</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config core.sparseCheckout true</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Next,</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="at">-e</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="at">-e</span> <span class="st">"</span><span class="va">$SPARSE_PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 30%">
@@ -557,6 +601,52 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </tr>
 </tbody>
 </table>
+<section id="s-option-only-files-directly-under-the-root-of-the-repository-are-checked-out" class="level3">
+<h3 class="anchored" data-anchor-id="s-option-only-files-directly-under-the-root-of-the-repository-are-checked-out"><code>-s</code> option: Only files directly under the root of the repository are checked out</h3>
+<p><span class="mini-section">Writing to the sparse-checkout config file</span></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"/*"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"!/*/"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span> <span class="op">&gt;</span> .git/info/sparse-checkout</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>command</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>{ echo "/*"; echo "!/*/"; }</code></td>
+<td>Outputs two patterns to stdout: <code>/*</code> to include all files and directories at the root level, and <code>!/*/</code> to exclude all directories at the root level. These together specify sparse-checkout rules to include only root files but exclude root directories.</td>
+</tr>
+<tr class="even">
+<td><code>&gt; .git/info/sparse-checkout</code></td>
+<td>Redirects the above output into the sparse-checkout configuration file, setting the sparse checkout rules for the repository.</td>
+</tr>
+</tbody>
+</table>
+<p><span class="mini-section">Empty directory structure is recreated:</span></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-tree <span class="at">-r</span> <span class="at">-d</span> <span class="at">--name-only</span> HEAD <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-I{}</span> mkdir <span class="at">-p</span> <span class="st">"{}"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Git lists all directories in the repo (recursively).</li>
+<li>For each directory, the script creates an empty directory on your filesystem.</li>
+<li>This means folder structures exist locally but are empty (no files inside).</li>
+</ul>
+</section>
+<section id="when-you-modify-the-sparse-checkout-patterns" class="level3">
+<h3 class="anchored" data-anchor-id="when-you-modify-the-sparse-checkout-patterns">When you modify the sparse-checkout patterns</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">--sparse</span> <span class="op">&lt;</span>paths<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The command <code>git add --sparse</code> tells Git:</p>
+<ul>
+<li>“Update the sparse checkout patterns and adjust the working directory accordingly.”</li>
+<li>Add files/directories newly matching the pattern.</li>
+</ul>
+</section>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
