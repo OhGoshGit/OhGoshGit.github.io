@@ -16,7 +16,7 @@ categories: [git restore]
 
 - Enable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes.
 
-## 📘 Guidline
+## 📘 Guideline
 
 Ensure you're using Git 2.23+, where `git restore` was introduced.
 

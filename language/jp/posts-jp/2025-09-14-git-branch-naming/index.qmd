@@ -1,0 +1,181 @@
+---
+title: "OGG... よく使われるGitブランチの命名規則とは？"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-09-14"
+date-modified: "2025-09-16"
+categories: [git branch]
+---
+
+## 🔎 Objectives
+
+- ブランチの目的を明確にし，コラボレーションをスムーズにする
+- 自動化スクリプトのハンドリングを向上させる
+- チームによるコードを管理において，明確性，一貫性，追跡可能性を作り出す
+
+## 🎯 Golas
+
+- 明確なブランチカテゴリ（`feature`，`hotfix`，`release`など）を一貫したトークンで定義する
+- ブランチ名が意図を即座に伝えられるようにする
+- 課題管理システムやCI/CDパイプラインとの統合を可能にする
+- チーム全体で命名を標準化することで混乱を減らす
+
+## 📘 Guidelines
+
+::::{.info-box}
+
+:::{.info-box-title}
+① 小文字とハイフンを使用して単語を区切る
+:::
+
+:::{.info-contents}
+- ブランチ名は，大文字小文字を区別するファイルシステムでの競合を避け，一貫性を保つため，常に小文字を使用する
+- ハイフン（`-`）は，アンダースコアやキャメルケースよりもブランチ名を読みやすくする
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ 例: `feat/user-login`  
+- ❌ 避けるべき例: `Feat_UserLogin`, `FeatUserLogin`  
+
+:::
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+② ブランチ名を明確なトークンで始める
+:::
+
+:::{.info-contents}
+- 各ブランチは，その目的を定義する**カテゴリトークン**で始める必要がある
+- 一般的なトークン: `feat`（機能），`fix`（バグ修正），`docs`（ドキュメント）
+- トークンと説明を区切るためにスラッシュ `/` を使用する
+- これによりブランチの目的が一目で分かる
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ 例: `fix/payment-timeout`  
+- ❌ 避けるべき例: `payment-timeout`（目的が不明確）  
+
+:::
+
+トークンがもたらす明確さは，ブランチリストやPRを読む人間にとって役立つだけでなく，Gitコマンドや CI/CDスクリプトが特定のブランチタイプを効率的にフィルタリング，マッピング，操作することを可能にします．
+
+
+```zsh
+# トークンでブランチをリスト表示
+git branch --list "feature/*"
+
+# トークンを持つブランチをプッシュまたはマッピング
+git push origin 'refs/heads/feature/*'
+
+# トークンで複数のブランチを削除
+git branch -D $(git branch --list "feature/*")
+```
+
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+③ 可能な限り課題やチケットにリンクする
+:::
+
+:::{.info-contents}
+- チームがJira，GitHub Issues，または他のトラッカーを使用している場合，チケット/課題IDを含める  
+- これによりコード，コミット，タスク間の**追跡可能性**が向上する  
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ 例: `feat/123-user-auth`  
+- ❌ 避けるべき例: `feat/user-auth`（チケットへのリンクがない）  
+
+:::
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+④ ブランチ名は短く，かつ説明的にする
+:::
+
+:::{.info-contents}
+- **簡潔さ**と**明確さ**のバランスを取る  
+- 意図を説明しつつ，過度に長い名前は避ける  
+:::
+::::
+
+
+ブランチのリストを確認する際，長いブランチ名はより多くのコンテキストを提供してくれますが，一行ログでは表示部分を不明瞭にする可能性があります．
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ 例: `refactor/api-headers`  
+- ❌ 長すぎる例: `refactor/update-the-way-we-handle-request-headers-in-api`  
+
+:::
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+⑤ チーム全体で一貫性を保つ
+:::
+
+:::{.info-contents}
+- 全ての開発者が同じ規則に従う必要がある  
+- 一貫性はコラボレーションを改善し，CI/CDでの自動化を可能にする  
+- ルールは `CONTRIBUTING.md` やプロジェクトのwikiに文書化する  
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ 例: 全員が機能開発に `feat/*` を使用する  
+- ❌ 避けるべき例: `feature/*`, `feat/*`, `new/*` を混在させる（混乱の原因となる）  
+
+:::
+---
+
+### ブランチ命名規則
+
+[作業ブランチ]{.mini-section}
+
+| **フォーマット**      | **目的 / ゴール**                       |
+| ------------------- | ------------------------------------ |
+| `feature/<name>`    | 新機能の開発                           |
+| `bugfix/<name>`     | バグ修正                              |
+| `refactor/<name>`   | 動作を変更せずにコードを再構成            |
+| `docs/<name>`       | ドキュメントの更新                      |
+| `test/<name>`       | テスト関連の作業                        |
+| `enh/<name>`        | パフォーマンス改善                      |
+: {tbl-colwidths="[25,75]"}
+
+
+[ライフサイクルブランチ]{.mini-section}
+
+| **フォーマット**      | **目的 / ゴール**                       |
+| ------------------- | ------------------------------------ |
+| `release/<version>` | リリースの準備                         |
+| `hotfix/<name>`     | 本番環境の緊急修正                      |
+| `sandbox/<name>`    | 実験的またはプロトタイプの作業            |
+: {tbl-colwidths="[25,75]"}
+
+
+
+
+参考文献
+----------
+- [stackoverflow > What are some examples of commonly used practices for naming git branches?](https://stackoverflow.com/questions/273695/what-are-some-examples-of-commonly-used-practices-for-naming-git-branches)

@@ -1,0 +1,185 @@
+---
+title: "OGG... What kind of Git branch naming convention is commonly used??"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-09-14"
+date-modified: "2025-09-16"
+categories: [git branch]
+---
+
+## 🔎 Objectives
+
+- Make branch purpose explicit, collaboration smoother, and automation possible.
+- Create clarity, consistency, and traceability in how teams manage code.
+
+## 🎯 Goals
+
+- Define clear branch categories (feature, fix, release, etc.) with consistent tokens.
+- Ensure branch names immediately communicate intent.
+- Enable integration with issue trackers and CI/CD pipelines.
+- Reduce confusion by standardizing naming across the team.
+
+## 📘 Guideline
+
+::::{.info-box}
+
+:::{.info-box-title}
+
+① Use lowercase letters and hyphens to separate words
+
+:::
+
+:::{.info-contents}
+
+- Branch names should always be lowercase for consistency and avoid conflicts in case-sensitive file systems.
+- Hyphens (`-`) make branch names easier to read than underscores or camelCase.  
+
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ Example: `feat/user-login`  
+- ❌ Avoid: `Feat_UserLogin`, `FeatUserLogin`  
+
+:::
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+② Start branch names with a clear token
+:::
+
+:::{.info-contents}
+- Each branch should begin with a **category token** that defines its purpose.  
+- Common tokens: `feat` (feature), `fix` (bug fix), `docs` (documentation).
+- Use slashes `/` to separate tokens and descriptions 
+- This makes the branch purpose obvious at a glance.  
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ Example: `fix/payment-timeout`  
+- ❌ Avoid: `payment-timeout` (purpose unclear)  
+
+:::
+
+This clarity is not only helpful for humans reading the branch list or PRs but also allows Git commands and CI/CD scripts to filter, map, or operate on specific branch types efficiently.
+
+
+```zsh
+# Listing branches by token
+git branch --list "feature/*"
+
+# Pushing or mapping branches with tokens
+git push origin 'refs/heads/feature/*'
+
+# Deleting multiple branches by token
+git branch -D $(git branch --list "feature/*")
+```
+
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+③ Link to issues or tickets when possible
+:::
+
+:::{.info-contents}
+- If your team uses Jira, GitHub Issues, or another tracker, include the ticket/issue ID.  
+- This improves **traceability** between code, commits, and tasks.  
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ Example: `feat/123-user-auth`  
+- ❌ Avoid: `feat/user-auth` (missing link to ticket)  
+
+:::
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+④ Keep branch names short but descriptive
+:::
+
+:::{.info-contents}
+- Balance **brevity** with **clarity**.  
+- Avoid overly long names while still describing the intent.  
+:::
+::::
+
+
+Long branch names can be very helpful when browsing a list of branches, as they provide more context. However, they can clutter one-line logs, obscuring the visible part of the log.
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ Example: `refactor/api-headers`  
+- ❌ Too long: `refactor/update-the-way-we-handle-request-headers-in-api`  
+
+:::
+---
+
+::::{.info-box}
+
+:::{.info-box-title}
+⑤ Maintain consistency across the team
+:::
+
+:::{.info-contents}
+- All developers must follow the same convention.  
+- Consistency improves collaboration and enables automation in CI/CD.  
+- Document rules in `CONTRIBUTING.md` or your project wiki.  
+:::
+::::
+
+::: {#exm- .custom_problem }
+<br>
+
+- ✅ Example: Everyone uses `feat/*` for features  
+- ❌ Avoid: Mixing `feature/*`, `feat/*`, `new/*` (causes chaos)  
+
+:::
+---
+
+### Branch Naming Convention
+
+[Work Branches]{.mini-section}
+
+| **Format**          | **Purpose / Goal**                         |
+| ------------------- | ------------------------------------------ |
+| `feature/<name>`    | New feature development                    |
+| `bugfix/<name>`     | Bug fix                                    |
+| `refactor/<name>`   | Restructuring code without behavior change |
+| `docs/<name>`       | Documentation updates                      |
+| `test/<name>`       | Testing-related work                       |
+| `enh/<name>`        | Performance enhancements                   |
+: {tbl-colwidths="[25,75]"}
+
+
+
+[Lifecycle branches]{.mini-section}
+
+| **Format**          | **Purpose / Goal**                         |
+| ------------------- | ------------------------------------------ |
+| `release/<version>` | Preparing a release                        |
+| `hotfix/<name>`     | Urgent production fix                      |
+| `sandbox/<name>`    | Experimental or prototype work             |
+: {tbl-colwidths="[25,75]"}
+
+
+
+
+References
+----------
+- [stackoverflow > What are some examples of commonly used practices for naming git branches?](https://stackoverflow.com/questions/273695/what-are-some-examples-of-commonly-used-practices-for-naming-git-branches)
