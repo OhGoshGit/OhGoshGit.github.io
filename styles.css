@@ -48,3 +48,47 @@ ul.task-list li input[type="checkbox"] {
 .no-border-top-table table td {
   border-top: none;
 }
+
+
+/* ------------------------------------------------ */
+/*            Info Box Styles                       */
+/* ------------------------------------------------ */
+
+.info-box {
+  margin-top: 0.3rem;
+  background-color: #e8f1fe;
+  padding-top: 0.5em;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
+  display: block !important;
+  align-items: center;
+  text-align: left;
+  padding-left: 1em;
+  position: relative; /* Needed for positioning the pseudo-element */
+}
+
+
+.info-box::before {
+  content: "";
+  position: absolute;
+  top: 0em; /* Start 5% from the top to cover the top 90% */
+  left: 0;
+  width: 0.4em; /* Same width as your intended border-left */
+  bottom: 0em; /* End 2em from the bottom */
+  background-color: #428ce6; /* Your desired border color */
+}
+
+.info-box-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #1a1a1a;
+  line-height: 1;
+  margin-top: 0; /* Adjust margins as needed */
+  padding-bottom: 0em; /* Add some space below the border */
+}
+
+.info-box .info-contents {
+  font-size: 1em;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}

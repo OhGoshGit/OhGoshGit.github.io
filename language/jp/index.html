@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,18 +35,19 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-81058a171fbd23f6d294604e43ab58d1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-df41eb8bfbc04f0858ebad79a05028a6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-81058a171fbd23f6d294604e43ab58d1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3e8113c6728a2c20ad2aaabba1e86133.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-7a790781050326b3e1cc146f4d4cbe37.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-3e8113c6728a2c20ad2aaabba1e86133.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -137,7 +138,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -325,6 +326,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
@@ -394,7 +397,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(15)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Z2l0JTIwY2hlY2tvdXQ=">git checkout <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(16)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Z2l0JTIwY2hlY2tvdXQ=">git checkout <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -428,7 +431,20 @@ Reading Time
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1754352000000" data-listing-file-modified-sort="1754397631614" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="203" data-listing-title-sort="あぁぁ... 特定のコミットからファイルを復元するにはどうすればいいんだ？" data-listing-filename-sort="index.qmd">
+<tr data-index="0" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1757808000000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="1757980800000" data-listing-reading-time-sort="3" data-listing-word-count-sort="486" data-listing-title-sort="OGG... よく使われるGitブランチの命名規則とは？" data-listing-filename-sort="index.qmd">
+<td>
+<span class="listing-date">2025-09-14</span>
+</td>
+<td>
+<a href="../../language/jp/posts-jp/2025-09-14-git-branch-naming/index.html" class="title listing-title">OGG… よく使われるGitブランチの命名規則とは？</a>
+</td>
+<td>
+<span class="listing-reading-time">3 min</span>
+</td>
+
+</tr>
+
+<tr data-index="1" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1754352000000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="203" data-listing-title-sort="あぁぁ... 特定のコミットからファイルを復元するにはどうすればいいんだ？" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2025-08-05</span>
 </td>
@@ -441,7 +457,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="1" data-categories="Z2l0JTIwY2hlY2tvdXQ=" data-listing-date-sort="1754265600000" data-listing-file-modified-sort="1754397631614" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="372" data-listing-title-sort="あぁぁ... 特定のディレクトリに対してgit sparse-checkoutを実行したい" data-listing-filename-sort="index.qmd">
+<tr data-index="2" data-categories="Z2l0JTIwY2hlY2tvdXQ=" data-listing-date-sort="1754265600000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="372" data-listing-title-sort="あぁぁ... 特定のディレクトリに対してgit sparse-checkoutを実行したい" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2025-08-04</span>
 </td>
@@ -454,7 +470,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="2" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1754397631614" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="380" data-listing-title-sort="あぁぁ... git reset --hard と --mixed と --soft の違いは何？" data-listing-filename-sort="index.qmd">
+<tr data-index="3" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="380" data-listing-title-sort="あぁぁ... git reset --hard と --mixed と --soft の違いは何？" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2025-06-14</span>
 </td>
@@ -467,7 +483,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="3" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1754397631614" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="60" data-listing-title-sort="あぁぁ... とあるファイルについてgit addを取り消したい．．．" data-listing-filename-sort="index.qmd">
+<tr data-index="4" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="60" data-listing-title-sort="あぁぁ... とあるファイルについてgit addを取り消したい．．．" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2025-06-13</span>
 </td>
@@ -480,7 +496,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="4" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1754397631614" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="383" data-listing-title-sort="あぁぁ... 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？" data-listing-filename-sort="index.qmd">
+<tr data-index="5" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="383" data-listing-title-sort="あぁぁ... 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2025-06-06</span>
 </td>
@@ -493,7 +509,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="5" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1754397631614" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618" data-listing-title-sort="あぁぁ... Gitで設定ファイルや秘密情報をどう管理すればええんや？" data-listing-filename-sort="index.qmd">
+<tr data-index="6" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618" data-listing-title-sort="あぁぁ... Gitで設定ファイルや秘密情報をどう管理すればええんや？" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2025-06-05</span>
 </td>
@@ -506,7 +522,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="6" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1754397631614" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="123" data-listing-title-sort="あぁぁ... GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？" data-listing-filename-sort="index.qmd">
+<tr data-index="7" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="123" data-listing-title-sort="あぁぁ... GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-12-17</span>
 </td>
@@ -519,7 +535,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="7" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="1754397631000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
+<tr data-index="8" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="1757988956000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-11-06</span>
 </td>
@@ -532,7 +548,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="8" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="1754397631000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
+<tr data-index="9" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="1757988956000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-11-05</span>
 </td>
@@ -545,7 +561,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="9" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="あぁぁ... GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？" data-listing-filename-sort="index.qmd">
+<tr data-index="10" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1757988956871" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="あぁぁ... GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-11-01</span>
 </td>
@@ -558,7 +574,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="10" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="あぁぁ... ローカルのGitブランチを異なる名前でリモートにプッシュしたい..." data-listing-filename-sort="index.qmd">
+<tr data-index="11" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1757988956870" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="あぁぁ... ローカルのGitブランチを異なる名前でリモートにプッシュしたい..." data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-10-31</span>
 </td>
@@ -571,7 +587,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="11" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="1749859200000" data-listing-reading-time-sort="1" data-listing-word-count-sort="58" data-listing-title-sort="あぁぁ... 現在のリポジトリを別のリモートに保存したい..." data-listing-filename-sort="index.qmd">
+<tr data-index="12" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1757988956870" data-listing-date-modified-sort="1749859200000" data-listing-reading-time-sort="1" data-listing-word-count-sort="58" data-listing-title-sort="あぁぁ... 現在のリポジトリを別のリモートに保存したい..." data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-07-26</span>
 </td>
@@ -584,7 +600,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="12" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="1754397631000" data-listing-reading-time-sort="3" data-listing-word-count-sort="552" data-listing-title-sort="あぁぁ... リモートブランチにpushも，リモート変更も，pullもできない..." data-listing-filename-sort="index.qmd">
+<tr data-index="13" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1757988956870" data-listing-date-modified-sort="1757988956000" data-listing-reading-time-sort="3" data-listing-word-count-sort="552" data-listing-title-sort="あぁぁ... リモートブランチにpushも，リモート変更も，pullもできない..." data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-07-18</span>
 </td>
@@ -597,7 +613,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="13" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="1754397631000" data-listing-reading-time-sort="1" data-listing-word-count-sort="78" data-listing-title-sort="あぁぁ... 間違ったbranch nameつけてしもうた..." data-listing-filename-sort="index.qmd">
+<tr data-index="14" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1757988956870" data-listing-date-modified-sort="1757988956000" data-listing-reading-time-sort="1" data-listing-word-count-sort="78" data-listing-title-sort="あぁぁ... 間違ったbranch nameつけてしもうた..." data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-07-13</span>
 </td>
@@ -610,7 +626,7 @@ Reading Time
 
 </tr>
 
-<tr data-index="14" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1754397631613" data-listing-date-modified-sort="1754397631000" data-listing-reading-time-sort="2" data-listing-word-count-sort="229" data-listing-title-sort="あぁぁ... 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた" data-listing-filename-sort="index.qmd">
+<tr data-index="15" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1757988956870" data-listing-date-modified-sort="1757988956000" data-listing-reading-time-sort="2" data-listing-word-count-sort="229" data-listing-title-sort="あぁぁ... 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた" data-listing-filename-sort="index.qmd">
 <td>
 <span class="listing-date">2024-07-12</span>
 </td>
@@ -700,13 +716,14 @@ Reading Time
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

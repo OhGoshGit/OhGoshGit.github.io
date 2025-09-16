@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2025-06-13">
+<meta name="dcterms.date" content="2025-09-14">
 
-<title>あぁぁ… とあるファイルについてgit addを取り消したい．．． – OhGoshGit!?!</title>
+<title>OGG… よく使われるGitブランチの命名規則とは？ – OhGoshGit!?!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -355,9 +355,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">あぁぁ… とあるファイルについてgit addを取り消したい．．．</h1>
+      <h1 class="title">OGG… よく使われるGitブランチの命名規則とは？</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git restore</div>
+                <div class="quarto-category">git branch</div>
               </div>
                   </div>
   </div>
@@ -375,10 +375,16 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025-06-13</p>
+        <p class="date">2025-09-14</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2025-09-16</p>
+      </div>
+    </div>
       
     </div>
     
@@ -391,12 +397,13 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">✅ Objective</a></li>
-  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">🎯 Goal</a></li>
-  <li><a href="#guideline" id="toc-guideline" class="nav-link" data-scroll-target="#guideline">📘 Guideline</a>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">🔎 Objectives</a></li>
+  <li><a href="#golas" id="toc-golas" class="nav-link" data-scroll-target="#golas">🎯 Golas</a></li>
+  <li><a href="#guidelines" id="toc-guidelines" class="nav-link" data-scroll-target="#guidelines">📘 Guidelines</a>
   <ul class="collapse">
-  <li><a href="#git-unstage-用のカスタムエイリアス設定" id="toc-git-unstage-用のカスタムエイリアス設定" class="nav-link" data-scroll-target="#git-unstage-用のカスタムエイリアス設定">💻 git unstage 用のカスタムエイリアス設定</a></li>
+  <li><a href="#ブランチ命名規則" id="toc-ブランチ命名規則" class="nav-link" data-scroll-target="#ブランチ命名規則">ブランチ命名規則</a></li>
   </ul></li>
+  <li><a href="#参考文献" id="toc-参考文献" class="nav-link" data-scroll-target="#参考文献">参考文献</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -408,54 +415,222 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="objective" class="level2">
-<h2 class="anchored" data-anchor-id="objective">✅ Objective</h2>
-<ol type="1">
-<li>特定のファイルに対するgit addの操作を取り消し、ステージングエリアからワーキングディレクトリに戻す</li>
-<li>ファイルの内容自体は変更しない</li>
-</ol>
-</section>
-<section id="goal" class="level2">
-<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
-<ul class="task-list">
-<li><label><input type="checkbox">以前にステージングエリアに追加された1つまたは複数のファイルをunstageする</label></li>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">🔎 Objectives</h2>
+<ul>
+<li>ブランチの目的を明確にし，コラボレーションをスムーズにする</li>
+<li>自動化スクリプトのハンドリングを向上させる</li>
+<li>チームによるコードを管理において，明確性，一貫性，追跡可能性を作り出す</li>
 </ul>
 </section>
-<section id="guideline" class="level2">
-<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
-<p><code>git add</code>でファイルをステージングすると、そのファイルはステージングエリア（インデックス）に移動し、コミットの準備が整います。もし考えが変わってunstageしたい場合（変更内容を失うことなく）、一般的に2つの選択肢があります：</p>
+<section id="golas" class="level2">
+<h2 class="anchored" data-anchor-id="golas">🎯 Golas</h2>
 <ul>
-<li><code>git restore --staged &lt;file&gt;</code></li>
-<li><code>git reset &lt;file&gt;</code></li>
+<li>明確なブランチカテゴリ（<code>feature</code>，<code>hotfix</code>，<code>release</code>など）を一貫したトークンで定義する</li>
+<li>ブランチ名が意図を即座に伝えられるようにする</li>
+<li>課題管理システムやCI/CDパイプラインとの統合を可能にする</li>
+<li>チーム全体で命名を標準化することで混乱を減らす</li>
 </ul>
-<p>ここでは、より新しいタスク特化型のGitコマンドの一部である<code>git restore</code>について説明します。このコマンドは、より直感的で分かりやすく、インデックスの状態を「復元」する動作に特化しています。他の形式で使用した場合にコミット履歴にも影響を与える可能性がある<code>git reset</code>の、より広範で潜在的に混乱を招く影響を避けることができます。</p>
-<p><span class="mini-section">特定のファイルをunstageする</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--staged</span> <span class="op">&lt;</span>file_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><span class="mini-section">複数の特定のファイルをunstageする</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--staged</span> <span class="op">&lt;</span>file_name1<span class="op">&gt;</span> <span class="op">&lt;</span>file_name2<span class="op">&gt;</span> ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="guidelines" class="level2">
+<h2 class="anchored" data-anchor-id="guidelines">📘 Guidelines</h2>
+<div class="info-box">
+<div class="info-box-title">
+<p>① 小文字とハイフンを使用して単語を区切る</p>
+</div>
+<div class="info-contents">
 <ul>
-<li>unstageしたいファイルをスペースで区切って列挙します。</li>
+<li>ブランチ名は，大文字小文字を区別するファイルシステムでの競合を避け，一貫性を保つため，常に小文字を使用する</li>
+<li>ハイフン（<code>-</code>）は，アンダースコアやキャメルケースよりもブランチ名を読みやすくする</li>
 </ul>
-<p><span class="mini-section">実行後の結果を確認する</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="git-unstage-用のカスタムエイリアス設定" class="level3">
-<h3 class="anchored" data-anchor-id="git-unstage-用のカスタムエイリアス設定">💻 git unstage 用のカスタムエイリアス設定</h3>
-<p>Gitでは、<code>.gitconfig</code>の<code>[alias]</code>セクションを通じて、長いコマンドのショートカット（Alias）を定義できます。</p>
-<p><span class="mini-section">設定の構文</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[alias]</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>shortcut<span class="op">&gt;</span> = <span class="op">&lt;</span>actual <span class="fu">git</span> command<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ul class="task-list">
-<li><label><input type="checkbox">実際のコマンドにgitを含めないでください — Gitは自動的にそれを付加します</label></li>
-<li><label><input type="checkbox">コマンドにスペースやオプションが含まれる場合は、引用符が必要かもしれません</label></li>
+</div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 1</strong></span> <br></p>
+<ul>
+<li>✅ 例: <code>feat/user-login</code><br>
+</li>
+<li>❌ 避けるべき例: <code>Feat_UserLogin</code>, <code>FeatUserLogin</code></li>
 </ul>
-<p><span class="mini-section">Aliasの設定</span></p>
-<p>以下の設定で、<code>git unstage</code>というGitサブコマンドのAliasを定義します。</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[alias]</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">unstage</span> = <span class="st">"restore --staged"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>これにより、<code>git unstage &lt;file&gt;</code>が<code>git restore --staged &lt;file_name&gt;</code>と同じように機能します。</p>
+</div>
+<hr>
+<div class="info-box">
+<div class="info-box-title">
+<p>② ブランチ名を明確なトークンで始める</p>
+</div>
+<div class="info-contents">
+<ul>
+<li>各ブランチは，その目的を定義する<strong>カテゴリトークン</strong>で始める必要がある</li>
+<li>一般的なトークン: <code>feat</code>（機能），<code>fix</code>（バグ修正），<code>docs</code>（ドキュメント）</li>
+<li>トークンと説明を区切るためにスラッシュ <code>/</code> を使用する</li>
+<li>これによりブランチの目的が一目で分かる</li>
+</ul>
+</div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 2</strong></span> <br></p>
+<ul>
+<li>✅ 例: <code>fix/payment-timeout</code><br>
+</li>
+<li>❌ 避けるべき例: <code>payment-timeout</code>（目的が不明確）</li>
+</ul>
+</div>
+<p>トークンがもたらす明確さは，ブランチリストやPRを読む人間にとって役立つだけでなく，Gitコマンドや CI/CDスクリプトが特定のブランチタイプを効率的にフィルタリング，マッピング，操作することを可能にします．</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># トークンでブランチをリスト表示</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">--list</span> <span class="st">"feature/*"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># トークンを持つブランチをプッシュまたはマッピング</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin <span class="st">'refs/heads/feature/*'</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># トークンで複数のブランチを削除</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-D</span> <span class="va">$(</span><span class="fu">git</span> branch <span class="at">--list</span> <span class="st">"feature/*"</span><span class="va">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+<div class="info-box">
+<div class="info-box-title">
+<p>③ 可能な限り課題やチケットにリンクする</p>
+</div>
+<div class="info-contents">
+<ul>
+<li>チームがJira，GitHub Issues，または他のトラッカーを使用している場合，チケット/課題IDを含める<br>
+</li>
+<li>これによりコード，コミット，タスク間の<strong>追跡可能性</strong>が向上する<br>
+</li>
+</ul>
+</div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 3</strong></span> <br></p>
+<ul>
+<li>✅ 例: <code>feat/123-user-auth</code><br>
+</li>
+<li>❌ 避けるべき例: <code>feat/user-auth</code>（チケットへのリンクがない）</li>
+</ul>
+</div>
+<hr>
+<div class="info-box">
+<div class="info-box-title">
+<p>④ ブランチ名は短く，かつ説明的にする</p>
+</div>
+<div class="info-contents">
+<ul>
+<li><strong>簡潔さ</strong>と<strong>明確さ</strong>のバランスを取る<br>
+</li>
+<li>意図を説明しつつ，過度に長い名前は避ける<br>
+</li>
+</ul>
+</div>
+</div>
+<p>ブランチのリストを確認する際，長いブランチ名はより多くのコンテキストを提供してくれますが，一行ログでは表示部分を不明瞭にする可能性があります．</p>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 4</strong></span> <br></p>
+<ul>
+<li>✅ 例: <code>refactor/api-headers</code><br>
+</li>
+<li>❌ 長すぎる例: <code>refactor/update-the-way-we-handle-request-headers-in-api</code></li>
+</ul>
+</div>
+<hr>
+<div class="info-box">
+<div class="info-box-title">
+<p>⑤ チーム全体で一貫性を保つ</p>
+</div>
+<div class="info-contents">
+<ul>
+<li>全ての開発者が同じ規則に従う必要がある<br>
+</li>
+<li>一貫性はコラボレーションを改善し，CI/CDでの自動化を可能にする<br>
+</li>
+<li>ルールは <code>CONTRIBUTING.md</code> やプロジェクトのwikiに文書化する<br>
+</li>
+</ul>
+</div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 5</strong></span> <br></p>
+<ul>
+<li>✅ 例: 全員が機能開発に <code>feat/*</code> を使用する<br>
+</li>
+<li>❌ 避けるべき例: <code>feature/*</code>, <code>feat/*</code>, <code>new/*</code> を混在させる（混乱の原因となる）</li>
+</ul>
+</div>
+<hr>
+<section id="ブランチ命名規則" class="level3">
+<h3 class="anchored" data-anchor-id="ブランチ命名規則">ブランチ命名規則</h3>
+<p><span class="mini-section">作業ブランチ</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>フォーマット</strong></th>
+<th><strong>目的 / ゴール</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>feature/&lt;name&gt;</code></td>
+<td>新機能の開発</td>
+</tr>
+<tr class="even">
+<td><code>bugfix/&lt;name&gt;</code></td>
+<td>バグ修正</td>
+</tr>
+<tr class="odd">
+<td><code>refactor/&lt;name&gt;</code></td>
+<td>動作を変更せずにコードを再構成</td>
+</tr>
+<tr class="even">
+<td><code>docs/&lt;name&gt;</code></td>
+<td>ドキュメントの更新</td>
+</tr>
+<tr class="odd">
+<td><code>test/&lt;name&gt;</code></td>
+<td>テスト関連の作業</td>
+</tr>
+<tr class="even">
+<td><code>enh/&lt;name&gt;</code></td>
+<td>パフォーマンス改善</td>
+</tr>
+</tbody>
+</table>
+<p><span class="mini-section">ライフサイクルブランチ</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>フォーマット</strong></th>
+<th><strong>目的 / ゴール</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>release/&lt;version&gt;</code></td>
+<td>リリースの準備</td>
+</tr>
+<tr class="even">
+<td><code>hotfix/&lt;name&gt;</code></td>
+<td>本番環境の緊急修正</td>
+</tr>
+<tr class="odd">
+<td><code>sandbox/&lt;name&gt;</code></td>
+<td>実験的またはプロトタイプの作業</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/273695/what-are-some-examples-of-commonly-used-practices-for-naming-git-branches">stackoverflow &gt; What are some examples of commonly used practices for naming git branches?</a></li>
+</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
