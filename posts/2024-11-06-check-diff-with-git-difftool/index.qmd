@@ -1,5 +1,5 @@
 ---
-title: "OGG... How do I check unstaged differences with the latest commit?"
+title: "最新コミットとunstaged差分の確認方法"
 author: 
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
@@ -28,7 +28,7 @@ It would also be helpful to view the differences in an editor.
 |`git diff --staged`|Check staged changes with HEAD|
 |`git diff <commit1> <commit2>`|Compare two specific commits|
 |`git diff main feature-branch`|Compare branches|
-|`git diff HEAD <file/directory-path>`|Check single file/directory changes with HEAD|
+|`git diff HEAD -- <file/directory-path>`|Check single file/directory changes with HEAD|
 |`git diff --stat`|Shows a summary of changes for each file, such as how many lines were added and deleted|
 
 <strong > &#9654;&nbsp; Viewing Changes in the Working Directory</strong>
@@ -105,7 +105,7 @@ The syntax of `git difftool` is similar to `git diff`. For example,
 |`git difftool --staged`<br>`git difftool --cached`|`git diff --staged`|
 |`git difftool <commit1> <commit2>`|`git diff <commit1> <commit2>`|
 |`git difftool main feature-branch`|`git diff main feature-branch`|
-|`git difftool HEAD <file/directory-path>`|`git diff HEAD <file/directory-path>`|
+|`git difftool HEAD -- <file/directory-path>`|`git diff HEAD -- <file/directory-path>`|
 
 <strong > &#9654;&nbsp; Choosing an editor </strong>
 
@@ -137,3 +137,37 @@ If you temporarily show the diff in vimdiff,
 ```zsh
 git difftool HEAD~1 HEAD --tool=vimdiff
 ```
+
+
+## Appendix: Role of `--` in Git
+
+In git command, `--` is a seperator between options and paths. 
+It is useful when a name could be ambiguous—e.g., if a branch or tag has the same name as a file.
+
+If the path (file or directory) does not conflict with a branch or tag name, Git automatically treats it as a path.
+
+::: {#exm- .custom_problem }
+<br>
+
+```bash
+git diff feature -- file.txt
+```
+
+In the above command, `feature` could be interpreted as either a branch or a file.
+Using `--` explicitly tells Git that anything after it is a path, not a branch or option.
+
+:::
+---
+
+::: {#exm- .custom_problem }
+<br>
+
+```bash
+git diff README.md
+```
+
+Git sees that `README.md` is not a branch or tag, so it is interpreted as a file path.
+Therefore, the command works correctly even without `--`.
+
+:::
+---
