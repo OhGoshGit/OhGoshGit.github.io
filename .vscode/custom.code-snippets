@@ -117,4 +117,17 @@
     ],
     "description": ""
   },
+  // --------------------------------------------
+  // table
+  // --------------------------------------------
+  "no-border-top-table": {
+    "scope": "quarto",
+    "prefix": "no-border-top-table",
+    "body": [
+      ":::: {.no-border-top-table}",
+      "",
+      "::::",
+    ],
+    "description": "no border top table"
+  },
 }
