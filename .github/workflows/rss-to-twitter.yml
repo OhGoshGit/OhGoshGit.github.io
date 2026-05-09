@@ -1,14 +1,24 @@
 name: rss-to-twitter
 on:
+  workflow_run:
+    workflows: ["Publish OhGoshGit"]
+    types:
+      - completed
+    branches:
+      - main
   schedule:
     # every 60 minutes at hh:00:00
     - cron: "0 * * * *"
   workflow_dispatch:
 jobs:
   twitter:
-    # if github.event.build.error.message is not null, it means that the build failed. Skip it
+    # only run when triggered manually/scheduled, or when the publish workflow succeeded
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for gh-pages to serve the updated RSS
+        if: ${{ github.event_name == 'workflow_run' }}
+        run: sleep 60
       - uses: azu/rss-to-twitter@v2
         with:
           RSS_URL: "https://ohgoshgit.github.io/index.xml"
