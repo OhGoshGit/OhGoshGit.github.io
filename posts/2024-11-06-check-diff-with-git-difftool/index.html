@@ -9,7 +9,7 @@
 <meta name="author" content="Ryo Nakagami">
 <meta name="dcterms.date" content="2024-11-06">
 
-<title>OGG… How do I check unstaged differences with the latest commit? – OhGoshGit!?!</title>
+<title>最新コミットとunstaged差分の確認方法 – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -355,7 +355,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… How do I check unstaged differences with the latest commit?</h1>
+      <h1 class="title">最新コミットとunstaged差分の確認方法</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">git difftool</div>
               </div>
@@ -400,6 +400,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#solution-1-using-git-diff" id="toc-solution-1-using-git-diff" class="nav-link" data-scroll-target="#solution-1-using-git-diff">Solution 1: Using <code>git diff</code></a></li>
   <li><a href="#solution-2-using-git-difftool" id="toc-solution-2-using-git-difftool" class="nav-link" data-scroll-target="#solution-2-using-git-difftool">Solution 2: Using <code>git difftool</code></a></li>
+  <li><a href="#appendix-role-of----in-git" id="toc-appendix-role-of----in-git" class="nav-link" data-scroll-target="#appendix-role-of----in-git">Appendix: Role of <code>--</code> in Git</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -449,7 +450,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <td>Compare branches</td>
 </tr>
 <tr class="odd">
-<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+<td><code>git diff HEAD -- &lt;file/directory-path&gt;</code></td>
 <td>Check single file/directory changes with HEAD</td>
 </tr>
 <tr class="even">
@@ -525,8 +526,8 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <td><code>git diff main feature-branch</code></td>
 </tr>
 <tr class="odd">
-<td><code>git difftool HEAD &lt;file/directory-path&gt;</code></td>
-<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+<td><code>git difftool HEAD -- &lt;file/directory-path&gt;</code></td>
+<td><code>git diff HEAD -- &lt;file/directory-path&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -541,6 +542,23 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <p><strong> ▶&nbsp; Choosing an editor temporarily</strong></p>
 <p>If you temporarily show the diff in vimdiff,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> difftool HEAD<span class="pp">~</span>1 HEAD <span class="at">--tool</span><span class="op">=</span>vimdiff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="appendix-role-of----in-git" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-role-of----in-git">Appendix: Role of <code>--</code> in Git</h2>
+<p>In git command, <code>--</code> is a seperator between options and paths. It is useful when a name could be ambiguous—e.g., if a branch or tag has the same name as a file.</p>
+<p>If the path (file or directory) does not conflict with a branch or tag name, Git automatically treats it as a path.</p>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 1</strong></span> <br></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff feature <span class="at">--</span> file.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In the above command, <code>feature</code> could be interpreted as either a branch or a file. Using <code>--</code> explicitly tells Git that anything after it is a path, not a branch or option.</p>
+</div>
+<hr>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 2</strong></span> <br></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff README.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Git sees that <code>README.md</code> is not a branch or tag, so it is interpreted as a file path. Therefore, the command works correctly even without <code>--</code>.</p>
+</div>
+<hr>
 
 
 </section>

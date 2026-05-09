@@ -2380,7 +2380,7 @@ font-style: inherit;">&gt;</span></span></code></pre></div></div>
   <pubDate>Wed, 04 Dec 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>OGG… How do I check unstaged differences with the latest commit?</title>
+  <title>最新コミットとunstaged差分の確認方法</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/</link>
   <description><![CDATA[ 
@@ -2428,7 +2428,7 @@ font-style: inherit;">&gt;</span></span></code></pre></div></div>
 <td>Compare branches</td>
 </tr>
 <tr class="odd">
-<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+<td><code>git diff HEAD -- &lt;file/directory-path&gt;</code></td>
 <td>Check single file/directory changes with HEAD</td>
 </tr>
 <tr class="even">
@@ -2587,8 +2587,8 @@ font-style: inherit;">(+)</span></span></code></pre></div></div>
 <td><code>git diff main feature-branch</code></td>
 </tr>
 <tr class="odd">
-<td><code>git difftool HEAD &lt;file/directory-path&gt;</code></td>
-<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+<td><code>git difftool HEAD -- &lt;file/directory-path&gt;</code></td>
+<td><code>git diff HEAD -- &lt;file/directory-path&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -2623,6 +2623,29 @@ background-color: null;
 font-style: inherit;">--tool</span><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>vimdiff</span></code></pre></div></div>
+</section>
+<section id="appendix-role-of----in-git" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-role-of----in-git">Appendix: Role of <code>--</code> in Git</h2>
+<p>In git command, <code>--</code> is a seperator between options and paths. It is useful when a name could be ambiguous—e.g., if a branch or tag has the same name as a file.</p>
+<p>If the path (file or directory) does not conflict with a branch or tag name, Git automatically treats it as a path.</p>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 1</strong></span> <br></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff feature <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> file.txt</span></code></pre></div></div>
+<p>In the above command, <code>feature</code> could be interpreted as either a branch or a file. Using <code>--</code> explicitly tells Git that anything after it is a path, not a branch or option.</p>
+</div>
+<hr>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 2</strong></span> <br></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff README.md</span></code></pre></div></div>
+<p>Git sees that <code>README.md</code> is not a branch or tag, so it is interpreted as a file path. Therefore, the command works correctly even without <code>--</code>.</p>
+</div>
+<hr>
 
 
 </section>
