@@ -277,6 +277,337 @@ font-style: inherit;">)</span></span></code></pre></div></div>
   <pubDate>Sun, 14 Sep 2025 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>OGG git cheatsheet</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2025-08-06-git-command-cheatsheet/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="git-command" class="level2">
+<h2 class="anchored" data-anchor-id="git-command">Git command</h2>
+<section id="basic-commands" class="level3">
+<h3 class="anchored" data-anchor-id="basic-commands">Basic Commands</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Check Git Version</strong></td>
+<td><code>git --version</code></td>
+<td>E.g. <code>git version 2.43.0</code></td>
+</tr>
+<tr class="even">
+<td><strong>Clone withou files</strong></td>
+<td><code>git clone --no-checkout &lt;repository-url&gt;</code></td>
+<td>clones the repository without checking out the files</td>
+</tr>
+<tr class="odd">
+<td><strong>Add all update</strong></td>
+<td><code>git add -u</code></td>
+<td>Stage modified and deleted files (but not new untracked files)</td>
+</tr>
+<tr class="even">
+<td><strong>Status</strong></td>
+<td><code>git status -sb</code></td>
+<td>Short and branch-aware status (great for quick checks)</td>
+</tr>
+<tr class="odd">
+<td><strong>Rename</strong></td>
+<td><code>git mv &lt;oldfilename&gt; &lt;newfilename&gt;</code></td>
+<td>Rename or move a file and stage the change for commit</td>
+</tr>
+<tr class="even">
+<td><strong>Remove</strong></td>
+<td><code>git rm --cached &lt;FILE_NAME&gt;</code></td>
+<td>Stop tracking a file in Git without deleting it from local</td>
+</tr>
+<tr class="odd">
+<td><strong>Log</strong></td>
+<td><code>git log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'</code></td>
+<td>Display commit log with ISO date, short commit ID, author, and commit message</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="commands-for-branch" class="level3">
+<h3 class="anchored" data-anchor-id="commands-for-branch">commands for branch</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Create Branch</strong></td>
+<td><code>git switch -c &lt;branch-name&gt;</code></td>
+<td>Create and checkout a new branch locally</td>
+</tr>
+<tr class="even">
+<td><strong>Checkout previous branch</strong></td>
+<td><code>git switch -</code></td>
+<td>Switch back to the previously checked-out branch.</td>
+</tr>
+<tr class="odd">
+<td><strong>Pull from all remotes</strong></td>
+<td><code>git pull --all</code></td>
+<td>Update all of your local tracking branches which track remote branches.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="commands-for-commits" class="level3">
+<h3 class="anchored" data-anchor-id="commands-for-commits">commands for commits</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Amend commit</strong></td>
+<td><code>git commit --amend</code></td>
+<td>Modify the most recent commit (message, content, or both) with editor starting up</td>
+</tr>
+<tr class="even">
+<td><strong>Commit all changes with message</strong></td>
+<td><code>git commit -am "&lt;commit message&gt;"</code></td>
+<td>Stage all tracked changes and commit with a message in one step</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="diff-check" class="level3">
+<h3 class="anchored" data-anchor-id="diff-check">diff check</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>check staged diff</strong></td>
+<td><code>git diff --cached &lt;branch&gt;</code></td>
+<td>Compare staged changes in the index against the specified branch</td>
+</tr>
+<tr class="even">
+<td><strong>check diff between branches</strong></td>
+<td><code>git diff &lt;base-branch&gt;..&lt;target-branch&gt;</code></td>
+<td>Compare changes between two branches</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="custom-git-commands" class="level3">
+<h3 class="anchored" data-anchor-id="custom-git-commands">Custom Git Commands</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-issue2pr.sh"><strong>Convert a specific issue to PR</strong></a></td>
+<td><code>git issue2pr</code></td>
+<td>Create a Pull Request from the current branch and link it to a specific GitHub Issue.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="config-command" class="level2">
+<h2 class="anchored" data-anchor-id="config-command">Config command</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Default branch name</strong></td>
+<td><code>git config --global init.defaultBranch &lt;default branch name&gt;</code></td>
+<td>Set default branch when initializing new repos</td>
+</tr>
+<tr class="even">
+<td><strong>Enable color output</strong></td>
+<td><code>git config --global color.ui auto</code></td>
+<td>Automatically color Git output in the terminal.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="github-cli-command" class="level2">
+<h2 class="anchored" data-anchor-id="github-cli-command">GitHub CLI command</h2>
+<section id="general" class="level3">
+<h3 class="anchored" data-anchor-id="general">general</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Check Organization</strong></td>
+<td><code>gh org list</code></td>
+<td>Show a list of organizations you belong to</td>
+</tr>
+<tr class="even">
+<td><strong>Check Organization Repo</strong></td>
+<td><code>gh repo list &lt;ORG&gt;</code></td>
+<td>Show a list of repositories under a specific organization you belong to</td>
+</tr>
+<tr class="odd">
+<td><strong>Create Repo</strong></td>
+<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin</code></td>
+<td>Create a public repo under your GitHub space</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;</code></td>
+<td>Create a public repo under the specified organization</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>gh repo create &lt;REPONAME&gt; --private --source=. --remote=origin</code></td>
+<td>Create a private repo under your GitHub space</td>
+</tr>
+<tr class="even">
+<td><strong>Delete Repo</strong></td>
+<td><code>gh repo delete &lt;ONWER&gt;/&lt;REPONAME&gt;</code></td>
+<td>Delete the target repository from GitHub, while your local repo remains intact</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="gist" class="level3">
+<h3 class="anchored" data-anchor-id="gist">Gist</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Even if a Gist is set to <code>Private</code>, it <strong>can still be accessed by anyone with the link</strong>. Do <strong>not</strong> store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.</p>
+</div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Create Secret Gist from File</strong></td>
+<td><code>gh gist create &lt;filename&gt; -d "&lt;gist title&gt;"</code></td>
+<td>Create a secret gist with the given file and description</td>
+</tr>
+<tr class="even">
+<td><strong>Create Gist from standard output</strong></td>
+<td><code>cat cool.txt | gh gist create -d "&lt;gist title&gt;"</code></td>
+<td>Create a gist directly from command output or piped content</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>cheatsheet</category>
+  <guid>https://ohgoshgit.github.io/posts/2025-08-06-git-command-cheatsheet/</guid>
+  <pubDate>Wed, 06 Aug 2025 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>OGG… How Can I restore a file from specific commit?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
   <link>https://ohgoshgit.github.io/posts/2025-08-05-restore-file-from-specific-commit/</link>

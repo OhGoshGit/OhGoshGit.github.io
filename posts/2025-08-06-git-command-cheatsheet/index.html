@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2025-08-06">
 
-<title>Git is hard, but we need to handle it – OhGoshGit!?!</title>
+<title>OGG git cheatsheet – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,30 +28,28 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-675c5eab8e17f4115e5ac5a6e806b6d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-675c5eab8e17f4115e5ac5a6e806b6d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -77,35 +77,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -126,38 +97,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+<link rel="stylesheet" href="../../styles.css">
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -328,7 +270,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -343,17 +285,17 @@ window.Quarto = {
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="././language/jp/"> 
+    <a class="nav-link" href="../.././language/jp/"> 
 <span class="menu-text">日本語</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="././"> 
+    <a class="nav-link" href="../.././"> 
 <span class="menu-text">English</span></a>
   </li>  
   <li class="nav-item compact">
@@ -362,7 +304,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -378,16 +320,36 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Git is hard, but we need to handle it</h1>
-            <p class="subtitle lead">Here are some bad situations I’ve gotten myself into, and how I eventually got myself out of them in plain english.</p>
-                      </div>
+      <h1 class="title">OGG git cheatsheet</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">cheatsheet</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta column-page-left">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2025-08-06</p>
+      </div>
+    </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2026-05-10</p>
+      </div>
+    </div>
       
     </div>
     
@@ -396,8 +358,27 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(19)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Y2hlYXRzaGVldA==">cheatsheet <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Z2l0JTIwY2hlY2tvdXQ=">git checkout <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVtb3Rl">git remote <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#git-command" id="toc-git-command" class="nav-link active" data-scroll-target="#git-command">Git command</a>
+  <ul class="collapse">
+  <li><a href="#basic-commands" id="toc-basic-commands" class="nav-link" data-scroll-target="#basic-commands">Basic Commands</a></li>
+  <li><a href="#commands-for-branch" id="toc-commands-for-branch" class="nav-link" data-scroll-target="#commands-for-branch">commands for branch</a></li>
+  <li><a href="#commands-for-commits" id="toc-commands-for-commits" class="nav-link" data-scroll-target="#commands-for-commits">commands for commits</a></li>
+  <li><a href="#diff-check" id="toc-diff-check" class="nav-link" data-scroll-target="#diff-check">diff check</a></li>
+  <li><a href="#custom-git-commands" id="toc-custom-git-commands" class="nav-link" data-scroll-target="#custom-git-commands">Custom Git Commands</a></li>
+  </ul></li>
+  <li><a href="#config-command" id="toc-config-command" class="nav-link" data-scroll-target="#config-command">Config command</a></li>
+  <li><a href="#github-cli-command" id="toc-github-cli-command" class="nav-link" data-scroll-target="#github-cli-command">GitHub CLI command</a>
+  <ul class="collapse">
+  <li><a href="#general" id="toc-general" class="nav-link" data-scroll-target="#general">general</a></li>
+  <li><a href="#gist" id="toc-gist" class="nav-link" data-scroll-target="#gist">Gist</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -406,282 +387,322 @@ window.Quarto = {
 
 
 
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
+<section id="git-command" class="level2">
+<h2 class="anchored" data-anchor-id="git-command">Git command</h2>
+<section id="basic-commands" class="level3">
+<h3 class="anchored" data-anchor-id="basic-commands">Basic Commands</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-Date
-</th>
-
-<th>
-Title
-</th>
-
-<th>
-Reading Time
-</th>
-
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1757808000000" data-listing-file-modified-sort="1778340943007" data-listing-date-modified-sort="1757980800000" data-listing-reading-time-sort="4" data-listing-word-count-sort="770" data-listing-title-sort="OGG... What kind of Git branch naming convention is commonly used??" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-09-14</span>
-</td>
-<td>
-<a href="./posts/2025-09-14-git-branch-naming/index.html" class="title listing-title">OGG… What kind of Git branch naming convention is commonly used??</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
+<tbody>
+<tr class="odd">
+<td><strong>Check Git Version</strong></td>
+<td><code>git --version</code></td>
+<td>E.g. <code>git version 2.43.0</code></td>
 </tr>
-
-<tr data-index="1" data-categories="Y2hlYXRzaGVldA==" data-listing-date-sort="1754438400000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778371200000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1609" data-listing-title-sort="OGG git cheatsheet" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-06</span>
-</td>
-<td>
-<a href="./posts/2025-08-06-git-command-cheatsheet/index.html" class="title listing-title">OGG git cheatsheet</a>
-</td>
-<td>
-<span class="listing-reading-time">9 min</span>
-</td>
-
+<tr class="even">
+<td><strong>Clone withou files</strong></td>
+<td><code>git clone --no-checkout &lt;repository-url&gt;</code></td>
+<td>clones the repository without checking out the files</td>
 </tr>
-
-<tr data-index="2" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1754352000000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="298" data-listing-title-sort="OGG... How Can I restore a file from specific commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-05</span>
-</td>
-<td>
-<a href="./posts/2025-08-05-restore-file-from-specific-commit/index.html" class="title listing-title">OGG… How Can I restore a file from specific commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tr class="odd">
+<td><strong>Add all update</strong></td>
+<td><code>git add -u</code></td>
+<td>Stage modified and deleted files (but not new untracked files)</td>
 </tr>
-
-<tr data-index="3" data-categories="Z2l0JTIwY2hlY2tvdXQ=" data-listing-date-sort="1754265600000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="6" data-listing-word-count-sort="1108" data-listing-title-sort="OGG... How do you git sparse-checkout a specific directory?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-04</span>
-</td>
-<td>
-<a href="./posts/2025-08-04-git-sparse-checkout/index.html" class="title listing-title">OGG… How do you git sparse-checkout a specific directory?</a>
-</td>
-<td>
-<span class="listing-reading-time">6 min</span>
-</td>
-
+<tr class="even">
+<td><strong>Status</strong></td>
+<td><code>git status -sb</code></td>
+<td>Short and branch-aware status (great for quick checks)</td>
 </tr>
-
-<tr data-index="4" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="544" data-listing-title-sort="OGG... What's difference between git reset --hard vs --mixed vs --soft?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-14</span>
-</td>
-<td>
-<a href="./posts/2025-06-14-git-reset-hard-mixed-soft/index.html" class="title listing-title">OGG… What’s difference between git reset –hard vs –mixed vs –soft?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
+<tr class="odd">
+<td><strong>Rename</strong></td>
+<td><code>git mv &lt;oldfilename&gt; &lt;newfilename&gt;</code></td>
+<td>Rename or move a file and stage the change for commit</td>
 </tr>
-
-<tr data-index="5" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="264" data-listing-title-sort="OGG... How to unstage files in Git?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-13</span>
-</td>
-<td>
-<a href="./posts/2025-06-13-how-to-unstage-files/index.html" class="title listing-title">OGG… How to unstage files in Git?</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tr class="even">
+<td><strong>Remove</strong></td>
+<td><code>git rm --cached &lt;FILE_NAME&gt;</code></td>
+<td>Stop tracking a file in Git without deleting it from local</td>
 </tr>
-
-<tr data-index="6" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="694" data-listing-title-sort="OGG... How do I consolidate multiple temporary commits into a single meaningful one?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-06</span>
-</td>
-<td>
-<a href="./posts/2025-06-06-organize-commits-using-git-rebase/index.html" class="title listing-title">OGG… How do I consolidate multiple temporary commits into a single meaningful one?</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
+<tr class="odd">
+<td><strong>Log</strong></td>
+<td><code>git log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'</code></td>
+<td>Display commit log with ISO date, short commit ID, author, and commit message</td>
 </tr>
-
-<tr data-index="7" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="758" data-listing-title-sort="OGG... How do I manage config and secret information in Git?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-05</span>
-</td>
-<td>
-<a href="./posts/2025-06-05-how-to-manage-secrets/index.html" class="title listing-title">OGG… How do I manage config and secret information in Git?</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="8" data-categories="c3No" data-listing-date-sort="1747958400000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="1" data-listing-word-count-sort="187" data-listing-title-sort="OGG... How do I switch the connection method for git push from HTTPS to SSH??" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-05-23</span>
-</td>
-<td>
-<a href="./posts/2025-05-23-switch-https-ssh/index.html" class="title listing-title">OGG… How do I switch the connection method for git push from HTTPS to SSH??</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="9" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I set up ssh connection to GitHub repository?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-17</span>
-</td>
-<td>
-<a href="./posts/2024-12-17-access-to-github-via-ssh/index.html" class="title listing-title">OGG… How can I set up ssh connection to GitHub repository?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="10" data-categories="Z2l0JTIwcmVtb3Rl" data-listing-date-sort="1733270400000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="3" data-listing-word-count-sort="484" data-listing-title-sort="OGG... How can I modify the GitHub repository name?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-04</span>
-</td>
-<td>
-<a href="./posts/2024-12-04-chnage-remote-uri/index.html" class="title listing-title">OGG… How can I modify the GitHub repository name?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="11" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="4" data-listing-word-count-sort="666" data-listing-title-sort="最新コミットとunstaged差分の確認方法" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-06</span>
-</td>
-<td>
-<a href="./posts/2024-11-06-check-diff-with-git-difftool/index.html" class="title listing-title">最新コミットとunstaged差分の確認方法</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="12" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-05</span>
-</td>
-<td>
-<a href="./posts/2024-11-05-when-do-i-use-git-rebase/index.html" class="title listing-title">OGG… Should I use git rebase?</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-
-</tr>
-
-<tr data-index="13" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="3" data-listing-word-count-sort="459" data-listing-title-sort="OGG... How can I push my repository to githab and gitlab remote at once?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="./posts/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">OGG… How can I push my repository to githab and gitlab remote at once?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="14" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="3" data-listing-word-count-sort="524" data-listing-title-sort="OGG... I just want to push a local git branch to a remote with a different name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="./posts/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">OGG… I just want to push a local git branch to a remote with a different name…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="15" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="OGG... I just want to save the current repository into another remote..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="./posts/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">OGG… I just want to save the current repository into another remote…</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="16" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="5" data-listing-word-count-sort="865" data-listing-title-sort="OGG... I cannot push to remote branch and cannot pull the remote changes..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="./posts/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">OGG… I cannot push to remote branch and cannot pull the remote changes…</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-
-</tr>
-
-<tr data-index="17" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1778340943000" data-listing-reading-time-sort="1" data-listing-word-count-sort="143" data-listing-title-sort="OGG... I accidentally named the branch the wrong name..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="./posts/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">OGG… I accidentally named the branch the wrong name…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="18" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1778340943006" data-listing-date-modified-sort="1720742400000" data-listing-reading-time-sort="2" data-listing-word-count-sort="389" data-listing-title-sort="OGG... I accidentally committed something to main that should have been on a brand new branch!" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="./posts/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">OGG… I accidentally committed something to main that should have been on a brand new branch!</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div>
+</section>
+<section id="commands-for-branch" class="level3">
+<h3 class="anchored" data-anchor-id="commands-for-branch">commands for branch</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Create Branch</strong></td>
+<td><code>git switch -c &lt;branch-name&gt;</code></td>
+<td>Create and checkout a new branch locally</td>
+</tr>
+<tr class="even">
+<td><strong>Checkout previous branch</strong></td>
+<td><code>git switch -</code></td>
+<td>Switch back to the previously checked-out branch.</td>
+</tr>
+<tr class="odd">
+<td><strong>Pull from all remotes</strong></td>
+<td><code>git pull --all</code></td>
+<td>Update all of your local tracking branches which track remote branches.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="commands-for-commits" class="level3">
+<h3 class="anchored" data-anchor-id="commands-for-commits">commands for commits</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Amend commit</strong></td>
+<td><code>git commit --amend</code></td>
+<td>Modify the most recent commit (message, content, or both) with editor starting up</td>
+</tr>
+<tr class="even">
+<td><strong>Commit all changes with message</strong></td>
+<td><code>git commit -am "&lt;commit message&gt;"</code></td>
+<td>Stage all tracked changes and commit with a message in one step</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="diff-check" class="level3">
+<h3 class="anchored" data-anchor-id="diff-check">diff check</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>check staged diff</strong></td>
+<td><code>git diff --cached &lt;branch&gt;</code></td>
+<td>Compare staged changes in the index against the specified branch</td>
+</tr>
+<tr class="even">
+<td><strong>check diff between branches</strong></td>
+<td><code>git diff &lt;base-branch&gt;..&lt;target-branch&gt;</code></td>
+<td>Compare changes between two branches</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="custom-git-commands" class="level3">
+<h3 class="anchored" data-anchor-id="custom-git-commands">Custom Git Commands</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-issue2pr.sh"><strong>Convert a specific issue to PR</strong></a></td>
+<td><code>git issue2pr</code></td>
+<td>Create a Pull Request from the current branch and link it to a specific GitHub Issue.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="config-command" class="level2">
+<h2 class="anchored" data-anchor-id="config-command">Config command</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Default branch name</strong></td>
+<td><code>git config --global init.defaultBranch &lt;default branch name&gt;</code></td>
+<td>Set default branch when initializing new repos</td>
+</tr>
+<tr class="even">
+<td><strong>Enable color output</strong></td>
+<td><code>git config --global color.ui auto</code></td>
+<td>Automatically color Git output in the terminal.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="github-cli-command" class="level2">
+<h2 class="anchored" data-anchor-id="github-cli-command">GitHub CLI command</h2>
+<section id="general" class="level3">
+<h3 class="anchored" data-anchor-id="general">general</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Check Organization</strong></td>
+<td><code>gh org list</code></td>
+<td>Show a list of organizations you belong to</td>
+</tr>
+<tr class="even">
+<td><strong>Check Organization Repo</strong></td>
+<td><code>gh repo list &lt;ORG&gt;</code></td>
+<td>Show a list of repositories under a specific organization you belong to</td>
+</tr>
+<tr class="odd">
+<td><strong>Create Repo</strong></td>
+<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin</code></td>
+<td>Create a public repo under your GitHub space</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;</code></td>
+<td>Create a public repo under the specified organization</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>gh repo create &lt;REPONAME&gt; --private --source=. --remote=origin</code></td>
+<td>Create a private repo under your GitHub space</td>
+</tr>
+<tr class="even">
+<td><strong>Delete Repo</strong></td>
+<td><code>gh repo delete &lt;ONWER&gt;/&lt;REPONAME&gt;</code></td>
+<td>Delete the target repository from GitHub, while your local repo remains intact</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="gist" class="level3">
+<h3 class="anchored" data-anchor-id="gist">Gist</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Even if a Gist is set to <code>Private</code>, it <strong>can still be accessed by anyone with the link</strong>. Do <strong>not</strong> store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.</p>
+</div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Create Secret Gist from File</strong></td>
+<td><code>gh gist create &lt;filename&gt; -d "&lt;gist title&gt;"</code></td>
+<td>Create a secret gist with the given file and description</td>
+</tr>
+<tr class="even">
+<td><strong>Create Gist from standard output</strong></td>
+<td><code>cat cool.txt | gh gist create -d "&lt;gist title&gt;"</code></td>
+<td>Create a gist directly from command output or piped content</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
 <script>
     document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
         let modName = title.innerHTML;
@@ -1104,6 +1125,8 @@ Reading Time
     }
   });
   </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1116,12 +1139,12 @@ Reading Time
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="./LICENSE">
+    <a class="nav-link" href="../../LICENSE">
 <p>License</p>
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
