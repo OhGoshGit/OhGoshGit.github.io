@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2026-05-10">
 
-<title>Gitってむずかしいわぁ．．．でもヘコタレへん – OhGoshGit!?!</title>
+<title>OGG… What principles guide an effective code review? – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -34,8 +36,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -77,35 +77,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -126,38 +97,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -378,16 +320,37 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Gitってむずかしいわぁ．．．でもヘコタレへん</h1>
-            <p class="subtitle lead">日常の分析/開発場面で直面したトラブルとその解決方法を平易な日本語で紹介します</p>
-                      </div>
+      <h1 class="title">OGG… What principles guide an effective code review?</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">code review</div>
+                <div class="quarto-category">principle</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta column-page-left">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026-05-10</p>
+      </div>
+    </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2026-05-10</p>
+      </div>
+    </div>
       
     </div>
     
@@ -396,8 +359,22 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(16)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Z2l0JTIwY2hlY2tvdXQ=">git checkout <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">🔎 Objective</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#guideline" id="toc-guideline" class="nav-link" data-scroll-target="#guideline">📘 Guideline</a>
+  <ul class="collapse">
+  <li><a href="#i.-the-essence-of-code-review" id="toc-i.-the-essence-of-code-review" class="nav-link" data-scroll-target="#i.-the-essence-of-code-review">I. The Essence of Code Review</a></li>
+  <li><a href="#ii.-checkpoints" id="toc-ii.-checkpoints" class="nav-link" data-scroll-target="#ii.-checkpoints">II. Checkpoints</a></li>
+  <li><a href="#iii.-the-discipline-of-the-reviewer" id="toc-iii.-the-discipline-of-the-reviewer" class="nav-link" data-scroll-target="#iii.-the-discipline-of-the-reviewer">III. The Discipline of the Reviewer</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -406,243 +383,94 @@ window.Quarto = {
 
 
 
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>Establish a shared understanding of what code review is <em>for</em>, so that reviews advance the codebase instead of becoming bottlenecks or rituals.</li>
+<li>In data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team.</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Clarify the <strong>essence</strong> of code review as discernment, not gatekeeping.</label></li>
+<li><label><input type="checkbox">Define concrete <strong>checkpoints</strong> that the reviewer can run through on every diff.</label></li>
+<li><label><input type="checkbox">Codify the <strong>discipline</strong> that distinguishes a productive reviewer from a merely polite one.</label></li>
+</ul>
+</section>
+<section id="guideline" class="level2">
+<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The 18 principles below are organized into three parts: what code review is for (essence), what to check (checkpoints), and how to behave as a reviewer (discipline). <span class="regmonkey_bold">Skipping any one of the three weakens the other two</span> — checkpoints without discipline become nitpicking, and discipline without checkpoints becomes hand-waving.</p>
+</div>
+</div>
+<section id="i.-the-essence-of-code-review" class="level3">
+<h3 class="anchored" data-anchor-id="i.-the-essence-of-code-review">I. The Essence of Code Review</h3>
+<ol type="1">
+<li><p><strong>Discernment, not gatekeeping.</strong> The purpose of code review is to verify that new contributions advance the shared codebase without introducing defects, drift, or unnecessary complexity, while preserving its conventions and intent.</p></li>
+<li><p><strong>Validity of the analysis.</strong> In data science, code review additionally protects the validity of the analysis itself: accurate inference, consistent design, reusability of analytical pipelines, maintainability over months of iteration, and the transfer of tacit knowledge across the team.</p></li>
+<li><p><strong>Code must earn its existence.</strong> Discernment means asking whether each line earns its place. Anything that does not serve the author’s stated purpose, the reader’s understanding, or the system’s correctness should be questioned — not accepted out of politeness.</p></li>
+<li><p><strong>The last cheap moment.</strong> A review is the last cheap moment to change direction. Once merged, every line becomes precedent that future code will imitate.</p></li>
+</ol>
+</section>
+<section id="ii.-checkpoints" class="level3">
+<h3 class="anchored" data-anchor-id="ii.-checkpoints">II. Checkpoints</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run through these in order. The earlier ones (Purpose, Correctness, Completeness) gate the later ones — there is no point arguing about abstractions if the intent itself is unclear.</p>
+</div>
+</div>
+<ol start="5" type="1">
+<li><p><strong>Purpose.</strong> Does this code accomplish what the author intended? If the intent is unclear, that itself is a finding — ask for the intent to be made explicit before judging the implementation.</p></li>
+<li><p><strong>Correctness.</strong> Are there obvious logic errors? <span class="regmonkey_bold">Read the code as the machine will execute it, not as the author meant it to read</span>.</p></li>
+<li><p><strong>Completeness.</strong> Against the stated requirements, are all cases implemented? Watch for silently dropped branches, unhandled inputs, and TODO debt left behind.</p></li>
+<li><p><strong>Conformance.</strong> Does the code follow the existing style and conventions of the surrounding codebase? A new style introduced in one file becomes drift in the next.</p></li>
+<li><p><strong>Improvability.</strong> Could this be shorter, faster, or clearer without harming intent? Resist gold-plating; only suggest changes that pay for themselves.</p></li>
+<li><p><strong>Approach.</strong> Is this the best way to achieve the desired result, or merely the first that worked? Sometimes a smaller change to a different file removes the need for the diff entirely.</p></li>
+<li><p><strong>Edge cases.</strong> Does the code handle empty inputs, nulls, boundary values, concurrent access, partial failures, and the conditions the author may not have considered?</p></li>
+<li><p><strong>Abstractions.</strong> Do you see useful abstractions emerging from repetition — or premature abstractions hiding simple code? <span class="regmonkey_bold">Three similar lines is better than the wrong abstraction</span>.</p></li>
+<li><p><strong>Tests.</strong> Are the unit tests appropriate? Tests should exercise the contract, not the implementation, and should fail loudly when the contract changes.</p></li>
+<li><p><strong>Documentation.</strong> Are comments and docs present where intent is non-obvious — and absent where the code already speaks for itself? A comment that restates the code is noise; a comment that captures a hidden constraint is gold.</p></li>
+</ol>
+</section>
+<section id="iii.-the-discipline-of-the-reviewer" class="level3">
+<h3 class="anchored" data-anchor-id="iii.-the-discipline-of-the-reviewer">III. The Discipline of the Reviewer</h3>
+<ol start="15" type="1">
+<li><p><strong>Name the good as well as the bad.</strong> Calling out a strong choice teaches the team what “good” looks like and reinforces it; silence after merge teaches nothing.</p></li>
+<li><p><strong>Critique the code, not the author.</strong> The diff is the subject; the person is a collaborator.</p></li>
+<li><p><strong>Prefer questions over verdicts when intent is uncertain.</strong> “Why this approach?” surfaces more bugs than “this is wrong.”</p></li>
+<li><p><strong>A review without a recommended action is incomplete.</strong> Approve, request changes, or escalate — never leave the author to interpret silence.</p></li>
+</ol>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://google.github.io/eng-practices/review/">Google Engineering Practices &gt; Code Review Developer Guide</a></li>
+<li><a href="https://conventionalcomments.org/">Conventional Comments</a></li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-
-<th>
-Date
-</th>
-
-<th>
-Title
-</th>
-
-<th>
-Reading Time
-</th>
-
-</tr>
-</thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1757808000000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1757980800000" data-listing-reading-time-sort="3" data-listing-word-count-sort="486" data-listing-title-sort="OGG... よく使われるGitブランチの命名規則とは？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-09-14</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-09-14-git-branch-naming/index.html" class="title listing-title">OGG… よく使われるGitブランチの命名規則とは？</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="1" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1754352000000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="203" data-listing-title-sort="あぁぁ... 特定のコミットからファイルを復元するにはどうすればいいんだ？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-08-05-restore-file-from-specific-commit/index.html" class="title listing-title">あぁぁ… 特定のコミットからファイルを復元するにはどうすればいいんだ？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="2" data-categories="Z2l0JTIwY2hlY2tvdXQ=" data-listing-date-sort="1754265600000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="372" data-listing-title-sort="あぁぁ... 特定のディレクトリに対してgit sparse-checkoutを実行したい" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-04</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-08-04-git-sparse-checkout/index.html" class="title listing-title">あぁぁ… 特定のディレクトリに対してgit sparse-checkoutを実行したい</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="3" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="380" data-listing-title-sort="あぁぁ... git reset --hard と --mixed と --soft の違いは何？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-14</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html" class="title listing-title">あぁぁ… git reset –hard と –mixed と –soft の違いは何？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="4" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="60" data-listing-title-sort="あぁぁ... とあるファイルについてgit addを取り消したい．．．" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-13</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html" class="title listing-title">あぁぁ… とあるファイルについてgit addを取り消したい．．．</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="5" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="383" data-listing-title-sort="あぁぁ... 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-06</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html" class="title listing-title">あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="6" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618" data-listing-title-sort="あぁぁ... Gitで設定ファイルや秘密情報をどう管理すればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-05-how-to-manage-secrets/index.html" class="title listing-title">あぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="7" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="123" data-listing-title-sort="あぁぁ... GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-17</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html" class="title listing-title">あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="8" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1778342231000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-06</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html" class="title listing-title">OGG… How do I check unstaged differences with the latest commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="9" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1778342231000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/index.html" class="title listing-title">OGG… Should I use git rebase?</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-
-</tr>
-
-<tr data-index="10" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="あぁぁ... GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="11" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="あぁぁ... ローカルのGitブランチを異なる名前でリモートにプッシュしたい..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">あぁぁ… ローカルのGitブランチを異なる名前でリモートにプッシュしたい…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="12" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1749859200000" data-listing-reading-time-sort="1" data-listing-word-count-sort="58" data-listing-title-sort="あぁぁ... 現在のリポジトリを別のリモートに保存したい..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">あぁぁ… 現在のリポジトリを別のリモートに保存したい…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="13" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1778342231000" data-listing-reading-time-sort="3" data-listing-word-count-sort="552" data-listing-title-sort="あぁぁ... リモートブランチにpushも，リモート変更も，pullもできない..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">あぁぁ… リモートブランチにpushも，リモート変更も，pullもできない…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="14" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1778342231000" data-listing-reading-time-sort="1" data-listing-word-count-sort="78" data-listing-title-sort="あぁぁ... 間違ったbranch nameつけてしもうた..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">あぁぁ… 間違ったbranch nameつけてしもうた…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="15" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1778342231186" data-listing-date-modified-sort="1778342231000" data-listing-reading-time-sort="2" data-listing-word-count-sort="229" data-listing-title-sort="あぁぁ... 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-</tbody>
-</table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script>
     document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
         let modName = title.innerHTML;
@@ -1065,6 +893,8 @@ Reading Time
     }
   });
   </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1082,7 +912,7 @@ Reading Time
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

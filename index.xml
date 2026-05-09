@@ -10,7 +10,111 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Sun, 14 Sep 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 10 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What principles guide an effective code review?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-05-10-code-reviewer-principle/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>Establish a shared understanding of what code review is <em>for</em>, so that reviews advance the codebase instead of becoming bottlenecks or rituals.</li>
+<li>In data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team.</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Clarify the <strong>essence</strong> of code review as discernment, not gatekeeping.</label></li>
+<li><label><input type="checkbox">Define concrete <strong>checkpoints</strong> that the reviewer can run through on every diff.</label></li>
+<li><label><input type="checkbox">Codify the <strong>discipline</strong> that distinguishes a productive reviewer from a merely polite one.</label></li>
+</ul>
+</section>
+<section id="guideline" class="level2">
+<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The 18 principles below are organized into three parts: what code review is for (essence), what to check (checkpoints), and how to behave as a reviewer (discipline). <span class="regmonkey_bold">Skipping any one of the three weakens the other two</span> — checkpoints without discipline become nitpicking, and discipline without checkpoints becomes hand-waving.</p>
+</div>
+</div>
+<section id="i.-the-essence-of-code-review" class="level3">
+<h3 class="anchored" data-anchor-id="i.-the-essence-of-code-review">I. The Essence of Code Review</h3>
+<ol type="1">
+<li><p><strong>Discernment, not gatekeeping.</strong> The purpose of code review is to verify that new contributions advance the shared codebase without introducing defects, drift, or unnecessary complexity, while preserving its conventions and intent.</p></li>
+<li><p><strong>Validity of the analysis.</strong> In data science, code review additionally protects the validity of the analysis itself: accurate inference, consistent design, reusability of analytical pipelines, maintainability over months of iteration, and the transfer of tacit knowledge across the team.</p></li>
+<li><p><strong>Code must earn its existence.</strong> Discernment means asking whether each line earns its place. Anything that does not serve the author’s stated purpose, the reader’s understanding, or the system’s correctness should be questioned — not accepted out of politeness.</p></li>
+<li><p><strong>The last cheap moment.</strong> A review is the last cheap moment to change direction. Once merged, every line becomes precedent that future code will imitate.</p></li>
+</ol>
+</section>
+<section id="ii.-checkpoints" class="level3">
+<h3 class="anchored" data-anchor-id="ii.-checkpoints">II. Checkpoints</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run through these in order. The earlier ones (Purpose, Correctness, Completeness) gate the later ones — there is no point arguing about abstractions if the intent itself is unclear.</p>
+</div>
+</div>
+<ol start="5" type="1">
+<li><p><strong>Purpose.</strong> Does this code accomplish what the author intended? If the intent is unclear, that itself is a finding — ask for the intent to be made explicit before judging the implementation.</p></li>
+<li><p><strong>Correctness.</strong> Are there obvious logic errors? <span class="regmonkey_bold">Read the code as the machine will execute it, not as the author meant it to read</span>.</p></li>
+<li><p><strong>Completeness.</strong> Against the stated requirements, are all cases implemented? Watch for silently dropped branches, unhandled inputs, and TODO debt left behind.</p></li>
+<li><p><strong>Conformance.</strong> Does the code follow the existing style and conventions of the surrounding codebase? A new style introduced in one file becomes drift in the next.</p></li>
+<li><p><strong>Improvability.</strong> Could this be shorter, faster, or clearer without harming intent? Resist gold-plating; only suggest changes that pay for themselves.</p></li>
+<li><p><strong>Approach.</strong> Is this the best way to achieve the desired result, or merely the first that worked? Sometimes a smaller change to a different file removes the need for the diff entirely.</p></li>
+<li><p><strong>Edge cases.</strong> Does the code handle empty inputs, nulls, boundary values, concurrent access, partial failures, and the conditions the author may not have considered?</p></li>
+<li><p><strong>Abstractions.</strong> Do you see useful abstractions emerging from repetition — or premature abstractions hiding simple code? <span class="regmonkey_bold">Three similar lines is better than the wrong abstraction</span>.</p></li>
+<li><p><strong>Tests.</strong> Are the unit tests appropriate? Tests should exercise the contract, not the implementation, and should fail loudly when the contract changes.</p></li>
+<li><p><strong>Documentation.</strong> Are comments and docs present where intent is non-obvious — and absent where the code already speaks for itself? A comment that restates the code is noise; a comment that captures a hidden constraint is gold.</p></li>
+</ol>
+</section>
+<section id="iii.-the-discipline-of-the-reviewer" class="level3">
+<h3 class="anchored" data-anchor-id="iii.-the-discipline-of-the-reviewer">III. The Discipline of the Reviewer</h3>
+<ol start="15" type="1">
+<li><p><strong>Name the good as well as the bad.</strong> Calling out a strong choice teaches the team what “good” looks like and reinforces it; silence after merge teaches nothing.</p></li>
+<li><p><strong>Critique the code, not the author.</strong> The diff is the subject; the person is a collaborator.</p></li>
+<li><p><strong>Prefer questions over verdicts when intent is uncertain.</strong> “Why this approach?” surfaces more bugs than “this is wrong.”</p></li>
+<li><p><strong>A review without a recommended action is incomplete.</strong> Approve, request changes, or escalate — never leave the author to interpret silence.</p></li>
+</ol>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://google.github.io/eng-practices/review/">Google Engineering Practices &gt; Code Review Developer Guide</a></li>
+<li><a href="https://conventionalcomments.org/">Conventional Comments</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>code review</category>
+  <category>principle</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-05-10-code-reviewer-principle/</guid>
+  <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What kind of Git branch naming convention is commonly used??</title>
   <dc:creator>Ryo Nakagami</dc:creator>

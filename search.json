@@ -518,32 +518,32 @@
     "text": "Appendix: What git rebase operations are possible?\n\n\n\n\n\n\n\n\nCommand\nDescription\n\n\n\n\npick\nUse the commit as-is (no changes to message or content).\n\n\nreword\nKeep the commit content, but edit the commit message.\n\n\nedit\nPause and allow you to amend the commit (edit files, message, etc.).\n\n\nsquash\nCombine this commit with the previous one, and edit the message.\n\n\nfixup\nLike squash, but discard this commit’s message (use previous message).\n\n\ndrop\nCompletely remove this commit from history."
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "title": "OGG… How to unstage files in Git?",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "title": "OGG… How to unstage files in Git?",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Goal",
-    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 1: checkout a new branch and delete the old",
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Guideline",
-    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 2: rename the branch",
+    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
   },
   {
     "objectID": "posts/2024-12-04-chnage-remote-uri/index.html",
@@ -574,32 +574,67 @@
     "text": "References\n\nGitHub Docs &gt; Managing remote repositories"
   },
   {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "title": "OGG… I accidentally named the branch the wrong name…",
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "title": "OGG… How to unstage files in Git?",
     "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
   },
   {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "title": "OGG… I accidentally named the branch the wrong name…",
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "title": "OGG… How to unstage files in Git?",
     "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
   },
   {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 1: checkout a new branch and delete the old",
-    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Goal",
+    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
   },
   {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 2: rename the branch",
-    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Guideline",
+    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "",
+    "text": "Establish a shared understanding of what code review is for, so that reviews advance the codebase instead of becoming bottlenecks or rituals.\nIn data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#objective",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#objective",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "",
+    "text": "Establish a shared understanding of what code review is for, so that reviews advance the codebase instead of becoming bottlenecks or rituals.\nIn data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#goal",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#goal",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\nClarify the essence of code review as discernment, not gatekeeping.\nDefine concrete checkpoints that the reviewer can run through on every diff.\nCodify the discipline that distinguishes a productive reviewer from a merely polite one."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#guideline",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#guideline",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "📘 Guideline",
+    "text": "📘 Guideline\n\n\n\n\n\n\nNote\n\n\n\nThe 18 principles below are organized into three parts: what code review is for (essence), what to check (checkpoints), and how to behave as a reviewer (discipline). Skipping any one of the three weakens the other two — checkpoints without discipline become nitpicking, and discipline without checkpoints becomes hand-waving.\n\n\n\nI. The Essence of Code Review\n\nDiscernment, not gatekeeping. The purpose of code review is to verify that new contributions advance the shared codebase without introducing defects, drift, or unnecessary complexity, while preserving its conventions and intent.\nValidity of the analysis. In data science, code review additionally protects the validity of the analysis itself: accurate inference, consistent design, reusability of analytical pipelines, maintainability over months of iteration, and the transfer of tacit knowledge across the team.\nCode must earn its existence. Discernment means asking whether each line earns its place. Anything that does not serve the author’s stated purpose, the reader’s understanding, or the system’s correctness should be questioned — not accepted out of politeness.\nThe last cheap moment. A review is the last cheap moment to change direction. Once merged, every line becomes precedent that future code will imitate.\n\n\n\nII. Checkpoints\n\n\n\n\n\n\nTip\n\n\n\nRun through these in order. The earlier ones (Purpose, Correctness, Completeness) gate the later ones — there is no point arguing about abstractions if the intent itself is unclear.\n\n\n\nPurpose. Does this code accomplish what the author intended? If the intent is unclear, that itself is a finding — ask for the intent to be made explicit before judging the implementation.\nCorrectness. Are there obvious logic errors? Read the code as the machine will execute it, not as the author meant it to read.\nCompleteness. Against the stated requirements, are all cases implemented? Watch for silently dropped branches, unhandled inputs, and TODO debt left behind.\nConformance. Does the code follow the existing style and conventions of the surrounding codebase? A new style introduced in one file becomes drift in the next.\nImprovability. Could this be shorter, faster, or clearer without harming intent? Resist gold-plating; only suggest changes that pay for themselves.\nApproach. Is this the best way to achieve the desired result, or merely the first that worked? Sometimes a smaller change to a different file removes the need for the diff entirely.\nEdge cases. Does the code handle empty inputs, nulls, boundary values, concurrent access, partial failures, and the conditions the author may not have considered?\nAbstractions. Do you see useful abstractions emerging from repetition — or premature abstractions hiding simple code? Three similar lines is better than the wrong abstraction.\nTests. Are the unit tests appropriate? Tests should exercise the contract, not the implementation, and should fail loudly when the contract changes.\nDocumentation. Are comments and docs present where intent is non-obvious — and absent where the code already speaks for itself? A comment that restates the code is noise; a comment that captures a hidden constraint is gold.\n\n\n\nIII. The Discipline of the Reviewer\n\nName the good as well as the bad. Calling out a strong choice teaches the team what “good” looks like and reinforces it; silence after merge teaches nothing.\nCritique the code, not the author. The diff is the subject; the person is a collaborator.\nPrefer questions over verdicts when intent is uncertain. “Why this approach?” surfaces more bugs than “this is wrong.”\nA review without a recommended action is incomplete. Approve, request changes, or escalate — never leave the author to interpret silence."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#references",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#references",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "References",
+    "text": "References\n\nGoogle Engineering Practices &gt; Code Review Developer Guide\nConventional Comments"
   },
   {
     "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
@@ -872,7 +907,7 @@
     "href": "index.html",
     "title": "Git is hard, but we need to handle it",
     "section": "",
-    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2025-09-14\n\n\nOGG… What kind of Git branch naming convention is commonly used??\n\n\n4 min\n\n\n\n\n\n\n2025-08-06\n\n\nOGG git cheatsheet\n\n\n9 min\n\n\n\n\n\n\n2025-08-05\n\n\nOGG… How Can I restore a file from specific commit?\n\n\n2 min\n\n\n\n\n\n\n2025-08-04\n\n\nOGG… How do you git sparse-checkout a specific directory?\n\n\n6 min\n\n\n\n\n\n\n2025-06-14\n\n\nOGG… What’s difference between git reset –hard vs –mixed vs –soft?\n\n\n3 min\n\n\n\n\n\n\n2025-06-13\n\n\nOGG… How to unstage files in Git?\n\n\n2 min\n\n\n\n\n\n\n2025-06-06\n\n\nOGG… How do I consolidate multiple temporary commits into a single meaningful one?\n\n\n4 min\n\n\n\n\n\n\n2025-06-05\n\n\nOGG… How do I manage config and secret information in Git?\n\n\n4 min\n\n\n\n\n\n\n2025-05-23\n\n\nOGG… How do I switch the connection method for git push from HTTPS to SSH??\n\n\n1 min\n\n\n\n\n\n\n2024-12-17\n\n\nOGG… How can I set up ssh connection to GitHub repository?\n\n\n3 min\n\n\n\n\n\n\n2024-12-04\n\n\nOGG… How can I modify the GitHub repository name?\n\n\n3 min\n\n\n\n\n\n\n2024-11-06\n\n\n最新コミットとunstaged差分の確認方法\n\n\n4 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2026-05-10\n\n\nOGG… What principles guide an effective code review?\n\n\n4 min\n\n\n\n\n\n\n2025-09-14\n\n\nOGG… What kind of Git branch naming convention is commonly used??\n\n\n4 min\n\n\n\n\n\n\n2025-08-06\n\n\nOGG git cheatsheet\n\n\n9 min\n\n\n\n\n\n\n2025-08-05\n\n\nOGG… How Can I restore a file from specific commit?\n\n\n2 min\n\n\n\n\n\n\n2025-08-04\n\n\nOGG… How do you git sparse-checkout a specific directory?\n\n\n6 min\n\n\n\n\n\n\n2025-06-14\n\n\nOGG… What’s difference between git reset –hard vs –mixed vs –soft?\n\n\n3 min\n\n\n\n\n\n\n2025-06-13\n\n\nOGG… How to unstage files in Git?\n\n\n2 min\n\n\n\n\n\n\n2025-06-06\n\n\nOGG… How do I consolidate multiple temporary commits into a single meaningful one?\n\n\n4 min\n\n\n\n\n\n\n2025-06-05\n\n\nOGG… How do I manage config and secret information in Git?\n\n\n4 min\n\n\n\n\n\n\n2025-05-23\n\n\nOGG… How do I switch the connection method for git push from HTTPS to SSH??\n\n\n1 min\n\n\n\n\n\n\n2024-12-17\n\n\nOGG… How can I set up ssh connection to GitHub repository?\n\n\n3 min\n\n\n\n\n\n\n2024-12-04\n\n\nOGG… How can I modify the GitHub repository name?\n\n\n3 min\n\n\n\n\n\n\n2024-11-06\n\n\n最新コミットとunstaged差分の確認方法\n\n\n4 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html",
