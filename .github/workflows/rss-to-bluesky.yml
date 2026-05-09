@@ -1,0 +1,33 @@
+name: rss-to-bluesky
+on:
+  workflow_run:
+    workflows: ["Publish OhGoshGit"]
+    types:
+      - completed
+    branches:
+      - main
+  schedule:
+    # every 60 minutes at hh:00:00
+    - cron: "0 * * * *"
+  workflow_dispatch:
+jobs:
+  bluesky:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for gh-pages to serve the updated RSS
+        if: ${{ github.event_name == 'workflow_run' }}
+        run: sleep 60
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements-bsky.txt
+      - run: pip install -r scripts/requirements-bsky.txt
+      - env:
+          BSKY_HANDLE: ${{ secrets.BSKY_HANDLE }}
+          BSKY_APP_PASSWORD: ${{ secrets.BSKY_APP_PASSWORD }}
+          RSS_URL: "https://ohgoshgit.github.io/index.xml"
+          UPDATE_WITHIN_MINUTES: "1500"
+        run: python scripts/rss_to_bluesky.py
