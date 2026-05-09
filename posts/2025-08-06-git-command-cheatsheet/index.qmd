@@ -1,0 +1,123 @@
+---
+title: "OGG git cheatsheet"
+author: 
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2025-08-06"
+date-modified: "2026-05-10"
+categories: [cheatsheet]
+---
+
+## Git command
+
+### Basic Commands
+
+:::: {.no-border-top-table}
+
+| Category               | Command Example                | Description                                           |
+| ---------------------- | ------------------------------ | ----------------------------------------------------- |
+| **Check Git Version**  | `git --version`                |E.g. `git version 2.43.0` |
+| **Clone withou files** | `git clone --no-checkout <repository-url>`|clones the repository without checking out the files |
+| **Add all update**     | `git add -u`                   |Stage modified and deleted files (but not new untracked files)|
+| **Status**             | `git status -sb`               | Short and branch-aware status (great for quick checks)|
+| **Rename**             | `git mv <oldfilename> <newfilename>`|Rename or move a file and stage the change for commit|
+| **Remove**             | `git rm --cached <FILE_NAME>`  | Stop tracking a file in Git without deleting it from local|
+| **Log**                | `git log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'`|Display commit log with ISO date, short commit ID, author, and commit message|
+: {tbl-colwidths="[25,35,40]"}
+
+::::
+
+### commands for branch
+
+:::: {.no-border-top-table}
+
+| Category               | Command Example                | Description                                           |
+| ---------------------- | ------------------------------ | ----------------------------------------------------- |
+| **Create Branch**      | `git switch -c <branch-name>`  | Create and checkout a new branch locally              |
+| **Checkout previous branch**      | `git switch -`                               | Switch back to the previously checked-out branch. |
+| **Pull from all remotes**         | `git pull --all`    |  Update all of your local tracking branches which track remote branches. |
+: {tbl-colwidths="[25,35,40]"}
+
+::::
+
+### commands for commits
+
+:::: {.no-border-top-table}
+| Category           | Command Example                | Description                                           |
+| ------------------ | ------------------------------ | ----------------------------------------------------- |
+| **Amend commit**   | `git commit --amend`           | Modify the most recent commit (message, content, or both) with editor starting up|
+| **Commit all changes with message** | `git commit -am "<commit message>"` | Stage all tracked changes and commit with a message in one step |
+: {tbl-colwidths="[25,35,40]"}
+::::
+
+### diff check
+
+:::: {.no-border-top-table}
+
+| Category                           | Command Example                             | Description                                                     |
+| ---------------------------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| **check staged diff**              | `git diff --cached <branch>`                | Compare staged changes in the index against the specified branch |
+| **check diff between branches**    | `git diff <base-branch>..<target-branch>`   | Compare changes between two branches                            |
+: {tbl-colwidths="[25,35,40]"}
+
+::::
+
+
+
+### Custom Git Commands
+
+:::: {.no-border-top-table}
+| Category           | Command Example                | Description                                           |
+| ------------------ | ------------------------------ | ----------------------------------------------------- |
+| [**Convert a specific issue to PR**](https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-issue2pr.sh)| `git issue2pr`|Create a Pull Request from the current branch and link it to a specific GitHub Issue.|
+: {tbl-colwidths="[25,35,40]"}
+::::
+
+## Config command
+
+:::: {.no-border-top-table}
+| Category                    | Command Example                | Description                                           |
+| --------------------------- | ------------------------------ | ----------------------------------------------------- |
+| **Default branch name**     | `git config --global init.defaultBranch <default branch name>` | Set default branch when initializing new repos |
+| **Enable color output**     | `git config --global color.ui auto`     | Automatically color Git output in the terminal.    |
+: {tbl-colwidths="[25,35,40]"}
+::::
+
+
+## GitHub CLI command
+
+### general
+
+:::: {.no-border-top-table}
+| Category               | Command Example                | Description                                           |
+| ---------------------- | ------------------------------ | ----------------------------------------------------- |
+| **Check Organization** | `gh org list`                  |Show a list of organizations you belong to             |
+| **Check Organization Repo** | `gh repo list <ORG>`      |Show a list of repositories under a specific organization you belong to|
+| **Create Repo**        |`gh repo create <REPONAME> --public --source=. --remote=origin`| Create a public repo under your GitHub space |
+|                        |`gh repo create <REPONAME> --public --source=. --remote=origin --org <ORG_NAME>`| Create a public repo under the specified organization |
+|                        |`gh repo create <REPONAME> --private --source=. --remote=origin`| Create a private repo under your GitHub space |
+| **Delete Repo**        | `gh repo delete <ONWER>/<REPONAME>`| Delete the target repository from GitHub, while your local repo remains intact|
+
+: {tbl-colwidths="[25,35,40]"}
+::::
+
+
+
+
+### Gist
+
+::: {.callout-warning }
+## Warning
+
+Even if a Gist is set to `Private`, it **can still be accessed by anyone with the link**. Do **not** store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.
+
+:::
+
+
+:::: {.no-border-top-table}
+| Category                         | Command Example                | Description                                           |
+| -------------------------------- | ------------------------------ | ----------------------------------------------------- |
+| **Create Secret Gist from File** | `gh gist create <filename> -d "<gist title>"`|Create a secret gist with the given file and description |
+| **Create Gist from standard output** | `cat cool.txt | gh gist create -d "<gist title>"` | Create a gist directly from command output or piped content |
+: {tbl-colwidths="[25,35,40]"}
+::::
