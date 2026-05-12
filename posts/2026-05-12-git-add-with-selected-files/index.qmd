@@ -1,0 +1,138 @@
+---
+title: "OGG... How do I `git add` only files matching a pattern?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-05-12"
+date-modified: "2026-05-12"
+categories: [git add, regex]
+---
+
+
+::: {.callout-note}
+## TL;DR
+
+```bash
+git ls-files -mo --exclude-standard | grep -E 'test|bats' | xargs -i git add {}
+```
+
+This one-liner stages **only** files whose paths contain `test` or `bats`, among files that are either modified or untracked (but not ignored).
+
+:::
+
+
+
+## 🎯 Goal
+
+- [ ] Stage only the files whose paths match a given pattern (e.g. test-related files), without `git add .` sweeping everything
+
+## 🔍 Diving into the pipeline
+
+The command is three stages glued together with pipes:
+
+```bash
+git ls-files -mo --exclude-standard   # 1. list candidate files
+  | grep -E 'test|bats'               # 2. filter by path pattern
+  | xargs -i git add {}               # 3. stage each one
+```
+
+### 1. `git ls-files -mo --exclude-standard`
+
+`git ls-files` prints file paths that Git knows about (or could know about) in the current working tree.
+
+:::: {.no-border-top-table}
+
+| Option                | Meaning                                                                                                                |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `-m`                  | **Modified** — tracked files that differ from the index                                                                |
+| `-o`                  | **Others** — files in the working tree that are not tracked (i.e. untracked files)                                     |
+| `--exclude-standard`  | Apply the usual ignore rules: `.gitignore`, `.git/info/exclude`, and the user's global excludes file                  |
+: {tbl-colwidths="[25,75]"}
+
+::::
+
+So `-mo --exclude-standard` together means *"modified files **plus** untracked files, but skip anything that is ignored."* Deleted files are not included unless you also pass `-d`.
+
+::: {.callout-tip}
+## Why not just `git add -u` or `git add .`?
+- `git add -u` stages **modified and deleted** tracked files, but ignores **untracked** ones.
+- `git add .` stages everything under the current directory, including files you may not want.
+
+:::
+
+### 2. `grep -E 'test|bats'`
+
+Filter the list to lines matching the extended regex `test|bats` — i.e. any path that contains the substring `test` **or** `bats` anywhere.
+
+:::: {.no-border-top-table}
+
+| Option | Meaning                                                                                  |
+| ------ | ---------------------------------------------------------------------------------------- |
+| `-E`   | Use **Extended Regular Expressions** (so `|` works as alternation without backslashing) |
+: {tbl-colwidths="[25,75]"}
+
+::::
+
+Example matches:
+
+```
+tests/test_parser.py     ✅ contains "test"
+src/foo.bats             ✅ contains "bats"
+scripts/run-bats.sh      ✅ contains "bats"
+src/main.py              ❌ no match
+```
+
+::: {.callout-warning}
+## `grep` matches anywhere in the path
+The pattern `test` will also match `latest/`, `contest.md`, or `protest.txt`. Tighten the regex when in doubt — e.g. `'(^|/)tests?/'` to require a literal `tests/` or `test/` directory segment.
+:::
+
+### 3. `xargs -i git add {}`
+
+`xargs` builds and executes commands from stdin. Here it runs `git add <file>` once per line of input.
+
+| Option   | Meaning                                                                                                          |
+| -------- | ---------------------------------------------------------------------------------------------------------------- |
+| `-i`     | Replace `{}` in the command with each input line. **Deprecated** in GNU `xargs` — prefer `-I {}` (capital `I`). |
+| `{}`     | Placeholder for the current input line                                                                           |
+: {tbl-colwidths="[25,75]"}
+
+So for input lines `a.py`, `b.py`, `xargs` runs:
+
+```bash
+git add a.py
+git add b.py
+```
+
+::: {.callout-note}
+## Modern, safer form
+The portable, modern equivalent is:
+
+```bash
+git ls-files -mo --exclude-standard -z \
+  | grep -zE 'test|bats' \
+  | xargs -0 -I {} git add {}
+```
+
+- `-z` / `-0` use NUL-delimited records, so paths containing spaces, tabs, or newlines do not break the pipeline.
+- `-I {}` is the POSIX-standard replacement form (the lowercase `-i` works on GNU `xargs` but is non-standard).
+:::
+
+## ✅ Variations worth knowing
+
+[Stage only modified files matching a pattern (skip untracked)]{.mini-section}
+
+```bash
+git ls-files -m --exclude-standard | grep -E 'test|bats' | xargs -I {} git add {}
+```
+
+[Preview what will be staged before running `git add`]{.mini-section}
+
+```bash
+git ls-files -mo --exclude-standard | grep -E 'test|bats'
+```
+
+References
+----------
+- [`git ls-files` — Git Reference](https://git-scm.com/docs/git-ls-files)
+- [`xargs(1)` — GNU findutils](https://www.gnu.org/software/findutils/manual/html_node/find_html/xargs-options.html)
