@@ -364,305 +364,102 @@
     "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
   },
   {
-    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html",
-    "href": "posts/2025-08-06-git-command-cheatsheet/index.html",
-    "title": "OGG git cheatsheet",
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
+    "title": "OGG… I just want to save the current repository into another remote…",
     "section": "",
-    "text": "Category\nCommand Example\nDescription\n\n\n\n\nCheck Git Version\ngit --version\nE.g. git version 2.43.0\n\n\nClone withou files\ngit clone --no-checkout &lt;repository-url&gt;\nclones the repository without checking out the files\n\n\nAdd all update\ngit add -u\nStage modified and deleted files (but not new untracked files)\n\n\nStatus\ngit status -sb\nShort and branch-aware status (great for quick checks)\n\n\nRename\ngit mv &lt;oldfilename&gt; &lt;newfilename&gt;\nRename or move a file and stage the change for commit\n\n\nRemove\ngit rm --cached &lt;FILE_NAME&gt;\nStop tracking a file in Git without deleting it from local\n\n\nLog\ngit log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'\nDisplay commit log with ISO date, short commit ID, author, and commit message\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCreate Branch\ngit switch -c &lt;branch-name&gt;\nCreate and checkout a new branch locally\n\n\nCheckout previous branch\ngit switch -\nSwitch back to the previously checked-out branch.\n\n\nPull from all remotes\ngit pull --all\nUpdate all of your local tracking branches which track remote branches.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nAmend commit\ngit commit --amend\nModify the most recent commit (message, content, or both) with editor starting up\n\n\nCommit all changes with message\ngit commit -am \"&lt;commit message&gt;\"\nStage all tracked changes and commit with a message in one step\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\ncheck staged diff\ngit diff --cached &lt;branch&gt;\nCompare staged changes in the index against the specified branch\n\n\ncheck diff between branches\ngit diff &lt;base-branch&gt;..&lt;target-branch&gt;\nCompare changes between two branches\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nConvert a specific issue to PR\ngit issue2pr\nCreate a Pull Request from the current branch and link it to a specific GitHub Issue."
+    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
   },
   {
-    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html#git-command",
-    "href": "posts/2025-08-06-git-command-cheatsheet/index.html#git-command",
-    "title": "OGG git cheatsheet",
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
+    "title": "OGG… I just want to save the current repository into another remote…",
     "section": "",
-    "text": "Category\nCommand Example\nDescription\n\n\n\n\nCheck Git Version\ngit --version\nE.g. git version 2.43.0\n\n\nClone withou files\ngit clone --no-checkout &lt;repository-url&gt;\nclones the repository without checking out the files\n\n\nAdd all update\ngit add -u\nStage modified and deleted files (but not new untracked files)\n\n\nStatus\ngit status -sb\nShort and branch-aware status (great for quick checks)\n\n\nRename\ngit mv &lt;oldfilename&gt; &lt;newfilename&gt;\nRename or move a file and stage the change for commit\n\n\nRemove\ngit rm --cached &lt;FILE_NAME&gt;\nStop tracking a file in Git without deleting it from local\n\n\nLog\ngit log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'\nDisplay commit log with ISO date, short commit ID, author, and commit message\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCreate Branch\ngit switch -c &lt;branch-name&gt;\nCreate and checkout a new branch locally\n\n\nCheckout previous branch\ngit switch -\nSwitch back to the previously checked-out branch.\n\n\nPull from all remotes\ngit pull --all\nUpdate all of your local tracking branches which track remote branches.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nAmend commit\ngit commit --amend\nModify the most recent commit (message, content, or both) with editor starting up\n\n\nCommit all changes with message\ngit commit -am \"&lt;commit message&gt;\"\nStage all tracked changes and commit with a message in one step\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\ncheck staged diff\ngit diff --cached &lt;branch&gt;\nCompare staged changes in the index against the specified branch\n\n\ncheck diff between branches\ngit diff &lt;base-branch&gt;..&lt;target-branch&gt;\nCompare changes between two branches\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nConvert a specific issue to PR\ngit issue2pr\nCreate a Pull Request from the current branch and link it to a specific GitHub Issue."
+    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
   },
   {
-    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html#config-command",
-    "href": "posts/2025-08-06-git-command-cheatsheet/index.html#config-command",
-    "title": "OGG git cheatsheet",
-    "section": "Config command",
-    "text": "Config command\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nDefault branch name\ngit config --global init.defaultBranch &lt;default branch name&gt;\nSet default branch when initializing new repos\n\n\nEnable color output\ngit config --global color.ui auto\nAutomatically color Git output in the terminal."
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "Solution: git clone –bare",
+    "text": "Solution: git clone –bare\n ▶  Steps\n\nCreate a bare clone of the repository\nMirror-push to the new repository\nRemove the temporary old local repository\n\n ▶  Commands\n# Step 1\n% git clone --bare https://github.com/EXAMPLE-USER/LinearModels.git\n\n# Step 2\n% cd LinearModels.git\n% git push --mirror https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git\n\n# Step 3\n% cd ..\n% rm -rf LinearModels.git\n\n📘 REMARKS \n\nA non-bare git clone downloads both the snapshot and history to the local machine. However, a git clone --bare only copies the history, allowing for a quicker transfer to a new remote repository.\nAdditionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．\nThe mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.\n\n\n\nWhy not no-bare git clone and git push –mirror?\nWhen running git clone origin-url, you will get all of the tags copied, a local branch master (HEAD) tracking a remote branch origin/master, and remote branches origin/test1, origin/test2, and origin/test3.\nIf you do git push --mirror a non-bare cloned repository, it also pushes your remote branches, origin/test1, origin/test2, and origin/test3, because mirror implies everything. Then, you would get branches named origin/origin/test1."
   },
   {
-    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html#github-cli-command",
-    "href": "posts/2025-08-06-git-command-cheatsheet/index.html#github-cli-command",
-    "title": "OGG git cheatsheet",
-    "section": "GitHub CLI command",
-    "text": "GitHub CLI command\n\ngeneral\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCheck Organization\ngh org list\nShow a list of organizations you belong to\n\n\nCheck Organization Repo\ngh repo list &lt;ORG&gt;\nShow a list of repositories under a specific organization you belong to\n\n\nCreate Repo\ngh repo create &lt;REPONAME&gt; --public --source=. --remote=origin\nCreate a public repo under your GitHub space\n\n\n\ngh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;\nCreate a public repo under the specified organization\n\n\n\ngh repo create &lt;REPONAME&gt; --private --source=. --remote=origin\nCreate a private repo under your GitHub space\n\n\nDelete Repo\ngh repo delete &lt;ONWER&gt;/&lt;REPONAME&gt;\nDelete the target repository from GitHub, while your local repo remains intact\n\n\n\n\n\n\nGist\n\n\n\n\n\n\nWarningWarning\n\n\n\nEven if a Gist is set to Private, it can still be accessed by anyone with the link. Do not store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCreate Secret Gist from File\ngh gist create &lt;filename&gt; -d \"&lt;gist title&gt;\"\nCreate a secret gist with the given file and description\n\n\nCreate Gist from standard output\ncat cool.txt | gh gist create -d \"&lt;gist title&gt;\"\nCreate a gist directly from command output or piped content"
-  },
-  {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "",
-    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
-  },
-  {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#problem",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html#problem",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "",
-    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
-  },
-  {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#solution",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html#solution",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "Solution",
-    "text": "Solution\n\nCheck your current remote URL:\ngit remote -v\nIf the URL starts with https://, you are using HTTPS.\nFind your SSH URL:\nOn GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., git@github.com:username/repo.git).\nChange the remote URL to SSH:\ngit remote set-url origin git@github.com:username/repo.git\nVerify the change:\ngit remote -v\nThe URL should now start with git@.\n\n\nTips\n\nMake sure you have added your SSH key to your GitHub account. You can generate a key with ssh-keygen and add it using the GitHub SSH settings.\nTest your SSH connection with:\nssh -T git@github.com\nIf you use multiple remotes or repositories, repeat these steps for each one."
-  },
-  {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "",
-    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
-  },
-  {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "",
-    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
-  },
-  {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "Solution",
-    "text": "Solution\nSteps\n\nGenerate a new ssh key\nAdd the SSH Key to the SSH Agent\nRegister the public key to GitHub\ntest ssh connection\nupdate the ssh config file\n\nSetup\n\n\n1. Generate a new ssh key\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nOption -t specifies the type of key to generate. ed25519 is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.\nOption -C adds a comment to the key for identification purposes.\n-f specifies the filename and location for the generated key pair. This will generate two files\n\nkirby_github_key: The private key (keep this secure! do not share!).\nkirby_github_key.pub: The public key (you upload this to GitHub).\n\n\n\n2. Add the SSH Key to the SSH Agent\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nThe ssh-add command adds your private SSH key to the SSH authentication agent (ssh-agent) so it can be used for SSH connections without repeatedly asking for the key’s passphrase. If the key (kirby_github_key) isn’t added to ssh-agent, SSH won’t know to use it. You might encounter the error like this;\nPermission denied (publickey).\n\n\n3. Register the public key to GitHub\n\ncat ~/.ssh/kirby_github_key.pub\n\nAfter opening the file, copy the strings and register it at the Github at Settings &gt; SSH and GPG keys &gt; New SSH key\nThen, test your connection by\n\n\n4. test ssh connection\n\n$ ssh -T git@github.com\n\nif connection established successfully, the following message will pop up\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nUpdate the ssh config file\nRunning ssh-add munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your ~/.ssh/config file:\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
-  },
-  {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "Appendix: ❗ Trouble Connecting via SSH with a Private Key",
-    "text": "Appendix: ❗ Trouble Connecting via SSH with a Private Key\n\n\n\n\n\n\nNotesummary\n\n\n\n\nSSH is strict about private key security to protect against unauthorized access.\nAlways keep your private keys readable only by you.\nUse chmod 600 your_key_file to ensure proper permission settings.\n\n\n\nTrouble\nWhen trying to connect using a SSH command, You might encounter an error like:\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nAs a result, the SSH connection fails.\nRoot Cause\n\nThis error happens because the file permissions of the private key file are too loose.\nFor example, if the file permissions are set to 666 (readable and writable by everyone), SSH refuses to use the key for security reasons.\n\nSolution\nYou can fix the issue by restricting the file’s permissions so that only the owner can read/write the file:\n% chmod 600 &lt;your-private-key-path&gt;\nAfter changing the permissions, try running the same SSH command again."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "Solution",
-    "text": "Solution\nThere are two ways to resolve this:\n\nRename your local branch to follow the naming convention, then push it to the remote.\nPush your current branch to the remote using the correct branch name without renaming it locally."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "### Solution 1: rename your local branch name",
-    "text": "### Solution 1: rename your local branch name\nRenaming your local branch is explained on this post.\n ▶  Commands\n# Step 1: rename your local branch\ngit branch -m &lt;old-name&gt; &lt;new-name&gt;\n\n# Step 2: push to the remote\ngit push -u origin HEAD"
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "### Solution 2: Push a local git branch to a remote with a different name",
-    "text": "### Solution 2: Push a local git branch to a remote with a different name\ngit push origin local-branch-name:remote-branch-name tells Git to push the local branch local-branch-name to the remote repository origin and create/update the branch named remote-branch-name there.\nBut be aware the command carry some risks. If remote-branch-name already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.\nTo mitigate the above risk, it’s better to check the status of the remnote branch first with git fetch and git branch -a. DO NOT USE git push --force.\n ▶  Commands\n# Step 1: git fetch and check your remote\ngit fetch \n\n# Step 2: Make sure your new remote name will not cause a problem\ngit branch -a  \n\n# Step 3: Push your local branch with different remote name\ngit push origin local-branch-name:remote-branch-name\n\n\n\n\n\n\nTip🍵 Green Tea Break: why use git fetch not git pull?\n\n\n\n ▶  git fetch keeps your local work untouched\n\ngit fetch only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.\ngit pull combines git fetch and git merge, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.\n\nIf you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use git fetch because it helps avoid unexpected merges."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "Use-cases",
-    "text": "Use-cases\n ▶  Temporarily Sharing Work\nIf you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like temp/20241031-login-test.\n ▶  Avoid Naming Conflicts\nIf there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called feature/login on the remote, you might push you local feature/login branch as feature/login-update.\nIn this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run\ngit branch -vvv\nand if the result is not what you expect, you can run\ngit branch --set-upstream-to=origin/new-feature\nto set your upstream branch to the correct one."
-  },
-  {
-    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html",
-    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html",
-    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
-    "section": "",
-    "text": "Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.\nThis is especially useful before code review or merging into the main branch to ensure a clean and understandable history."
-  },
-  {
-    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
-    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
-    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
-    "section": "",
-    "text": "Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.\nThis is especially useful before code review or merging into the main branch to ensure a clean and understandable history."
-  },
-  {
-    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
-    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
-    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
-    "section": "Goal",
-    "text": "Goal\n\nConsolidate multiple recent commits into a single, well-described commit.\nRemove unnecessary intermediate commits (e.g., typo fixes, debug logs) by squashing them.\nMake commit history easier to understand for reviewers, increasing review efficiency and clarity."
-  },
-  {
-    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
-    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
-    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
-    "section": "Guideline",
-    "text": "Guideline\n\n\n\n\n\n\nNote\n\n\n\nPreferably, ensure the following conditions:\n\nCommits have not yet been pushed to the remote repository (e.g., GitHub).\nThe work is done on a local branch.\n\nOtherwise, you will likely need to use a force push (git push -f) after rebasing, which can overwrite history on the remote. Please proceed with caution because rewriting commit history on pushed commits can disrupt collaboration.\n\n\n\nSteps for consolidating commits\n\nCheck recent commits\ngit log --oneline\nStart interactive rebase\nTo squash the last 3 commits, run:\ngit rebase -i HEAD~3\n\n\n\n\n\n\n\nNoteSyntax\n\n\n\nThe syntax is\ngit rebase -i &lt;base-commit&gt;\n\nYou can only specify a single base commit to rebase onto\nYou cannot run a commad which is working as git rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;\n\n\n\n\nEdit the rebase instruction list\nAfter running the git rebase, the output would be\npick abc123 fix typo\npick def456 add new test case\npick ghi789 finalize logic\ncommit ids are sorted by top to bottom = older to newer. In the above example, the first line (abc123) is the oldest of the commits being rebased.\nIf you want to squash the latest two commits into the oldest one, modify it to:\npick abc123 fix typo\nsquash def456 add new test case\nsquash ghi789 finalize logic\nEdit the commit message\nA new editor screen will prompt you to combine the commit messages. Edit as needed, e.g.:\nFinalize logic with test case\n\n- Fixed typo\n- Added test case\n- Finalized core logic\nThen, save and exit. It would be recommended to verify the new commit history by\ngit log --oneline\n\n\n\n\n\n\n\nNoteTips\n\n\n\nIf something goes wrong during the rebase, you can cancel it:\ngit rebase --abort"
-  },
-  {
-    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-what-git-rebase-operations-are-possible",
-    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-what-git-rebase-operations-are-possible",
-    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
-    "section": "Appendix: What git rebase operations are possible?",
-    "text": "Appendix: What git rebase operations are possible?\n\n\n\n\n\n\n\n\nCommand\nDescription\n\n\n\n\npick\nUse the commit as-is (no changes to message or content).\n\n\nreword\nKeep the commit content, but edit the commit message.\n\n\nedit\nPause and allow you to amend the commit (edit files, message, etc.).\n\n\nsquash\nCombine this commit with the previous one, and edit the message.\n\n\nfixup\nLike squash, but discard this commit’s message (use previous message).\n\n\ndrop\nCompletely remove this commit from history."
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 1: checkout a new branch and delete the old",
-    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 2: rename the branch",
-    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html",
-    "href": "posts/2024-12-04-chnage-remote-uri/index.html",
-    "title": "OGG… How can I modify the GitHub repository name?",
-    "section": "",
-    "text": "Suppose you are working on a GitHub-hosted repository myproject. As your project evolves, you start wondering the original name is ambiguous or unclear to potential users or collaborators.\nSo, you’ve decided to rename myproject to assembled-kalmanfilter-coremodel.\n ▶  Current Status\n\ncurrent repository url: https://github.com/OhGoshGit/myproject.git\nremote name: origin\n\n% git remote -v\norigin  https://github.com/OhGoshGit/myproject.git (fetch)\norigin  https://github.com/OhGoshGit/myproject.git (push)\n ▶  ToBe\n% git remote -v\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (fetch)\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (push)"
-  },
-  {
-    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html#problem",
-    "href": "posts/2024-12-04-chnage-remote-uri/index.html#problem",
-    "title": "OGG… How can I modify the GitHub repository name?",
-    "section": "",
-    "text": "Suppose you are working on a GitHub-hosted repository myproject. As your project evolves, you start wondering the original name is ambiguous or unclear to potential users or collaborators.\nSo, you’ve decided to rename myproject to assembled-kalmanfilter-coremodel.\n ▶  Current Status\n\ncurrent repository url: https://github.com/OhGoshGit/myproject.git\nremote name: origin\n\n% git remote -v\norigin  https://github.com/OhGoshGit/myproject.git (fetch)\norigin  https://github.com/OhGoshGit/myproject.git (push)\n ▶  ToBe\n% git remote -v\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (fetch)\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (push)"
-  },
-  {
-    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html#solutions",
-    "href": "posts/2024-12-04-chnage-remote-uri/index.html#solutions",
-    "title": "OGG… How can I modify the GitHub repository name?",
-    "section": "Solutions",
-    "text": "Solutions\nWhen you rename a repository, all existing information, with the exception of project site URLs, is automatically redirected to the new name, including:\n\nIssues\nWikis\nStars\nFollowers\n\nHowever, it’s still a good idea to update any references.\n\nWarning ! \nIf you create a new repository under your account in the future, do not reuse the original name of the renamed repository. If you do, redirects to the renamed repository will no longer work.\n\n\n ▶  Steps\n\nLog in to GitHub and navigate to the Repository\n\nGo to GitHub and log in to your account.\nGo to the repository you want to rename.\n\nAccess Repository Settings:\n\nOn the repository’s main page, click the Settings tab\n\nEdit the Repository Name:\n\nIn the General section, you’ll see the Repository name field.\nEnter the new name for your repository in the text box.\n\nConfirm the Change:\n\nClick Rename\n\nUpdate Your Local Repository:\n\nchange an existing remote repository URL in your local repository by running git remote set-url command\n\n# When you use HTTPS\ngit remote set-url origin https://github.com/your-username/new-repository-name.git\n\n# When you use SSH\ngit remote set-url origin git@github.com:your-username/new-repository-name.git\nConfirmation\n\nTest pushing or pulling to ensure the updated remote URL works correctly:\n\ngit remote -v\ngit pull origin main\nnotify your collaborators\n\nIf others are using the repository, notify them about the name change.\n\n\n\n\ngit remote set-url command\nThe git remote set-url command is used to update the URL of a remote repository in your local Git configuration. This is often necessary when the remote repository’s URL changes (e.g., due to renaming, migration, or switching protocols).\n ▶  Syntax\ngit remote set-url &lt;remote-name&gt; &lt;new-url&gt;\n\n&lt;remote-name&gt;: The name of the remote (commonly origin)\n&lt;new-url&gt;: The new URL for the remote repository\n\nThe git remote set-url command only updates the URL; it does not create a new remote. If the remote name (e.g., origin) doesn’t exist, you’ll need to add it using git remote add first.\n ▶  Tips\nIf you’ve accidentally made a wrong &lt;remote-name&gt;, you can remove by the following command:\ngit remote rm &lt;wrong-remote-name&gt;"
-  },
-  {
-    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html#references",
-    "href": "posts/2024-12-04-chnage-remote-uri/index.html#references",
-    "title": "OGG… How can I modify the GitHub repository name?",
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
+    "title": "OGG… I just want to save the current repository into another remote…",
     "section": "References",
-    "text": "References\n\nGitHub Docs &gt; Managing remote repositories"
+    "text": "References\n\nGitHub Docs &gt; Duplicating a repository"
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "title": "OGG… How to unstage files in Git?",
+    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html",
+    "href": "posts/2025-08-04-git-sparse-checkout/index.html",
+    "title": "OGG… How do you git sparse-checkout a specific directory?",
     "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
+    "text": "Explaining of git-sparse-checkoutscript\n\n#!/bin/bash\nset -euo pipefail\n\nusage() {\n  echo \"Usage: $0 -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt; -s\"\n  exit 1\n}\n\nBARE=false\n\nwhile getopts \"su:d:b:p:\" opt; do\n  case $opt in\n    s) BARE_STRUCTURE=true ;; \n    u) CLONE_URL=$OPTARG ;;\n    d) TARGET_DIR=$OPTARG ;;\n    b) BRANCH=$OPTARG ;;\n    p) SPARSE_PATH=$OPTARG ;;\n    *) usage ;;\n  esac\ndone\n\nif [[ -z \"${CLONE_URL-}\" || -z \"${TARGET_DIR-}\" || -z \"${BRANCH-}\" ]]; then\n  usage\nfi\n\nif [[ \"$BARE_STRUCTURE\" = false && -z \"${SPARSE_PATH-}\" ]]; then\n  echo \"Error: -p &lt;sparse_path&gt; is required unless -s (bare mode) is specified.\"\n  usage\nfi\n\ngit clone --filter=blob:none --no-checkout \"$CLONE_URL\" \"$TARGET_DIR\"\ncd \"$TARGET_DIR\"\ngit config core.sparseCheckout true\n\nif $BARE_STRUCTURE; then\n  {\n    echo \"/*\"\n    echo \"!/*/\"\n  } &gt; .git/info/sparse-checkout\n  git checkout \"$BRANCH\"\n  git ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p \"{}\"\n  exit 0\nfi\n\necho -e \"$SPARSE_PATH\" | tr ':' '\\n' &gt; .git/info/sparse-checkout\ngit checkout \"$BRANCH\""
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "title": "OGG… How to unstage files in Git?",
+    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#goal",
+    "href": "posts/2025-08-04-git-sparse-checkout/index.html#goal",
+    "title": "OGG… How do you git sparse-checkout a specific directory?",
     "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
+    "text": "Explaining of git-sparse-checkoutscript\n\n#!/bin/bash\nset -euo pipefail\n\nusage() {\n  echo \"Usage: $0 -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt; -s\"\n  exit 1\n}\n\nBARE=false\n\nwhile getopts \"su:d:b:p:\" opt; do\n  case $opt in\n    s) BARE_STRUCTURE=true ;; \n    u) CLONE_URL=$OPTARG ;;\n    d) TARGET_DIR=$OPTARG ;;\n    b) BRANCH=$OPTARG ;;\n    p) SPARSE_PATH=$OPTARG ;;\n    *) usage ;;\n  esac\ndone\n\nif [[ -z \"${CLONE_URL-}\" || -z \"${TARGET_DIR-}\" || -z \"${BRANCH-}\" ]]; then\n  usage\nfi\n\nif [[ \"$BARE_STRUCTURE\" = false && -z \"${SPARSE_PATH-}\" ]]; then\n  echo \"Error: -p &lt;sparse_path&gt; is required unless -s (bare mode) is specified.\"\n  usage\nfi\n\ngit clone --filter=blob:none --no-checkout \"$CLONE_URL\" \"$TARGET_DIR\"\ncd \"$TARGET_DIR\"\ngit config core.sparseCheckout true\n\nif $BARE_STRUCTURE; then\n  {\n    echo \"/*\"\n    echo \"!/*/\"\n  } &gt; .git/info/sparse-checkout\n  git checkout \"$BRANCH\"\n  git ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p \"{}\"\n  exit 0\nfi\n\necho -e \"$SPARSE_PATH\" | tr ':' '\\n' &gt; .git/info/sparse-checkout\ngit checkout \"$BRANCH\""
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Goal",
-    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
+    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#usage",
+    "href": "posts/2025-08-04-git-sparse-checkout/index.html#usage",
+    "title": "OGG… How do you git sparse-checkout a specific directory?",
+    "section": "✅ Usage",
+    "text": "✅ Usage\ngit-sparse-checkout -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt; -s\nParameters\n\n\n\n\n\n\n\n\nOption\nDescription\nRequired\n\n\n\n\n-u\nGit clone URL\n✅ Yes\n\n\n-d\nTarget directory to clone into\n✅ Yes\n\n\n-b\nBranch to check out\n✅ Yes\n\n\n-p\nPath(s) to check out within the repository. Directories separated by ‘:’\n✅ Yes unless -s specified\n\n\n-s\nBare mode: clone only root files and create empty directories\n❌ Optional\n\n\n\n\nExmaple 1\ngit-sparse-checkout \\\n  -u https://github.com/RyoNakagami/regmonkey_gitcommand \\\n  -d ./checkout_sandbox \\\n  -b main \\\n  -p /src:/docs\nThis will:\n\nClone the repository without full history or blobs\nEnable sparse-checkout mode\nCheckout only both of /src and /docs directory from the main branch\nWrite the result to ./checkout_sandbox\n\n\n\nExmaple 2\ngit-sparse-checkout \\\n  -u https://github.com/RyoNakagami/regmonkey_gitcommand \\\n  -d ./checkout_sandbox_bare \\\n  -b main \\\n  -s\nThis will:\n\nClone the repository without full history or blobs\nEnable sparse-checkout mode with the setting to include only root-level files (exclude root directories)\nCreate the directory structure as empty folders matching the repo’s directory tree\nWrite the result to ./checkout_sandbox_bare"
   },
   {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Guideline",
-    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
+    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#diving-into-the-shell-script",
+    "href": "posts/2025-08-04-git-sparse-checkout/index.html#diving-into-the-shell-script",
+    "title": "OGG… How do you git sparse-checkout a specific directory?",
+    "section": "🔍 Diving into the shell script",
+    "text": "🔍 Diving into the shell script\nEfficiently clone a repo without downloading file contents or populating the working directory immediately.\ngit clone --filter=blob:none --no-checkout \"$CLONE_URL\" \"$TARGET_DIR\"\n\n\n\n\n\n\n\noptions\ncomment\n\n\n\n\n--filter=blob:none\nUse partial clone with a filter to exclude all file contents (blobs) initially, downloading only repository metadata (commits, trees). This reduces bandwidth and disk usage.\n\n\n--no-checkout\nClone the repository but do not check out any files to the working directory yet. This means the working directory will be empty (no files checked out).\n\n\n\nThen, enable sparse checkout for this local repository. The following tells Git you want to selectively check out only certain paths from the repository into your working directory.\ngit config core.sparseCheckout true\nNext,\necho -e \"$SPARSE_PATH\" | tr ':' '\\n' &gt; .git/info/sparse-checkout\n\n\n\n\n\n\n\ncommand\ncomment\n\n\n\n\necho -e \"$SPARSE_PATH\"\nOutput the value of the variable SPARSE_PATH with escape sequences (like \\n) interpreted.\n\n\ntr ':' '\\n'\nTranslate all colon (:) characters into newline characters (\\n), effectively converting a colon-separated list into a line-separated list.\n\n\n&gt; .git/info/sparse-checkout\nWrite this list of paths (one per line) into the special sparse-checkout config file\n\n\n\n\n-s option: Only files directly under the root of the repository are checked out\nWriting to the sparse-checkout config file\n{\n  echo \"/*\"\n  echo \"!/*/\"\n} &gt; .git/info/sparse-checkout\n\n\n\n\n\n\n\ncommand\ncomment\n\n\n\n\n{ echo \"/*\"; echo \"!/*/\"; }\nOutputs two patterns to stdout: /* to include all files and directories at the root level, and !/*/ to exclude all directories at the root level. These together specify sparse-checkout rules to include only root files but exclude root directories.\n\n\n&gt; .git/info/sparse-checkout\nRedirects the above output into the sparse-checkout configuration file, setting the sparse checkout rules for the repository.\n\n\n\nEmpty directory structure is recreated:\ngit ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p \"{}\"\n\nGit lists all directories in the repo (recursively).\nFor each directory, the script creates an empty directory on your filesystem.\nThis means folder structures exist locally but are empty (no files inside).\n\n\n\nWhen you modify the sparse-checkout patterns\ngit add --sparse &lt;paths&gt;\nThe command git add --sparse tells Git:\n\n“Update the sparse checkout patterns and adjust the working directory accordingly.”\nAdd files/directories newly matching the pattern."
   },
   {
-    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html",
-    "href": "posts/2026-05-10-code-reviewer-principle/index.html",
-    "title": "OGG… What principles guide an effective code review?",
-    "section": "",
-    "text": "Establish a shared understanding of what code review is for, so that reviews advance the codebase instead of becoming bottlenecks or rituals.\nIn data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team."
-  },
-  {
-    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#objective",
-    "href": "posts/2026-05-10-code-reviewer-principle/index.html#objective",
-    "title": "OGG… What principles guide an effective code review?",
-    "section": "",
-    "text": "Establish a shared understanding of what code review is for, so that reviews advance the codebase instead of becoming bottlenecks or rituals.\nIn data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team."
-  },
-  {
-    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#goal",
-    "href": "posts/2026-05-10-code-reviewer-principle/index.html#goal",
-    "title": "OGG… What principles guide an effective code review?",
-    "section": "🎯 Goal",
-    "text": "🎯 Goal\n\nClarify the essence of code review as discernment, not gatekeeping.\nDefine concrete checkpoints that the reviewer can run through on every diff.\nCodify the discipline that distinguishes a productive reviewer from a merely polite one."
-  },
-  {
-    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#guideline",
-    "href": "posts/2026-05-10-code-reviewer-principle/index.html#guideline",
-    "title": "OGG… What principles guide an effective code review?",
-    "section": "📘 Guideline",
-    "text": "📘 Guideline\n\n\n\n\n\n\nNote\n\n\n\nThe 18 principles below are organized into three parts: what code review is for (essence), what to check (checkpoints), and how to behave as a reviewer (discipline). Skipping any one of the three weakens the other two — checkpoints without discipline become nitpicking, and discipline without checkpoints becomes hand-waving.\n\n\n\nI. The Essence of Code Review\n\nDiscernment, not gatekeeping. The purpose of code review is to verify that new contributions advance the shared codebase without introducing defects, drift, or unnecessary complexity, while preserving its conventions and intent.\nValidity of the analysis. In data science, code review additionally protects the validity of the analysis itself: accurate inference, consistent design, reusability of analytical pipelines, maintainability over months of iteration, and the transfer of tacit knowledge across the team.\nCode must earn its existence. Discernment means asking whether each line earns its place. Anything that does not serve the author’s stated purpose, the reader’s understanding, or the system’s correctness should be questioned — not accepted out of politeness.\nThe last cheap moment. A review is the last cheap moment to change direction. Once merged, every line becomes precedent that future code will imitate.\n\n\n\nII. Checkpoints\n\n\n\n\n\n\nTip\n\n\n\nRun through these in order. The earlier ones (Purpose, Correctness, Completeness) gate the later ones — there is no point arguing about abstractions if the intent itself is unclear.\n\n\n\nPurpose. Does this code accomplish what the author intended? If the intent is unclear, that itself is a finding — ask for the intent to be made explicit before judging the implementation.\nCorrectness. Are there obvious logic errors? Read the code as the machine will execute it, not as the author meant it to read.\nCompleteness. Against the stated requirements, are all cases implemented? Watch for silently dropped branches, unhandled inputs, and TODO debt left behind.\nConformance. Does the code follow the existing style and conventions of the surrounding codebase? A new style introduced in one file becomes drift in the next.\nImprovability. Could this be shorter, faster, or clearer without harming intent? Resist gold-plating; only suggest changes that pay for themselves.\nApproach. Is this the best way to achieve the desired result, or merely the first that worked? Sometimes a smaller change to a different file removes the need for the diff entirely.\nEdge cases. Does the code handle empty inputs, nulls, boundary values, concurrent access, partial failures, and the conditions the author may not have considered?\nAbstractions. Do you see useful abstractions emerging from repetition — or premature abstractions hiding simple code? Three similar lines is better than the wrong abstraction.\nTests. Are the unit tests appropriate? Tests should exercise the contract, not the implementation, and should fail loudly when the contract changes.\nDocumentation. Are comments and docs present where intent is non-obvious — and absent where the code already speaks for itself? A comment that restates the code is noise; a comment that captures a hidden constraint is gold.\n\n\n\nIII. The Discipline of the Reviewer\n\nName the good as well as the bad. Calling out a strong choice teaches the team what “good” looks like and reinforces it; silence after merge teaches nothing.\nCritique the code, not the author. The diff is the subject; the person is a collaborator.\nPrefer questions over verdicts when intent is uncertain. “Why this approach?” surfaces more bugs than “this is wrong.”\nA review without a recommended action is incomplete. Approve, request changes, or escalate — never leave the author to interpret silence."
-  },
-  {
-    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#references",
-    "href": "posts/2026-05-10-code-reviewer-principle/index.html#references",
-    "title": "OGG… What principles guide an effective code review?",
+    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#references",
+    "href": "posts/2025-08-04-git-sparse-checkout/index.html#references",
+    "title": "OGG… How do you git sparse-checkout a specific directory?",
     "section": "References",
-    "text": "References\n\nGoogle Engineering Practices &gt; Code Review Developer Guide\nConventional Comments"
+    "text": "References\n\nregmonkey_gitcommand"
   },
   {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
-    "title": "OGG… How Can I restore a file from specific commit?",
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html",
+    "href": "posts/2025-09-14-git-branch-naming/index.html",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
     "section": "",
-    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
+    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
   },
   {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
-    "title": "OGG… How Can I restore a file from specific commit?",
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#objectives",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#objectives",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
     "section": "",
-    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
+    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
   },
   {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
-    "title": "OGG… How Can I restore a file from specific commit?",
-    "section": "🎯 Goal",
-    "text": "🎯 Goal\n\nEnable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes."
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#goals",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#goals",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "section": "🎯 Goals",
+    "text": "🎯 Goals\n\nDefine clear branch categories (feature, fix, release, etc.) with consistent tokens.\nEnsure branch names immediately communicate intent.\nEnable integration with issue trackers and CI/CD pipelines.\nReduce confusion by standardizing naming across the team."
   },
   {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
-    "title": "OGG… How Can I restore a file from specific commit?",
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#guideline",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#guideline",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
     "section": "📘 Guideline",
-    "text": "📘 Guideline\nEnsure you’re using Git 2.23+, where git restore was introduced.\nWhen to Use\n\nTo retrieve a deleted or modified file from a past commit.\nTo undo local changes to a file without discarding other work.\nTo recover specific content for comparison or patching.\n\nHow to Use\n\nUse git log or git blame to identify the target commit hash\n\ngit log &lt;filepath&gt;  # check history\n\nRun the command:\n\n## git restore version\ngit restore --source=&lt;commit-hash&gt; &lt;filepath&gt;\n\n## git checkout version\ngit checkout &lt;commit-hash&gt; &lt;filepath&gt;\nUndo git restore specific commit id version\n\n\n\n\n\n\n\nSituation\nRecovery Option\n\n\n\n\nNot staged yet\ngit restore &lt;filepath&gt;\n\n\nStaged but not committed\ngit restore --staged &lt;filepath&gt; then restore\n\n\nAlready committed\nUse git reflog + git reset\n\n\nPreventive measure\nUse git stash before risky restores"
+    "text": "📘 Guideline\n\n\n① Use lowercase letters and hyphens to separate words\n\n\n\nBranch names should always be lowercase for consistency and avoid conflicts in case-sensitive file systems.\nHyphens (-) make branch names easier to read than underscores or camelCase.\n\n\n\n\nExample 1 \n\n✅ Example: feat/user-login\n\n❌ Avoid: Feat_UserLogin, FeatUserLogin\n\n\n\n\n\n② Start branch names with a clear token\n\n\n\nEach branch should begin with a category token that defines its purpose.\n\nCommon tokens: feat (feature), fix (bug fix), docs (documentation).\nUse slashes / to separate tokens and descriptions\nThis makes the branch purpose obvious at a glance.\n\n\n\n\n\nExample 2 \n\n✅ Example: fix/payment-timeout\n\n❌ Avoid: payment-timeout (purpose unclear)\n\n\nThis clarity is not only helpful for humans reading the branch list or PRs but also allows Git commands and CI/CD scripts to filter, map, or operate on specific branch types efficiently.\n# Listing branches by token\ngit branch --list \"feature/*\"\n\n# Pushing or mapping branches with tokens\ngit push origin 'refs/heads/feature/*'\n\n# Deleting multiple branches by token\ngit branch -D $(git branch --list \"feature/*\")\n\n\n\n③ Link to issues or tickets when possible\n\n\n\nIf your team uses Jira, GitHub Issues, or another tracker, include the ticket/issue ID.\n\nThis improves traceability between code, commits, and tasks.\n\n\n\n\n\nExample 3 \n\n✅ Example: feat/123-user-auth\n\n❌ Avoid: feat/user-auth (missing link to ticket)\n\n\n\n\n\n④ Keep branch names short but descriptive\n\n\n\nBalance brevity with clarity.\n\nAvoid overly long names while still describing the intent.\n\n\n\n\nLong branch names can be very helpful when browsing a list of branches, as they provide more context. However, they can clutter one-line logs, obscuring the visible part of the log.\n\nExample 4 \n\n✅ Example: refactor/api-headers\n\n❌ Too long: refactor/update-the-way-we-handle-request-headers-in-api\n\n\n\n\n\n⑤ Maintain consistency across the team\n\n\n\nAll developers must follow the same convention.\n\nConsistency improves collaboration and enables automation in CI/CD.\n\nDocument rules in CONTRIBUTING.md or your project wiki.\n\n\n\n\n\nExample 5 \n\n✅ Example: Everyone uses feat/* for features\n\n❌ Avoid: Mixing feature/*, feat/*, new/* (causes chaos)\n\n\n\n\nBranch Naming Convention\nWork Branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nfeature/&lt;name&gt;\nNew feature development\n\n\nbugfix/&lt;name&gt;\nBug fix\n\n\nrefactor/&lt;name&gt;\nRestructuring code without behavior change\n\n\ndocs/&lt;name&gt;\nDocumentation updates\n\n\ntest/&lt;name&gt;\nTesting-related work\n\n\nenh/&lt;name&gt;\nPerformance enhancements\n\n\n\nLifecycle branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nrelease/&lt;version&gt;\nPreparing a release\n\n\nhotfix/&lt;name&gt;\nUrgent production fix\n\n\nsandbox/&lt;name&gt;\nExperimental or prototype work"
+  },
+  {
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#references",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#references",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "section": "References",
+    "text": "References\n\nstackoverflow &gt; What are some examples of commonly used practices for naming git branches?"
   },
   {
     "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html",
@@ -707,102 +504,340 @@
     "text": "📘 References\n\nGit DOcumentation &gt; git-reset"
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html",
-    "href": "posts/2025-09-14-git-branch-naming/index.html",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
+    "title": "OGG… How Can I restore a file from specific commit?",
     "section": "",
-    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
+    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#objectives",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#objectives",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
+    "title": "OGG… How Can I restore a file from specific commit?",
     "section": "",
-    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
+    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#goals",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#goals",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
-    "section": "🎯 Goals",
-    "text": "🎯 Goals\n\nDefine clear branch categories (feature, fix, release, etc.) with consistent tokens.\nEnsure branch names immediately communicate intent.\nEnable integration with issue trackers and CI/CD pipelines.\nReduce confusion by standardizing naming across the team."
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
+    "title": "OGG… How Can I restore a file from specific commit?",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\nEnable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes."
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#guideline",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#guideline",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
+    "title": "OGG… How Can I restore a file from specific commit?",
     "section": "📘 Guideline",
-    "text": "📘 Guideline\n\n\n① Use lowercase letters and hyphens to separate words\n\n\n\nBranch names should always be lowercase for consistency and avoid conflicts in case-sensitive file systems.\nHyphens (-) make branch names easier to read than underscores or camelCase.\n\n\n\n\nExample 1 \n\n✅ Example: feat/user-login\n\n❌ Avoid: Feat_UserLogin, FeatUserLogin\n\n\n\n\n\n② Start branch names with a clear token\n\n\n\nEach branch should begin with a category token that defines its purpose.\n\nCommon tokens: feat (feature), fix (bug fix), docs (documentation).\nUse slashes / to separate tokens and descriptions\nThis makes the branch purpose obvious at a glance.\n\n\n\n\n\nExample 2 \n\n✅ Example: fix/payment-timeout\n\n❌ Avoid: payment-timeout (purpose unclear)\n\n\nThis clarity is not only helpful for humans reading the branch list or PRs but also allows Git commands and CI/CD scripts to filter, map, or operate on specific branch types efficiently.\n# Listing branches by token\ngit branch --list \"feature/*\"\n\n# Pushing or mapping branches with tokens\ngit push origin 'refs/heads/feature/*'\n\n# Deleting multiple branches by token\ngit branch -D $(git branch --list \"feature/*\")\n\n\n\n③ Link to issues or tickets when possible\n\n\n\nIf your team uses Jira, GitHub Issues, or another tracker, include the ticket/issue ID.\n\nThis improves traceability between code, commits, and tasks.\n\n\n\n\n\nExample 3 \n\n✅ Example: feat/123-user-auth\n\n❌ Avoid: feat/user-auth (missing link to ticket)\n\n\n\n\n\n④ Keep branch names short but descriptive\n\n\n\nBalance brevity with clarity.\n\nAvoid overly long names while still describing the intent.\n\n\n\n\nLong branch names can be very helpful when browsing a list of branches, as they provide more context. However, they can clutter one-line logs, obscuring the visible part of the log.\n\nExample 4 \n\n✅ Example: refactor/api-headers\n\n❌ Too long: refactor/update-the-way-we-handle-request-headers-in-api\n\n\n\n\n\n⑤ Maintain consistency across the team\n\n\n\nAll developers must follow the same convention.\n\nConsistency improves collaboration and enables automation in CI/CD.\n\nDocument rules in CONTRIBUTING.md or your project wiki.\n\n\n\n\n\nExample 5 \n\n✅ Example: Everyone uses feat/* for features\n\n❌ Avoid: Mixing feature/*, feat/*, new/* (causes chaos)\n\n\n\n\nBranch Naming Convention\nWork Branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nfeature/&lt;name&gt;\nNew feature development\n\n\nbugfix/&lt;name&gt;\nBug fix\n\n\nrefactor/&lt;name&gt;\nRestructuring code without behavior change\n\n\ndocs/&lt;name&gt;\nDocumentation updates\n\n\ntest/&lt;name&gt;\nTesting-related work\n\n\nenh/&lt;name&gt;\nPerformance enhancements\n\n\n\nLifecycle branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nrelease/&lt;version&gt;\nPreparing a release\n\n\nhotfix/&lt;name&gt;\nUrgent production fix\n\n\nsandbox/&lt;name&gt;\nExperimental or prototype work"
+    "text": "📘 Guideline\nEnsure you’re using Git 2.23+, where git restore was introduced.\nWhen to Use\n\nTo retrieve a deleted or modified file from a past commit.\nTo undo local changes to a file without discarding other work.\nTo recover specific content for comparison or patching.\n\nHow to Use\n\nUse git log or git blame to identify the target commit hash\n\ngit log &lt;filepath&gt;  # check history\n\nRun the command:\n\n## git restore version\ngit restore --source=&lt;commit-hash&gt; &lt;filepath&gt;\n\n## git checkout version\ngit checkout &lt;commit-hash&gt; &lt;filepath&gt;\nUndo git restore specific commit id version\n\n\n\n\n\n\n\nSituation\nRecovery Option\n\n\n\n\nNot staged yet\ngit restore &lt;filepath&gt;\n\n\nStaged but not committed\ngit restore --staged &lt;filepath&gt; then restore\n\n\nAlready committed\nUse git reflog + git reset\n\n\nPreventive measure\nUse git stash before risky restores"
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#references",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#references",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "",
+    "text": "Establish a shared understanding of what code review is for, so that reviews advance the codebase instead of becoming bottlenecks or rituals.\nIn data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#objective",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#objective",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "",
+    "text": "Establish a shared understanding of what code review is for, so that reviews advance the codebase instead of becoming bottlenecks or rituals.\nIn data science especially, ensure code review safeguards the validity of the analysis itself — accurate inference, reusable pipelines, and the transfer of tacit knowledge across the team."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#goal",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#goal",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\nClarify the essence of code review as discernment, not gatekeeping.\nDefine concrete checkpoints that the reviewer can run through on every diff.\nCodify the discipline that distinguishes a productive reviewer from a merely polite one."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#guideline",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#guideline",
+    "title": "OGG… What principles guide an effective code review?",
+    "section": "📘 Guideline",
+    "text": "📘 Guideline\n\n\n\n\n\n\nNote\n\n\n\nThe 18 principles below are organized into three parts: what code review is for (essence), what to check (checkpoints), and how to behave as a reviewer (discipline). Skipping any one of the three weakens the other two — checkpoints without discipline become nitpicking, and discipline without checkpoints becomes hand-waving.\n\n\n\nI. The Essence of Code Review\n\nDiscernment, not gatekeeping. The purpose of code review is to verify that new contributions advance the shared codebase without introducing defects, drift, or unnecessary complexity, while preserving its conventions and intent.\nValidity of the analysis. In data science, code review additionally protects the validity of the analysis itself: accurate inference, consistent design, reusability of analytical pipelines, maintainability over months of iteration, and the transfer of tacit knowledge across the team.\nCode must earn its existence. Discernment means asking whether each line earns its place. Anything that does not serve the author’s stated purpose, the reader’s understanding, or the system’s correctness should be questioned — not accepted out of politeness.\nThe last cheap moment. A review is the last cheap moment to change direction. Once merged, every line becomes precedent that future code will imitate.\n\n\n\nII. Checkpoints\n\n\n\n\n\n\nTip\n\n\n\nRun through these in order. The earlier ones (Purpose, Correctness, Completeness) gate the later ones — there is no point arguing about abstractions if the intent itself is unclear.\n\n\n\nPurpose. Does this code accomplish what the author intended? If the intent is unclear, that itself is a finding — ask for the intent to be made explicit before judging the implementation.\nCorrectness. Are there obvious logic errors? Read the code as the machine will execute it, not as the author meant it to read.\nCompleteness. Against the stated requirements, are all cases implemented? Watch for silently dropped branches, unhandled inputs, and TODO debt left behind.\nConformance. Does the code follow the existing style and conventions of the surrounding codebase? A new style introduced in one file becomes drift in the next.\nImprovability. Could this be shorter, faster, or clearer without harming intent? Resist gold-plating; only suggest changes that pay for themselves.\nApproach. Is this the best way to achieve the desired result, or merely the first that worked? Sometimes a smaller change to a different file removes the need for the diff entirely.\nEdge cases. Does the code handle empty inputs, nulls, boundary values, concurrent access, partial failures, and the conditions the author may not have considered?\nAbstractions. Do you see useful abstractions emerging from repetition — or premature abstractions hiding simple code? Three similar lines is better than the wrong abstraction.\nTests. Are the unit tests appropriate? Tests should exercise the contract, not the implementation, and should fail loudly when the contract changes.\nDocumentation. Are comments and docs present where intent is non-obvious — and absent where the code already speaks for itself? A comment that restates the code is noise; a comment that captures a hidden constraint is gold.\n\n\n\nIII. The Discipline of the Reviewer\n\nName the good as well as the bad. Calling out a strong choice teaches the team what “good” looks like and reinforces it; silence after merge teaches nothing.\nCritique the code, not the author. The diff is the subject; the person is a collaborator.\nPrefer questions over verdicts when intent is uncertain. “Why this approach?” surfaces more bugs than “this is wrong.”\nA review without a recommended action is incomplete. Approve, request changes, or escalate — never leave the author to interpret silence."
+  },
+  {
+    "objectID": "posts/2026-05-10-code-reviewer-principle/index.html#references",
+    "href": "posts/2026-05-10-code-reviewer-principle/index.html#references",
+    "title": "OGG… What principles guide an effective code review?",
     "section": "References",
-    "text": "References\n\nstackoverflow &gt; What are some examples of commonly used practices for naming git branches?"
+    "text": "References\n\nGoogle Engineering Practices &gt; Code Review Developer Guide\nConventional Comments"
   },
   {
-    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html",
-    "href": "posts/2025-08-04-git-sparse-checkout/index.html",
-    "title": "OGG… How do you git sparse-checkout a specific directory?",
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "title": "OGG… How to unstage files in Git?",
     "section": "",
-    "text": "Explaining of git-sparse-checkoutscript\n\n#!/bin/bash\nset -euo pipefail\n\nusage() {\n  echo \"Usage: $0 -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt; -s\"\n  exit 1\n}\n\nBARE=false\n\nwhile getopts \"su:d:b:p:\" opt; do\n  case $opt in\n    s) BARE_STRUCTURE=true ;; \n    u) CLONE_URL=$OPTARG ;;\n    d) TARGET_DIR=$OPTARG ;;\n    b) BRANCH=$OPTARG ;;\n    p) SPARSE_PATH=$OPTARG ;;\n    *) usage ;;\n  esac\ndone\n\nif [[ -z \"${CLONE_URL-}\" || -z \"${TARGET_DIR-}\" || -z \"${BRANCH-}\" ]]; then\n  usage\nfi\n\nif [[ \"$BARE_STRUCTURE\" = false && -z \"${SPARSE_PATH-}\" ]]; then\n  echo \"Error: -p &lt;sparse_path&gt; is required unless -s (bare mode) is specified.\"\n  usage\nfi\n\ngit clone --filter=blob:none --no-checkout \"$CLONE_URL\" \"$TARGET_DIR\"\ncd \"$TARGET_DIR\"\ngit config core.sparseCheckout true\n\nif $BARE_STRUCTURE; then\n  {\n    echo \"/*\"\n    echo \"!/*/\"\n  } &gt; .git/info/sparse-checkout\n  git checkout \"$BRANCH\"\n  git ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p \"{}\"\n  exit 0\nfi\n\necho -e \"$SPARSE_PATH\" | tr ':' '\\n' &gt; .git/info/sparse-checkout\ngit checkout \"$BRANCH\""
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
   },
   {
-    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#goal",
-    "href": "posts/2025-08-04-git-sparse-checkout/index.html#goal",
-    "title": "OGG… How do you git sparse-checkout a specific directory?",
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "title": "OGG… How to unstage files in Git?",
     "section": "",
-    "text": "Explaining of git-sparse-checkoutscript\n\n#!/bin/bash\nset -euo pipefail\n\nusage() {\n  echo \"Usage: $0 -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt; -s\"\n  exit 1\n}\n\nBARE=false\n\nwhile getopts \"su:d:b:p:\" opt; do\n  case $opt in\n    s) BARE_STRUCTURE=true ;; \n    u) CLONE_URL=$OPTARG ;;\n    d) TARGET_DIR=$OPTARG ;;\n    b) BRANCH=$OPTARG ;;\n    p) SPARSE_PATH=$OPTARG ;;\n    *) usage ;;\n  esac\ndone\n\nif [[ -z \"${CLONE_URL-}\" || -z \"${TARGET_DIR-}\" || -z \"${BRANCH-}\" ]]; then\n  usage\nfi\n\nif [[ \"$BARE_STRUCTURE\" = false && -z \"${SPARSE_PATH-}\" ]]; then\n  echo \"Error: -p &lt;sparse_path&gt; is required unless -s (bare mode) is specified.\"\n  usage\nfi\n\ngit clone --filter=blob:none --no-checkout \"$CLONE_URL\" \"$TARGET_DIR\"\ncd \"$TARGET_DIR\"\ngit config core.sparseCheckout true\n\nif $BARE_STRUCTURE; then\n  {\n    echo \"/*\"\n    echo \"!/*/\"\n  } &gt; .git/info/sparse-checkout\n  git checkout \"$BRANCH\"\n  git ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p \"{}\"\n  exit 0\nfi\n\necho -e \"$SPARSE_PATH\" | tr ':' '\\n' &gt; .git/info/sparse-checkout\ngit checkout \"$BRANCH\""
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
   },
   {
-    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#usage",
-    "href": "posts/2025-08-04-git-sparse-checkout/index.html#usage",
-    "title": "OGG… How do you git sparse-checkout a specific directory?",
-    "section": "✅ Usage",
-    "text": "✅ Usage\ngit-sparse-checkout -u &lt;clone_url&gt; -d &lt;target_dir&gt; -b &lt;branch&gt; -p &lt;sparse_path&gt; -s\nParameters\n\n\n\n\n\n\n\n\nOption\nDescription\nRequired\n\n\n\n\n-u\nGit clone URL\n✅ Yes\n\n\n-d\nTarget directory to clone into\n✅ Yes\n\n\n-b\nBranch to check out\n✅ Yes\n\n\n-p\nPath(s) to check out within the repository. Directories separated by ‘:’\n✅ Yes unless -s specified\n\n\n-s\nBare mode: clone only root files and create empty directories\n❌ Optional\n\n\n\n\nExmaple 1\ngit-sparse-checkout \\\n  -u https://github.com/RyoNakagami/regmonkey_gitcommand \\\n  -d ./checkout_sandbox \\\n  -b main \\\n  -p /src:/docs\nThis will:\n\nClone the repository without full history or blobs\nEnable sparse-checkout mode\nCheckout only both of /src and /docs directory from the main branch\nWrite the result to ./checkout_sandbox\n\n\n\nExmaple 2\ngit-sparse-checkout \\\n  -u https://github.com/RyoNakagami/regmonkey_gitcommand \\\n  -d ./checkout_sandbox_bare \\\n  -b main \\\n  -s\nThis will:\n\nClone the repository without full history or blobs\nEnable sparse-checkout mode with the setting to include only root-level files (exclude root directories)\nCreate the directory structure as empty folders matching the repo’s directory tree\nWrite the result to ./checkout_sandbox_bare"
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Goal",
+    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
   },
   {
-    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#diving-into-the-shell-script",
-    "href": "posts/2025-08-04-git-sparse-checkout/index.html#diving-into-the-shell-script",
-    "title": "OGG… How do you git sparse-checkout a specific directory?",
-    "section": "🔍 Diving into the shell script",
-    "text": "🔍 Diving into the shell script\nEfficiently clone a repo without downloading file contents or populating the working directory immediately.\ngit clone --filter=blob:none --no-checkout \"$CLONE_URL\" \"$TARGET_DIR\"\n\n\n\n\n\n\n\noptions\ncomment\n\n\n\n\n--filter=blob:none\nUse partial clone with a filter to exclude all file contents (blobs) initially, downloading only repository metadata (commits, trees). This reduces bandwidth and disk usage.\n\n\n--no-checkout\nClone the repository but do not check out any files to the working directory yet. This means the working directory will be empty (no files checked out).\n\n\n\nThen, enable sparse checkout for this local repository. The following tells Git you want to selectively check out only certain paths from the repository into your working directory.\ngit config core.sparseCheckout true\nNext,\necho -e \"$SPARSE_PATH\" | tr ':' '\\n' &gt; .git/info/sparse-checkout\n\n\n\n\n\n\n\ncommand\ncomment\n\n\n\n\necho -e \"$SPARSE_PATH\"\nOutput the value of the variable SPARSE_PATH with escape sequences (like \\n) interpreted.\n\n\ntr ':' '\\n'\nTranslate all colon (:) characters into newline characters (\\n), effectively converting a colon-separated list into a line-separated list.\n\n\n&gt; .git/info/sparse-checkout\nWrite this list of paths (one per line) into the special sparse-checkout config file\n\n\n\n\n-s option: Only files directly under the root of the repository are checked out\nWriting to the sparse-checkout config file\n{\n  echo \"/*\"\n  echo \"!/*/\"\n} &gt; .git/info/sparse-checkout\n\n\n\n\n\n\n\ncommand\ncomment\n\n\n\n\n{ echo \"/*\"; echo \"!/*/\"; }\nOutputs two patterns to stdout: /* to include all files and directories at the root level, and !/*/ to exclude all directories at the root level. These together specify sparse-checkout rules to include only root files but exclude root directories.\n\n\n&gt; .git/info/sparse-checkout\nRedirects the above output into the sparse-checkout configuration file, setting the sparse checkout rules for the repository.\n\n\n\nEmpty directory structure is recreated:\ngit ls-tree -r -d --name-only HEAD | xargs -I{} mkdir -p \"{}\"\n\nGit lists all directories in the repo (recursively).\nFor each directory, the script creates an empty directory on your filesystem.\nThis means folder structures exist locally but are empty (no files inside).\n\n\n\nWhen you modify the sparse-checkout patterns\ngit add --sparse &lt;paths&gt;\nThe command git add --sparse tells Git:\n\n“Update the sparse checkout patterns and adjust the working directory accordingly.”\nAdd files/directories newly matching the pattern."
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Guideline",
+    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
   },
   {
-    "objectID": "posts/2025-08-04-git-sparse-checkout/index.html#references",
-    "href": "posts/2025-08-04-git-sparse-checkout/index.html#references",
-    "title": "OGG… How do you git sparse-checkout a specific directory?",
+    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html",
+    "href": "posts/2024-12-04-chnage-remote-uri/index.html",
+    "title": "OGG… How can I modify the GitHub repository name?",
+    "section": "",
+    "text": "Suppose you are working on a GitHub-hosted repository myproject. As your project evolves, you start wondering the original name is ambiguous or unclear to potential users or collaborators.\nSo, you’ve decided to rename myproject to assembled-kalmanfilter-coremodel.\n ▶  Current Status\n\ncurrent repository url: https://github.com/OhGoshGit/myproject.git\nremote name: origin\n\n% git remote -v\norigin  https://github.com/OhGoshGit/myproject.git (fetch)\norigin  https://github.com/OhGoshGit/myproject.git (push)\n ▶  ToBe\n% git remote -v\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (fetch)\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (push)"
+  },
+  {
+    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html#problem",
+    "href": "posts/2024-12-04-chnage-remote-uri/index.html#problem",
+    "title": "OGG… How can I modify the GitHub repository name?",
+    "section": "",
+    "text": "Suppose you are working on a GitHub-hosted repository myproject. As your project evolves, you start wondering the original name is ambiguous or unclear to potential users or collaborators.\nSo, you’ve decided to rename myproject to assembled-kalmanfilter-coremodel.\n ▶  Current Status\n\ncurrent repository url: https://github.com/OhGoshGit/myproject.git\nremote name: origin\n\n% git remote -v\norigin  https://github.com/OhGoshGit/myproject.git (fetch)\norigin  https://github.com/OhGoshGit/myproject.git (push)\n ▶  ToBe\n% git remote -v\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (fetch)\norigin  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git (push)"
+  },
+  {
+    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html#solutions",
+    "href": "posts/2024-12-04-chnage-remote-uri/index.html#solutions",
+    "title": "OGG… How can I modify the GitHub repository name?",
+    "section": "Solutions",
+    "text": "Solutions\nWhen you rename a repository, all existing information, with the exception of project site URLs, is automatically redirected to the new name, including:\n\nIssues\nWikis\nStars\nFollowers\n\nHowever, it’s still a good idea to update any references.\n\nWarning ! \nIf you create a new repository under your account in the future, do not reuse the original name of the renamed repository. If you do, redirects to the renamed repository will no longer work.\n\n\n ▶  Steps\n\nLog in to GitHub and navigate to the Repository\n\nGo to GitHub and log in to your account.\nGo to the repository you want to rename.\n\nAccess Repository Settings:\n\nOn the repository’s main page, click the Settings tab\n\nEdit the Repository Name:\n\nIn the General section, you’ll see the Repository name field.\nEnter the new name for your repository in the text box.\n\nConfirm the Change:\n\nClick Rename\n\nUpdate Your Local Repository:\n\nchange an existing remote repository URL in your local repository by running git remote set-url command\n\n# When you use HTTPS\ngit remote set-url origin https://github.com/your-username/new-repository-name.git\n\n# When you use SSH\ngit remote set-url origin git@github.com:your-username/new-repository-name.git\nConfirmation\n\nTest pushing or pulling to ensure the updated remote URL works correctly:\n\ngit remote -v\ngit pull origin main\nnotify your collaborators\n\nIf others are using the repository, notify them about the name change.\n\n\n\n\ngit remote set-url command\nThe git remote set-url command is used to update the URL of a remote repository in your local Git configuration. This is often necessary when the remote repository’s URL changes (e.g., due to renaming, migration, or switching protocols).\n ▶  Syntax\ngit remote set-url &lt;remote-name&gt; &lt;new-url&gt;\n\n&lt;remote-name&gt;: The name of the remote (commonly origin)\n&lt;new-url&gt;: The new URL for the remote repository\n\nThe git remote set-url command only updates the URL; it does not create a new remote. If the remote name (e.g., origin) doesn’t exist, you’ll need to add it using git remote add first.\n ▶  Tips\nIf you’ve accidentally made a wrong &lt;remote-name&gt;, you can remove by the following command:\ngit remote rm &lt;wrong-remote-name&gt;"
+  },
+  {
+    "objectID": "posts/2024-12-04-chnage-remote-uri/index.html#references",
+    "href": "posts/2024-12-04-chnage-remote-uri/index.html#references",
+    "title": "OGG… How can I modify the GitHub repository name?",
     "section": "References",
-    "text": "References\n\nregmonkey_gitcommand"
+    "text": "References\n\nGitHub Docs &gt; Managing remote repositories"
   },
   {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
-    "title": "OGG… I just want to save the current repository into another remote…",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "",
-    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
-    "title": "OGG… I just want to save the current repository into another remote…",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "OGG… I accidentally named the branch the wrong name…",
     "section": "",
-    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
   },
   {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
-    "title": "OGG… I just want to save the current repository into another remote…",
-    "section": "Solution: git clone –bare",
-    "text": "Solution: git clone –bare\n ▶  Steps\n\nCreate a bare clone of the repository\nMirror-push to the new repository\nRemove the temporary old local repository\n\n ▶  Commands\n# Step 1\n% git clone --bare https://github.com/EXAMPLE-USER/LinearModels.git\n\n# Step 2\n% cd LinearModels.git\n% git push --mirror https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git\n\n# Step 3\n% cd ..\n% rm -rf LinearModels.git\n\n📘 REMARKS \n\nA non-bare git clone downloads both the snapshot and history to the local machine. However, a git clone --bare only copies the history, allowing for a quicker transfer to a new remote repository.\nAdditionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．\nThe mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.\n\n\n\nWhy not no-bare git clone and git push –mirror?\nWhen running git clone origin-url, you will get all of the tags copied, a local branch master (HEAD) tracking a remote branch origin/master, and remote branches origin/test1, origin/test2, and origin/test3.\nIf you do git push --mirror a non-bare cloned repository, it also pushes your remote branches, origin/test1, origin/test2, and origin/test3, because mirror implies everything. Then, you would get branches named origin/origin/test1."
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 1: checkout a new branch and delete the old",
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
   },
   {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
-    "title": "OGG… I just want to save the current repository into another remote…",
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 2: rename the branch",
+    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html",
+    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html",
+    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
+    "section": "",
+    "text": "Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.\nThis is especially useful before code review or merging into the main branch to ensure a clean and understandable history."
+  },
+  {
+    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
+    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#objective",
+    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
+    "section": "",
+    "text": "Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.\nThis is especially useful before code review or merging into the main branch to ensure a clean and understandable history."
+  },
+  {
+    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
+    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#goal",
+    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
+    "section": "Goal",
+    "text": "Goal\n\nConsolidate multiple recent commits into a single, well-described commit.\nRemove unnecessary intermediate commits (e.g., typo fixes, debug logs) by squashing them.\nMake commit history easier to understand for reviewers, increasing review efficiency and clarity."
+  },
+  {
+    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
+    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#guideline",
+    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
+    "section": "Guideline",
+    "text": "Guideline\n\n\n\n\n\n\nNote\n\n\n\nPreferably, ensure the following conditions:\n\nCommits have not yet been pushed to the remote repository (e.g., GitHub).\nThe work is done on a local branch.\n\nOtherwise, you will likely need to use a force push (git push -f) after rebasing, which can overwrite history on the remote. Please proceed with caution because rewriting commit history on pushed commits can disrupt collaboration.\n\n\n\nSteps for consolidating commits\n\nCheck recent commits\ngit log --oneline\nStart interactive rebase\nTo squash the last 3 commits, run:\ngit rebase -i HEAD~3\n\n\n\n\n\n\n\nNoteSyntax\n\n\n\nThe syntax is\ngit rebase -i &lt;base-commit&gt;\n\nYou can only specify a single base commit to rebase onto\nYou cannot run a commad which is working as git rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;\n\n\n\n\nEdit the rebase instruction list\nAfter running the git rebase, the output would be\npick abc123 fix typo\npick def456 add new test case\npick ghi789 finalize logic\ncommit ids are sorted by top to bottom = older to newer. In the above example, the first line (abc123) is the oldest of the commits being rebased.\nIf you want to squash the latest two commits into the oldest one, modify it to:\npick abc123 fix typo\nsquash def456 add new test case\nsquash ghi789 finalize logic\nEdit the commit message\nA new editor screen will prompt you to combine the commit messages. Edit as needed, e.g.:\nFinalize logic with test case\n\n- Fixed typo\n- Added test case\n- Finalized core logic\nThen, save and exit. It would be recommended to verify the new commit history by\ngit log --oneline\n\n\n\n\n\n\n\nNoteTips\n\n\n\nIf something goes wrong during the rebase, you can cancel it:\ngit rebase --abort"
+  },
+  {
+    "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-what-git-rebase-operations-are-possible",
+    "href": "posts/2025-06-06-organize-commits-using-git-rebase/index.html#appendix-what-git-rebase-operations-are-possible",
+    "title": "OGG… How do I consolidate multiple temporary commits into a single meaningful one?",
+    "section": "Appendix: What git rebase operations are possible?",
+    "text": "Appendix: What git rebase operations are possible?\n\n\n\n\n\n\n\n\nCommand\nDescription\n\n\n\n\npick\nUse the commit as-is (no changes to message or content).\n\n\nreword\nKeep the commit content, but edit the commit message.\n\n\nedit\nPause and allow you to amend the commit (edit files, message, etc.).\n\n\nsquash\nCombine this commit with the previous one, and edit the message.\n\n\nfixup\nLike squash, but discard this commit’s message (use previous message).\n\n\ndrop\nCompletely remove this commit from history."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "Solution",
+    "text": "Solution\nThere are two ways to resolve this:\n\nRename your local branch to follow the naming convention, then push it to the remote.\nPush your current branch to the remote using the correct branch name without renaming it locally."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "### Solution 1: rename your local branch name",
+    "text": "### Solution 1: rename your local branch name\nRenaming your local branch is explained on this post.\n ▶  Commands\n# Step 1: rename your local branch\ngit branch -m &lt;old-name&gt; &lt;new-name&gt;\n\n# Step 2: push to the remote\ngit push -u origin HEAD"
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "### Solution 2: Push a local git branch to a remote with a different name",
+    "text": "### Solution 2: Push a local git branch to a remote with a different name\ngit push origin local-branch-name:remote-branch-name tells Git to push the local branch local-branch-name to the remote repository origin and create/update the branch named remote-branch-name there.\nBut be aware the command carry some risks. If remote-branch-name already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.\nTo mitigate the above risk, it’s better to check the status of the remnote branch first with git fetch and git branch -a. DO NOT USE git push --force.\n ▶  Commands\n# Step 1: git fetch and check your remote\ngit fetch \n\n# Step 2: Make sure your new remote name will not cause a problem\ngit branch -a  \n\n# Step 3: Push your local branch with different remote name\ngit push origin local-branch-name:remote-branch-name\n\n\n\n\n\n\nTip🍵 Green Tea Break: why use git fetch not git pull?\n\n\n\n ▶  git fetch keeps your local work untouched\n\ngit fetch only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.\ngit pull combines git fetch and git merge, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.\n\nIf you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use git fetch because it helps avoid unexpected merges."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "Use-cases",
+    "text": "Use-cases\n ▶  Temporarily Sharing Work\nIf you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like temp/20241031-login-test.\n ▶  Avoid Naming Conflicts\nIf there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called feature/login on the remote, you might push you local feature/login branch as feature/login-update.\nIn this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run\ngit branch -vvv\nand if the result is not what you expect, you can run\ngit branch --set-upstream-to=origin/new-feature\nto set your upstream branch to the correct one."
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "",
+    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "",
+    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "Solution",
+    "text": "Solution\nSteps\n\nGenerate a new ssh key\nAdd the SSH Key to the SSH Agent\nRegister the public key to GitHub\ntest ssh connection\nupdate the ssh config file\n\nSetup\n\n\n1. Generate a new ssh key\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nOption -t specifies the type of key to generate. ed25519 is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.\nOption -C adds a comment to the key for identification purposes.\n-f specifies the filename and location for the generated key pair. This will generate two files\n\nkirby_github_key: The private key (keep this secure! do not share!).\nkirby_github_key.pub: The public key (you upload this to GitHub).\n\n\n\n2. Add the SSH Key to the SSH Agent\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nThe ssh-add command adds your private SSH key to the SSH authentication agent (ssh-agent) so it can be used for SSH connections without repeatedly asking for the key’s passphrase. If the key (kirby_github_key) isn’t added to ssh-agent, SSH won’t know to use it. You might encounter the error like this;\nPermission denied (publickey).\n\n\n3. Register the public key to GitHub\n\ncat ~/.ssh/kirby_github_key.pub\n\nAfter opening the file, copy the strings and register it at the Github at Settings &gt; SSH and GPG keys &gt; New SSH key\nThen, test your connection by\n\n\n4. test ssh connection\n\n$ ssh -T git@github.com\n\nif connection established successfully, the following message will pop up\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nUpdate the ssh config file\nRunning ssh-add munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your ~/.ssh/config file:\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "Appendix: ❗ Trouble Connecting via SSH with a Private Key",
+    "text": "Appendix: ❗ Trouble Connecting via SSH with a Private Key\n\n\n\n\n\n\nNotesummary\n\n\n\n\nSSH is strict about private key security to protect against unauthorized access.\nAlways keep your private keys readable only by you.\nUse chmod 600 your_key_file to ensure proper permission settings.\n\n\n\nTrouble\nWhen trying to connect using a SSH command, You might encounter an error like:\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nAs a result, the SSH connection fails.\nRoot Cause\n\nThis error happens because the file permissions of the private key file are too loose.\nFor example, if the file permissions are set to 666 (readable and writable by everyone), SSH refuses to use the key for security reasons.\n\nSolution\nYou can fix the issue by restricting the file’s permissions so that only the owner can read/write the file:\n% chmod 600 &lt;your-private-key-path&gt;\nAfter changing the permissions, try running the same SSH command again."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "",
+    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#problem",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html#problem",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "",
+    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#solution",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html#solution",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "Solution",
+    "text": "Solution\n\nCheck your current remote URL:\ngit remote -v\nIf the URL starts with https://, you are using HTTPS.\nFind your SSH URL:\nOn GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., git@github.com:username/repo.git).\nChange the remote URL to SSH:\ngit remote set-url origin git@github.com:username/repo.git\nVerify the change:\ngit remote -v\nThe URL should now start with git@.\n\n\nTips\n\nMake sure you have added your SSH key to your GitHub account. You can generate a key with ssh-keygen and add it using the GitHub SSH settings.\nTest your SSH connection with:\nssh -T git@github.com\nIf you use multiple remotes or repositories, repeat these steps for each one."
+  },
+  {
+    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html",
+    "href": "posts/2025-08-06-git-command-cheatsheet/index.html",
+    "title": "OGG git cheatsheet",
+    "section": "",
+    "text": "Category\nCommand Example\nDescription\n\n\n\n\nCheck Git Version\ngit --version\nE.g. git version 2.43.0\n\n\nClone withou files\ngit clone --no-checkout &lt;repository-url&gt;\nclones the repository without checking out the files\n\n\nAdd all update\ngit add -u\nStage modified and deleted files (but not new untracked files)\n\n\nStatus\ngit status -sb\nShort and branch-aware status (great for quick checks)\n\n\nRename\ngit mv &lt;oldfilename&gt; &lt;newfilename&gt;\nRename or move a file and stage the change for commit\n\n\nRemove\ngit rm --cached &lt;FILE_NAME&gt;\nStop tracking a file in Git without deleting it from local\n\n\nLog\ngit log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'\nDisplay commit log with ISO date, short commit ID, author, and commit message\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCreate Branch\ngit switch -c &lt;branch-name&gt;\nCreate and checkout a new branch locally\n\n\nCheckout previous branch\ngit switch -\nSwitch back to the previously checked-out branch.\n\n\nPull from all remotes\ngit pull --all\nUpdate all of your local tracking branches which track remote branches.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nAmend commit\ngit commit --amend\nModify the most recent commit (message, content, or both) with editor starting up\n\n\nCommit all changes with message\ngit commit -am \"&lt;commit message&gt;\"\nStage all tracked changes and commit with a message in one step\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\ncheck staged diff\ngit diff --cached &lt;branch&gt;\nCompare staged changes in the index against the specified branch\n\n\ncheck diff between branches\ngit diff &lt;base-branch&gt;..&lt;target-branch&gt;\nCompare changes between two branches\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nConvert a specific issue to PR\ngit issue2pr\nCreate a Pull Request from the current branch and link it to a specific GitHub Issue."
+  },
+  {
+    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html#git-command",
+    "href": "posts/2025-08-06-git-command-cheatsheet/index.html#git-command",
+    "title": "OGG git cheatsheet",
+    "section": "",
+    "text": "Category\nCommand Example\nDescription\n\n\n\n\nCheck Git Version\ngit --version\nE.g. git version 2.43.0\n\n\nClone withou files\ngit clone --no-checkout &lt;repository-url&gt;\nclones the repository without checking out the files\n\n\nAdd all update\ngit add -u\nStage modified and deleted files (but not new untracked files)\n\n\nStatus\ngit status -sb\nShort and branch-aware status (great for quick checks)\n\n\nRename\ngit mv &lt;oldfilename&gt; &lt;newfilename&gt;\nRename or move a file and stage the change for commit\n\n\nRemove\ngit rm --cached &lt;FILE_NAME&gt;\nStop tracking a file in Git without deleting it from local\n\n\nLog\ngit log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'\nDisplay commit log with ISO date, short commit ID, author, and commit message\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCreate Branch\ngit switch -c &lt;branch-name&gt;\nCreate and checkout a new branch locally\n\n\nCheckout previous branch\ngit switch -\nSwitch back to the previously checked-out branch.\n\n\nPull from all remotes\ngit pull --all\nUpdate all of your local tracking branches which track remote branches.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nAmend commit\ngit commit --amend\nModify the most recent commit (message, content, or both) with editor starting up\n\n\nCommit all changes with message\ngit commit -am \"&lt;commit message&gt;\"\nStage all tracked changes and commit with a message in one step\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\ncheck staged diff\ngit diff --cached &lt;branch&gt;\nCompare staged changes in the index against the specified branch\n\n\ncheck diff between branches\ngit diff &lt;base-branch&gt;..&lt;target-branch&gt;\nCompare changes between two branches\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nConvert a specific issue to PR\ngit issue2pr\nCreate a Pull Request from the current branch and link it to a specific GitHub Issue."
+  },
+  {
+    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html#config-command",
+    "href": "posts/2025-08-06-git-command-cheatsheet/index.html#config-command",
+    "title": "OGG git cheatsheet",
+    "section": "Config command",
+    "text": "Config command\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nDefault branch name\ngit config --global init.defaultBranch &lt;default branch name&gt;\nSet default branch when initializing new repos\n\n\nEnable color output\ngit config --global color.ui auto\nAutomatically color Git output in the terminal."
+  },
+  {
+    "objectID": "posts/2025-08-06-git-command-cheatsheet/index.html#github-cli-command",
+    "href": "posts/2025-08-06-git-command-cheatsheet/index.html#github-cli-command",
+    "title": "OGG git cheatsheet",
+    "section": "GitHub CLI command",
+    "text": "GitHub CLI command\n\ngeneral\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCheck Organization\ngh org list\nShow a list of organizations you belong to\n\n\nCheck Organization Repo\ngh repo list &lt;ORG&gt;\nShow a list of repositories under a specific organization you belong to\n\n\nCreate Repo\ngh repo create &lt;REPONAME&gt; --public --source=. --remote=origin\nCreate a public repo under your GitHub space\n\n\n\ngh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;\nCreate a public repo under the specified organization\n\n\n\ngh repo create &lt;REPONAME&gt; --private --source=. --remote=origin\nCreate a private repo under your GitHub space\n\n\nDelete Repo\ngh repo delete &lt;ONWER&gt;/&lt;REPONAME&gt;\nDelete the target repository from GitHub, while your local repo remains intact\n\n\n\n\n\n\nGist\n\n\n\n\n\n\nWarningWarning\n\n\n\nEven if a Gist is set to Private, it can still be accessed by anyone with the link. Do not store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCreate Secret Gist from File\ngh gist create &lt;filename&gt; -d \"&lt;gist title&gt;\"\nCreate a secret gist with the given file and description\n\n\nCreate Gist from standard output\ncat cool.txt | gh gist create -d \"&lt;gist title&gt;\"\nCreate a gist directly from command output or piped content"
+  },
+  {
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "",
+    "text": "NoteTL;DR\n\n\n\ngit ls-files -mo --exclude-standard | grep -E 'test|bats' | xargs -i git add {}\nThis one-liner stages only files whose paths contain test or bats, among files that are either modified or untracked (but not ignored)."
+  },
+  {
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#goal",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#goal",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\nStage only the files whose paths match a given pattern (e.g. test-related files), without git add . sweeping everything"
+  },
+  {
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#diving-into-the-pipeline",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#diving-into-the-pipeline",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "🔍 Diving into the pipeline",
+    "text": "🔍 Diving into the pipeline\nThe command is three stages glued together with pipes:\ngit ls-files -mo --exclude-standard   # 1. list candidate files\n  | grep -E 'test|bats'               # 2. filter by path pattern\n  | xargs -i git add {}               # 3. stage each one\n\n1. git ls-files -mo --exclude-standard\ngit ls-files prints file paths that Git knows about (or could know about) in the current working tree.\n\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-m\nModified — tracked files that differ from the index\n\n\n-o\nOthers — files in the working tree that are not tracked (i.e. untracked files)\n\n\n--exclude-standard\nApply the usual ignore rules: .gitignore, .git/info/exclude, and the user’s global excludes file\n\n\n\n\nSo -mo --exclude-standard together means “modified files plus untracked files, but skip anything that is ignored.” Deleted files are not included unless you also pass -d.\n\n\n\n\n\n\nTipWhy not just git add -u or git add .?\n\n\n\n\ngit add -u stages modified and deleted tracked files, but ignores untracked ones.\ngit add . stages everything under the current directory, including files you may not want.\n\n\n\n\n\n2. grep -E 'test|bats'\nFilter the list to lines matching the extended regex test|bats — i.e. any path that contains the substring test or bats anywhere.\n\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-E\nUse Extended Regular Expressions (so | works as alternation without backslashing)\n\n\n\n\nExample matches:\ntests/test_parser.py     ✅ contains \"test\"\nsrc/foo.bats             ✅ contains \"bats\"\nscripts/run-bats.sh      ✅ contains \"bats\"\nsrc/main.py              ❌ no match\n\n\n\n\n\n\nWarninggrep matches anywhere in the path\n\n\n\nThe pattern test will also match latest/, contest.md, or protest.txt. Tighten the regex when in doubt — e.g. '(^|/)tests?/' to require a literal tests/ or test/ directory segment.\n\n\n\n\n3. xargs -i git add {}\nxargs builds and executes commands from stdin. Here it runs git add &lt;file&gt; once per line of input.\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-i\nReplace {} in the command with each input line. Deprecated in GNU xargs — prefer -I {} (capital I).\n\n\n{}\nPlaceholder for the current input line\n\n\n\nSo for input lines a.py, b.py, xargs runs:\ngit add a.py\ngit add b.py\n\n\n\n\n\n\nNoteModern, safer form\n\n\n\nThe portable, modern equivalent is:\ngit ls-files -mo --exclude-standard -z \\\n  | grep -zE 'test|bats' \\\n  | xargs -0 -I {} git add {}\n\n-z / -0 use NUL-delimited records, so paths containing spaces, tabs, or newlines do not break the pipeline.\n-I {} is the POSIX-standard replacement form (the lowercase -i works on GNU xargs but is non-standard)."
+  },
+  {
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#variations-worth-knowing",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#variations-worth-knowing",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "✅ Variations worth knowing",
+    "text": "✅ Variations worth knowing\nStage only modified files matching a pattern (skip untracked)\ngit ls-files -m --exclude-standard | grep -E 'test|bats' | xargs -I {} git add {}\nPreview what will be staged before running git add\ngit ls-files -mo --exclude-standard | grep -E 'test|bats'"
+  },
+  {
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#references",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#references",
+    "title": "OGG… How do I git add only files matching a pattern?",
     "section": "References",
-    "text": "References\n\nGitHub Docs &gt; Duplicating a repository"
+    "text": "References\n\ngit ls-files — Git Reference\nxargs(1) — GNU findutils"
   },
   {
     "objectID": "posts/2025-06-05-how-to-manage-secrets/index.html",
@@ -907,7 +942,7 @@
     "href": "index.html",
     "title": "Git is hard, but we need to handle it",
     "section": "",
-    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2026-05-10\n\n\nOGG… What principles guide an effective code review?\n\n\n4 min\n\n\n\n\n\n\n2025-09-14\n\n\nOGG… What kind of Git branch naming convention is commonly used??\n\n\n4 min\n\n\n\n\n\n\n2025-08-06\n\n\nOGG git cheatsheet\n\n\n9 min\n\n\n\n\n\n\n2025-08-05\n\n\nOGG… How Can I restore a file from specific commit?\n\n\n2 min\n\n\n\n\n\n\n2025-08-04\n\n\nOGG… How do you git sparse-checkout a specific directory?\n\n\n6 min\n\n\n\n\n\n\n2025-06-14\n\n\nOGG… What’s difference between git reset –hard vs –mixed vs –soft?\n\n\n3 min\n\n\n\n\n\n\n2025-06-13\n\n\nOGG… How to unstage files in Git?\n\n\n2 min\n\n\n\n\n\n\n2025-06-06\n\n\nOGG… How do I consolidate multiple temporary commits into a single meaningful one?\n\n\n4 min\n\n\n\n\n\n\n2025-06-05\n\n\nOGG… How do I manage config and secret information in Git?\n\n\n4 min\n\n\n\n\n\n\n2025-05-23\n\n\nOGG… How do I switch the connection method for git push from HTTPS to SSH??\n\n\n1 min\n\n\n\n\n\n\n2024-12-17\n\n\nOGG… How can I set up ssh connection to GitHub repository?\n\n\n3 min\n\n\n\n\n\n\n2024-12-04\n\n\nOGG… How can I modify the GitHub repository name?\n\n\n3 min\n\n\n\n\n\n\n2024-11-06\n\n\n最新コミットとunstaged差分の確認方法\n\n\n4 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2026-05-12\n\n\nOGG… How do I git add only files matching a pattern?\n\n\n6 min\n\n\n\n\n\n\n2026-05-10\n\n\nOGG… What principles guide an effective code review?\n\n\n4 min\n\n\n\n\n\n\n2025-09-14\n\n\nOGG… What kind of Git branch naming convention is commonly used??\n\n\n4 min\n\n\n\n\n\n\n2025-08-06\n\n\nOGG git cheatsheet\n\n\n9 min\n\n\n\n\n\n\n2025-08-05\n\n\nOGG… How Can I restore a file from specific commit?\n\n\n2 min\n\n\n\n\n\n\n2025-08-04\n\n\nOGG… How do you git sparse-checkout a specific directory?\n\n\n6 min\n\n\n\n\n\n\n2025-06-14\n\n\nOGG… What’s difference between git reset –hard vs –mixed vs –soft?\n\n\n3 min\n\n\n\n\n\n\n2025-06-13\n\n\nOGG… How to unstage files in Git?\n\n\n2 min\n\n\n\n\n\n\n2025-06-06\n\n\nOGG… How do I consolidate multiple temporary commits into a single meaningful one?\n\n\n4 min\n\n\n\n\n\n\n2025-06-05\n\n\nOGG… How do I manage config and secret information in Git?\n\n\n4 min\n\n\n\n\n\n\n2025-05-23\n\n\nOGG… How do I switch the connection method for git push from HTTPS to SSH??\n\n\n1 min\n\n\n\n\n\n\n2024-12-17\n\n\nOGG… How can I set up ssh connection to GitHub repository?\n\n\n3 min\n\n\n\n\n\n\n2024-12-04\n\n\nOGG… How can I modify the GitHub repository name?\n\n\n3 min\n\n\n\n\n\n\n2024-11-06\n\n\n最新コミットとunstaged差分の確認方法\n\n\n4 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html",

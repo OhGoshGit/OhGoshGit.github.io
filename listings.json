@@ -23,6 +23,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-05-12-git-add-with-selected-files/index.html",
       "/posts/2026-05-10-code-reviewer-principle/index.html",
       "/posts/2025-09-14-git-branch-naming/index.html",
       "/posts/2025-08-06-git-command-cheatsheet/index.html",

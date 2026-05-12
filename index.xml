@@ -10,7 +10,329 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Sun, 10 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 12 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I git add only files matching a pattern?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-05-12-git-add-with-selected-files/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-files <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-mo</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--exclude-standard</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-E</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test|bats'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xargs</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-i</span> git add {}</span></code></pre></div></div>
+<p>This one-liner stages <strong>only</strong> files whose paths contain <code>test</code> or <code>bats</code>, among files that are either modified or untracked (but not ignored).</p>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Stage only the files whose paths match a given pattern (e.g.&nbsp;test-related files), without <code>git add .</code> sweeping everything</label></li>
+</ul>
+</section>
+<section id="diving-into-the-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="diving-into-the-pipeline">🔍 Diving into the pipeline</h2>
+<p>The command is three stages glued together with pipes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-files <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-mo</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--exclude-standard</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 1. list candidate files</span></span>
+<span id="cb2-2">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-E</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test|bats'</span>               <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 2. filter by path pattern</span></span>
+<span id="cb2-3">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xargs</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-i</span> git add {}               <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3. stage each one</span></span></code></pre></div></div>
+<section id="git-ls-files--mo---exclude-standard" class="level3">
+<h3 class="anchored" data-anchor-id="git-ls-files--mo---exclude-standard">1. <code>git ls-files -mo --exclude-standard</code></h3>
+<p><code>git ls-files</code> prints file paths that Git knows about (or could know about) in the current working tree.</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-m</code></td>
+<td><strong>Modified</strong> — tracked files that differ from the index</td>
+</tr>
+<tr class="even">
+<td><code>-o</code></td>
+<td><strong>Others</strong> — files in the working tree that are not tracked (i.e.&nbsp;untracked files)</td>
+</tr>
+<tr class="odd">
+<td><code>--exclude-standard</code></td>
+<td>Apply the usual ignore rules: <code>.gitignore</code>, <code>.git/info/exclude</code>, and the user’s global excludes file</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So <code>-mo --exclude-standard</code> together means <em>“modified files <strong>plus</strong> untracked files, but skip anything that is ignored.”</em> Deleted files are not included unless you also pass <code>-d</code>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Why not just <code>git add -u</code> or <code>git add .</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>git add -u</code> stages <strong>modified and deleted</strong> tracked files, but ignores <strong>untracked</strong> ones.</li>
+<li><code>git add .</code> stages everything under the current directory, including files you may not want.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="grep--e-testbats" class="level3">
+<h3 class="anchored" data-anchor-id="grep--e-testbats">2. <code>grep -E 'test|bats'</code></h3>
+<p>Filter the list to lines matching the extended regex <code>test|bats</code> — i.e.&nbsp;any path that contains the substring <code>test</code> <strong>or</strong> <code>bats</code> anywhere.</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-E</code></td>
+<td>Use <strong>Extended Regular Expressions</strong> (so <code>|</code> works as alternation without backslashing)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Example matches:</p>
+<pre><code>tests/test_parser.py     ✅ contains "test"
+src/foo.bats             ✅ contains "bats"
+scripts/run-bats.sh      ✅ contains "bats"
+src/main.py              ❌ no match</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>grep</code> matches anywhere in the path
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The pattern <code>test</code> will also match <code>latest/</code>, <code>contest.md</code>, or <code>protest.txt</code>. Tighten the regex when in doubt — e.g.&nbsp;<code>'(^|/)tests?/'</code> to require a literal <code>tests/</code> or <code>test/</code> directory segment.</p>
+</div>
+</div>
+</section>
+<section id="xargs--i-git-add" class="level3">
+<h3 class="anchored" data-anchor-id="xargs--i-git-add">3. <code>xargs -i git add {}</code></h3>
+<p><code>xargs</code> builds and executes commands from stdin. Here it runs <code>git add &lt;file&gt;</code> once per line of input.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-i</code></td>
+<td>Replace <code>{}</code> in the command with each input line. <strong>Deprecated</strong> in GNU <code>xargs</code> — prefer <code>-I {}</code> (capital <code>I</code>).</td>
+</tr>
+<tr class="even">
+<td><code>{}</code></td>
+<td>Placeholder for the current input line</td>
+</tr>
+</tbody>
+</table>
+<p>So for input lines <code>a.py</code>, <code>b.py</code>, <code>xargs</code> runs:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add a.py</span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add b.py</span></code></pre></div></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Modern, safer form
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The portable, modern equivalent is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-files <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-mo</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--exclude-standard</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-z</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb5-2">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-zE</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test|bats'</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb5-3">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xargs</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-0</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-I</span> {} git add {}</span></code></pre></div></div>
+<ul>
+<li><code>-z</code> / <code>-0</code> use NUL-delimited records, so paths containing spaces, tabs, or newlines do not break the pipeline.</li>
+<li><code>-I {}</code> is the POSIX-standard replacement form (the lowercase <code>-i</code> works on GNU <code>xargs</code> but is non-standard).</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="variations-worth-knowing" class="level2">
+<h2 class="anchored" data-anchor-id="variations-worth-knowing">✅ Variations worth knowing</h2>
+<p><span class="mini-section">Stage only modified files matching a pattern (skip untracked)</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-files <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--exclude-standard</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-E</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test|bats'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xargs</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-I</span> {} git add {}</span></code></pre></div></div>
+<p><span class="mini-section">Preview what will be staged before running <code>git add</code></span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-files <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-mo</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--exclude-standard</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-E</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test|bats'</span></span></code></pre></div></div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-ls-files"><code>git ls-files</code> — Git Reference</a></li>
+<li><a href="https://www.gnu.org/software/findutils/manual/html_node/find_html/xargs-options.html"><code>xargs(1)</code> — GNU findutils</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git add</category>
+  <category>regex</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-05-12-git-add-with-selected-files/</guid>
+  <pubDate>Tue, 12 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What principles guide an effective code review?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -4872,117 +5194,6 @@ font-style: inherit;">-m</span> future-inverse-matrix-calculation feature/invers
   <category>git branch</category>
   <guid>https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/</guid>
   <pubDate>Sat, 13 Jul 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… I accidentally committed something to main that should have been on a brand new branch!</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<p>This post is based on <a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you have just set up a new git repository. Initially, you planned to create a new branch named <code>test</code> to work on after the first commit, which involved editing the <code>README.md</code> file. However, in practice, you continued to make changes on the <code>main</code> branch instead.</p>
-<p><strong> ▶&nbsp; What I originally planned to do</strong></p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
-    gitGraph
-       commit id: "813faa2"
-       branch test
-       commit id: "28a8bf7"
-       commit id: "466fbe7"
-       commit id: "30bf56a"
-       commit id: "6159140"
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p><strong> ▶&nbsp; What I’ve actually done…</strong></p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%
-    gitGraph
-       commit id: "813faa2"
-       commit id: "28a8bf7"
-       commit id: "466fbe7"
-       commit id: "30bf56a"
-       commit id: "6159140"
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section id="solution-using-git-reset" class="level2">
-<h2 class="anchored" data-anchor-id="solution-using-git-reset">Solution: using <code>git reset</code></h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<ol type="1">
-<li>Create a new test branch based on the current <code>HEAD</code> state.</li>
-<li>Reset the <code>main</code> branch to the state immediately after the first commit.</li>
-<li>Switch to the <code>test</code> branch.</li>
-</ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Step 1: keep the current repository state into test branch</span></span>
-<span id="cb1-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git branch test</span>
-<span id="cb1-3"></span>
-<span id="cb1-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Step 2: clean the main branch</span></span>
-<span id="cb1-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git reset 813faa2 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--hard</span></span>
-<span id="cb1-6"></span>
-<span id="cb1-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Step 3: moving to the test branch</span></span>
-<span id="cb1-8"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git switch test</span></code></pre></div></div>
-<p><strong> ▶&nbsp; Explains</strong></p>
-<ul>
-<li>You can create a new branch based on the current HEAD without switching using <code>git branch &lt;branch-name&gt;</code>.</li>
-<li>Using <code>git reset --hard</code> instead of <code>git reset --soft</code> ensures that by default, changes are not left in the current branch’s index or files.</li>
-<li>If changes remain in the current branch, you would need to execute <code>git stash</code> or <code>git clean</code>.</li>
-</ul>
-<div style="padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;">
-<p><strong style="color:#ffa657">!!WARNING</strong> <br></p>
-<p>If you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers.</p>
-</div>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://dangitgit.com/#accidental-commit-master">Dangit, I accidentally committed something to master that should have been on a brand new branch!</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <category>git commit</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-07-12-committed-on-a-wrong-branch/</guid>
-  <pubDate>Fri, 12 Jul 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
