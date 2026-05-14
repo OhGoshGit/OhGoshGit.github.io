@@ -1,0 +1,15 @@
+.glossary-container {
+  padding-left: 1em;
+}
+
+.glossary-term {
+  font-weight: 700;
+  display: block;
+  margin-top: 1em;
+  padding-bottom: 0.5em;
+}
+
+.glossary-desc {
+  margin-left: 1em;
+  white-space: pre-wrap;
+}

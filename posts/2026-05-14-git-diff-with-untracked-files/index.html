@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2024-11-06">
+<meta name="dcterms.date" content="2026-05-14">
 
-<title>OGG… How do I check unstaged differences with the latest commit? – OhGoshGit!?!</title>
+<title>OGG… Why doesn’t git diff show untracked files and how do I fix it? – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -63,28 +63,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../../">
-<link href="../../../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../../site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../../site_libs/bootstrap/bootstrap-dark-675c5eab8e17f4115e5ac5a6e806b6d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../../../site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-675c5eab8e17f4115e5ac5a6e806b6d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-f24d670a19e371e014c18f2c1fcf6f5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -131,11 +131,11 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.css">
-<script type="text/javascript" src="../../../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.js"></script>
+<link rel="stylesheet" href="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.css">
+<script type="text/javascript" src="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.js"></script>
 
 
-<link rel="stylesheet" href="../../../../styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -307,7 +307,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../../../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">OhGoshGit!?!</span>
     </a>
   </div>
@@ -322,17 +322,17 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text">Dangit, Git!?!</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../../../about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About OhGoshGit!?!</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../../.././language/jp/"> 
+    <a class="nav-link" href="../.././language/jp/"> 
 <span class="menu-text">日本語</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../../.././"> 
+    <a class="nav-link" href="../.././"> 
 <span class="menu-text">English</span></a>
   </li>  
   <li class="nav-item compact">
@@ -341,7 +341,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../../../index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -357,9 +357,11 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… How do I check unstaged differences with the latest commit?</h1>
+      <h1 class="title">OGG… Why doesn’t <code>git diff</code> show untracked files and how do I fix it?</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git difftool</div>
+                <div class="quarto-category">git diff</div>
+                <div class="quarto-category">git add</div>
+                <div class="quarto-category">git reset</div>
               </div>
                   </div>
   </div>
@@ -377,7 +379,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-11-06</p>
+        <p class="date">2026-05-14</p>
       </div>
     </div>
     
@@ -399,9 +401,20 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution-1-using-git-diff" id="toc-solution-1-using-git-diff" class="nav-link" data-scroll-target="#solution-1-using-git-diff">Solution 1: Using <code>git diff</code></a></li>
-  <li><a href="#solution-2-using-git-difftool" id="toc-solution-2-using-git-difftool" class="nav-link" data-scroll-target="#solution-2-using-git-difftool">Solution 2: Using <code>git difftool</code></a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#why-git-diff-ignores-untracked-files" id="toc-why-git-diff-ignores-untracked-files" class="nav-link" data-scroll-target="#why-git-diff-ignores-untracked-files">Why <code>git diff</code> ignores untracked files</a></li>
+  <li><a href="#git-add--n-intent-to-add" id="toc-git-add--n-intent-to-add" class="nav-link" data-scroll-target="#git-add--n-intent-to-add"><code>git add -N</code>: intent-to-add</a>
+  <ul class="collapse">
+  <li><a href="#typical-workflow-with-git-add--n" id="toc-typical-workflow-with-git-add--n" class="nav-link" data-scroll-target="#typical-workflow-with-git-add--n">Typical workflow with <code>git add -N</code></a></li>
+  </ul></li>
+  <li><a href="#resetting-git-add--n-with-git-reset" id="toc-resetting-git-add--n-with-git-reset" class="nav-link" data-scroll-target="#resetting-git-add--n-with-git-reset">Resetting <code>git add -N</code> with <code>git reset</code></a>
+  <ul class="collapse">
+  <li><a href="#what---mixed-means-here" id="toc-what---mixed-means-here" class="nav-link" data-scroll-target="#what---mixed-means-here">What <code>--mixed</code> means here</a></li>
+  <li><a href="#bulk-undo-all-intent-to-add-entries-at-once" id="toc-bulk-undo-all-intent-to-add-entries-at-once" class="nav-link" data-scroll-target="#bulk-undo-all-intent-to-add-entries-at-once">Bulk-undo all intent-to-add entries at once</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">📘 References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -413,136 +426,322 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.</p>
-<p>You want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make git diff see a new file without staging its content</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-N</span> <span class="op">&lt;</span>new-file<span class="op">&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Undo git add -N only (file must have no staged content)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> reset HEAD <span class="op">&lt;</span>new-file<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>git diff</code> only compares the <strong>index</strong> against the working tree.</li>
+<li>An untracked file has no index entry, so <code>git diff</code> cannot see it.</li>
+<li><code>git add -N</code> creates a zero-length index entry (“intent to add”) that lets <code>git diff</code> pick up the file without staging any content.</li>
+</ul>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Understand why <code>git diff</code> skips untracked files</label></li>
+<li><label><input type="checkbox">Use <code>git add -N</code> to include new files in <code>git diff</code> without staging them</label></li>
+<li><label><input type="checkbox">Undo <code>git add -N</code> with <code>git reset</code></label></li>
+</ul>
 </section>
-<section id="solution-1-using-git-diff" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1-using-git-diff">Solution 1: Using <code>git diff</code></h2>
-<p><code>git diff</code> allows you to inspect changes in your code, from minor edits to major branch comparisons.</p>
-<p><strong> ▶&nbsp; Key Takeaways</strong></p>
+<section id="why-git-diff-ignores-untracked-files" class="level2">
+<h2 class="anchored" data-anchor-id="why-git-diff-ignores-untracked-files">Why <code>git diff</code> ignores untracked files</h2>
+<p><code>git diff</code> (with no flags) compares two things:</p>
+<pre><code>index (staging area)  ←→  working tree</code></pre>
+<p>Every tracked file has an <strong>index entry</strong> — a record in Git’s internal database that stores the file’s path. <code>git diff</code> iterates over these entries and compares each one to the corresponding file.</p>
+<p>An <strong>untracked file</strong> has no index entry at all. From Git’s perspective it simply does not exist yet, so <code>git diff</code> has nothing to compare it against and silently skips it.</p>
+<p><span class="mini-section">Why you want to care</span></p>
+<p>A common workflow is to pipe <code>git diff</code> into an LLM to code-review:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--no-pager</span> diff <span class="kw">|</span> <span class="ex">claude</span> <span class="at">-p</span> <span class="st">"code-review for this diff"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If your changeset includes new files that are still untracked, <code>git diff</code> silently omits them — the LLM sees an incomplete picture and the review will miss those additions entirely. Running <code>git add -N</code> on each new file first ensures every change, including brand-new files, appears in the diff you hand off.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-N</span> new-feature.py</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--no-pager</span> diff <span class="kw">|</span> <span class="ex">claude</span> <span class="at">-p</span> <span class="st">"code-review for this diff"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Why <code>--no-pager</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div style="padding-left:1em;">
+<p>Without it, Git may invoke a pager (e.g.&nbsp;<code>less</code>) when stdout is not a terminal. A pager takes over the terminal rather than writing plain text to stdout, which breaks the pipe — Claude receives nothing. <code>--no-pager</code> forces Git to write directly to stdout regardless of terminal detection.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="git-add--n-intent-to-add" class="level2">
+<h2 class="anchored" data-anchor-id="git-add--n-intent-to-add"><code>git add -N</code>: intent-to-add</h2>
+<p><code>git add -N</code> (long form: <code>git add --intent-to-add</code>) registers a file in the index with an <strong>empty blob</strong> as its content. It does <strong>not</strong> stage the actual file contents.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-N</span> new-feature.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After this command:</p>
+<ul>
+<li><code>git status</code> shows <code>new-feature.py</code> as a new file with unstaged changes</li>
+<li><code>git diff</code> now shows the full diff of the file (index = empty, working tree = file content)</li>
+<li><code>git diff --cached</code> shows nothing (no content has been staged)</li>
+<li><code>git commit</code> will refuse to commit it — the staged content is empty</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git add <span class="at">-N</span> new-feature.py</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git status <span class="at">--short</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">A</span>  new-feature.py    <span class="co"># wait — why 'A'?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>git status</code> shows <code>A</code> but nothing is actually staged
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>The <code>A</code> in the left column means “added to index”, but the index entry is empty.</li>
+<li><code>git diff --cached</code> will show an empty diff. Only <code>git diff</code> (unstaged) reveals the full file content.</li>
+</ul>
+</div>
+</div>
+<section id="typical-workflow-with-git-add--n" class="level3">
+<h3 class="anchored" data-anchor-id="typical-workflow-with-git-add--n">Typical workflow with <code>git add -N</code></h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. You create a new file</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> new-feature.py</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Register intent-to-add so git diff can see it</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-N</span> new-feature.py</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Edit the file, review the diff as you work</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">vim</span> new-feature.py</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff new-feature.py   <span class="co"># full diff visible</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. When satisfied, stage for real</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add new-feature.py</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Commit</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Add new-feature.py"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="resetting-git-add--n-with-git-reset" class="level2">
+<h2 class="anchored" data-anchor-id="resetting-git-add--n-with-git-reset">Resetting <code>git add -N</code> with <code>git reset</code></h2>
+<p>If you added intent-to-add by mistake and want to go back to treating the file as untracked, use <code>git reset</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> reset HEAD <span class="op">&lt;</span>file<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Only use this when the file has no staged content
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div style="padding-left:1em;">
+<p><code>git reset HEAD &lt;file&gt;</code> works correctly here because an intent-to-add entry has an <strong>empty blob</strong> — there is nothing staged to lose. If you later ran <code>git add &lt;file&gt;</code> and staged real content, this command would discard those staged changes. Use <code>git restore --staged &lt;file&gt;</code> to unstage a fully-staged file instead.</p>
+</div>
+</div>
+</div>
+<p><code>git reset HEAD &lt;file&gt;</code> is a <strong><code>--mixed</code>-mode reset scoped to one file</strong>. It removes the file’s index entry entirely, returning the file to untracked status. The file’s content on disk is never touched.</p>
+<section id="what---mixed-means-here" class="level3">
+<h3 class="anchored" data-anchor-id="what---mixed-means-here">What <code>--mixed</code> means here</h3>
+<p><code>git reset</code> has three modes that control how much state is rolled back:</p>
+<div class="no-border-top-table pb-3">
 <table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>Commands</th>
-<th>Explaination</th>
+<th>Mode</th>
+<th>HEAD moves</th>
+<th>Index cleared</th>
+<th>Working tree cleared</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>git diff</code></td>
-<td>Check unstaged changes with HEAD</td>
+<td><code>--soft</code></td>
+<td>✔️</td>
+<td>✅ kept</td>
+<td>✅ kept</td>
 </tr>
 <tr class="even">
-<td><code>git diff --staged</code></td>
-<td>Check staged changes with HEAD</td>
+<td><code>--mixed</code></td>
+<td>✔️</td>
+<td>❌ cleared</td>
+<td>✅ kept</td>
 </tr>
 <tr class="odd">
-<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
-<td>Compare two specific commits</td>
-</tr>
-<tr class="even">
-<td><code>git diff main feature-branch</code></td>
-<td>Compare branches</td>
-</tr>
-<tr class="odd">
-<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
-<td>Check single file/directory changes with HEAD</td>
-</tr>
-<tr class="even">
-<td><code>git diff --stat</code></td>
-<td>Shows a summary of changes for each file, such as how many lines were added and deleted</td>
+<td><code>--hard</code></td>
+<td>✔️</td>
+<td>❌ cleared</td>
+<td>❌ cleared</td>
 </tr>
 </tbody>
 </table>
-<p><strong> ▶&nbsp; Viewing Changes in the Working Directory</strong></p>
-<p>To see all changes in your working directory that haven’t been staged,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This command shows the differences between your working directory and the last commit in your terminal display.</p>
-<p>If you want to see staged changes with your latest commit,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="at">--staged</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong> ▶&nbsp; Comparing with a Specific Commit</strong></p>
-<p>To see differences between your current state and a specific commit,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## (1) Compared with latest commit</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff HEAD</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">## (2) Compared with specific commit</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="op">&lt;</span>commit-hash<span class="op">&gt;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">## (3) Comparing two specific commits</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="op">&lt;</span>commit-hash1<span class="op">&gt;</span> <span class="op">&lt;</span>commit-hash2<span class="op">&gt;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">## (4) Comparing the HEAD with the HEAD~1</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff HEAD<span class="pp">~</span>1 HEAD</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong> ▶&nbsp; Comparing Branches</strong></p>
-<p>You can also use <code>git diff</code> to compare different branches.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff main feature-branch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong> ▶&nbsp; Shows a summary of changes for each file</strong></p>
-<p>When you want to see a summary of changes for each file, such as how many lines were added and deleted, use <code>git diff --stat</code>. If you want to compare the current branch with <code>gh-pages</code> branch in <code>.github/</code> directory,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git diff <span class="at">--stat</span> gh-pages .github/ </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="ex">.github/ISSUE_TEMPLATE/fix_documentation.yml</span> <span class="kw">|</span> <span class="ex">39</span> +++++++++++++++++++++++++++++++++++++++</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">.github/ISSUE_TEMPLATE/fix_typos.yml</span>         <span class="kw">|</span> <span class="ex">32</span> ++++++++++++++++++++++++++++++++</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">.github/pull_request_template.md</span>             <span class="kw">|</span> <span class="ex">25</span> +++++++++++++++++++++++++</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a> <span class="ex">.github/workflows/publish.yml</span>                <span class="kw">|</span> <span class="ex">26</span> ++++++++++++++++++++++++++</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a> <span class="ex">.github/workflows/rss-to-twitter.yml</span>         <span class="kw">|</span> <span class="ex">20</span> ++++++++++++++++++++</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a> <span class="ex">5</span> files changed, 142 insertions<span class="op">(+)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The number shows how many lines are modified for each files.</p>
+</div>
+<p>When you run <code>git reset HEAD &lt;file&gt;</code> (without a mode flag), Git uses <strong><code>--mixed</code></strong> by default and applies it only to that single file:</p>
+<ul>
+<li>The index entry for <code>&lt;file&gt;</code> is removed (or reset to <code>HEAD</code>’s version)</li>
+<li>The working tree file is untouched</li>
+<li>HEAD itself does not move (no commit is changed)</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git add <span class="at">-N</span> new-feature.py</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git status <span class="at">--short</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">A</span>  new-feature.py</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git reset HEAD new-feature.py</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git status <span class="at">--short</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ex">??</span> new-feature.py    <span class="co"># back to untracked</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span><code>git reset HEAD &lt;file&gt;</code> vs <code>git reset HEAD</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>git reset HEAD &lt;file&gt;</code> — scoped to one file; only removes that file’s index entry</li>
+<li><code>git reset HEAD</code> — resets the <strong>entire</strong> index to match <code>HEAD</code>; all staged changes are unstaged</li>
+</ul>
+</div>
+</div>
 </section>
-<section id="solution-2-using-git-difftool" class="level2">
-<h2 class="anchored" data-anchor-id="solution-2-using-git-difftool">Solution 2: Using <code>git difftool</code></h2>
-<p><code>git difftool</code> is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.</p>
-<p>The syntax of <code>git difftool</code> is similar to <code>git diff</code>. For example,</p>
+<section id="bulk-undo-all-intent-to-add-entries-at-once" class="level3">
+<h3 class="anchored" data-anchor-id="bulk-undo-all-intent-to-add-entries-at-once">Bulk-undo all intent-to-add entries at once</h3>
+<p>When you have multiple intent-to-add files and want to undo all of them without touching any fully-staged files, use <code>--diff-filter=A</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="at">--cached</span> <span class="at">--name-only</span> <span class="at">--diff-filter</span><span class="op">=</span>A <span class="dt">\</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">xargs</span> git reset HEAD <span class="at">--</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Breaking it down:</p>
+<div class="no-border-top-table">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 40%">
+<col style="width: 60%">
 </colgroup>
 <thead>
 <tr class="header">
-<th><code>git difftool</code> commands</th>
-<th><code>git diff</code> commands</th>
+<th>Part</th>
+<th>What it does</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>git difftool</code></td>
-<td><code>git diff</code></td>
+<td><code>git diff --cached --name-only</code></td>
+<td>Lists file names that differ between <code>HEAD</code> and the index (i.e.&nbsp;staged changes)</td>
 </tr>
 <tr class="even">
-<td><code>git difftool --staged</code><br><code>git difftool --cached</code></td>
-<td><code>git diff --staged</code></td>
+<td><code>--diff-filter=A</code></td>
+<td>Keeps only <strong>Added</strong> entries — files with no prior version in <code>HEAD</code>, which is exactly the state <code>git add -N</code> creates</td>
 </tr>
 <tr class="odd">
-<td><code>git difftool &lt;commit1&gt; &lt;commit2&gt;</code></td>
-<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
-</tr>
-<tr class="even">
-<td><code>git difftool main feature-branch</code></td>
-<td><code>git diff main feature-branch</code></td>
-</tr>
-<tr class="odd">
-<td><code>git difftool HEAD &lt;file/directory-path&gt;</code></td>
-<td><code>git diff HEAD &lt;file/directory-path&gt;</code></td>
+<td><code>xargs git reset HEAD --</code></td>
+<td>Runs <code>git reset HEAD -- &lt;file&gt;</code> for each name; the <code>--</code> separator prevents file names from being misread as flags</td>
 </tr>
 </tbody>
 </table>
-<p><strong> ▶&nbsp; Choosing an editor </strong></p>
-<p>You can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> diff.tool your_preferred_tool</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>For example, if you prefer to vscode,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> diff.tool vscode</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>To check if you successfully configure difftool editor,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>then, you can check what editor is you default git difftool editor.</p>
-<p><strong> ▶&nbsp; Choosing an editor temporarily</strong></p>
-<p>If you temporarily show the diff in vimdiff,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> difftool HEAD<span class="pp">~</span>1 HEAD <span class="at">--tool</span><span class="op">=</span>vimdiff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Because <code>--diff-filter=A</code> matches only new index entries, fully-staged modifications (<code>M</code>) and deletions (<code>D</code>) are left completely untouched.</p>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Situation</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>See why a new file is invisible to <code>git diff</code></td>
+<td><code>git status --short</code></td>
+</tr>
+<tr class="even">
+<td>Make a new file visible to <code>git diff</code></td>
+<td><code>git add -N &lt;file&gt;</code></td>
+</tr>
+<tr class="odd">
+<td>Stage the full content after reviewing</td>
+<td><code>git add &lt;file&gt;</code></td>
+</tr>
+<tr class="even">
+<td>Undo <code>git add -N</code> (no staged content)</td>
+<td><code>git reset HEAD &lt;file&gt;</code></td>
+</tr>
+<tr class="odd">
+<td>Unstage a fully staged file</td>
+<td><code>git restore --staged &lt;file&gt;</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> Index (staging area)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    Git's intermediate layer between the working tree and a commit.</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    Every file Git tracks has an entry here. `git add` writes content</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    into the index; `git commit` turns the index into a new commit object.</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> Intent-to-add (git add -N)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    A special index entry with an empty blob, created by</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    `git add --intent-to-add`. It tells Git "this file will eventually</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    be added" so that `git diff` can compare the (empty) index entry</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    against the working tree file, producing a visible diff without</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    staging any content.</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> git diff</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    Compares the index against the working tree.</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    Shows changes you have made but not yet staged.</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    Untracked files (no index entry) are invisible to this command.</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> git diff --cached</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    Compares HEAD against the index.</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    Shows changes that are staged and will be included in the next commit.</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    Also written as `git diff --staged` (identical behaviour).</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    An intent-to-add entry (`git add -N`) produces an empty diff here</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    because no content has been staged yet.</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> git reset --mixed (default)</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    Moves HEAD to a target commit and clears the index to match,</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    but leaves the working tree files untouched. When scoped to a</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    single file (`git reset HEAD &lt;file&gt;`), it only removes that file's</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    index entry — HEAD does not move.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-diff">Git Documentation &gt; git-diff</a></li>
+<li><a href="https://git-scm.com/docs/git-add#Documentation/git-add.txt--N">Git Documentation &gt; git-add (<code>--intent-to-add</code>)</a></li>
+<li><a href="https://git-scm.com/docs/git-reset">Git Documentation &gt; git-reset</a></li>
+</ul>
 
 
 </section>
@@ -984,7 +1183,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
  © Copyright RyoNak
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="../../../../LICENSE">
+    <a class="nav-link" href="../../LICENSE">
 <p>License</p>
 </a>
   </li>  
