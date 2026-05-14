@@ -40,6 +40,7 @@ format:
     include-in-header: 
       - _include/setup_googletagmanager.html
       - _include/custom_webfont.html
+      - _include/custom_function.html
     include-in-body: _include/setup_googletagmanager_body.html
     include-after-body: _include/custom_section.html
     theme: 

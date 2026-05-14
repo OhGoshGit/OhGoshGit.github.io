@@ -1,0 +1,278 @@
+---
+title: "OGG... Why doesn't `git diff` show untracked files and how do I fix it?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-05-14"
+date-modified: "2026-05-14"
+categories: [git diff, git add, git reset]
+---
+
+::: {.callout-note}
+## TL;DR
+
+:::{style="padding-left:1em;"}
+
+```bash
+# Make git diff see a new file without staging its content
+git add -N <new-file>
+
+# Undo git add -N only (file must have no staged content)
+git reset HEAD <new-file>
+```
+
+- `git diff` only compares the **index** against the working tree.
+- An untracked file has no index entry, so `git diff` cannot see it.
+- `git add -N` creates a zero-length index entry ("intent to add") that lets `git diff` pick up the file without staging any content.
+
+
+:::
+:::
+
+
+## 🎯 Goal
+
+- [ ] Understand why `git diff` skips untracked files
+- [ ] Use `git add -N` to include new files in `git diff` without staging them
+- [ ] Undo `git add -N` with `git reset`
+
+
+## Why `git diff` ignores untracked files
+
+`git diff` (with no flags) compares two things:
+
+```
+index (staging area)  ←→  working tree
+```
+
+Every tracked file has an **index entry** — a record in Git's internal database that stores the file's path. `git diff` iterates over these entries and compares each one to the corresponding file.
+
+An **untracked file** has no index entry at all. From Git's perspective it simply does not exist yet, so `git diff` has nothing to compare it against and silently skips it.
+
+
+[Why you want to care]{.mini-section}
+
+A common workflow is to pipe `git diff` into an LLM to code-review:
+
+```bash
+git --no-pager diff | claude -p "code-review for this diff"
+```
+
+If your changeset includes new files that are still untracked, `git diff` silently omits them — the LLM sees an incomplete picture and the review will miss those additions entirely.
+Running `git add -N` on each new file first ensures every change, including brand-new files, appears in the diff you hand off.
+
+```bash
+git add -N new-feature.py
+git --no-pager diff | claude -p "code-review for this diff"
+```
+
+::: {.callout-tip}
+## Why `--no-pager`?
+
+:::{style="padding-left:1em;"}
+Without it, Git may invoke a pager (e.g. `less`) when stdout is not a terminal.
+A pager takes over the terminal rather than writing plain text to stdout, which breaks the pipe — Claude receives nothing.
+`--no-pager` forces Git to write directly to stdout regardless of terminal detection.
+:::
+:::
+
+
+## `git add -N`: intent-to-add
+
+`git add -N` (long form: `git add --intent-to-add`) registers a file in the index with an **empty blob** as its content. It does **not** stage the actual file contents.
+
+```bash
+git add -N new-feature.py
+```
+
+After this command:
+
+- `git status` shows `new-feature.py` as a new file with unstaged changes
+- `git diff` now shows the full diff of the file (index = empty, working tree = file content)
+- `git diff --cached` shows nothing (no content has been staged)
+- `git commit` will refuse to commit it — the staged content is empty
+
+```bash
+$ git add -N new-feature.py
+$ git status --short
+A  new-feature.py    # wait — why 'A'?
+```
+
+::: {.callout-warning}
+## `git status` shows `A` but nothing is actually staged
+
+
+- The `A` in the left column means "added to index", but the index entry is empty.
+- `git diff --cached` will show an empty diff. Only `git diff` (unstaged) reveals the full file content.
+
+:::
+
+### Typical workflow with `git add -N`
+
+```bash
+# 1. You create a new file
+touch new-feature.py
+
+# 2. Register intent-to-add so git diff can see it
+git add -N new-feature.py
+
+# 3. Edit the file, review the diff as you work
+vim new-feature.py
+git diff new-feature.py   # full diff visible
+
+# 4. When satisfied, stage for real
+git add new-feature.py
+
+# 5. Commit
+git commit -m "Add new-feature.py"
+```
+
+
+## Resetting `git add -N` with `git reset`
+
+If you added intent-to-add by mistake and want to go back to treating the file as untracked, use `git reset`:
+
+```bash
+git reset HEAD <file>
+```
+
+::: {.callout-warning}
+## Only use this when the file has no staged content
+
+:::{style="padding-left:1em;"}
+`git reset HEAD <file>` works correctly here because an intent-to-add entry has an **empty blob** — there is nothing staged to lose. If you later ran `git add <file>` and staged real content, this command would discard those staged changes. Use `git restore --staged <file>` to unstage a fully-staged file instead.
+:::
+
+:::
+
+`git reset HEAD <file>` is a **`--mixed`-mode reset scoped to one file**. It removes the file's index entry entirely, returning the file to untracked status. The file's content on disk is never touched.
+
+### What `--mixed` means here
+
+`git reset` has three modes that control how much state is rolled back:
+
+:::{.no-border-top-table .pb-3}
+
+| Mode        | HEAD moves | Index cleared | Working tree cleared |
+| ----------- | ---------- | ------------- | -------------------- |
+| `--soft`    | ✔️         | ✅ kept        | ✅ kept               |
+| `--mixed`   | ✔️         | ❌ cleared     | ✅ kept               |
+| `--hard`    | ✔️         | ❌ cleared     | ❌ cleared            |
+
+:::
+
+When you run `git reset HEAD <file>` (without a mode flag), Git uses **`--mixed`** by default and applies it only to that single file:
+
+- The index entry for `<file>` is removed (or reset to `HEAD`'s version)
+- The working tree file is untouched
+- HEAD itself does not move (no commit is changed)
+
+```bash
+$ git add -N new-feature.py
+$ git status --short
+A  new-feature.py
+
+$ git reset HEAD new-feature.py
+$ git status --short
+?? new-feature.py    # back to untracked
+```
+
+::: {.callout-tip}
+## `git reset HEAD <file>` vs `git reset HEAD`
+- `git reset HEAD <file>` — scoped to one file; only removes that file's index entry
+- `git reset HEAD` — resets the **entire** index to match `HEAD`; all staged changes are unstaged
+:::
+
+### Bulk-undo all intent-to-add entries at once
+
+When you have multiple intent-to-add files and want to undo all of them without touching any fully-staged files, use `--diff-filter=A`:
+
+```bash
+git diff --cached --name-only --diff-filter=A \
+  | xargs git reset HEAD --
+```
+
+Breaking it down:
+
+:::: {.no-border-top-table}
+
+| Part | What it does |
+| ---- | ------------ |
+| `git diff --cached --name-only` | Lists file names that differ between `HEAD` and the index (i.e. staged changes) |
+| `--diff-filter=A` | Keeps only **Added** entries — files with no prior version in `HEAD`, which is exactly the state `git add -N` creates |
+| `xargs git reset HEAD --` | Runs `git reset HEAD -- <file>` for each name; the `--` separator prevents file names from being misread as flags |
+
+: {tbl-colwidths="[40,60]"}
+
+::::
+
+Because `--diff-filter=A` matches only new index entries, fully-staged modifications (`M`) and deletions (`D`) are left completely untouched.
+
+
+## Summary
+
+:::{.no-border-top-table}
+
+| Situation                                    | Command                          |
+| -------------------------------------------- | -------------------------------- |
+| See why a new file is invisible to `git diff`| `git status --short`             |
+| Make a new file visible to `git diff`        | `git add -N <file>`              |
+| Stage the full content after reviewing       | `git add <file>`                 |
+| Undo `git add -N` (no staged content)        | `git reset HEAD <file>`          |
+| Unstage a fully staged file                  | `git restore --staged <file>`    |
+
+: {tbl-colwidths="[55,45]"}
+
+:::
+
+
+## Glossary
+
+::: {.glossary-container}
+
+```yml
+- def: Index (staging area)
+  description: |
+    Git's intermediate layer between the working tree and a commit.
+    Every file Git tracks has an entry here. `git add` writes content
+    into the index; `git commit` turns the index into a new commit object.
+
+- def: Intent-to-add (git add -N)
+  description: |
+    A special index entry with an empty blob, created by
+    `git add --intent-to-add`. It tells Git "this file will eventually
+    be added" so that `git diff` can compare the (empty) index entry
+    against the working tree file, producing a visible diff without
+    staging any content.
+
+- def: git diff
+  description: |
+    Compares the index against the working tree.
+    Shows changes you have made but not yet staged.
+    Untracked files (no index entry) are invisible to this command.
+
+- def: git diff --cached
+  description: |
+    Compares HEAD against the index.
+    Shows changes that are staged and will be included in the next commit.
+    Also written as `git diff --staged` (identical behaviour).
+    An intent-to-add entry (`git add -N`) produces an empty diff here
+    because no content has been staged yet.
+
+- def: git reset --mixed (default)
+  description: |
+    Moves HEAD to a target commit and clears the index to match,
+    but leaves the working tree files untouched. When scoped to a
+    single file (`git reset HEAD <file>`), it only removes that file's
+    index entry — HEAD does not move.
+```
+
+:::
+
+
+📘 References
+---------
+
+- [Git Documentation > git-diff](https://git-scm.com/docs/git-diff)
+- [Git Documentation > git-add (`--intent-to-add`)](https://git-scm.com/docs/git-add#Documentation/git-add.txt--N)
+- [Git Documentation > git-reset](https://git-scm.com/docs/git-reset)
