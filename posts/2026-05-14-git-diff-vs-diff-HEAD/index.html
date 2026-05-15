@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2026-05-12">
+<meta name="dcterms.date" content="2026-05-15">
 
-<title>OGG… How do I git add only files matching a pattern? – OhGoshGit!?!</title>
+<title>OGG… What’s the difference between git diff, git diff --cached, and git diff HEAD? – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -133,6 +133,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.css">
 <script type="text/javascript" src="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -357,10 +360,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… How do I <code>git add</code> only files matching a pattern?</h1>
+      <h1 class="title">OGG… What’s the difference between <code>git diff</code>, <code>git diff --cached</code>, and <code>git diff HEAD</code>?</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">git add</div>
-                <div class="quarto-category">regex</div>
+                <div class="quarto-category">git diff</div>
               </div>
                   </div>
   </div>
@@ -378,14 +380,14 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2026-05-12</p>
+        <p class="date">2026-05-15</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">2026-05-12</p>
+        <p class="date-modified">2026-05-15</p>
       </div>
     </div>
       
@@ -401,14 +403,18 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">🎯 Goal</a></li>
-  <li><a href="#diving-into-the-pipeline" id="toc-diving-into-the-pipeline" class="nav-link" data-scroll-target="#diving-into-the-pipeline">🔍 Diving into the pipeline</a>
+  <li><a href="#where-each-command-compares" id="toc-where-each-command-compares" class="nav-link" data-scroll-target="#where-each-command-compares">Where each command compares</a></li>
+  <li><a href="#walking-through-a-concrete-example" id="toc-walking-through-a-concrete-example" class="nav-link" data-scroll-target="#walking-through-a-concrete-example">Walking through a concrete example</a>
   <ul class="collapse">
-  <li><a href="#git-ls-files--mo---exclude-standard" id="toc-git-ls-files--mo---exclude-standard" class="nav-link" data-scroll-target="#git-ls-files--mo---exclude-standard">1. <code>git ls-files -mo --exclude-standard</code></a></li>
-  <li><a href="#grep--e-testbats" id="toc-grep--e-testbats" class="nav-link" data-scroll-target="#grep--e-testbats">2. <code>grep -E 'test|bats'</code></a></li>
-  <li><a href="#xargs--i-git-add" id="toc-xargs--i-git-add" class="nav-link" data-scroll-target="#xargs--i-git-add">3. <code>xargs -i git add {}</code></a></li>
+  <li><a href="#git-diff-staging-area-working-tree" id="toc-git-diff-staging-area-working-tree" class="nav-link" data-scroll-target="#git-diff-staging-area-working-tree"><code>git diff</code> — staging area → working tree</a></li>
+  <li><a href="#git-diff---cached-head-staging-area" id="toc-git-diff---cached-head-staging-area" class="nav-link" data-scroll-target="#git-diff---cached-head-staging-area"><code>git diff --cached</code> — HEAD → staging area</a></li>
+  <li><a href="#git-diff-head-head-working-tree" id="toc-git-diff-head-head-working-tree" class="nav-link" data-scroll-target="#git-diff-head-head-working-tree"><code>git diff HEAD</code> — HEAD → working tree</a></li>
+  <li><a href="#diff-coverage-by-command" id="toc-diff-coverage-by-command" class="nav-link" data-scroll-target="#diff-coverage-by-command">Diff coverage by command</a></li>
   </ul></li>
-  <li><a href="#variations-worth-knowing" id="toc-variations-worth-knowing" class="nav-link" data-scroll-target="#variations-worth-knowing">✅ Variations worth knowing</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#including-untracked-files-in-a-diff" id="toc-including-untracked-files-in-a-diff" class="nav-link" data-scroll-target="#including-untracked-files-in-a-diff">Including untracked files in a diff</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">📘 References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -430,175 +436,310 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="at">-mo</span> <span class="at">--exclude-standard</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'test|bats'</span> <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-i</span> git add {}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This one-liner stages <strong>only</strong> files whose paths contain <code>test</code> or <code>bats</code>, among files that are either modified or untracked (but not ignored).</p>
+<div style="padding-left:1em;">
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant HEAD as HEAD (latest commit)
+    participant SA as Staging area
+    participant WT as Working tree
+
+    HEAD -&gt;&gt; SA: git diff --cached
+    SA -&gt;&gt; WT: git diff
+    HEAD --&gt;&gt; WT: git diff HEAD
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><code>git diff HEAD</code> = <code>git diff</code> + <code>git diff --cached</code> combined.</p>
+</div>
 </div>
 </div>
 <section id="goal" class="level2">
 <h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
 <ul class="task-list">
-<li><label><input type="checkbox">Stage only the files whose paths match a given pattern (e.g.&nbsp;test-related files), without <code>git add .</code> sweeping everything</label></li>
+<li><label><input type="checkbox">Understand what each of <code>git diff</code> / <code>git diff --cached</code> / <code>git diff HEAD</code> compares</label></li>
+<li><label><input type="checkbox">Know which commands exclude untracked files</label></li>
 </ul>
 </section>
-<section id="diving-into-the-pipeline" class="level2">
-<h2 class="anchored" data-anchor-id="diving-into-the-pipeline">🔍 Diving into the pipeline</h2>
-<p>The command is three stages glued together with pipes:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="at">-mo</span> <span class="at">--exclude-standard</span>   <span class="co"># 1. list candidate files</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'test|bats'</span>               <span class="co"># 2. filter by path pattern</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-i</span> git add {}               <span class="co"># 3. stage each one</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="git-ls-files--mo---exclude-standard" class="level3">
-<h3 class="anchored" data-anchor-id="git-ls-files--mo---exclude-standard">1. <code>git ls-files -mo --exclude-standard</code></h3>
-<p><code>git ls-files</code> prints file paths that Git knows about (or could know about) in the current working tree.</p>
-<div class="no-border-top-table">
+<section id="where-each-command-compares" class="level2">
+<h2 class="anchored" data-anchor-id="where-each-command-compares">Where each command compares</h2>
+<p>Git has three layers that hold changes.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    HEAD["HEAD (latest commit)"]
+    SA["Staging area"]
+    WT["Working tree"]
+
+    HEAD --&gt;|"git diff --cached"| SA
+    SA --&gt;|"git diff"| WT
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="no-border-top-table pb-3">
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>Option</th>
-<th>Meaning</th>
+<th>Command</th>
+<th>From</th>
+<th>To</th>
+<th>Includes untracked</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>-m</code></td>
-<td><strong>Modified</strong> — tracked files that differ from the index</td>
+<td><code>git diff</code></td>
+<td>Staging area</td>
+<td>Working tree</td>
+<td>✗</td>
 </tr>
 <tr class="even">
-<td><code>-o</code></td>
-<td><strong>Others</strong> — files in the working tree that are not tracked (i.e.&nbsp;untracked files)</td>
+<td><code>git diff --cached</code></td>
+<td>HEAD</td>
+<td>Staging area</td>
+<td>✗</td>
 </tr>
 <tr class="odd">
-<td><code>--exclude-standard</code></td>
-<td>Apply the usual ignore rules: <code>.gitignore</code>, <code>.git/info/exclude</code>, and the user’s global excludes file</td>
+<td><code>git diff HEAD</code></td>
+<td>HEAD</td>
+<td>Working tree</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git add -N &lt;file&gt;</code> + <code>git diff HEAD</code></td>
+<td>HEAD</td>
+<td>Working tree</td>
+<td>✓</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>So <code>-mo --exclude-standard</code> together means <em>“modified files <strong>plus</strong> untracked files, but skip anything that is ignored.”</em> Deleted files are not included unless you also pass <code>-d</code>.</p>
+<p><code>git diff HEAD</code> is equivalent to the two commands combined.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff HEAD  <span class="co"># ≈  git diff --cached  +  git diff</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>However, none of them show <strong>untracked files</strong> — files that have no index entry yet.</p>
+</section>
+<section id="walking-through-a-concrete-example" class="level2">
+<h2 class="anchored" data-anchor-id="walking-through-a-concrete-example">Walking through a concrete example</h2>
+<p>Consider this state:</p>
+<pre><code>HEAD:          a.py (committed)
+Staging area:  a.py (first edit staged), b.py (newly added)
+Working tree:  a.py (second edit, not yet staged), c.py (untracked new file)</code></pre>
+<p><strong>Setup:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"original content"</span> <span class="op">&gt;</span> a.py</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add a.py <span class="kw">&amp;&amp;</span> <span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"initial commit"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"first modification"</span> <span class="op">&gt;</span> a.py</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"new b file"</span> <span class="op">&gt;</span> b.py</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add a.py b.py          <span class="co"># stage first edit of a.py and b.py</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"second modification"</span> <span class="op">&gt;&gt;</span> a.py   <span class="co"># second edit stays in working tree only</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"c file untracked"</span> <span class="op">&gt;</span> c.py       <span class="co"># untracked, never added</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="git-diff-staging-area-working-tree" class="level3">
+<h3 class="anchored" data-anchor-id="git-diff-staging-area-working-tree"><code>git diff</code> — staging area → working tree</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Shows only <code>a.py</code>’s <strong>second edit</strong></li>
+<li>No diff for <code>b.py</code> (not touched in the working tree)</li>
+<li><code>c.py</code> is invisible (untracked)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">diff --git a/a.py b/a.py</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>index 578ddd4..ab08efe 100644</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">--- a/a.py</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ b/a.py</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="dt">@@ -1 +1,2 @@</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a> first modification</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="va">+second modification</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="git-diff---cached-head-staging-area" class="level3">
+<h3 class="anchored" data-anchor-id="git-diff---cached-head-staging-area"><code>git diff --cached</code> — HEAD → staging area</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="at">--cached</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Shows <code>a.py</code>’s <strong>first edit</strong></li>
+<li>Shows all of <code>b.py</code> (doesn’t exist in HEAD, so the entire file is a diff)</li>
+<li><code>c.py</code> is invisible (not staged)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">diff --git a/a.py b/a.py</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>index 2fd0152..578ddd4 100644</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dt">--- a/a.py</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ b/a.py</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="dt">@@ -1 +1 @@</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="st">-original content</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="va">+first modification</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">diff --git a/b.py b/b.py</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>new file mode 100644</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>index 0000000..eaf0030</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="dt">--- /dev/null</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ b/b.py</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="dt">@@ -0,0 +1 @@</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="va">+new b file</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="git-diff-head-head-working-tree" class="level3">
+<h3 class="anchored" data-anchor-id="git-diff-head-head-working-tree"><code>git diff HEAD</code> — HEAD → working tree</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff HEAD</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Shows <strong>both edits to <code>a.py</code> combined</strong></li>
+<li>Shows all of <code>b.py</code></li>
+<li><code>c.py</code> is still <strong>invisible</strong> (untracked files are excluded)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">diff --git a/a.py b/a.py</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>index 2fd0152..ab08efe 100644</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">--- a/a.py</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ b/a.py</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">@@ -1 +1,2 @@</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">-original content</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="va">+first modification</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="va">+second modification</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="kw">diff --git a/b.py b/b.py</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>new file mode 100644</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>index 0000000..eaf0030</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="dt">--- /dev/null</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ b/b.py</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="dt">@@ -0,0 +1 @@</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="va">+new b file</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="diff-coverage-by-command" class="level3">
+<h3 class="anchored" data-anchor-id="diff-coverage-by-command">Diff coverage by command</h3>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><code>a.py</code> second edit</th>
+<th><code>b.py</code></th>
+<th><code>c.py</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git diff</code></td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git diff --cached</code></td>
+<td>✓ (first edit)</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr class="odd">
+<td><code>git diff HEAD</code></td>
+<td>✓ (both edits)</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git add -N c.py</code> + <code>git diff HEAD</code></td>
+<td>✓ (both edits)</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="including-untracked-files-in-a-diff" class="level2">
+<h2 class="anchored" data-anchor-id="including-untracked-files-in-a-diff">Including untracked files in a diff</h2>
+<p>To include an untracked file in <code>git diff HEAD</code>, use <code>git add -N</code> (intent-to-add). This creates an index entry without staging the file’s content.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-N</span> c.py</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff HEAD    <span class="co"># c.py now appears in the diff</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Why not just <code>git add -u</code> or <code>git add .</code>?
+<span class="screen-reader-only">Tip</span>Code review workflow example
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ul>
-<li><code>git add -u</code> stages <strong>modified and deleted</strong> tracked files, but ignores <strong>untracked</strong> ones.</li>
-<li><code>git add .</code> stages everything under the current directory, including files you may not want.</li>
-</ul>
+<div style="padding-left:1em;">
+<p>When you want an LLM to review all changes including new files:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Register new files as intent-to-add</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-N</span> new-feature.py</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pipe the full diff from HEAD to Claude</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--no-pager</span> diff HEAD <span class="kw">|</span> <span class="ex">claude</span> <span class="at">-p</span> <span class="st">"code-review for this diff"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Stage for real once satisfied</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add new-feature.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Without <code>--no-pager</code>, Git may launch a pager (<code>less</code>, etc.) which takes over the terminal instead of writing to stdout — breaking the pipe so Claude receives nothing.</p>
+</div>
 </div>
 </div>
 </section>
-<section id="grep--e-testbats" class="level3">
-<h3 class="anchored" data-anchor-id="grep--e-testbats">2. <code>grep -E 'test|bats'</code></h3>
-<p>Filter the list to lines matching the extended regex <code>test|bats</code> — i.e.&nbsp;any path that contains the substring <code>test</code> <strong>or</strong> <code>bats</code> anywhere.</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <div class="no-border-top-table">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
+<col style="width: 60%">
+<col style="width: 40%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Option</th>
-<th>Meaning</th>
+<th>Goal</th>
+<th>Command</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>-E</code></td>
-<td>Use <strong>Extended Regular Expressions</strong> (so <code>|</code> works as alternation without backslashing)</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Example matches:</p>
-<pre><code>tests/test_parser.py     ✅ contains "test"
-src/foo.bats             ✅ contains "bats"
-scripts/run-bats.sh      ✅ contains "bats"
-src/main.py              ❌ no match</code></pre>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span><code>grep</code> matches anywhere in the path
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The pattern <code>test</code> will also match <code>latest/</code>, <code>contest.md</code>, or <code>protest.txt</code>. Tighten the regex when in doubt — e.g.&nbsp;<code>'(^|/)tests?/'</code> to require a literal <code>tests/</code> or <code>test/</code> directory segment.</p>
-</div>
-</div>
-</section>
-<section id="xargs--i-git-add" class="level3">
-<h3 class="anchored" data-anchor-id="xargs--i-git-add">3. <code>xargs -i git add {}</code></h3>
-<p><code>xargs</code> builds and executes commands from stdin. Here it runs <code>git add &lt;file&gt;</code> once per line of input.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Option</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>-i</code></td>
-<td>Replace <code>{}</code> in the command with each input line. <strong>Deprecated</strong> in GNU <code>xargs</code> — prefer <code>-I {}</code> (capital <code>I</code>).</td>
+<td>Review staged changes</td>
+<td><code>git diff --cached</code></td>
 </tr>
 <tr class="even">
-<td><code>{}</code></td>
-<td>Placeholder for the current input line</td>
+<td>Review unstaged changes</td>
+<td><code>git diff</code></td>
+</tr>
+<tr class="odd">
+<td>Review all changes from HEAD</td>
+<td><code>git diff HEAD</code></td>
+</tr>
+<tr class="even">
+<td>Review all changes including untracked files</td>
+<td><code>git add -N &lt;file&gt;</code> → <code>git diff HEAD</code></td>
 </tr>
 </tbody>
 </table>
-<p>So for input lines <code>a.py</code>, <code>b.py</code>, <code>xargs</code> runs:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add a.py</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add b.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Modern, safer form
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The portable, modern equivalent is:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="at">-mo</span> <span class="at">--exclude-standard</span> <span class="at">-z</span> <span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-zE</span> <span class="st">'test|bats'</span> <span class="dt">\</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-0</span> <span class="at">-I</span> {} git add {}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ul>
-<li><code>-z</code> / <code>-0</code> use NUL-delimited records, so paths containing spaces, tabs, or newlines do not break the pipeline.</li>
-<li><code>-I {}</code> is the POSIX-standard replacement form (the lowercase <code>-i</code> works on GNU <code>xargs</code> but is non-standard).</li>
-</ul>
-</div>
 </div>
 </section>
-</section>
-<section id="variations-worth-knowing" class="level2">
-<h2 class="anchored" data-anchor-id="variations-worth-knowing">✅ Variations worth knowing</h2>
-<p><span class="mini-section">Stage only modified files matching a pattern (skip untracked)</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="at">-m</span> <span class="at">--exclude-standard</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'test|bats'</span> <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-I</span> {} git add {}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><span class="mini-section">Preview what will be staged before running <code>git add</code></span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="at">-mo</span> <span class="at">--exclude-standard</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'test|bats'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> Staging area (index)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    The intermediate layer between the working tree and a commit.</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    `git add` writes file content into the index; `git commit` turns</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    the index snapshot into a new commit object.</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> HEAD</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    A pointer to the latest commit on the current branch.</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    `git diff HEAD` shows all changes since the last commit.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
 <ul>
-<li><a href="https://git-scm.com/docs/git-ls-files"><code>git ls-files</code> — Git Reference</a></li>
-<li><a href="https://www.gnu.org/software/findutils/manual/html_node/find_html/xargs-options.html"><code>xargs(1)</code> — GNU findutils</a></li>
+<li><a href="https://git-scm.com/docs/git-diff">Git Documentation &gt; git-diff</a></li>
+<li><a href="https://git-scm.com/docs/git-add#Documentation/git-add.txt--N">Git Documentation &gt; git-add (<code>--intent-to-add</code>)</a></li>
 </ul>
 
 

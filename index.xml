@@ -10,7 +10,535 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Thu, 14 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 15 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What’s the difference between git diff, git diff --cached, and git diff HEAD?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-05-14-git-diff-vs-diff-HEAD/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div style="padding-left:1em;">
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant HEAD as HEAD (latest commit)
+    participant SA as Staging area
+    participant WT as Working tree
+
+    HEAD -&gt;&gt; SA: git diff --cached
+    SA -&gt;&gt; WT: git diff
+    HEAD --&gt;&gt; WT: git diff HEAD
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><code>git diff HEAD</code> = <code>git diff</code> + <code>git diff --cached</code> combined.</p>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Understand what each of <code>git diff</code> / <code>git diff --cached</code> / <code>git diff HEAD</code> compares</label></li>
+<li><label><input type="checkbox">Know which commands exclude untracked files</label></li>
+</ul>
+</section>
+<section id="where-each-command-compares" class="level2">
+<h2 class="anchored" data-anchor-id="where-each-command-compares">Where each command compares</h2>
+<p>Git has three layers that hold changes.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    HEAD["HEAD (latest commit)"]
+    SA["Staging area"]
+    WT["Working tree"]
+
+    HEAD --&gt;|"git diff --cached"| SA
+    SA --&gt;|"git diff"| WT
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>From</th>
+<th>To</th>
+<th>Includes untracked</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git diff</code></td>
+<td>Staging area</td>
+<td>Working tree</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git diff --cached</code></td>
+<td>HEAD</td>
+<td>Staging area</td>
+<td>✗</td>
+</tr>
+<tr class="odd">
+<td><code>git diff HEAD</code></td>
+<td>HEAD</td>
+<td>Working tree</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git add -N &lt;file&gt;</code> + <code>git diff HEAD</code></td>
+<td>HEAD</td>
+<td>Working tree</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>git diff HEAD</code> is equivalent to the two commands combined.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ≈  git diff --cached  +  git diff</span></span></code></pre></div></div>
+<p>However, none of them show <strong>untracked files</strong> — files that have no index entry yet.</p>
+</section>
+<section id="walking-through-a-concrete-example" class="level2">
+<h2 class="anchored" data-anchor-id="walking-through-a-concrete-example">Walking through a concrete example</h2>
+<p>Consider this state:</p>
+<pre><code>HEAD:          a.py (committed)
+Staging area:  a.py (first edit staged), b.py (newly added)
+Working tree:  a.py (second edit, not yet staged), c.py (untracked new file)</code></pre>
+<p><strong>Setup:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"original content"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> a.py</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add a.py <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">&amp;&amp;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"initial commit"</span></span>
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"first modification"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> a.py</span>
+<span id="cb3-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new b file"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> b.py</span>
+<span id="cb3-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add a.py b.py          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># stage first edit of a.py and b.py</span></span>
+<span id="cb3-7"></span>
+<span id="cb3-8"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"second modification"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> a.py   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># second edit stays in working tree only</span></span>
+<span id="cb3-9"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"c file untracked"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> c.py       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># untracked, never added</span></span></code></pre></div></div>
+<section id="git-diff-staging-area-working-tree" class="level3">
+<h3 class="anchored" data-anchor-id="git-diff-staging-area-working-tree"><code>git diff</code> — staging area → working tree</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff</span></code></pre></div></div>
+<ul>
+<li>Shows only <code>a.py</code>’s <strong>second edit</strong></li>
+<li>No diff for <code>b.py</code> (not touched in the working tree)</li>
+<li><code>c.py</code> is invisible (untracked)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb5-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">diff --git a/a.py b/a.py</span></span>
+<span id="cb5-2">index 578ddd4..ab08efe 100644</span>
+<span id="cb5-3"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">--- a/a.py</span></span>
+<span id="cb5-4"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">+++ b/a.py</span></span>
+<span id="cb5-5"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">@@ -1 +1,2 @@</span></span>
+<span id="cb5-6"> first modification</span>
+<span id="cb5-7"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">+second modification</span></span></code></pre></div></div>
+</section>
+<section id="git-diff---cached-head-staging-area" class="level3">
+<h3 class="anchored" data-anchor-id="git-diff---cached-head-staging-area"><code>git diff --cached</code> — HEAD → staging area</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--cached</span></span></code></pre></div></div>
+<ul>
+<li>Shows <code>a.py</code>’s <strong>first edit</strong></li>
+<li>Shows all of <code>b.py</code> (doesn’t exist in HEAD, so the entire file is a diff)</li>
+<li><code>c.py</code> is invisible (not staged)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb7-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">diff --git a/a.py b/a.py</span></span>
+<span id="cb7-2">index 2fd0152..578ddd4 100644</span>
+<span id="cb7-3"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">--- a/a.py</span></span>
+<span id="cb7-4"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">+++ b/a.py</span></span>
+<span id="cb7-5"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">@@ -1 +1 @@</span></span>
+<span id="cb7-6"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">-original content</span></span>
+<span id="cb7-7"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">+first modification</span></span>
+<span id="cb7-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">diff --git a/b.py b/b.py</span></span>
+<span id="cb7-9">new file mode 100644</span>
+<span id="cb7-10">index 0000000..eaf0030</span>
+<span id="cb7-11"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">--- /dev/null</span></span>
+<span id="cb7-12"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">+++ b/b.py</span></span>
+<span id="cb7-13"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">@@ -0,0 +1 @@</span></span>
+<span id="cb7-14"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">+new b file</span></span></code></pre></div></div>
+</section>
+<section id="git-diff-head-head-working-tree" class="level3">
+<h3 class="anchored" data-anchor-id="git-diff-head-head-working-tree"><code>git diff HEAD</code> — HEAD → working tree</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD</span></code></pre></div></div>
+<ul>
+<li>Shows <strong>both edits to <code>a.py</code> combined</strong></li>
+<li>Shows all of <code>b.py</code></li>
+<li><code>c.py</code> is still <strong>invisible</strong> (untracked files are excluded)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb9-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">diff --git a/a.py b/a.py</span></span>
+<span id="cb9-2">index 2fd0152..ab08efe 100644</span>
+<span id="cb9-3"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">--- a/a.py</span></span>
+<span id="cb9-4"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">+++ b/a.py</span></span>
+<span id="cb9-5"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">@@ -1 +1,2 @@</span></span>
+<span id="cb9-6"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">-original content</span></span>
+<span id="cb9-7"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">+first modification</span></span>
+<span id="cb9-8"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">+second modification</span></span>
+<span id="cb9-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">diff --git a/b.py b/b.py</span></span>
+<span id="cb9-10">new file mode 100644</span>
+<span id="cb9-11">index 0000000..eaf0030</span>
+<span id="cb9-12"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">--- /dev/null</span></span>
+<span id="cb9-13"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">+++ b/b.py</span></span>
+<span id="cb9-14"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">@@ -0,0 +1 @@</span></span>
+<span id="cb9-15"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">+new b file</span></span></code></pre></div></div>
+<hr>
+</section>
+<section id="diff-coverage-by-command" class="level3">
+<h3 class="anchored" data-anchor-id="diff-coverage-by-command">Diff coverage by command</h3>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><code>a.py</code> second edit</th>
+<th><code>b.py</code></th>
+<th><code>c.py</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git diff</code></td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git diff --cached</code></td>
+<td>✓ (first edit)</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr class="odd">
+<td><code>git diff HEAD</code></td>
+<td>✓ (both edits)</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git add -N c.py</code> + <code>git diff HEAD</code></td>
+<td>✓ (both edits)</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="including-untracked-files-in-a-diff" class="level2">
+<h2 class="anchored" data-anchor-id="including-untracked-files-in-a-diff">Including untracked files in a diff</h2>
+<p>To include an untracked file in <code>git diff HEAD</code>, use <code>git add -N</code> (intent-to-add). This creates an index entry without staging the file’s content.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-N</span> c.py</span>
+<span id="cb10-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># c.py now appears in the diff</span></span></code></pre></div></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Code review workflow example
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div style="padding-left:1em;">
+<p>When you want an LLM to review all changes including new files:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Register new files as intent-to-add</span></span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-N</span> new-feature.py</span>
+<span id="cb11-3"></span>
+<span id="cb11-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Pipe the full diff from HEAD to Claude</span></span>
+<span id="cb11-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-pager</span> diff HEAD <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">claude</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"code-review for this diff"</span></span>
+<span id="cb11-6"></span>
+<span id="cb11-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Stage for real once satisfied</span></span>
+<span id="cb11-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add new-feature.py</span></code></pre></div></div>
+<p>Without <code>--no-pager</code>, Git may launch a pager (<code>less</code>, etc.) which takes over the terminal instead of writing to stdout — breaking the pipe so Claude receives nothing.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 60%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Review staged changes</td>
+<td><code>git diff --cached</code></td>
+</tr>
+<tr class="even">
+<td>Review unstaged changes</td>
+<td><code>git diff</code></td>
+</tr>
+<tr class="odd">
+<td>Review all changes from HEAD</td>
+<td><code>git diff HEAD</code></td>
+</tr>
+<tr class="even">
+<td>Review all changes including untracked files</td>
+<td><code>git add -N &lt;file&gt;</code> → <code>git diff HEAD</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Staging area (index)</span></span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb12-3">    The intermediate layer between the working tree and a commit.</span>
+<span id="cb12-4">    `git add` writes file content into the index; `git commit` turns</span>
+<span id="cb12-5">    the index snapshot into a new commit object.</span>
+<span id="cb12-6"></span>
+<span id="cb12-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> HEAD</span></span>
+<span id="cb12-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb12-9">    A pointer to the latest commit on the current branch.</span>
+<span id="cb12-10">    `git diff HEAD` shows all changes since the last commit.</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-diff">Git Documentation &gt; git-diff</a></li>
+<li><a href="https://git-scm.com/docs/git-add#Documentation/git-add.txt--N">Git Documentation &gt; git-add (<code>--intent-to-add</code>)</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git diff</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-05-14-git-diff-vs-diff-HEAD/</guid>
+  <pubDate>Fri, 15 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… Why doesn’t git diff show untracked files and how do I fix it?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -5405,273 +5933,6 @@ font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div></div
   <category>git clone</category>
   <guid>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/</guid>
   <pubDate>Fri, 26 Jul 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… I cannot push to remote branch and cannot pull the remote changes…</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-07-18-cannot-push-to-remote-branch/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a local development branch, <code>eda/data-sanity-check</code>. After some modifications and commits on the local, you realized that you cannot push to the remote branch.</p>
-<p>When you hit <code>git push</code>, you’ve got the following error:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git push</span>
-<span id="cb1-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">...</span></span>
-<span id="cb1-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">To</span> https://github.com/RyoNakagami/github_sandbox</span>
-<span id="cb1-4"> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">! </span><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">[rejected]</span>        eda/data-sanity-check <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> eda/data-sanity-check <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(fe</span>tch first)</span>
-<span id="cb1-5"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">error:</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;"> failed to push some refs to 'https</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">//github.com/RyoNakagami/github_sandbox'</span></span>
-<span id="cb1-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> Updates were rejected because the remote contains work that you do</span>
-<span id="cb1-7"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> not have locally. This is usually caused by another repository pushing</span>
-<span id="cb1-8"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> to the same ref. You may want to first integrate the remote changes</span>
-<span id="cb1-9"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">e.g., </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'git pull ...'</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span> before pushing again.</span>
-<span id="cb1-10"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> See the <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Note about fast-forwards'</span> in <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'git push --help'</span> for details.</span></code></pre></div></div>
-</section>
-<section id="what-is-happening" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-happening">What is happening</h2>
-<p>Generally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.</p>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
-            'gitGraph': {'rotateCommitLabel': true,
-                         'mainBranchName': 'local'}}}%%
-    gitGraph
-       commit id: "local-mod-1"
-       branch remote
-       commit id: "remote-mod-1"
-       checkout local
-       commit id: "local-mod-2"
-       commit id: "local-mod-3"
-       checkout remote
-       merge local id:"❗️failed to push"
-</pre>
-</div>
-<p></p><figcaption> Fig 1. Conflict between the local and the remote</figcaption> </figure><p></p>
-</div>
-</div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
-            'gitGraph': {'rotateCommitLabel': true,
-                         'mainBranchName': 'local'}}}%%
-    gitGraph
-       commit id: "local-mod-1"
-       branch remote
-       commit id: "remote-mod-1"
-       checkout local
-       commit id: "local-mod-2"
-       commit id: "local-mod-3"
-       merge remote id:"❗️failed to pull"
-</pre>
-</div>
-<p></p><figcaption> Fig 2. You cannot pull the remote either</figcaption> </figure><p></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="solution-git-pull---rebase" class="level2">
-<h2 class="anchored" data-anchor-id="solution-git-pull---rebase">Solution: git pull --rebase</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<ol type="1">
-<li>Check the difference between the local and the romote</li>
-<li>Resolve the local-remote conflict</li>
-<li>push top the remote after solving the conflict</li>
-</ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## fetch the remote info</span></span>
-<span id="cb2-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git fetch</span>
-<span id="cb2-3"></span>
-<span id="cb2-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## check which files are different from the remote</span></span>
-<span id="cb2-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git difftool eda/data-sanity-check origin</span></code></pre></div></div>
-<p>The above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.</p>
-<p>Then, let’s solve the conflict.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Step 2</span></span>
-<span id="cb3-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git pull <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--rebase</span></span>
-<span id="cb3-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">...</span></span>
-<span id="cb3-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Auto-merging</span> eda/check_datasanity.py</span>
-<span id="cb3-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">CONFLICT</span> <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">content</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span>: Merge conflict in eda/check_datasanity.py</span>
-<span id="cb3-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">error:</span> could not apply <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>your-current HEAD commit-id<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span>... eda: add histogram</span>
-<span id="cb3-7"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> Resolve all conflicts manually, mark them as resolved with</span>
-<span id="cb3-8"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"git add/rm &lt;conflicted_files&gt;"</span>, then run <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"git rebase --continue"</span>.</span>
-<span id="cb3-9"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> You can instead skip this commit: run <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"git rebase --skip"</span>.</span>
-<span id="cb3-10"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">hint:</span> To abort and get back to the state before <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"git rebase"</span>, run <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"git rebase --abort"</span>.</span>
-<span id="cb3-11"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Could</span> not apply <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>your-current HEAD commit-id<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span>... eda: add histogram</span>
-<span id="cb3-12"></span>
-<span id="cb3-13"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## after resolving the conflict</span></span>
-<span id="cb3-14"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git rebase <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--continue</span></span></code></pre></div></div>
-<p>The <code>git pull --rebase</code> commands is the same as <code>git pull</code> + <code>git rebase</code>. Aftrer hitting <code>git pull --rebase</code>, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.</p>
-<p>After resolving the conflict, do not foregt to run <code>git rebase --continue</code>, otherwise you continue to stay in the conflict-resolution mode.</p>
-<p>Your git history will look like the following;</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
-            'gitGraph': {'rotateCommitLabel': true,
-                         'mainBranchName': 'local'}}}%%
-    gitGraph
-       commit id: "local-mod-1"
-       branch remote
-       commit id: "remote-mod-1"
-       checkout local
-       merge remote id:"pull"
-       commit id: "conflict-resolve"
-</pre>
-</div>
-<p></p><figcaption> Fig 3. git pull –rebase</figcaption> </figure><p></p>
-</div>
-</div>
-</div>
-<p>At the above <code>conflict-resolve</code> node, you choose which local modifications should stay in the repository history.</p>
-<p>Then, now that you are able to push to the remote.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Step 3: push to the remote</span></span>
-<span id="cb4-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git push origin HEAD</span></code></pre></div></div>
-<p><strong> ▶&nbsp; REMARKS</strong></p>
-<ul>
-<li>When hitting <code>git pull --rebase</code>, it’s possible that all differences automatically are resoloved.
-<ul>
-<li>For example, you modified some files but ther remote changes are not related to the files you’ve chnaged.</li>
-<li><code>git pull --rebase</code> automatically resolved the difference which does not cause the conflict.</li>
-</ul></li>
-<li>When you get confused and want to get out of the conflict-resolution mode without saving, hit the <code>git rebase --abort</code></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <category>git branch</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-07-18-cannot-push-to-remote-branch/</guid>
-  <pubDate>Thu, 18 Jul 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
