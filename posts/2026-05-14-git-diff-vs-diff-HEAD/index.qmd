@@ -1,0 +1,275 @@
+---
+title: "OGG... What's the difference between `git diff`, `git diff --cached`, and `git diff HEAD`?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-05-15"
+date-modified: "2026-05-15"
+categories: [git diff]
+---
+
+::: {.callout-note}
+## TL;DR
+
+:::{style="padding-left:1em;"}
+
+```{mermaid}
+sequenceDiagram
+    participant HEAD as HEAD (latest commit)
+    participant SA as Staging area
+    participant WT as Working tree
+
+    HEAD ->> SA: git diff --cached
+    SA ->> WT: git diff
+    HEAD -->> WT: git diff HEAD
+```
+
+`git diff HEAD` = `git diff` + `git diff --cached` combined.
+
+:::
+:::
+
+
+## 🎯 Goal
+
+- [ ] Understand what each of `git diff` / `git diff --cached` / `git diff HEAD` compares
+- [ ] Know which commands exclude untracked files
+
+
+## Where each command compares
+
+Git has three layers that hold changes.
+
+```{mermaid}
+flowchart LR
+    HEAD["HEAD (latest commit)"]
+    SA["Staging area"]
+    WT["Working tree"]
+
+    HEAD -->|"git diff --cached"| SA
+    SA -->|"git diff"| WT
+```
+
+:::{.no-border-top-table .pb-3}
+
+| Command | From | To | Includes untracked |
+|---|---|---|---|
+| `git diff` | Staging area | Working tree | ✗ |
+| `git diff --cached` | HEAD | Staging area | ✗ |
+| `git diff HEAD` | HEAD | Working tree | ✗ |
+| `git add -N <file>` + `git diff HEAD` | HEAD | Working tree | ✓ |
+
+:::
+
+`git diff HEAD` is equivalent to the two commands combined.
+
+```bash
+git diff HEAD  # ≈  git diff --cached  +  git diff
+```
+
+However, none of them show **untracked files** — files that have no index entry yet.
+
+
+## Walking through a concrete example
+
+Consider this state:
+
+```
+HEAD:          a.py (committed)
+Staging area:  a.py (first edit staged), b.py (newly added)
+Working tree:  a.py (second edit, not yet staged), c.py (untracked new file)
+```
+
+**Setup:**
+
+```bash
+echo "original content" > a.py
+git add a.py && git commit -m "initial commit"
+
+echo "first modification" > a.py
+echo "new b file" > b.py
+git add a.py b.py          # stage first edit of a.py and b.py
+
+echo "second modification" >> a.py   # second edit stays in working tree only
+echo "c file untracked" > c.py       # untracked, never added
+```
+
+
+
+### `git diff` — staging area → working tree
+
+```bash
+git diff
+```
+
+- Shows only `a.py`'s **second edit**
+- No diff for `b.py` (not touched in the working tree)
+- `c.py` is invisible (untracked)
+
+**Output:**
+
+```diff
+diff --git a/a.py b/a.py
+index 578ddd4..ab08efe 100644
+--- a/a.py
++++ b/a.py
+@@ -1 +1,2 @@
+ first modification
++second modification
+```
+
+
+
+### `git diff --cached` — HEAD → staging area
+
+```bash
+git diff --cached
+```
+
+- Shows `a.py`'s **first edit**
+- Shows all of `b.py` (doesn't exist in HEAD, so the entire file is a diff)
+- `c.py` is invisible (not staged)
+
+**Output:**
+
+```diff
+diff --git a/a.py b/a.py
+index 2fd0152..578ddd4 100644
+--- a/a.py
++++ b/a.py
+@@ -1 +1 @@
+-original content
++first modification
+diff --git a/b.py b/b.py
+new file mode 100644
+index 0000000..eaf0030
+--- /dev/null
++++ b/b.py
+@@ -0,0 +1 @@
++new b file
+```
+
+
+
+### `git diff HEAD` — HEAD → working tree
+
+```bash
+git diff HEAD
+```
+
+- Shows **both edits to `a.py` combined**
+- Shows all of `b.py`
+- `c.py` is still **invisible** (untracked files are excluded)
+
+**Output:**
+
+```diff
+diff --git a/a.py b/a.py
+index 2fd0152..ab08efe 100644
+--- a/a.py
++++ b/a.py
+@@ -1 +1,2 @@
+-original content
++first modification
++second modification
+diff --git a/b.py b/b.py
+new file mode 100644
+index 0000000..eaf0030
+--- /dev/null
++++ b/b.py
+@@ -0,0 +1 @@
++new b file
+```
+
+---
+
+
+### Diff coverage by command
+
+:::{.no-border-top-table .pb-3}
+
+| | `a.py` second edit | `b.py` | `c.py` |
+|---|---|---|---|
+| `git diff` | ✓ | ✗ | ✗ |
+| `git diff --cached` | ✓ (first edit) | ✓ | ✗ |
+| `git diff HEAD` | ✓ (both edits) | ✓ | ✗ |
+| `git add -N c.py` + `git diff HEAD` | ✓ (both edits) | ✓ | ✓ |
+
+:::
+
+
+## Including untracked files in a diff
+
+To include an untracked file in `git diff HEAD`, use `git add -N` (intent-to-add). This creates an index entry without staging the file's content.
+
+```bash
+git add -N c.py
+git diff HEAD    # c.py now appears in the diff
+```
+
+::: {.callout-tip}
+## Code review workflow example
+
+:::{style="padding-left:1em;"}
+
+When you want an LLM to review all changes including new files:
+
+```bash
+# Register new files as intent-to-add
+git add -N new-feature.py
+
+# Pipe the full diff from HEAD to Claude
+git --no-pager diff HEAD | claude -p "code-review for this diff"
+
+# Stage for real once satisfied
+git add new-feature.py
+```
+
+Without `--no-pager`, Git may launch a pager (`less`, etc.) which takes over the terminal instead of writing to stdout — breaking the pipe so Claude receives nothing.
+
+:::
+:::
+
+
+## Summary
+
+:::{.no-border-top-table}
+
+| Goal | Command |
+|---|---|
+| Review staged changes | `git diff --cached` |
+| Review unstaged changes | `git diff` |
+| Review all changes from HEAD | `git diff HEAD` |
+| Review all changes including untracked files | `git add -N <file>` → `git diff HEAD` |
+
+: {tbl-colwidths="[60,40]"}
+
+:::
+
+
+## Glossary
+
+::: {.glossary-container}
+
+```yml
+- def: Staging area (index)
+  description: |
+    The intermediate layer between the working tree and a commit.
+    `git add` writes file content into the index; `git commit` turns
+    the index snapshot into a new commit object.
+
+- def: HEAD
+  description: |
+    A pointer to the latest commit on the current branch.
+    `git diff HEAD` shows all changes since the last commit.
+
+```
+
+:::
+
+
+📘 References
+---------
+
+- [Git Documentation > git-diff](https://git-scm.com/docs/git-diff)
+- [Git Documentation > git-add (`--intent-to-add`)](https://git-scm.com/docs/git-add#Documentation/git-add.txt--N)
