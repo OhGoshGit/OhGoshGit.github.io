@@ -1,0 +1,379 @@
+---
+title: "OGG... How do I `git clone` a private GitLab through a jump server?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-05-18"
+date-modified: "2026-05-18"
+categories: [git clone, ssh, socks5]
+---
+
+## 🔎 Objective
+
+- You cannot reach a private internal GitLab (`private-git.example.com`) directly from your local machine — only an SSH-accessible jump server can.
+- Tunnel `git clone` through the jump server so that authentication (HTTPS + `.netrc` PAT) keeps working, without changing how the URL looks.
+
+```
+local ─── ✕ no direct route ─── private GitLab
+   │
+   └─── jump server ─── private GitLab
+```
+
+## 🎯 Goal
+
+- [ ] Open a SOCKS5 proxy on the jump server and keep it alive.
+- [ ] Route only requests to the private GitLab host through that proxy.
+- [ ] Clone the repository as if the network barrier did not exist.
+
+## TL;DR
+
+Open an SSH connection to the jump server as a SOCKS5 proxy, then let `git` use that proxy.
+
+```bash
+# 1. Open the jump server as a SOCKS5 proxy (keep the session open)
+ssh JumpServer -D 1080
+
+# 2. Configure git to use the proxy (one-time setup)
+git config --global http.https://private-git.example.com.proxy socks5h://localhost:1080
+
+# 3. Clone
+git clone https://private-git.example.com/gitlab/org/repo-name
+```
+
+
+## Why direct access fails — back to TCP/IP basics
+
+When `git` (or a browser) makes an HTTPS request, two things happen under the hood.
+
+```{mermaid}
+flowchart LR
+    A[Application<br/>git / browser] -->|① name → IP| B[DNS resolution]
+    B -->|② connect to IP| C[TCP/TLS connection]
+    C --> D[Server]
+
+    classDef app   fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef infra fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef host  fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class A app
+    class B,C infra
+    class D host
+```
+
+### Step ① DNS resolution
+
+A hostname like `private-git.example.com` is for humans. The network only speaks **IP addresses** (`10.x.x.x` etc.), so a DNS server is asked to translate the name into an IP.
+
+- Public hosts → resolvable from any DNS on the internet
+- Internal hosts → **only registered in an internal DNS**
+
+### Step ② TCP connection
+
+Once you have an IP, you open a TCP connection to its port (443 for HTTPS).
+
+- Public hosts → reachable over the internet
+- Internal hosts → **only reachable from within the internal network**
+
+To reach an internal private server you need **both**: the ability to resolve its hostname *and* a network path to its IP. A local machine sitting outside the corporate network has neither.
+
+```{mermaid}
+flowchart TB
+    subgraph Local[Local: outside network]
+        L[git]
+    end
+
+    subgraph Internal[Internal network]
+        DNS[Internal DNS]
+        Git[GitLab]
+    end
+
+    L -.->|✕ cannot resolve| DNS
+    L -.->|✕ cannot connect| Git
+
+    classDef outside fill:#fde2e2,stroke:#c0392b,color:#7b1d1d
+    classDef inside  fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class L outside
+    class DNS,Git inside
+    style Local   fill:#fff5f5,stroke:#c0392b,stroke-dasharray:4 3
+    style Internal fill:#f3f9ee,stroke:#3a7d2b
+    linkStyle 0,1 stroke:#c0392b,color:#c0392b
+```
+
+This is where the jump server enters the picture.
+
+
+## Using the jump server as a "DNS + TCP proxy"
+
+The jump server lives **inside** the internal network, so it can already resolve internal hostnames and reach internal services. The trick is to ask it: *"please do the DNS lookup and TCP connection on my behalf."*
+
+That's exactly what a SOCKS5 proxy does.
+
+### What is SOCKS5?
+
+SOCKS5 is a proxy protocol that sits between a client and a server and forwards raw TCP. Unlike an HTTP proxy, it does not inspect or rewrite the payload — so HTTPS, SSH, or any other TCP-based protocol can pass through.
+
+`ssh -D 1080` means *"open a SOCKS5 listener on local port 1080; any traffic that arrives there is forwarded through the SSH session and originates from the jump server."*
+
+### `socks5` vs `socks5h`
+
+SOCKS5 has two modes that differ in **where DNS resolution happens**.
+
+```{mermaid}
+flowchart TB
+    subgraph S5["socks5 (no h)"]
+        direction TB
+        X1[git] -->|"① resolve DNS locally<br/>→ fails (no internal DNS)"| X2[Local DNS]
+    end
+
+    subgraph S5H["socks5h (with h)"]
+        direction TB
+        Y1[git] -->|"① forward the hostname<br/>to the proxy"| Y2[SOCKS5h proxy]
+        Y2 -->|"② resolve on the jump<br/>server side"| Y3[Internal DNS]
+    end
+
+    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef fail   fill:#fde2e2,stroke:#c0392b,color:#7b1d1d
+    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class X1,Y1 app
+    class X2 fail
+    class Y2 proxy
+    class Y3 inside
+    style S5  fill:#fff5f5,stroke:#c0392b,stroke-dasharray:4 3
+    style S5H fill:#f3f9ee,stroke:#3a7d2b
+    linkStyle 0 stroke:#c0392b,color:#c0392b
+    linkStyle 1,2 stroke:#3a7d2b,color:#3a7d2b
+```
+
+:::{.no-border-top-table}
+
+| Protocol | DNS resolution | What happens in this scenario |
+|---|---|---|
+| `socks5` | Local | `private-git.example.com` fails to resolve locally |
+| `socks5h` | Proxy (jump server) | Jump server resolves it via internal DNS → success |
+
+: {tbl-colwidths="[25,25,50]"}
+
+:::
+
+The trailing `h` stands for *"hostname resolution on the proxy side."* For internal hostnames, `socks5h` is the only sane choice.
+
+
+## End-to-end flow
+
+```{mermaid}
+flowchart LR
+    subgraph L[Local]
+        G[git clone] --> P[localhost:1080<br/>SOCKS5h listener]
+        P --> S[ssh -D 1080]
+    end
+
+    subgraph B[Jump server]
+        SD[sshd] --> D[Resolve via<br/>internal DNS]
+        D --> O[TCP connect]
+    end
+
+    subgraph I[Internal network]
+        GL[private-git.example.com:443]
+    end
+
+    S -.->|SSH-encrypted tunnel| SD
+    O --> GL
+
+    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class G app
+    class P,S,SD,D,O proxy
+    class GL inside
+    style L fill:#f5f9ff,stroke:#2c6cb0
+    style B fill:#fffbe9,stroke:#b8860b
+    style I fill:#f3f9ee,stroke:#3a7d2b
+    linkStyle 3 stroke:#b8860b,color:#b8860b,stroke-dasharray:4 3
+```
+
+Locally, `git` only ever talks to `localhost:1080`. Everything beyond that — DNS lookup, the TCP/TLS handshake to GitLab — is delegated to the jump server.
+
+
+## Step-by-step
+
+### Prerequisites
+
+`~/.ssh/config` already has the jump server configured:
+
+```
+Host JumpServer
+    HostName jumphost-internal
+    User your-username
+    ProxyCommand ssh -W %h:%p bastion
+```
+
+`~/.netrc` already has GitLab credentials:
+
+```
+machine private-git.example.com
+  login your-username
+  password your-PAT
+```
+
+::: {.callout-note}
+No `protocol` line is needed. `git` only reads `machine` / `login` / `password` from `.netrc`.
+:::
+
+::: {.callout-warning}
+## Encrypt `.netrc` with GPG instead of leaving it plaintext
+
+`~/.netrc` stores your PAT in **plaintext**. Even with `chmod 600`, anyone who
+gains read access to your home directory (backup, stolen laptop, malicious
+process) gets your token. The safer pattern is to keep credentials in a
+GPG-encrypted `~/.netrc.gpg` and let `git` decrypt it on demand.
+
+[1. Encrypt the file with your GPG public key]{.mini-section}
+
+Use **public-key encryption** (`-e -r <recipient>`), not a passphrase. That way
+only the holder of the matching private key can decrypt — no shared secret to
+remember or leak.
+
+```bash
+chmod 600 ~/.netrc
+gpg -e -r you@example.com ~/.netrc    # produces ~/.netrc.gpg
+shred -u ~/.netrc                      # securely remove the plaintext
+```
+
+- `-e` ── encrypt
+- `-r you@example.com` ── recipient (must match a key in your keyring; use the
+  email or key-ID shown by `gpg --list-keys`)
+
+If you don't have a key yet:
+
+```bash
+gpg --quick-generate-key "Your Name <you@example.com>" default default 0
+```
+
+[2. Tell `git` to read it through GPG]{.mini-section}
+
+Configure `git-credential-netrc` (ships with Git's `contrib/`) as the credential helper:
+
+```bash
+git config --global credential.helper \
+  "netrc -f ~/.netrc.gpg -v"
+```
+
+On each push/clone, `git` invokes GPG, `gpg-agent` prompts for your private
+key's passphrase (cached for the session), and the plaintext credentials
+never touch disk.
+
+[3. Verify]{.mini-section}
+
+```bash
+ls -la ~/.netrc*    # only ~/.netrc.gpg should exist
+git clone https://private-git.example.com/gitlab/org/repo-name
+```
+
+If the helper script is not on `PATH`, point to it explicitly:
+`/usr/share/doc/git/contrib/credential/netrc/git-credential-netrc.pl`.
+:::
+
+### Step 1｜Open the SOCKS5 tunnel on the jump server
+
+```bash
+ssh JumpServer -D 1080
+```
+
+`-D 1080` opens a SOCKS5 listener on local port 1080. **Keep this terminal open** for the duration of the work session.
+
+Sanity check:
+
+```bash
+nc -zv localhost 1080
+# Connection to localhost 1080 port [tcp/*] succeeded!
+```
+
+### Step 2｜Point git at the proxy (one-time)
+
+```bash
+git config --global http.https://private-git.example.com.proxy socks5h://localhost:1080
+```
+
+Anatomy of the command:
+
+```
+git config --global  http.https://private-git.example.com.proxy  socks5h://localhost:1080
+           ─────────  ────────────────────────────────────────  ──────────────────────
+           scope      config key (URL-scoped)                   value
+```
+
+- `--global` ── writes to `~/.gitconfig`
+- `http.<URL>.proxy` ── **applies the proxy only to that URL**, not all of git
+- `socks5h://localhost:1080` ── the proxy address
+
+Resulting `~/.gitconfig`:
+
+```ini
+[http "https://private-git.example.com"]
+    proxy = socks5h://localhost:1080
+```
+
+Other remotes (GitHub, etc.) are unaffected.
+
+### Step 3｜Clone
+
+```bash
+git clone https://private-git.example.com/gitlab/org/repo-name
+```
+
+`.netrc` is read automatically, so no interactive username/PAT prompt appears.
+
+
+## `pip install` works the same way
+
+If `requirements.txt` references a private repo with `git+https`, the same proxy carries it.
+
+```
+git+https://private-git.example.com/gitlab/org/common-ml.git@v0.1.0
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+
+
+## Glossary
+
+::: {.glossary-container}
+
+```yml
+- def: SOCKS5
+  description: |
+    A proxy protocol that forwards raw TCP between a client and a
+    server. Unlike an HTTP proxy it does not inspect the payload, so
+    HTTPS, SSH, and other TCP protocols pass through transparently.
+
+- def: socks5h
+  description: |
+    A SOCKS5 variant in which the proxy server, not the client,
+    performs DNS resolution. Required when the target hostname is
+    only resolvable from the proxy's side of the network.
+
+- def: Jump server (bastion)
+  description: |
+    A machine inside a restricted network that authorized users SSH
+    into in order to reach further internal resources. Used here as
+    the "DNS + TCP delegate" for the local machine.
+
+- def: .netrc
+  description: |
+    A per-user file (`~/.netrc`) that stores hostname/login/password
+    triples. `git` and `curl` read it automatically to authenticate
+    against the named host without prompting.
+```
+
+:::
+
+
+📘 References
+---------
+
+- [Git Documentation > git-config (`http.<url>.*`)](https://git-scm.com/docs/git-config#Documentation/git-config.txt-httplturlgt)
+- [OpenSSH Manual > ssh (`-D` dynamic port forwarding)](https://man.openbsd.org/ssh#D)
+- [RFC 1928 — SOCKS Protocol Version 5](https://www.rfc-editor.org/rfc/rfc1928)
