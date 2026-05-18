@@ -256,7 +256,7 @@
     "href": "index.html",
     "title": "Git is hard, but we need to handle it",
     "section": "",
-    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2026-05-15\n\n\nOGG… What’s the difference between git diff, git diff --cached, and git diff HEAD?\n\n\n5 min\n\n\n\n\n\n\n2026-05-14\n\n\nOGG… Why doesn’t git diff show untracked files and how do I fix it?\n\n\n8 min\n\n\n\n\n\n\n2026-05-12\n\n\nOGG… How do I git add only files matching a pattern?\n\n\n6 min\n\n\n\n\n\n\n2026-05-10\n\n\nOGG… What principles guide an effective code review?\n\n\n4 min\n\n\n\n\n\n\n2025-09-14\n\n\nOGG… What kind of Git branch naming convention is commonly used??\n\n\n4 min\n\n\n\n\n\n\n2025-08-06\n\n\nOGG git cheatsheet\n\n\n9 min\n\n\n\n\n\n\n2025-08-05\n\n\nOGG… How Can I restore a file from specific commit?\n\n\n2 min\n\n\n\n\n\n\n2025-08-04\n\n\nOGG… How do you git sparse-checkout a specific directory?\n\n\n6 min\n\n\n\n\n\n\n2025-06-14\n\n\nOGG… What’s difference between git reset –hard vs –mixed vs –soft?\n\n\n3 min\n\n\n\n\n\n\n2025-06-13\n\n\nOGG… How to unstage files in Git?\n\n\n2 min\n\n\n\n\n\n\n2025-06-06\n\n\nOGG… How do I consolidate multiple temporary commits into a single meaningful one?\n\n\n4 min\n\n\n\n\n\n\n2025-06-05\n\n\nOGG… How do I manage config and secret information in Git?\n\n\n4 min\n\n\n\n\n\n\n2025-05-23\n\n\nOGG… How do I switch the connection method for git push from HTTPS to SSH??\n\n\n1 min\n\n\n\n\n\n\n2024-12-17\n\n\nOGG… How can I set up ssh connection to GitHub repository?\n\n\n3 min\n\n\n\n\n\n\n2024-12-04\n\n\nOGG… How can I modify the GitHub repository name?\n\n\n3 min\n\n\n\n\n\n\n2024-11-06\n\n\n最新コミットとunstaged差分の確認方法\n\n\n4 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Date\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\n\n\n\n\n\n2026-05-18\n\n\nOGG… How do I git clone a private GitLab through a jump server?\n\n\n9 min\n\n\n\n\n\n\n2026-05-15\n\n\nOGG… What’s the difference between git diff, git diff --cached, and git diff HEAD?\n\n\n5 min\n\n\n\n\n\n\n2026-05-14\n\n\nOGG… Why doesn’t git diff show untracked files and how do I fix it?\n\n\n8 min\n\n\n\n\n\n\n2026-05-12\n\n\nOGG… How do I git add only files matching a pattern?\n\n\n6 min\n\n\n\n\n\n\n2026-05-10\n\n\nOGG… What principles guide an effective code review?\n\n\n4 min\n\n\n\n\n\n\n2025-09-14\n\n\nOGG… What kind of Git branch naming convention is commonly used??\n\n\n4 min\n\n\n\n\n\n\n2025-08-06\n\n\nOGG git cheatsheet\n\n\n9 min\n\n\n\n\n\n\n2025-08-05\n\n\nOGG… How Can I restore a file from specific commit?\n\n\n2 min\n\n\n\n\n\n\n2025-08-04\n\n\nOGG… How do you git sparse-checkout a specific directory?\n\n\n6 min\n\n\n\n\n\n\n2025-06-14\n\n\nOGG… What’s difference between git reset –hard vs –mixed vs –soft?\n\n\n3 min\n\n\n\n\n\n\n2025-06-13\n\n\nOGG… How to unstage files in Git?\n\n\n2 min\n\n\n\n\n\n\n2025-06-06\n\n\nOGG… How do I consolidate multiple temporary commits into a single meaningful one?\n\n\n4 min\n\n\n\n\n\n\n2025-06-05\n\n\nOGG… How do I manage config and secret information in Git?\n\n\n4 min\n\n\n\n\n\n\n2025-05-23\n\n\nOGG… How do I switch the connection method for git push from HTTPS to SSH??\n\n\n1 min\n\n\n\n\n\n\n2024-12-17\n\n\nOGG… How can I set up ssh connection to GitHub repository?\n\n\n3 min\n\n\n\n\n\n\n2024-12-04\n\n\nOGG… How can I modify the GitHub repository name?\n\n\n3 min\n\n\n\n\n\n\n2024-11-06\n\n\n最新コミットとunstaged差分の確認方法\n\n\n4 min\n\n\n\n\n\n\n2024-11-05\n\n\nOGG… Should I use git rebase?\n\n\n12 min\n\n\n\n\n\n\n2024-11-01\n\n\nOGG… How can I push my repository to githab and gitlab remote at once?\n\n\n3 min\n\n\n\n\n\n\n2024-10-31\n\n\nOGG… I just want to push a local git branch to a remote with a different name…\n\n\n3 min\n\n\n\n\n\n\n2024-07-26\n\n\nOGG… I just want to save the current repository into another remote…\n\n\n2 min\n\n\n\n\n\n\n2024-07-18\n\n\nOGG… I cannot push to remote branch and cannot pull the remote changes…\n\n\n5 min\n\n\n\n\n\n\n2024-07-13\n\n\nOGG… I accidentally named the branch the wrong name…\n\n\n1 min\n\n\n\n\n\n\n2024-07-12\n\n\nOGG… I accidentally committed something to main that should have been on a brand new branch!\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2024-11-05-when-do-i-use-git-rebase/index.html",
@@ -350,424 +350,144 @@
     "text": "GitHub CLI command\n\ngeneral\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCheck Organization\ngh org list\nShow a list of organizations you belong to\n\n\nCheck Organization Repo\ngh repo list &lt;ORG&gt;\nShow a list of repositories under a specific organization you belong to\n\n\nCreate Repo\ngh repo create &lt;REPONAME&gt; --public --source=. --remote=origin\nCreate a public repo under your GitHub space\n\n\n\ngh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;\nCreate a public repo under the specified organization\n\n\n\ngh repo create &lt;REPONAME&gt; --private --source=. --remote=origin\nCreate a private repo under your GitHub space\n\n\nDelete Repo\ngh repo delete &lt;ONWER&gt;/&lt;REPONAME&gt;\nDelete the target repository from GitHub, while your local repo remains intact\n\n\n\n\n\n\nGist\n\n\n\n\n\n\nWarningWarning\n\n\n\nEven if a Gist is set to Private, it can still be accessed by anyone with the link. Do not store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.\n\n\n\n\n\n\n\n\n\n\n\nCategory\nCommand Example\nDescription\n\n\n\n\nCreate Secret Gist from File\ngh gist create &lt;filename&gt; -d \"&lt;gist title&gt;\"\nCreate a secret gist with the given file and description\n\n\nCreate Gist from standard output\ncat cool.txt | gh gist create -d \"&lt;gist title&gt;\"\nCreate a gist directly from command output or piped content"
   },
   {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
     "section": "",
-    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+    "text": "You cannot reach a private internal GitLab (private-git.example.com) directly from your local machine — only an SSH-accessible jump server can.\nTunnel git clone through the jump server so that authentication (HTTPS + .netrc PAT) keeps working, without changing how the URL looks.\n\nlocal ─── ✕ no direct route ─── private GitLab\n   │\n   └─── jump server ─── private GitLab"
   },
   {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#objective",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#objective",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
     "section": "",
-    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+    "text": "You cannot reach a private internal GitLab (private-git.example.com) directly from your local machine — only an SSH-accessible jump server can.\nTunnel git clone through the jump server so that authentication (HTTPS + .netrc PAT) keeps working, without changing how the URL looks.\n\nlocal ─── ✕ no direct route ─── private GitLab\n   │\n   └─── jump server ─── private GitLab"
   },
   {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "Solution",
-    "text": "Solution\nSteps\n\nGenerate a new ssh key\nAdd the SSH Key to the SSH Agent\nRegister the public key to GitHub\ntest ssh connection\nupdate the ssh config file\n\nSetup\n\n\n1. Generate a new ssh key\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nOption -t specifies the type of key to generate. ed25519 is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.\nOption -C adds a comment to the key for identification purposes.\n-f specifies the filename and location for the generated key pair. This will generate two files\n\nkirby_github_key: The private key (keep this secure! do not share!).\nkirby_github_key.pub: The public key (you upload this to GitHub).\n\n\n\n2. Add the SSH Key to the SSH Agent\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nThe ssh-add command adds your private SSH key to the SSH authentication agent (ssh-agent) so it can be used for SSH connections without repeatedly asking for the key’s passphrase. If the key (kirby_github_key) isn’t added to ssh-agent, SSH won’t know to use it. You might encounter the error like this;\nPermission denied (publickey).\n\n\n3. Register the public key to GitHub\n\ncat ~/.ssh/kirby_github_key.pub\n\nAfter opening the file, copy the strings and register it at the Github at Settings &gt; SSH and GPG keys &gt; New SSH key\nThen, test your connection by\n\n\n4. test ssh connection\n\n$ ssh -T git@github.com\n\nif connection established successfully, the following message will pop up\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nUpdate the ssh config file\nRunning ssh-add munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your ~/.ssh/config file:\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
-  },
-  {
-    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
-    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
-    "title": "OGG… How can I set up ssh connection to GitHub repository?",
-    "section": "Appendix: ❗ Trouble Connecting via SSH with a Private Key",
-    "text": "Appendix: ❗ Trouble Connecting via SSH with a Private Key\n\n\n\n\n\n\nNotesummary\n\n\n\n\nSSH is strict about private key security to protect against unauthorized access.\nAlways keep your private keys readable only by you.\nUse chmod 600 your_key_file to ensure proper permission settings.\n\n\n\nTrouble\nWhen trying to connect using a SSH command, You might encounter an error like:\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nAs a result, the SSH connection fails.\nRoot Cause\n\nThis error happens because the file permissions of the private key file are too loose.\nFor example, if the file permissions are set to 666 (readable and writable by everyone), SSH refuses to use the key for security reasons.\n\nSolution\nYou can fix the issue by restricting the file’s permissions so that only the owner can read/write the file:\n% chmod 600 &lt;your-private-key-path&gt;\nAfter changing the permissions, try running the same SSH command again."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
-    "title": "最新コミットとunstaged差分の確認方法",
-    "section": "",
-    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
-    "title": "最新コミットとunstaged差分の確認方法",
-    "section": "",
-    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
-    "title": "最新コミットとunstaged差分の確認方法",
-    "section": "Solution 1: Using git diff",
-    "text": "Solution 1: Using git diff\ngit diff allows you to inspect changes in your code, from minor edits to major branch comparisons.\n ▶  Key Takeaways\n\n\n\n\n\n\n\nCommands\nExplaination\n\n\n\n\ngit diff\nCheck unstaged changes with HEAD\n\n\ngit diff --staged\nCheck staged changes with HEAD\n\n\ngit diff &lt;commit1&gt; &lt;commit2&gt;\nCompare two specific commits\n\n\ngit diff main feature-branch\nCompare branches\n\n\ngit diff HEAD -- &lt;file/directory-path&gt;\nCheck single file/directory changes with HEAD\n\n\ngit diff --stat\nShows a summary of changes for each file, such as how many lines were added and deleted\n\n\n\n ▶  Viewing Changes in the Working Directory\nTo see all changes in your working directory that haven’t been staged,\ngit diff\nThis command shows the differences between your working directory and the last commit in your terminal display.\nIf you want to see staged changes with your latest commit,\ngit diff --staged\n ▶  Comparing with a Specific Commit\nTo see differences between your current state and a specific commit,\n## (1) Compared with latest commit\ngit diff\ngit diff HEAD\n\n## (2) Compared with specific commit\ngit diff &lt;commit-hash&gt;\n\n## (3) Comparing two specific commits\ngit diff &lt;commit-hash1&gt; &lt;commit-hash2&gt;\n\n## (4) Comparing the HEAD with the HEAD~1\ngit diff HEAD~1 HEAD\n ▶  Comparing Branches\nYou can also use git diff to compare different branches.\ngit diff main feature-branch\n ▶  Shows a summary of changes for each file\nWhen you want to see a summary of changes for each file, such as how many lines were added and deleted, use git diff --stat. If you want to compare the current branch with gh-pages branch in .github/ directory,\n% git diff --stat gh-pages .github/ \n .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++\n .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++\n .github/pull_request_template.md             | 25 +++++++++++++++++++++++++\n .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++\n .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++\n 5 files changed, 142 insertions(+)\nThe number shows how many lines are modified for each files."
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
-    "title": "最新コミットとunstaged差分の確認方法",
-    "section": "Solution 2: Using git difftool",
-    "text": "Solution 2: Using git difftool\ngit difftool is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.\nThe syntax of git difftool is similar to git diff. For example,\n\n\n\n\n\n\n\ngit difftool commands\ngit diff commands\n\n\n\n\ngit difftool\ngit diff\n\n\ngit difftool --stagedgit difftool --cached\ngit diff --staged\n\n\ngit difftool &lt;commit1&gt; &lt;commit2&gt;\ngit diff &lt;commit1&gt; &lt;commit2&gt;\n\n\ngit difftool main feature-branch\ngit diff main feature-branch\n\n\ngit difftool HEAD -- &lt;file/directory-path&gt;\ngit diff HEAD -- &lt;file/directory-path&gt;\n\n\n\n ▶  Choosing an editor \nYou can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is\ngit config --global diff.tool your_preferred_tool\nFor example, if you prefer to vscode,\ngit config --global diff.tool vscode\nTo check if you successfully configure difftool editor,\ngit config -l\nthen, you can check what editor is you default git difftool editor.\n ▶  Choosing an editor temporarily\nIf you temporarily show the diff in vimdiff,\ngit difftool HEAD~1 HEAD --tool=vimdiff"
-  },
-  {
-    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#appendix-role-of----in-git",
-    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#appendix-role-of----in-git",
-    "title": "最新コミットとunstaged差分の確認方法",
-    "section": "Appendix: Role of -- in Git",
-    "text": "Appendix: Role of -- in Git\nIn git command, -- is a seperator between options and paths. It is useful when a name could be ambiguous—e.g., if a branch or tag has the same name as a file.\nIf the path (file or directory) does not conflict with a branch or tag name, Git automatically treats it as a path.\n\nExample 1 \ngit diff feature -- file.txt\nIn the above command, feature could be interpreted as either a branch or a file. Using -- explicitly tells Git that anything after it is a path, not a branch or option.\n\n\n\nExample 2 \ngit diff README.md\nGit sees that README.md is not a branch or tag, so it is interpreted as a file path. Therefore, the command works correctly even without --."
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "",
-    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "",
-    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "What is happening",
-    "text": "What is happening\nGenerally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       checkout remote\n       merge local id:\"❗️failed to push\"\n\n\n Fig 1. Conflict between the local and the remote \n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       merge remote id:\"❗️failed to pull\"\n\n\n Fig 2. You cannot pull the remote either"
-  },
-  {
-    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
-    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
-    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
-    "section": "Solution: git pull --rebase",
-    "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "",
-    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 1: checkout a new branch and delete the old",
-    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
-  },
-  {
-    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
-    "title": "OGG… I accidentally named the branch the wrong name…",
-    "section": "Solution 2: rename the branch",
-    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
-  },
-  {
-    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html",
-    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html",
-    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
-    "section": "",
-    "text": "Understand what git reset is\nUnderstand the difference between git reset --hard vs --mixed vs --soft"
-  },
-  {
-    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#objective",
-    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#objective",
-    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
-    "section": "",
-    "text": "Understand what git reset is\nUnderstand the difference between git reset --hard vs --mixed vs --soft"
-  },
-  {
-    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#what-is-git-reset",
-    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#what-is-git-reset",
-    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
-    "section": "What is git reset?",
-    "text": "What is git reset?\n\nDefinition: git reset git reset is a command used to move HEAD and optionally unstage or delete changes.\n\n\nComparison Table between --soft, --mixed, and --hard\n\n\n\n\nArea\n--soft\n--mixed (default)\n--hard\n\n\n\n\nHEAD (commit ptr)\n✔️ moved\n✔️ moved\n✔️ moved\n\n\nStaging area (Index)\n✅ kept\n❌ cleared\n❌ cleared\n\n\nWorking dir files\n✅ kept\n✅ kept\n❌ cleared\n\n\n\n\ngit reset sequence diagram\nThe following diagram is a step-by-step visualization of how different git reset modes affect Git’s three areas:\n\n\n\n\n\nsequenceDiagram\n    participant Before as commit-id A\n    participant Working as Working Area\n    participant Staging as Staging(Index)\n    participant HEAD as commit-id B\n\n    Before-&gt;&gt;Working: editing files\n\n    Working-&gt;&gt;Staging: git add\n\n    Staging-&gt;&gt;HEAD: git commit\n\n    HEAD-&gt;&gt;Staging: git reset --soft HEAD~1\n    HEAD-&gt;&gt;Working: git reset --mixed HEAD~1\n    HEAD-&gt;&gt;Before: git reset --hard HEAD~1"
-  },
-  {
-    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#do-i-need-to-run-git-reset---hard-think-again",
-    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#do-i-need-to-run-git-reset---hard-think-again",
-    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
-    "section": "Do I need to run git reset --hard? Think again",
-    "text": "Do I need to run git reset --hard? Think again\nWhen working with Git, you may find yourself needing to create a new branch from a previous commit becasue a bug was introduced in the most recent commit. For example, you might want to create a HOTFIX branch from one commit before the current HEAD.\nYou may be thinking of git reset --hard and git switch for checkout, but think again. In that case,\ngit switch -c HOTFIX HEAD~1\nis better.\nWhat It Does\n\nCreates a new branch named HOTFIX starting from the commit before HEAD.\nSwitches you to the HOTFIX branch.\nLeaves your current branch and commit history unchanged.\n\nBenefits\n\nNon-destructive: All commits are preserved.\nClean separation: You work on the hotfix branch without altering your current one."
-  },
-  {
-    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#best-practice-guideline-summary",
-    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#best-practice-guideline-summary",
-    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
-    "section": "Best Practice Guideline Summary",
-    "text": "Best Practice Guideline Summary\n\n\n\n\n\n\n\n\nIf you want to…\nUse\n\n\n\n\nRewrite commit history but keep work\ngit reset --soft HEAD~1\n\n\nUnstage files, keep changes in files\ngit reset --mixed HEAD~1 (default)\n\n\nFully discard all changes and reset everything\ngit reset --hard HEAD~1\n\n\nCreate and switch to a new branch HOTFIX from HEAD~1\ngit switch -c HOTFIX HEAD~1"
-  },
-  {
-    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#references",
-    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#references",
-    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
-    "section": "📘 References",
-    "text": "📘 References\n\nGit DOcumentation &gt; git-reset"
-  },
-  {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
-    "title": "OGG… How Can I restore a file from specific commit?",
-    "section": "",
-    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
-  },
-  {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
-    "title": "OGG… How Can I restore a file from specific commit?",
-    "section": "",
-    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
-  },
-  {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
-    "title": "OGG… How Can I restore a file from specific commit?",
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#goal",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#goal",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
     "section": "🎯 Goal",
-    "text": "🎯 Goal\n\nEnable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes."
+    "text": "🎯 Goal\n\nOpen a SOCKS5 proxy on the jump server and keep it alive.\nRoute only requests to the private GitLab host through that proxy.\nClone the repository as if the network barrier did not exist."
   },
   {
-    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
-    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
-    "title": "OGG… How Can I restore a file from specific commit?",
-    "section": "📘 Guideline",
-    "text": "📘 Guideline\nEnsure you’re using Git 2.23+, where git restore was introduced.\nWhen to Use\n\nTo retrieve a deleted or modified file from a past commit.\nTo undo local changes to a file without discarding other work.\nTo recover specific content for comparison or patching.\n\nHow to Use\n\nUse git log or git blame to identify the target commit hash\n\ngit log &lt;filepath&gt;  # check history\n\nRun the command:\n\n## git restore version\ngit restore --source=&lt;commit-hash&gt; &lt;filepath&gt;\n\n## git checkout version\ngit checkout &lt;commit-hash&gt; &lt;filepath&gt;\nUndo git restore specific commit id version\n\n\n\n\n\n\n\nSituation\nRecovery Option\n\n\n\n\nNot staged yet\ngit restore &lt;filepath&gt;\n\n\nStaged but not committed\ngit restore --staged &lt;filepath&gt; then restore\n\n\nAlready committed\nUse git reflog + git reset\n\n\nPreventive measure\nUse git stash before risky restores"
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#tldr",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#tldr",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
+    "section": "TL;DR",
+    "text": "TL;DR\nOpen an SSH connection to the jump server as a SOCKS5 proxy, then let git use that proxy.\n# 1. Open the jump server as a SOCKS5 proxy (keep the session open)\nssh JumpServer -D 1080\n\n# 2. Configure git to use the proxy (one-time setup)\ngit config --global http.https://private-git.example.com.proxy socks5h://localhost:1080\n\n# 3. Clone\ngit clone https://private-git.example.com/gitlab/org/repo-name"
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html",
-    "href": "posts/2025-09-14-git-branch-naming/index.html",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
-    "section": "",
-    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#why-direct-access-fails-back-to-tcpip-basics",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#why-direct-access-fails-back-to-tcpip-basics",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
+    "section": "Why direct access fails — back to TCP/IP basics",
+    "text": "Why direct access fails — back to TCP/IP basics\nWhen git (or a browser) makes an HTTPS request, two things happen under the hood.\n\n\n\n\n\nflowchart LR\n    A[Application&lt;br/&gt;git / browser] --&gt;|① name → IP| B[DNS resolution]\n    B --&gt;|② connect to IP| C[TCP/TLS connection]\n    C --&gt; D[Server]\n\n    classDef app   fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66\n    classDef infra fill:#fff4d6,stroke:#b8860b,color:#5a4209\n    classDef host  fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12\n    class A app\n    class B,C infra\n    class D host\n\n\n\n\n\n\n\nStep ① DNS resolution\nA hostname like private-git.example.com is for humans. The network only speaks IP addresses (10.x.x.x etc.), so a DNS server is asked to translate the name into an IP.\n\nPublic hosts → resolvable from any DNS on the internet\nInternal hosts → only registered in an internal DNS\n\n\n\nStep ② TCP connection\nOnce you have an IP, you open a TCP connection to its port (443 for HTTPS).\n\nPublic hosts → reachable over the internet\nInternal hosts → only reachable from within the internal network\n\nTo reach an internal private server you need both: the ability to resolve its hostname and a network path to its IP. A local machine sitting outside the corporate network has neither.\n\n\n\n\n\nflowchart TB\n    subgraph Local[Local: outside network]\n        L[git]\n    end\n\n    subgraph Internal[Internal network]\n        DNS[Internal DNS]\n        Git[GitLab]\n    end\n\n    L -.-&gt;|✕ cannot resolve| DNS\n    L -.-&gt;|✕ cannot connect| Git\n\n    classDef outside fill:#fde2e2,stroke:#c0392b,color:#7b1d1d\n    classDef inside  fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12\n    class L outside\n    class DNS,Git inside\n    style Local   fill:#fff5f5,stroke:#c0392b,stroke-dasharray:4 3\n    style Internal fill:#f3f9ee,stroke:#3a7d2b\n    linkStyle 0,1 stroke:#c0392b,color:#c0392b\n\n\n\n\n\n\nThis is where the jump server enters the picture."
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#objectives",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#objectives",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
-    "section": "",
-    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#using-the-jump-server-as-a-dns-tcp-proxy",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#using-the-jump-server-as-a-dns-tcp-proxy",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
+    "section": "Using the jump server as a “DNS + TCP proxy”",
+    "text": "Using the jump server as a “DNS + TCP proxy”\nThe jump server lives inside the internal network, so it can already resolve internal hostnames and reach internal services. The trick is to ask it: “please do the DNS lookup and TCP connection on my behalf.”\nThat’s exactly what a SOCKS5 proxy does.\n\nWhat is SOCKS5?\nSOCKS5 is a proxy protocol that sits between a client and a server and forwards raw TCP. Unlike an HTTP proxy, it does not inspect or rewrite the payload — so HTTPS, SSH, or any other TCP-based protocol can pass through.\nssh -D 1080 means “open a SOCKS5 listener on local port 1080; any traffic that arrives there is forwarded through the SSH session and originates from the jump server.”\n\n\nsocks5 vs socks5h\nSOCKS5 has two modes that differ in where DNS resolution happens.\n\n\n\n\n\nflowchart TB\n    subgraph S5[\"socks5 (no h)\"]\n        direction TB\n        X1[git] --&gt;|\"① resolve DNS locally&lt;br/&gt;→ fails (no internal DNS)\"| X2[Local DNS]\n    end\n\n    subgraph S5H[\"socks5h (with h)\"]\n        direction TB\n        Y1[git] --&gt;|\"① forward the hostname&lt;br/&gt;to the proxy\"| Y2[SOCKS5h proxy]\n        Y2 --&gt;|\"② resolve on the jump&lt;br/&gt;server side\"| Y3[Internal DNS]\n    end\n\n    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66\n    classDef fail   fill:#fde2e2,stroke:#c0392b,color:#7b1d1d\n    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209\n    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12\n    class X1,Y1 app\n    class X2 fail\n    class Y2 proxy\n    class Y3 inside\n    style S5  fill:#fff5f5,stroke:#c0392b,stroke-dasharray:4 3\n    style S5H fill:#f3f9ee,stroke:#3a7d2b\n    linkStyle 0 stroke:#c0392b,color:#c0392b\n    linkStyle 1,2 stroke:#3a7d2b,color:#3a7d2b\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProtocol\nDNS resolution\nWhat happens in this scenario\n\n\n\n\nsocks5\nLocal\nprivate-git.example.com fails to resolve locally\n\n\nsocks5h\nProxy (jump server)\nJump server resolves it via internal DNS → success\n\n\n\n\nThe trailing h stands for “hostname resolution on the proxy side.” For internal hostnames, socks5h is the only sane choice."
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#goals",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#goals",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
-    "section": "🎯 Goals",
-    "text": "🎯 Goals\n\nDefine clear branch categories (feature, fix, release, etc.) with consistent tokens.\nEnsure branch names immediately communicate intent.\nEnable integration with issue trackers and CI/CD pipelines.\nReduce confusion by standardizing naming across the team."
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#end-to-end-flow",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#end-to-end-flow",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
+    "section": "End-to-end flow",
+    "text": "End-to-end flow\n\n\n\n\n\nflowchart LR\n    subgraph L[Local]\n        G[git clone] --&gt; P[localhost:1080&lt;br/&gt;SOCKS5h listener]\n        P --&gt; S[ssh -D 1080]\n    end\n\n    subgraph B[Jump server]\n        SD[sshd] --&gt; D[Resolve via&lt;br/&gt;internal DNS]\n        D --&gt; O[TCP connect]\n    end\n\n    subgraph I[Internal network]\n        GL[private-git.example.com:443]\n    end\n\n    S -.-&gt;|SSH-encrypted tunnel| SD\n    O --&gt; GL\n\n    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66\n    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209\n    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12\n    class G app\n    class P,S,SD,D,O proxy\n    class GL inside\n    style L fill:#f5f9ff,stroke:#2c6cb0\n    style B fill:#fffbe9,stroke:#b8860b\n    style I fill:#f3f9ee,stroke:#3a7d2b\n    linkStyle 3 stroke:#b8860b,color:#b8860b,stroke-dasharray:4 3\n\n\n\n\n\n\nLocally, git only ever talks to localhost:1080. Everything beyond that — DNS lookup, the TCP/TLS handshake to GitLab — is delegated to the jump server."
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#guideline",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#guideline",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
-    "section": "📘 Guideline",
-    "text": "📘 Guideline\n\n\n① Use lowercase letters and hyphens to separate words\n\n\n\nBranch names should always be lowercase for consistency and avoid conflicts in case-sensitive file systems.\nHyphens (-) make branch names easier to read than underscores or camelCase.\n\n\n\n\nExample 1 \n\n✅ Example: feat/user-login\n\n❌ Avoid: Feat_UserLogin, FeatUserLogin\n\n\n\n\n\n② Start branch names with a clear token\n\n\n\nEach branch should begin with a category token that defines its purpose.\n\nCommon tokens: feat (feature), fix (bug fix), docs (documentation).\nUse slashes / to separate tokens and descriptions\nThis makes the branch purpose obvious at a glance.\n\n\n\n\n\nExample 2 \n\n✅ Example: fix/payment-timeout\n\n❌ Avoid: payment-timeout (purpose unclear)\n\n\nThis clarity is not only helpful for humans reading the branch list or PRs but also allows Git commands and CI/CD scripts to filter, map, or operate on specific branch types efficiently.\n# Listing branches by token\ngit branch --list \"feature/*\"\n\n# Pushing or mapping branches with tokens\ngit push origin 'refs/heads/feature/*'\n\n# Deleting multiple branches by token\ngit branch -D $(git branch --list \"feature/*\")\n\n\n\n③ Link to issues or tickets when possible\n\n\n\nIf your team uses Jira, GitHub Issues, or another tracker, include the ticket/issue ID.\n\nThis improves traceability between code, commits, and tasks.\n\n\n\n\n\nExample 3 \n\n✅ Example: feat/123-user-auth\n\n❌ Avoid: feat/user-auth (missing link to ticket)\n\n\n\n\n\n④ Keep branch names short but descriptive\n\n\n\nBalance brevity with clarity.\n\nAvoid overly long names while still describing the intent.\n\n\n\n\nLong branch names can be very helpful when browsing a list of branches, as they provide more context. However, they can clutter one-line logs, obscuring the visible part of the log.\n\nExample 4 \n\n✅ Example: refactor/api-headers\n\n❌ Too long: refactor/update-the-way-we-handle-request-headers-in-api\n\n\n\n\n\n⑤ Maintain consistency across the team\n\n\n\nAll developers must follow the same convention.\n\nConsistency improves collaboration and enables automation in CI/CD.\n\nDocument rules in CONTRIBUTING.md or your project wiki.\n\n\n\n\n\nExample 5 \n\n✅ Example: Everyone uses feat/* for features\n\n❌ Avoid: Mixing feature/*, feat/*, new/* (causes chaos)\n\n\n\n\nBranch Naming Convention\nWork Branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nfeature/&lt;name&gt;\nNew feature development\n\n\nbugfix/&lt;name&gt;\nBug fix\n\n\nrefactor/&lt;name&gt;\nRestructuring code without behavior change\n\n\ndocs/&lt;name&gt;\nDocumentation updates\n\n\ntest/&lt;name&gt;\nTesting-related work\n\n\nenh/&lt;name&gt;\nPerformance enhancements\n\n\n\nLifecycle branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nrelease/&lt;version&gt;\nPreparing a release\n\n\nhotfix/&lt;name&gt;\nUrgent production fix\n\n\nsandbox/&lt;name&gt;\nExperimental or prototype work"
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#step-by-step",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#step-by-step",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
+    "section": "Step-by-step",
+    "text": "Step-by-step\n\nPrerequisites\n~/.ssh/config already has the jump server configured:\nHost JumpServer\n    HostName jumphost-internal\n    User your-username\n    ProxyCommand ssh -W %h:%p bastion\n~/.netrc already has GitLab credentials:\nmachine private-git.example.com\n  login your-username\n  password your-PAT\n\n\n\n\n\n\nNote\n\n\n\nNo protocol line is needed. git only reads machine / login / password from .netrc.\n\n\n\n\n\n\n\n\nWarningEncrypt .netrc with GPG instead of leaving it plaintext\n\n\n\n~/.netrc stores your PAT in plaintext. Even with chmod 600, anyone who gains read access to your home directory (backup, stolen laptop, malicious process) gets your token. The safer pattern is to keep credentials in a GPG-encrypted ~/.netrc.gpg and let git decrypt it on demand.\n1. Encrypt the file with your GPG public key\nUse public-key encryption (-e -r &lt;recipient&gt;), not a passphrase. That way only the holder of the matching private key can decrypt — no shared secret to remember or leak.\nchmod 600 ~/.netrc\ngpg -e -r you@example.com ~/.netrc    # produces ~/.netrc.gpg\nshred -u ~/.netrc                      # securely remove the plaintext\n\n-e ── encrypt\n-r you@example.com ── recipient (must match a key in your keyring; use the email or key-ID shown by gpg --list-keys)\n\nIf you don’t have a key yet:\ngpg --quick-generate-key \"Your Name &lt;you@example.com&gt;\" default default 0\n2. Tell git to read it through GPG\nConfigure git-credential-netrc (ships with Git’s contrib/) as the credential helper:\ngit config --global credential.helper \\\n  \"netrc -f ~/.netrc.gpg -v\"\nOn each push/clone, git invokes GPG, gpg-agent prompts for your private key’s passphrase (cached for the session), and the plaintext credentials never touch disk.\n3. Verify\nls -la ~/.netrc*    # only ~/.netrc.gpg should exist\ngit clone https://private-git.example.com/gitlab/org/repo-name\nIf the helper script is not on PATH, point to it explicitly: /usr/share/doc/git/contrib/credential/netrc/git-credential-netrc.pl.\n\n\n\n\nStep 1｜Open the SOCKS5 tunnel on the jump server\nssh JumpServer -D 1080\n-D 1080 opens a SOCKS5 listener on local port 1080. Keep this terminal open for the duration of the work session.\nSanity check:\nnc -zv localhost 1080\n# Connection to localhost 1080 port [tcp/*] succeeded!\n\n\nStep 2｜Point git at the proxy (one-time)\ngit config --global http.https://private-git.example.com.proxy socks5h://localhost:1080\nAnatomy of the command:\ngit config --global  http.https://private-git.example.com.proxy  socks5h://localhost:1080\n           ─────────  ────────────────────────────────────────  ──────────────────────\n           scope      config key (URL-scoped)                   value\n\n--global ── writes to ~/.gitconfig\nhttp.&lt;URL&gt;.proxy ── applies the proxy only to that URL, not all of git\nsocks5h://localhost:1080 ── the proxy address\n\nResulting ~/.gitconfig:\n[http \"https://private-git.example.com\"]\n    proxy = socks5h://localhost:1080\nOther remotes (GitHub, etc.) are unaffected.\n\n\nStep 3｜Clone\ngit clone https://private-git.example.com/gitlab/org/repo-name\n.netrc is read automatically, so no interactive username/PAT prompt appears."
   },
   {
-    "objectID": "posts/2025-09-14-git-branch-naming/index.html#references",
-    "href": "posts/2025-09-14-git-branch-naming/index.html#references",
-    "title": "OGG… What kind of Git branch naming convention is commonly used??",
-    "section": "References",
-    "text": "References\n\nstackoverflow &gt; What are some examples of commonly used practices for naming git branches?"
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#pip-install-works-the-same-way",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#pip-install-works-the-same-way",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
+    "section": "pip install works the same way",
+    "text": "pip install works the same way\nIf requirements.txt references a private repo with git+https, the same proxy carries it.\ngit+https://private-git.example.com/gitlab/org/common-ml.git@v0.1.0\npip install -r requirements.txt"
   },
   {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
-    "section": "",
-    "text": "NoteTL;DR\n\n\n\n\n# Make git diff see a new file without staging its content\ngit add -N &lt;new-file&gt;\n\n# Undo git add -N only (file must have no staged content)\ngit reset HEAD &lt;new-file&gt;\n\ngit diff only compares the index against the working tree.\nAn untracked file has no index entry, so git diff cannot see it.\ngit add -N creates a zero-length index entry (“intent to add”) that lets git diff pick up the file without staging any content."
-  },
-  {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#goal",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#goal",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
-    "section": "🎯 Goal",
-    "text": "🎯 Goal\n\nUnderstand why git diff skips untracked files\nUse git add -N to include new files in git diff without staging them\nUndo git add -N with git reset"
-  },
-  {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#why-git-diff-ignores-untracked-files",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#why-git-diff-ignores-untracked-files",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
-    "section": "Why git diff ignores untracked files",
-    "text": "Why git diff ignores untracked files\ngit diff (with no flags) compares two things:\nindex (staging area)  ←→  working tree\nEvery tracked file has an index entry — a record in Git’s internal database that stores the file’s path. git diff iterates over these entries and compares each one to the corresponding file.\nAn untracked file has no index entry at all. From Git’s perspective it simply does not exist yet, so git diff has nothing to compare it against and silently skips it.\nWhy you want to care\nA common workflow is to pipe git diff into an LLM to code-review:\ngit --no-pager diff | claude -p \"code-review for this diff\"\nIf your changeset includes new files that are still untracked, git diff silently omits them — the LLM sees an incomplete picture and the review will miss those additions entirely. Running git add -N on each new file first ensures every change, including brand-new files, appears in the diff you hand off.\ngit add -N new-feature.py\ngit --no-pager diff | claude -p \"code-review for this diff\"\n\n\n\n\n\n\nTipWhy --no-pager?\n\n\n\n\nWithout it, Git may invoke a pager (e.g. less) when stdout is not a terminal. A pager takes over the terminal rather than writing plain text to stdout, which breaks the pipe — Claude receives nothing. --no-pager forces Git to write directly to stdout regardless of terminal detection."
-  },
-  {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#git-add--n-intent-to-add",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#git-add--n-intent-to-add",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
-    "section": "git add -N: intent-to-add",
-    "text": "git add -N: intent-to-add\ngit add -N (long form: git add --intent-to-add) registers a file in the index with an empty blob as its content. It does not stage the actual file contents.\ngit add -N new-feature.py\nAfter this command:\n\ngit status shows new-feature.py as a new file with unstaged changes\ngit diff now shows the full diff of the file (index = empty, working tree = file content)\ngit diff --cached shows nothing (no content has been staged)\ngit commit will refuse to commit it — the staged content is empty\n\n$ git add -N new-feature.py\n$ git status --short\nA  new-feature.py    # wait — why 'A'?\n\n\n\n\n\n\nWarninggit status shows A but nothing is actually staged\n\n\n\n\nThe A in the left column means “added to index”, but the index entry is empty.\ngit diff --cached will show an empty diff. Only git diff (unstaged) reveals the full file content.\n\n\n\n\nTypical workflow with git add -N\n# 1. You create a new file\ntouch new-feature.py\n\n# 2. Register intent-to-add so git diff can see it\ngit add -N new-feature.py\n\n# 3. Edit the file, review the diff as you work\nvim new-feature.py\ngit diff new-feature.py   # full diff visible\n\n# 4. When satisfied, stage for real\ngit add new-feature.py\n\n# 5. Commit\ngit commit -m \"Add new-feature.py\""
-  },
-  {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#resetting-git-add--n-with-git-reset",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#resetting-git-add--n-with-git-reset",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
-    "section": "Resetting git add -N with git reset",
-    "text": "Resetting git add -N with git reset\nIf you added intent-to-add by mistake and want to go back to treating the file as untracked, use git reset:\ngit reset HEAD &lt;file&gt;\n\n\n\n\n\n\nWarningOnly use this when the file has no staged content\n\n\n\n\ngit reset HEAD &lt;file&gt; works correctly here because an intent-to-add entry has an empty blob — there is nothing staged to lose. If you later ran git add &lt;file&gt; and staged real content, this command would discard those staged changes. Use git restore --staged &lt;file&gt; to unstage a fully-staged file instead.\n\n\n\ngit reset HEAD &lt;file&gt; is a --mixed-mode reset scoped to one file. It removes the file’s index entry entirely, returning the file to untracked status. The file’s content on disk is never touched.\n\nWhat --mixed means here\ngit reset has three modes that control how much state is rolled back:\n\n\n\n\nMode\nHEAD moves\nIndex cleared\nWorking tree cleared\n\n\n\n\n--soft\n✔️\n✅ kept\n✅ kept\n\n\n--mixed\n✔️\n❌ cleared\n✅ kept\n\n\n--hard\n✔️\n❌ cleared\n❌ cleared\n\n\n\n\nWhen you run git reset HEAD &lt;file&gt; (without a mode flag), Git uses --mixed by default and applies it only to that single file:\n\nThe index entry for &lt;file&gt; is removed (or reset to HEAD’s version)\nThe working tree file is untouched\nHEAD itself does not move (no commit is changed)\n\n$ git add -N new-feature.py\n$ git status --short\nA  new-feature.py\n\n$ git reset HEAD new-feature.py\n$ git status --short\n?? new-feature.py    # back to untracked\n\n\n\n\n\n\nTipgit reset HEAD &lt;file&gt; vs git reset HEAD\n\n\n\n\ngit reset HEAD &lt;file&gt; — scoped to one file; only removes that file’s index entry\ngit reset HEAD — resets the entire index to match HEAD; all staged changes are unstaged\n\n\n\n\n\nBulk-undo all intent-to-add entries at once\nWhen you have multiple intent-to-add files and want to undo all of them without touching any fully-staged files, use --diff-filter=A:\ngit diff --cached --name-only --diff-filter=A \\\n  | xargs git reset HEAD --\nBreaking it down:\n\n\n\n\n\n\n\n\nPart\nWhat it does\n\n\n\n\ngit diff --cached --name-only\nLists file names that differ between HEAD and the index (i.e. staged changes)\n\n\n--diff-filter=A\nKeeps only Added entries — files with no prior version in HEAD, which is exactly the state git add -N creates\n\n\nxargs git reset HEAD --\nRuns git reset HEAD -- &lt;file&gt; for each name; the -- separator prevents file names from being misread as flags\n\n\n\n\nBecause --diff-filter=A matches only new index entries, fully-staged modifications (M) and deletions (D) are left completely untouched."
-  },
-  {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#summary",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#summary",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
-    "section": "Summary",
-    "text": "Summary\n\n\n\n\n\n\n\n\nSituation\nCommand\n\n\n\n\nSee why a new file is invisible to git diff\ngit status --short\n\n\nMake a new file visible to git diff\ngit add -N &lt;file&gt;\n\n\nStage the full content after reviewing\ngit add &lt;file&gt;\n\n\nUndo git add -N (no staged content)\ngit reset HEAD &lt;file&gt;\n\n\nUnstage a fully staged file\ngit restore --staged &lt;file&gt;"
-  },
-  {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#glossary",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#glossary",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#glossary",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#glossary",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
     "section": "Glossary",
-    "text": "Glossary\n\n- def: Index (staging area)\n  description: |\n    Git's intermediate layer between the working tree and a commit.\n    Every file Git tracks has an entry here. `git add` writes content\n    into the index; `git commit` turns the index into a new commit object.\n\n- def: Intent-to-add (git add -N)\n  description: |\n    A special index entry with an empty blob, created by\n    `git add --intent-to-add`. It tells Git \"this file will eventually\n    be added\" so that `git diff` can compare the (empty) index entry\n    against the working tree file, producing a visible diff without\n    staging any content.\n\n- def: git diff\n  description: |\n    Compares the index against the working tree.\n    Shows changes you have made but not yet staged.\n    Untracked files (no index entry) are invisible to this command.\n\n- def: git diff --cached\n  description: |\n    Compares HEAD against the index.\n    Shows changes that are staged and will be included in the next commit.\n    Also written as `git diff --staged` (identical behaviour).\n    An intent-to-add entry (`git add -N`) produces an empty diff here\n    because no content has been staged yet.\n\n- def: git reset --mixed (default)\n  description: |\n    Moves HEAD to a target commit and clears the index to match,\n    but leaves the working tree files untouched. When scoped to a\n    single file (`git reset HEAD &lt;file&gt;`), it only removes that file's\n    index entry — HEAD does not move."
+    "text": "Glossary\n\n- def: SOCKS5\n  description: |\n    A proxy protocol that forwards raw TCP between a client and a\n    server. Unlike an HTTP proxy it does not inspect the payload, so\n    HTTPS, SSH, and other TCP protocols pass through transparently.\n\n- def: socks5h\n  description: |\n    A SOCKS5 variant in which the proxy server, not the client,\n    performs DNS resolution. Required when the target hostname is\n    only resolvable from the proxy's side of the network.\n\n- def: Jump server (bastion)\n  description: |\n    A machine inside a restricted network that authorized users SSH\n    into in order to reach further internal resources. Used here as\n    the \"DNS + TCP delegate\" for the local machine.\n\n- def: .netrc\n  description: |\n    A per-user file (`~/.netrc`) that stores hostname/login/password\n    triples. `git` and `curl` read it automatically to authenticate\n    against the named host without prompting."
   },
   {
-    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#references",
-    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#references",
-    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "objectID": "posts/2026-05-18-git-clone-via-jump-server/index.html#references",
+    "href": "posts/2026-05-18-git-clone-via-jump-server/index.html#references",
+    "title": "OGG… How do I git clone a private GitLab through a jump server?",
     "section": "📘 References",
-    "text": "📘 References\n\nGit Documentation &gt; git-diff\nGit Documentation &gt; git-add (--intent-to-add)\nGit Documentation &gt; git-reset"
+    "text": "📘 References\n\nGit Documentation &gt; git-config (http.&lt;url&gt;.*)\nOpenSSH Manual &gt; ssh (-D dynamic port forwarding)\nRFC 1928 — SOCKS Protocol Version 5"
   },
   {
-    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html",
-    "href": "posts/2024-11-01-push-to-multiple-origins/index.html",
-    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
     "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
+    "text": "This post is based on Dangit, I accidentally committed something to master that should have been on a brand new branch!"
   },
   {
-    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
-    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
-    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
-    "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "section": "Problem",
+    "text": "Problem\nLet’s say you have just set up a new git repository. Initially, you planned to create a new branch named test to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.\n ▶  What I originally planned to do\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       branch test\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\"\n\n\n\n\n\n\n ▶  What I’ve actually done…\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\""
   },
   {
-    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
-    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
-    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
-    "section": "Solution",
-    "text": "Solution\nIn Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.\n ▶  Steps\nHere’s how you can set this up:\n\nAdd Multiple Remotes by using git remote add command\nCheck Your Remotes with git remote -v\nPushing to Multiple Remotes\n\n ▶  Commands\nSuppose you’re working on a local Git project named hoshinokirby. You want to push this project to both GitHub and GitLab.\n# Step 1: Add multiple Remotes\ngit remote add github https://github.com/user-name/hoshinokirby.git\ngit remote add gitlab https://gitlab.com/user-name/hoshinokirby.git\n\n# Step 2: Check Your Remotes\ngit remote -v\noutput should be like below:\ngithub    https://github.com/user-name/hoshinokirby.git (fetch)\ngithub    https://github.com/user-name/hoshinokirby.git (push)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (push)\nThen,\n# Step 3: Push to Both Remotes:\ngit push github feature/ml-prediction-enhancement\ngit push gitlab feature/ml-prediction-enhancement\n\n\n\n\n\n\nTip🍵 Green Tea Break: Delete a Remote\n\n\n\nf you have added the wrong remote in your Git repository and want to delete it, you can do so using the git remote remove command. Removing a remote only affects your local configuration and does not impact the remote repository itself.\n# remove the remote\ngit remote remove &lt;remote-name&gt;\n\n# shorthand version\ngit remote rm &lt;remote-name&gt;\nBefore running the above commands, make sure to double-check the remote name to avoid accidental deletions.\n\n\n\nAutomate Pushing to Both Remotes by shellscript\nThe following script is designed to push a specified branch to all configured Git remotes.\n#!/bin/bash\n#--------------------------------------\n# Description\n#   The script iterates over each remote and pushes the specified branch to it \n#   using the git push command. The script retrieves the list of configured Git remotes \n#   using the git remote command and stores it in the variable REMOTES.\n#   If no remotes are found, the script prints an error message and exits with a status code of 1.\n#--------------------------------------\n\n\n# Check if branch name is provided\nif [ -z \"$1\" ]; then\n  echo \"Usage: $0 &lt;branch-name&gt;\"\n  exit 1\nfi\n\n# Define the branch name\nBRANCH_NAME=$1\n\n# Get the list of remotes\nREMOTES=$(git remote)\n\n# Check if there are any remotes configured\nif [ -z \"$REMOTES\" ]; then\n  echo \"No remotes found. Please configure a remote repository.\"\n  exit 1\nfi\n\n# Push to each remote\necho \"$REMOTES\" | while read -r REMOTE; do\n    git push \"$REMOTE\" \"$BRANCH_NAME\"\ndone\n\nexit 0\nTo use this script, follow these steps:\n\nSave the script to a file, e.g., push_to_remotes.sh\nMake the script executable:\n\nchmod +x push_to_remotes.sh\n\nRun the script with the branch name as an argument:\n\n./push_to_remotes.sh &lt;branch-name&gt;"
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "section": "Solution: using git reset",
+    "text": "Solution: using git reset\n ▶  Steps\n\nCreate a new test branch based on the current HEAD state.\nReset the main branch to the state immediately after the first commit.\nSwitch to the test branch.\n\n ▶  Commands\n## Step 1: keep the current repository state into test branch\n% git branch test\n\n## Step 2: clean the main branch\n% git reset 813faa2 --hard\n\n## Step 3: moving to the test branch\n% git switch test\n ▶  Explains\n\nYou can create a new branch based on the current HEAD without switching using git branch &lt;branch-name&gt;.\nUsing git reset --hard instead of git reset --soft ensures that by default, changes are not left in the current branch’s index or files.\nIf changes remain in the current branch, you would need to execute git stash or git clean.\n\n\n!!WARNING \nIf you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers."
   },
   {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
-    "title": "OGG… I just want to save the current repository into another remote…",
-    "section": "",
-    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
-  },
-  {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
-    "title": "OGG… I just want to save the current repository into another remote…",
-    "section": "",
-    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
-  },
-  {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
-    "title": "OGG… I just want to save the current repository into another remote…",
-    "section": "Solution: git clone –bare",
-    "text": "Solution: git clone –bare\n ▶  Steps\n\nCreate a bare clone of the repository\nMirror-push to the new repository\nRemove the temporary old local repository\n\n ▶  Commands\n# Step 1\n% git clone --bare https://github.com/EXAMPLE-USER/LinearModels.git\n\n# Step 2\n% cd LinearModels.git\n% git push --mirror https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git\n\n# Step 3\n% cd ..\n% rm -rf LinearModels.git\n\n📘 REMARKS \n\nA non-bare git clone downloads both the snapshot and history to the local machine. However, a git clone --bare only copies the history, allowing for a quicker transfer to a new remote repository.\nAdditionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．\nThe mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.\n\n\n\nWhy not no-bare git clone and git push –mirror?\nWhen running git clone origin-url, you will get all of the tags copied, a local branch master (HEAD) tracking a remote branch origin/master, and remote branches origin/test1, origin/test2, and origin/test3.\nIf you do git push --mirror a non-bare cloned repository, it also pushes your remote branches, origin/test1, origin/test2, and origin/test3, because mirror implies everything. Then, you would get branches named origin/origin/test1."
-  },
-  {
-    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
-    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
-    "title": "OGG… I just want to save the current repository into another remote…",
+    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
+    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
     "section": "References",
-    "text": "References\n\nGitHub Docs &gt; Duplicating a repository"
+    "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
   },
   {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html",
+    "title": "OGG… How do I git add only files matching a pattern?",
     "section": "",
-    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+    "text": "NoteTL;DR\n\n\n\ngit ls-files -mo --exclude-standard | grep -E 'test|bats' | xargs -i git add {}\nThis one-liner stages only files whose paths contain test or bats, among files that are either modified or untracked (but not ignored)."
   },
   {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#problem",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html#problem",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "",
-    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#goal",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#goal",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\nStage only the files whose paths match a given pattern (e.g. test-related files), without git add . sweeping everything"
   },
   {
-    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#solution",
-    "href": "posts/2025-05-23-switch-https-ssh/index.html#solution",
-    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
-    "section": "Solution",
-    "text": "Solution\n\nCheck your current remote URL:\ngit remote -v\nIf the URL starts with https://, you are using HTTPS.\nFind your SSH URL:\nOn GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., git@github.com:username/repo.git).\nChange the remote URL to SSH:\ngit remote set-url origin git@github.com:username/repo.git\nVerify the change:\ngit remote -v\nThe URL should now start with git@.\n\n\nTips\n\nMake sure you have added your SSH key to your GitHub account. You can generate a key with ssh-keygen and add it using the GitHub SSH settings.\nTest your SSH connection with:\nssh -T git@github.com\nIf you use multiple remotes or repositories, repeat these steps for each one."
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#diving-into-the-pipeline",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#diving-into-the-pipeline",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "🔍 Diving into the pipeline",
+    "text": "🔍 Diving into the pipeline\nThe command is three stages glued together with pipes:\ngit ls-files -mo --exclude-standard   # 1. list candidate files\n  | grep -E 'test|bats'               # 2. filter by path pattern\n  | xargs -i git add {}               # 3. stage each one\n\n1. git ls-files -mo --exclude-standard\ngit ls-files prints file paths that Git knows about (or could know about) in the current working tree.\n\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-m\nModified — tracked files that differ from the index\n\n\n-o\nOthers — files in the working tree that are not tracked (i.e. untracked files)\n\n\n--exclude-standard\nApply the usual ignore rules: .gitignore, .git/info/exclude, and the user’s global excludes file\n\n\n\n\nSo -mo --exclude-standard together means “modified files plus untracked files, but skip anything that is ignored.” Deleted files are not included unless you also pass -d.\n\n\n\n\n\n\nTipWhy not just git add -u or git add .?\n\n\n\n\ngit add -u stages modified and deleted tracked files, but ignores untracked ones.\ngit add . stages everything under the current directory, including files you may not want.\n\n\n\n\n\n2. grep -E 'test|bats'\nFilter the list to lines matching the extended regex test|bats — i.e. any path that contains the substring test or bats anywhere.\n\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-E\nUse Extended Regular Expressions (so | works as alternation without backslashing)\n\n\n\n\nExample matches:\ntests/test_parser.py     ✅ contains \"test\"\nsrc/foo.bats             ✅ contains \"bats\"\nscripts/run-bats.sh      ✅ contains \"bats\"\nsrc/main.py              ❌ no match\n\n\n\n\n\n\nWarninggrep matches anywhere in the path\n\n\n\nThe pattern test will also match latest/, contest.md, or protest.txt. Tighten the regex when in doubt — e.g. '(^|/)tests?/' to require a literal tests/ or test/ directory segment.\n\n\n\n\n3. xargs -i git add {}\nxargs builds and executes commands from stdin. Here it runs git add &lt;file&gt; once per line of input.\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-i\nReplace {} in the command with each input line. Deprecated in GNU xargs — prefer -I {} (capital I).\n\n\n{}\nPlaceholder for the current input line\n\n\n\nSo for input lines a.py, b.py, xargs runs:\ngit add a.py\ngit add b.py\n\n\n\n\n\n\nNoteModern, safer form\n\n\n\nThe portable, modern equivalent is:\ngit ls-files -mo --exclude-standard -z \\\n  | grep -zE 'test|bats' \\\n  | xargs -0 -I {} git add {}\n\n-z / -0 use NUL-delimited records, so paths containing spaces, tabs, or newlines do not break the pipeline.\n-I {} is the POSIX-standard replacement form (the lowercase -i works on GNU xargs but is non-standard)."
   },
   {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#variations-worth-knowing",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#variations-worth-knowing",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "✅ Variations worth knowing",
+    "text": "✅ Variations worth knowing\nStage only modified files matching a pattern (skip untracked)\ngit ls-files -m --exclude-standard | grep -E 'test|bats' | xargs -I {} git add {}\nPreview what will be staged before running git add\ngit ls-files -mo --exclude-standard | grep -E 'test|bats'"
   },
   {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "",
-    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "Solution",
-    "text": "Solution\nThere are two ways to resolve this:\n\nRename your local branch to follow the naming convention, then push it to the remote.\nPush your current branch to the remote using the correct branch name without renaming it locally."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "### Solution 1: rename your local branch name",
-    "text": "### Solution 1: rename your local branch name\nRenaming your local branch is explained on this post.\n ▶  Commands\n# Step 1: rename your local branch\ngit branch -m &lt;old-name&gt; &lt;new-name&gt;\n\n# Step 2: push to the remote\ngit push -u origin HEAD"
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "### Solution 2: Push a local git branch to a remote with a different name",
-    "text": "### Solution 2: Push a local git branch to a remote with a different name\ngit push origin local-branch-name:remote-branch-name tells Git to push the local branch local-branch-name to the remote repository origin and create/update the branch named remote-branch-name there.\nBut be aware the command carry some risks. If remote-branch-name already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.\nTo mitigate the above risk, it’s better to check the status of the remnote branch first with git fetch and git branch -a. DO NOT USE git push --force.\n ▶  Commands\n# Step 1: git fetch and check your remote\ngit fetch \n\n# Step 2: Make sure your new remote name will not cause a problem\ngit branch -a  \n\n# Step 3: Push your local branch with different remote name\ngit push origin local-branch-name:remote-branch-name\n\n\n\n\n\n\nTip🍵 Green Tea Break: why use git fetch not git pull?\n\n\n\n ▶  git fetch keeps your local work untouched\n\ngit fetch only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.\ngit pull combines git fetch and git merge, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.\n\nIf you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use git fetch because it helps avoid unexpected merges."
-  },
-  {
-    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
-    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
-    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
-    "section": "Use-cases",
-    "text": "Use-cases\n ▶  Temporarily Sharing Work\nIf you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like temp/20241031-login-test.\n ▶  Avoid Naming Conflicts\nIf there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called feature/login on the remote, you might push you local feature/login branch as feature/login-update.\nIn this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run\ngit branch -vvv\nand if the result is not what you expect, you can run\ngit branch --set-upstream-to=origin/new-feature\nto set your upstream branch to the correct one."
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "",
-    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Goal",
-    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
-  },
-  {
-    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
-    "title": "OGG… How to unstage files in Git?",
-    "section": "Guideline",
-    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
+    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#references",
+    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#references",
+    "title": "OGG… How do I git add only files matching a pattern?",
+    "section": "References",
+    "text": "References\n\ngit ls-files — Git Reference\nxargs(1) — GNU findutils"
   },
   {
     "objectID": "posts/2026-05-14-git-diff-vs-diff-HEAD/index.html",
@@ -826,67 +546,424 @@
     "text": "📘 References\n\nGit Documentation &gt; git-diff\nGit Documentation &gt; git-add (--intent-to-add)"
   },
   {
-    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html",
-    "href": "posts/2026-05-12-git-add-with-selected-files/index.html",
-    "title": "OGG… How do I git add only files matching a pattern?",
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html",
+    "title": "OGG… How to unstage files in Git?",
     "section": "",
-    "text": "NoteTL;DR\n\n\n\ngit ls-files -mo --exclude-standard | grep -E 'test|bats' | xargs -i git add {}\nThis one-liner stages only files whose paths contain test or bats, among files that are either modified or untracked (but not ignored)."
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
   },
   {
-    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#goal",
-    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#goal",
-    "title": "OGG… How do I git add only files matching a pattern?",
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#objective",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "",
+    "text": "To reverse the git add operation for specific files, moving them from the staging area back to the working directory\nnot modifying the content of the files themselves"
+  },
+  {
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#goal",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Goal",
+    "text": "Goal\n\nunstage one or more files that were previously added to the staging area"
+  },
+  {
+    "objectID": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "href": "posts/2025-06-13-how-to-unstage-files/index.html#guideline",
+    "title": "OGG… How to unstage files in Git?",
+    "section": "Guideline",
+    "text": "Guideline\nWhen you stage a file using git add, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:\n\ngit restore --staged &lt;file&gt;\ngit reset &lt;file&gt;\n\nHere I will explain of the first one git restore, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of git reset, which can also affect commit history when used in other forms.\nTo unstage a specific file\ngit restore --staged &lt;file_name&gt;\nTo unstage multiple specific files\ngit restore --staged &lt;file_name1&gt; &lt;file_name2&gt; ...\n\nList all the files you want to unstage, separated by spaces.\n\nTo confirm the result after running\ngit status\n\n💻 custom alias setup for git unstage\nGit lets you define shortcuts (aliases) for longer commands via the [alias] section of .gitconfig.\nSetup Syntax\n[alias]\n    &lt;shortcut&gt; = &lt;actual git command&gt;\n\nDo not include git in the actual command — Git automatically prefixes it.\nYou may need quotes if the command includes spaces or options.\n\nAlias Setup\nThe following setup defines a Git subcommand alias called git unstage\n[alias]\n    unstage = \"restore --staged\"\nThen, git unstage &lt;file&gt; works the same as git restore --staged &lt;file_name&gt;"
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#problem",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be dev-2.2.x-0001/ml-prediction-enhancement."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "Solution",
+    "text": "Solution\nThere are two ways to resolve this:\n\nRename your local branch to follow the naming convention, then push it to the remote.\nPush your current branch to the remote using the correct branch name without renaming it locally."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-1-rename-your-local-branch-name",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "### Solution 1: rename your local branch name",
+    "text": "### Solution 1: rename your local branch name\nRenaming your local branch is explained on this post.\n ▶  Commands\n# Step 1: rename your local branch\ngit branch -m &lt;old-name&gt; &lt;new-name&gt;\n\n# Step 2: push to the remote\ngit push -u origin HEAD"
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "### Solution 2: Push a local git branch to a remote with a different name",
+    "text": "### Solution 2: Push a local git branch to a remote with a different name\ngit push origin local-branch-name:remote-branch-name tells Git to push the local branch local-branch-name to the remote repository origin and create/update the branch named remote-branch-name there.\nBut be aware the command carry some risks. If remote-branch-name already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.\nTo mitigate the above risk, it’s better to check the status of the remnote branch first with git fetch and git branch -a. DO NOT USE git push --force.\n ▶  Commands\n# Step 1: git fetch and check your remote\ngit fetch \n\n# Step 2: Make sure your new remote name will not cause a problem\ngit branch -a  \n\n# Step 3: Push your local branch with different remote name\ngit push origin local-branch-name:remote-branch-name\n\n\n\n\n\n\nTip🍵 Green Tea Break: why use git fetch not git pull?\n\n\n\n ▶  git fetch keeps your local work untouched\n\ngit fetch only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.\ngit pull combines git fetch and git merge, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.\n\nIf you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use git fetch because it helps avoid unexpected merges."
+  },
+  {
+    "objectID": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
+    "href": "posts/2024-10-31-push-remote-with-different-branchname/index.html#use-cases",
+    "title": "OGG… I just want to push a local git branch to a remote with a different name…",
+    "section": "Use-cases",
+    "text": "Use-cases\n ▶  Temporarily Sharing Work\nIf you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like temp/20241031-login-test.\n ▶  Avoid Naming Conflicts\nIf there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called feature/login on the remote, you might push you local feature/login branch as feature/login-update.\nIn this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run\ngit branch -vvv\nand if the result is not what you expect, you can run\ngit branch --set-upstream-to=origin/new-feature\nto set your upstream branch to the correct one."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "",
+    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#problem",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html#problem",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "",
+    "text": "You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation."
+  },
+  {
+    "objectID": "posts/2025-05-23-switch-https-ssh/index.html#solution",
+    "href": "posts/2025-05-23-switch-https-ssh/index.html#solution",
+    "title": "OGG… How do I switch the connection method for git push from HTTPS to SSH??",
+    "section": "Solution",
+    "text": "Solution\n\nCheck your current remote URL:\ngit remote -v\nIf the URL starts with https://, you are using HTTPS.\nFind your SSH URL:\nOn GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., git@github.com:username/repo.git).\nChange the remote URL to SSH:\ngit remote set-url origin git@github.com:username/repo.git\nVerify the change:\ngit remote -v\nThe URL should now start with git@.\n\n\nTips\n\nMake sure you have added your SSH key to your GitHub account. You can generate a key with ssh-keygen and add it using the GitHub SSH settings.\nTest your SSH connection with:\nssh -T git@github.com\nIf you use multiple remotes or repositories, repeat these steps for each one."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "",
+    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#problem",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "",
+    "text": "Let’s say you are working on a GitHub-hosted repository, LinearModels, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git, while keeping the history as of now."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#solution-git-clone-bare",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "Solution: git clone –bare",
+    "text": "Solution: git clone –bare\n ▶  Steps\n\nCreate a bare clone of the repository\nMirror-push to the new repository\nRemove the temporary old local repository\n\n ▶  Commands\n# Step 1\n% git clone --bare https://github.com/EXAMPLE-USER/LinearModels.git\n\n# Step 2\n% cd LinearModels.git\n% git push --mirror https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git\n\n# Step 3\n% cd ..\n% rm -rf LinearModels.git\n\n📘 REMARKS \n\nA non-bare git clone downloads both the snapshot and history to the local machine. However, a git clone --bare only copies the history, allowing for a quicker transfer to a new remote repository.\nAdditionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．\nThe mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.\n\n\n\nWhy not no-bare git clone and git push –mirror?\nWhen running git clone origin-url, you will get all of the tags copied, a local branch master (HEAD) tracking a remote branch origin/master, and remote branches origin/test1, origin/test2, and origin/test3.\nIf you do git push --mirror a non-bare cloned repository, it also pushes your remote branches, origin/test1, origin/test2, and origin/test3, because mirror implies everything. Then, you would get branches named origin/origin/test1."
+  },
+  {
+    "objectID": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
+    "href": "posts/2024-07-26-mirror-repository-to-newremote/index.html#references",
+    "title": "OGG… I just want to save the current repository into another remote…",
+    "section": "References",
+    "text": "References\n\nGitHub Docs &gt; Duplicating a repository"
+  },
+  {
+    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html",
+    "href": "posts/2024-11-01-push-to-multiple-origins/index.html",
+    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
+  },
+  {
+    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
+    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#problem",
+    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
+    "section": "",
+    "text": "Suppose you’re working on a local Git branch named feature/ml-prediction-enhancement. You want to push this project to both GitHub and GitLab.\n ▶  Example\n\nyou might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application."
+  },
+  {
+    "objectID": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
+    "href": "posts/2024-11-01-push-to-multiple-origins/index.html#solution",
+    "title": "OGG… How can I push my repository to githab and gitlab remote at once?",
+    "section": "Solution",
+    "text": "Solution\nIn Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.\n ▶  Steps\nHere’s how you can set this up:\n\nAdd Multiple Remotes by using git remote add command\nCheck Your Remotes with git remote -v\nPushing to Multiple Remotes\n\n ▶  Commands\nSuppose you’re working on a local Git project named hoshinokirby. You want to push this project to both GitHub and GitLab.\n# Step 1: Add multiple Remotes\ngit remote add github https://github.com/user-name/hoshinokirby.git\ngit remote add gitlab https://gitlab.com/user-name/hoshinokirby.git\n\n# Step 2: Check Your Remotes\ngit remote -v\noutput should be like below:\ngithub    https://github.com/user-name/hoshinokirby.git (fetch)\ngithub    https://github.com/user-name/hoshinokirby.git (push)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)\ngitlab    https://gitlab.com/user-name/hoshinokirby.git (push)\nThen,\n# Step 3: Push to Both Remotes:\ngit push github feature/ml-prediction-enhancement\ngit push gitlab feature/ml-prediction-enhancement\n\n\n\n\n\n\nTip🍵 Green Tea Break: Delete a Remote\n\n\n\nf you have added the wrong remote in your Git repository and want to delete it, you can do so using the git remote remove command. Removing a remote only affects your local configuration and does not impact the remote repository itself.\n# remove the remote\ngit remote remove &lt;remote-name&gt;\n\n# shorthand version\ngit remote rm &lt;remote-name&gt;\nBefore running the above commands, make sure to double-check the remote name to avoid accidental deletions.\n\n\n\nAutomate Pushing to Both Remotes by shellscript\nThe following script is designed to push a specified branch to all configured Git remotes.\n#!/bin/bash\n#--------------------------------------\n# Description\n#   The script iterates over each remote and pushes the specified branch to it \n#   using the git push command. The script retrieves the list of configured Git remotes \n#   using the git remote command and stores it in the variable REMOTES.\n#   If no remotes are found, the script prints an error message and exits with a status code of 1.\n#--------------------------------------\n\n\n# Check if branch name is provided\nif [ -z \"$1\" ]; then\n  echo \"Usage: $0 &lt;branch-name&gt;\"\n  exit 1\nfi\n\n# Define the branch name\nBRANCH_NAME=$1\n\n# Get the list of remotes\nREMOTES=$(git remote)\n\n# Check if there are any remotes configured\nif [ -z \"$REMOTES\" ]; then\n  echo \"No remotes found. Please configure a remote repository.\"\n  exit 1\nfi\n\n# Push to each remote\necho \"$REMOTES\" | while read -r REMOTE; do\n    git push \"$REMOTE\" \"$BRANCH_NAME\"\ndone\n\nexit 0\nTo use this script, follow these steps:\n\nSave the script to a file, e.g., push_to_remotes.sh\nMake the script executable:\n\nchmod +x push_to_remotes.sh\n\nRun the script with the branch name as an argument:\n\n./push_to_remotes.sh &lt;branch-name&gt;"
+  },
+  {
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "section": "",
+    "text": "NoteTL;DR\n\n\n\n\n# Make git diff see a new file without staging its content\ngit add -N &lt;new-file&gt;\n\n# Undo git add -N only (file must have no staged content)\ngit reset HEAD &lt;new-file&gt;\n\ngit diff only compares the index against the working tree.\nAn untracked file has no index entry, so git diff cannot see it.\ngit add -N creates a zero-length index entry (“intent to add”) that lets git diff pick up the file without staging any content."
+  },
+  {
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#goal",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#goal",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
     "section": "🎯 Goal",
-    "text": "🎯 Goal\n\nStage only the files whose paths match a given pattern (e.g. test-related files), without git add . sweeping everything"
+    "text": "🎯 Goal\n\nUnderstand why git diff skips untracked files\nUse git add -N to include new files in git diff without staging them\nUndo git add -N with git reset"
   },
   {
-    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#diving-into-the-pipeline",
-    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#diving-into-the-pipeline",
-    "title": "OGG… How do I git add only files matching a pattern?",
-    "section": "🔍 Diving into the pipeline",
-    "text": "🔍 Diving into the pipeline\nThe command is three stages glued together with pipes:\ngit ls-files -mo --exclude-standard   # 1. list candidate files\n  | grep -E 'test|bats'               # 2. filter by path pattern\n  | xargs -i git add {}               # 3. stage each one\n\n1. git ls-files -mo --exclude-standard\ngit ls-files prints file paths that Git knows about (or could know about) in the current working tree.\n\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-m\nModified — tracked files that differ from the index\n\n\n-o\nOthers — files in the working tree that are not tracked (i.e. untracked files)\n\n\n--exclude-standard\nApply the usual ignore rules: .gitignore, .git/info/exclude, and the user’s global excludes file\n\n\n\n\nSo -mo --exclude-standard together means “modified files plus untracked files, but skip anything that is ignored.” Deleted files are not included unless you also pass -d.\n\n\n\n\n\n\nTipWhy not just git add -u or git add .?\n\n\n\n\ngit add -u stages modified and deleted tracked files, but ignores untracked ones.\ngit add . stages everything under the current directory, including files you may not want.\n\n\n\n\n\n2. grep -E 'test|bats'\nFilter the list to lines matching the extended regex test|bats — i.e. any path that contains the substring test or bats anywhere.\n\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-E\nUse Extended Regular Expressions (so | works as alternation without backslashing)\n\n\n\n\nExample matches:\ntests/test_parser.py     ✅ contains \"test\"\nsrc/foo.bats             ✅ contains \"bats\"\nscripts/run-bats.sh      ✅ contains \"bats\"\nsrc/main.py              ❌ no match\n\n\n\n\n\n\nWarninggrep matches anywhere in the path\n\n\n\nThe pattern test will also match latest/, contest.md, or protest.txt. Tighten the regex when in doubt — e.g. '(^|/)tests?/' to require a literal tests/ or test/ directory segment.\n\n\n\n\n3. xargs -i git add {}\nxargs builds and executes commands from stdin. Here it runs git add &lt;file&gt; once per line of input.\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-i\nReplace {} in the command with each input line. Deprecated in GNU xargs — prefer -I {} (capital I).\n\n\n{}\nPlaceholder for the current input line\n\n\n\nSo for input lines a.py, b.py, xargs runs:\ngit add a.py\ngit add b.py\n\n\n\n\n\n\nNoteModern, safer form\n\n\n\nThe portable, modern equivalent is:\ngit ls-files -mo --exclude-standard -z \\\n  | grep -zE 'test|bats' \\\n  | xargs -0 -I {} git add {}\n\n-z / -0 use NUL-delimited records, so paths containing spaces, tabs, or newlines do not break the pipeline.\n-I {} is the POSIX-standard replacement form (the lowercase -i works on GNU xargs but is non-standard)."
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#why-git-diff-ignores-untracked-files",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#why-git-diff-ignores-untracked-files",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "section": "Why git diff ignores untracked files",
+    "text": "Why git diff ignores untracked files\ngit diff (with no flags) compares two things:\nindex (staging area)  ←→  working tree\nEvery tracked file has an index entry — a record in Git’s internal database that stores the file’s path. git diff iterates over these entries and compares each one to the corresponding file.\nAn untracked file has no index entry at all. From Git’s perspective it simply does not exist yet, so git diff has nothing to compare it against and silently skips it.\nWhy you want to care\nA common workflow is to pipe git diff into an LLM to code-review:\ngit --no-pager diff | claude -p \"code-review for this diff\"\nIf your changeset includes new files that are still untracked, git diff silently omits them — the LLM sees an incomplete picture and the review will miss those additions entirely. Running git add -N on each new file first ensures every change, including brand-new files, appears in the diff you hand off.\ngit add -N new-feature.py\ngit --no-pager diff | claude -p \"code-review for this diff\"\n\n\n\n\n\n\nTipWhy --no-pager?\n\n\n\n\nWithout it, Git may invoke a pager (e.g. less) when stdout is not a terminal. A pager takes over the terminal rather than writing plain text to stdout, which breaks the pipe — Claude receives nothing. --no-pager forces Git to write directly to stdout regardless of terminal detection."
   },
   {
-    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#variations-worth-knowing",
-    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#variations-worth-knowing",
-    "title": "OGG… How do I git add only files matching a pattern?",
-    "section": "✅ Variations worth knowing",
-    "text": "✅ Variations worth knowing\nStage only modified files matching a pattern (skip untracked)\ngit ls-files -m --exclude-standard | grep -E 'test|bats' | xargs -I {} git add {}\nPreview what will be staged before running git add\ngit ls-files -mo --exclude-standard | grep -E 'test|bats'"
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#git-add--n-intent-to-add",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#git-add--n-intent-to-add",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "section": "git add -N: intent-to-add",
+    "text": "git add -N: intent-to-add\ngit add -N (long form: git add --intent-to-add) registers a file in the index with an empty blob as its content. It does not stage the actual file contents.\ngit add -N new-feature.py\nAfter this command:\n\ngit status shows new-feature.py as a new file with unstaged changes\ngit diff now shows the full diff of the file (index = empty, working tree = file content)\ngit diff --cached shows nothing (no content has been staged)\ngit commit will refuse to commit it — the staged content is empty\n\n$ git add -N new-feature.py\n$ git status --short\nA  new-feature.py    # wait — why 'A'?\n\n\n\n\n\n\nWarninggit status shows A but nothing is actually staged\n\n\n\n\nThe A in the left column means “added to index”, but the index entry is empty.\ngit diff --cached will show an empty diff. Only git diff (unstaged) reveals the full file content.\n\n\n\n\nTypical workflow with git add -N\n# 1. You create a new file\ntouch new-feature.py\n\n# 2. Register intent-to-add so git diff can see it\ngit add -N new-feature.py\n\n# 3. Edit the file, review the diff as you work\nvim new-feature.py\ngit diff new-feature.py   # full diff visible\n\n# 4. When satisfied, stage for real\ngit add new-feature.py\n\n# 5. Commit\ngit commit -m \"Add new-feature.py\""
   },
   {
-    "objectID": "posts/2026-05-12-git-add-with-selected-files/index.html#references",
-    "href": "posts/2026-05-12-git-add-with-selected-files/index.html#references",
-    "title": "OGG… How do I git add only files matching a pattern?",
-    "section": "References",
-    "text": "References\n\ngit ls-files — Git Reference\nxargs(1) — GNU findutils"
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#resetting-git-add--n-with-git-reset",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#resetting-git-add--n-with-git-reset",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "section": "Resetting git add -N with git reset",
+    "text": "Resetting git add -N with git reset\nIf you added intent-to-add by mistake and want to go back to treating the file as untracked, use git reset:\ngit reset HEAD &lt;file&gt;\n\n\n\n\n\n\nWarningOnly use this when the file has no staged content\n\n\n\n\ngit reset HEAD &lt;file&gt; works correctly here because an intent-to-add entry has an empty blob — there is nothing staged to lose. If you later ran git add &lt;file&gt; and staged real content, this command would discard those staged changes. Use git restore --staged &lt;file&gt; to unstage a fully-staged file instead.\n\n\n\ngit reset HEAD &lt;file&gt; is a --mixed-mode reset scoped to one file. It removes the file’s index entry entirely, returning the file to untracked status. The file’s content on disk is never touched.\n\nWhat --mixed means here\ngit reset has three modes that control how much state is rolled back:\n\n\n\n\nMode\nHEAD moves\nIndex cleared\nWorking tree cleared\n\n\n\n\n--soft\n✔️\n✅ kept\n✅ kept\n\n\n--mixed\n✔️\n❌ cleared\n✅ kept\n\n\n--hard\n✔️\n❌ cleared\n❌ cleared\n\n\n\n\nWhen you run git reset HEAD &lt;file&gt; (without a mode flag), Git uses --mixed by default and applies it only to that single file:\n\nThe index entry for &lt;file&gt; is removed (or reset to HEAD’s version)\nThe working tree file is untouched\nHEAD itself does not move (no commit is changed)\n\n$ git add -N new-feature.py\n$ git status --short\nA  new-feature.py\n\n$ git reset HEAD new-feature.py\n$ git status --short\n?? new-feature.py    # back to untracked\n\n\n\n\n\n\nTipgit reset HEAD &lt;file&gt; vs git reset HEAD\n\n\n\n\ngit reset HEAD &lt;file&gt; — scoped to one file; only removes that file’s index entry\ngit reset HEAD — resets the entire index to match HEAD; all staged changes are unstaged\n\n\n\n\n\nBulk-undo all intent-to-add entries at once\nWhen you have multiple intent-to-add files and want to undo all of them without touching any fully-staged files, use --diff-filter=A:\ngit diff --cached --name-only --diff-filter=A \\\n  | xargs git reset HEAD --\nBreaking it down:\n\n\n\n\n\n\n\n\nPart\nWhat it does\n\n\n\n\ngit diff --cached --name-only\nLists file names that differ between HEAD and the index (i.e. staged changes)\n\n\n--diff-filter=A\nKeeps only Added entries — files with no prior version in HEAD, which is exactly the state git add -N creates\n\n\nxargs git reset HEAD --\nRuns git reset HEAD -- &lt;file&gt; for each name; the -- separator prevents file names from being misread as flags\n\n\n\n\nBecause --diff-filter=A matches only new index entries, fully-staged modifications (M) and deletions (D) are left completely untouched."
   },
   {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#summary",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#summary",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "section": "Summary",
+    "text": "Summary\n\n\n\n\n\n\n\n\nSituation\nCommand\n\n\n\n\nSee why a new file is invisible to git diff\ngit status --short\n\n\nMake a new file visible to git diff\ngit add -N &lt;file&gt;\n\n\nStage the full content after reviewing\ngit add &lt;file&gt;\n\n\nUndo git add -N (no staged content)\ngit reset HEAD &lt;file&gt;\n\n\nUnstage a fully staged file\ngit restore --staged &lt;file&gt;"
+  },
+  {
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#glossary",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#glossary",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "section": "Glossary",
+    "text": "Glossary\n\n- def: Index (staging area)\n  description: |\n    Git's intermediate layer between the working tree and a commit.\n    Every file Git tracks has an entry here. `git add` writes content\n    into the index; `git commit` turns the index into a new commit object.\n\n- def: Intent-to-add (git add -N)\n  description: |\n    A special index entry with an empty blob, created by\n    `git add --intent-to-add`. It tells Git \"this file will eventually\n    be added\" so that `git diff` can compare the (empty) index entry\n    against the working tree file, producing a visible diff without\n    staging any content.\n\n- def: git diff\n  description: |\n    Compares the index against the working tree.\n    Shows changes you have made but not yet staged.\n    Untracked files (no index entry) are invisible to this command.\n\n- def: git diff --cached\n  description: |\n    Compares HEAD against the index.\n    Shows changes that are staged and will be included in the next commit.\n    Also written as `git diff --staged` (identical behaviour).\n    An intent-to-add entry (`git add -N`) produces an empty diff here\n    because no content has been staged yet.\n\n- def: git reset --mixed (default)\n  description: |\n    Moves HEAD to a target commit and clears the index to match,\n    but leaves the working tree files untouched. When scoped to a\n    single file (`git reset HEAD &lt;file&gt;`), it only removes that file's\n    index entry — HEAD does not move."
+  },
+  {
+    "objectID": "posts/2026-05-14-git-diff-with-untracked-files/index.html#references",
+    "href": "posts/2026-05-14-git-diff-with-untracked-files/index.html#references",
+    "title": "OGG… Why doesn’t git diff show untracked files and how do I fix it?",
+    "section": "📘 References",
+    "text": "📘 References\n\nGit Documentation &gt; git-diff\nGit Documentation &gt; git-add (--intent-to-add)\nGit Documentation &gt; git-reset"
+  },
+  {
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html",
+    "href": "posts/2025-09-14-git-branch-naming/index.html",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
     "section": "",
-    "text": "This post is based on Dangit, I accidentally committed something to master that should have been on a brand new branch!"
+    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
   },
   {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#problem",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
-    "section": "Problem",
-    "text": "Problem\nLet’s say you have just set up a new git repository. Initially, you planned to create a new branch named test to work on after the first commit, which involved editing the README.md file. However, in practice, you continued to make changes on the main branch instead.\n ▶  What I originally planned to do\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       branch test\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\"\n\n\n\n\n\n\n ▶  What I’ve actually done…\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}} }%%\n    gitGraph\n       commit id: \"813faa2\"\n       commit id: \"28a8bf7\"\n       commit id: \"466fbe7\"\n       commit id: \"30bf56a\"\n       commit id: \"6159140\""
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#objectives",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#objectives",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "section": "",
+    "text": "Make branch purpose explicit, collaboration smoother, and automation possible.\nCreate clarity, consistency, and traceability in how teams manage code."
   },
   {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#solution-using-git-reset",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
-    "section": "Solution: using git reset",
-    "text": "Solution: using git reset\n ▶  Steps\n\nCreate a new test branch based on the current HEAD state.\nReset the main branch to the state immediately after the first commit.\nSwitch to the test branch.\n\n ▶  Commands\n## Step 1: keep the current repository state into test branch\n% git branch test\n\n## Step 2: clean the main branch\n% git reset 813faa2 --hard\n\n## Step 3: moving to the test branch\n% git switch test\n ▶  Explains\n\nYou can create a new branch based on the current HEAD without switching using git branch &lt;branch-name&gt;.\nUsing git reset --hard instead of git reset --soft ensures that by default, changes are not left in the current branch’s index or files.\nIf changes remain in the current branch, you would need to execute git stash or git clean.\n\n\n!!WARNING \nIf you have already pushed to the remote repository with the wrong commits, it’s better not to execute the above solution because it could inconvenience other developers."
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#goals",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#goals",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "section": "🎯 Goals",
+    "text": "🎯 Goals\n\nDefine clear branch categories (feature, fix, release, etc.) with consistent tokens.\nEnsure branch names immediately communicate intent.\nEnable integration with issue trackers and CI/CD pipelines.\nReduce confusion by standardizing naming across the team."
   },
   {
-    "objectID": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
-    "href": "posts/2024-07-12-committed-on-a-wrong-branch/index.html#references",
-    "title": "OGG… I accidentally committed something to main that should have been on a brand new branch!",
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#guideline",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#guideline",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
+    "section": "📘 Guideline",
+    "text": "📘 Guideline\n\n\n① Use lowercase letters and hyphens to separate words\n\n\n\nBranch names should always be lowercase for consistency and avoid conflicts in case-sensitive file systems.\nHyphens (-) make branch names easier to read than underscores or camelCase.\n\n\n\n\nExample 1 \n\n✅ Example: feat/user-login\n\n❌ Avoid: Feat_UserLogin, FeatUserLogin\n\n\n\n\n\n② Start branch names with a clear token\n\n\n\nEach branch should begin with a category token that defines its purpose.\n\nCommon tokens: feat (feature), fix (bug fix), docs (documentation).\nUse slashes / to separate tokens and descriptions\nThis makes the branch purpose obvious at a glance.\n\n\n\n\n\nExample 2 \n\n✅ Example: fix/payment-timeout\n\n❌ Avoid: payment-timeout (purpose unclear)\n\n\nThis clarity is not only helpful for humans reading the branch list or PRs but also allows Git commands and CI/CD scripts to filter, map, or operate on specific branch types efficiently.\n# Listing branches by token\ngit branch --list \"feature/*\"\n\n# Pushing or mapping branches with tokens\ngit push origin 'refs/heads/feature/*'\n\n# Deleting multiple branches by token\ngit branch -D $(git branch --list \"feature/*\")\n\n\n\n③ Link to issues or tickets when possible\n\n\n\nIf your team uses Jira, GitHub Issues, or another tracker, include the ticket/issue ID.\n\nThis improves traceability between code, commits, and tasks.\n\n\n\n\n\nExample 3 \n\n✅ Example: feat/123-user-auth\n\n❌ Avoid: feat/user-auth (missing link to ticket)\n\n\n\n\n\n④ Keep branch names short but descriptive\n\n\n\nBalance brevity with clarity.\n\nAvoid overly long names while still describing the intent.\n\n\n\n\nLong branch names can be very helpful when browsing a list of branches, as they provide more context. However, they can clutter one-line logs, obscuring the visible part of the log.\n\nExample 4 \n\n✅ Example: refactor/api-headers\n\n❌ Too long: refactor/update-the-way-we-handle-request-headers-in-api\n\n\n\n\n\n⑤ Maintain consistency across the team\n\n\n\nAll developers must follow the same convention.\n\nConsistency improves collaboration and enables automation in CI/CD.\n\nDocument rules in CONTRIBUTING.md or your project wiki.\n\n\n\n\n\nExample 5 \n\n✅ Example: Everyone uses feat/* for features\n\n❌ Avoid: Mixing feature/*, feat/*, new/* (causes chaos)\n\n\n\n\nBranch Naming Convention\nWork Branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nfeature/&lt;name&gt;\nNew feature development\n\n\nbugfix/&lt;name&gt;\nBug fix\n\n\nrefactor/&lt;name&gt;\nRestructuring code without behavior change\n\n\ndocs/&lt;name&gt;\nDocumentation updates\n\n\ntest/&lt;name&gt;\nTesting-related work\n\n\nenh/&lt;name&gt;\nPerformance enhancements\n\n\n\nLifecycle branches\n\n\n\n\n\n\n\nFormat\nPurpose / Goal\n\n\n\n\nrelease/&lt;version&gt;\nPreparing a release\n\n\nhotfix/&lt;name&gt;\nUrgent production fix\n\n\nsandbox/&lt;name&gt;\nExperimental or prototype work"
+  },
+  {
+    "objectID": "posts/2025-09-14-git-branch-naming/index.html#references",
+    "href": "posts/2025-09-14-git-branch-naming/index.html#references",
+    "title": "OGG… What kind of Git branch naming convention is commonly used??",
     "section": "References",
-    "text": "References\n\nDangit, I accidentally committed something to master that should have been on a brand new branch!"
+    "text": "References\n\nstackoverflow &gt; What are some examples of commonly used practices for naming git branches?"
+  },
+  {
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html",
+    "title": "OGG… How Can I restore a file from specific commit?",
+    "section": "",
+    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
+  },
+  {
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#objective",
+    "title": "OGG… How Can I restore a file from specific commit?",
+    "section": "",
+    "text": "Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository."
+  },
+  {
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#goal",
+    "title": "OGG… How Can I restore a file from specific commit?",
+    "section": "🎯 Goal",
+    "text": "🎯 Goal\n\nEnable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes."
+  },
+  {
+    "objectID": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
+    "href": "posts/2025-08-05-restore-file-from-specific-commit/index.html#guideline",
+    "title": "OGG… How Can I restore a file from specific commit?",
+    "section": "📘 Guideline",
+    "text": "📘 Guideline\nEnsure you’re using Git 2.23+, where git restore was introduced.\nWhen to Use\n\nTo retrieve a deleted or modified file from a past commit.\nTo undo local changes to a file without discarding other work.\nTo recover specific content for comparison or patching.\n\nHow to Use\n\nUse git log or git blame to identify the target commit hash\n\ngit log &lt;filepath&gt;  # check history\n\nRun the command:\n\n## git restore version\ngit restore --source=&lt;commit-hash&gt; &lt;filepath&gt;\n\n## git checkout version\ngit checkout &lt;commit-hash&gt; &lt;filepath&gt;\nUndo git restore specific commit id version\n\n\n\n\n\n\n\nSituation\nRecovery Option\n\n\n\n\nNot staged yet\ngit restore &lt;filepath&gt;\n\n\nStaged but not committed\ngit restore --staged &lt;filepath&gt; then restore\n\n\nAlready committed\nUse git reflog + git reset\n\n\nPreventive measure\nUse git stash before risky restores"
+  },
+  {
+    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html",
+    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html",
+    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
+    "section": "",
+    "text": "Understand what git reset is\nUnderstand the difference between git reset --hard vs --mixed vs --soft"
+  },
+  {
+    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#objective",
+    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#objective",
+    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
+    "section": "",
+    "text": "Understand what git reset is\nUnderstand the difference between git reset --hard vs --mixed vs --soft"
+  },
+  {
+    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#what-is-git-reset",
+    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#what-is-git-reset",
+    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
+    "section": "What is git reset?",
+    "text": "What is git reset?\n\nDefinition: git reset git reset is a command used to move HEAD and optionally unstage or delete changes.\n\n\nComparison Table between --soft, --mixed, and --hard\n\n\n\n\nArea\n--soft\n--mixed (default)\n--hard\n\n\n\n\nHEAD (commit ptr)\n✔️ moved\n✔️ moved\n✔️ moved\n\n\nStaging area (Index)\n✅ kept\n❌ cleared\n❌ cleared\n\n\nWorking dir files\n✅ kept\n✅ kept\n❌ cleared\n\n\n\n\ngit reset sequence diagram\nThe following diagram is a step-by-step visualization of how different git reset modes affect Git’s three areas:\n\n\n\n\n\nsequenceDiagram\n    participant Before as commit-id A\n    participant Working as Working Area\n    participant Staging as Staging(Index)\n    participant HEAD as commit-id B\n\n    Before-&gt;&gt;Working: editing files\n\n    Working-&gt;&gt;Staging: git add\n\n    Staging-&gt;&gt;HEAD: git commit\n\n    HEAD-&gt;&gt;Staging: git reset --soft HEAD~1\n    HEAD-&gt;&gt;Working: git reset --mixed HEAD~1\n    HEAD-&gt;&gt;Before: git reset --hard HEAD~1"
+  },
+  {
+    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#do-i-need-to-run-git-reset---hard-think-again",
+    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#do-i-need-to-run-git-reset---hard-think-again",
+    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
+    "section": "Do I need to run git reset --hard? Think again",
+    "text": "Do I need to run git reset --hard? Think again\nWhen working with Git, you may find yourself needing to create a new branch from a previous commit becasue a bug was introduced in the most recent commit. For example, you might want to create a HOTFIX branch from one commit before the current HEAD.\nYou may be thinking of git reset --hard and git switch for checkout, but think again. In that case,\ngit switch -c HOTFIX HEAD~1\nis better.\nWhat It Does\n\nCreates a new branch named HOTFIX starting from the commit before HEAD.\nSwitches you to the HOTFIX branch.\nLeaves your current branch and commit history unchanged.\n\nBenefits\n\nNon-destructive: All commits are preserved.\nClean separation: You work on the hotfix branch without altering your current one."
+  },
+  {
+    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#best-practice-guideline-summary",
+    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#best-practice-guideline-summary",
+    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
+    "section": "Best Practice Guideline Summary",
+    "text": "Best Practice Guideline Summary\n\n\n\n\n\n\n\n\nIf you want to…\nUse\n\n\n\n\nRewrite commit history but keep work\ngit reset --soft HEAD~1\n\n\nUnstage files, keep changes in files\ngit reset --mixed HEAD~1 (default)\n\n\nFully discard all changes and reset everything\ngit reset --hard HEAD~1\n\n\nCreate and switch to a new branch HOTFIX from HEAD~1\ngit switch -c HOTFIX HEAD~1"
+  },
+  {
+    "objectID": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#references",
+    "href": "posts/2025-06-14-git-reset-hard-mixed-soft/index.html#references",
+    "title": "OGG… What’s difference between git reset –hard vs –mixed vs –soft?",
+    "section": "📘 References",
+    "text": "📘 References\n\nGit DOcumentation &gt; git-reset"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "",
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#problem",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "",
+    "text": "Let’s say you made a local development branch, feature/inverse-matrix-calculation. After some commits and pushes to remote, you realized that you had named the branch the wrong way.\n\nthe correct name: feature/inverse-matrix-calculation\nthe current name: future-inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-1-checkout-a-new-branch-and-delete-the-old",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 1: checkout a new branch and delete the old",
+    "text": "Solution 1: checkout a new branch and delete the old\n ▶  Steps\n\nCreate a new branch based on the current HEAD state at the future-inverse-matrix-calculation.\nSwitch to the future-inverse-matrix-calculation branch\nDelete the old one\nSet the correct upstream branch\n\n ▶  Commands\n## Step 1 & 2\n% git switch -c future-inverse-matrix-calculation feature/inverse-matrix-calculation\n\n## Step 3\n% git branch -D future-inverse-matrix-calculation\n\n## Step 4\n% git branch feature/inverse-matrix-calculation -u &lt;remote branch&gt;"
+  },
+  {
+    "objectID": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "href": "posts/2024-07-13-fix-wrong-branchname/index.html#solution-2-rename-the-branch",
+    "title": "OGG… I accidentally named the branch the wrong name…",
+    "section": "Solution 2: rename the branch",
+    "text": "Solution 2: rename the branch\nWith the following command, you can rename a branch that was given the wrong name while keeping the upstream branch setting.\n% git branch -m &lt;old-name&gt; &lt;new-name&gt;\n ▶  Commands\n## rename using -m/--move option\n% git branch -m future-inverse-matrix-calculation feature/inverse-matrix-calculation"
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "",
+    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#problem",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "",
+    "text": "Let’s say you are working on a local development branch, eda/data-sanity-check. After some modifications and commits on the local, you realized that you cannot push to the remote branch.\nWhen you hit git push, you’ve got the following error:\n% git push\n...\nTo https://github.com/RyoNakagami/github_sandbox\n ! [rejected]        eda/data-sanity-check -&gt; eda/data-sanity-check (fetch first)\nerror: failed to push some refs to 'https://github.com/RyoNakagami/github_sandbox'\nhint: Updates were rejected because the remote contains work that you do\nhint: not have locally. This is usually caused by another repository pushing\nhint: to the same ref. You may want to first integrate the remote changes\nhint: (e.g., 'git pull ...') before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details."
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#what-is-happening",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "What is happening",
+    "text": "What is happening\nGenerally speaking, you need to pull the remote and stay up-to-date before pushing. But the problem is you’ve already git commited on some modifications at the current branch while there are some commits at the remote branch too, and that’s why you cannot pull the remote because of the history conflict.\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       checkout remote\n       merge local id:\"❗️failed to push\"\n\n\n Fig 1. Conflict between the local and the remote \n\n\n\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       commit id: \"local-mod-2\"\n       commit id: \"local-mod-3\"\n       merge remote id:\"❗️failed to pull\"\n\n\n Fig 2. You cannot pull the remote either"
+  },
+  {
+    "objectID": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
+    "href": "posts/2024-07-18-cannot-push-to-remote-branch/index.html#solution-git-pull---rebase",
+    "title": "OGG… I cannot push to remote branch and cannot pull the remote changes…",
+    "section": "Solution: git pull --rebase",
+    "text": "Solution: git pull --rebase\n ▶  Steps\n\nCheck the difference between the local and the romote\nResolve the local-remote conflict\npush top the remote after solving the conflict\n\n ▶  Commands\n## fetch the remote info\n% git fetch\n\n## check which files are different from the remote\n% git difftool eda/data-sanity-check origin\nThe above commands are just for checking the remote-local difference. If you want to solve the problem quickly, it’s alright to skip the process.\nThen, let’s solve the conflict.\n## Step 2\n% git pull --rebase\n...\nAuto-merging eda/check_datasanity.py\nCONFLICT (content): Merge conflict in eda/check_datasanity.py\nerror: could not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply &lt;your-current HEAD commit-id&gt;... eda: add histogram\n\n## after resolving the conflict\n% git rebase --continue\nThe git pull --rebase commands is the same as git pull + git rebase. Aftrer hitting git pull --rebase, you are now in the conflict-resolution process when there is a conflict. You need to open the files which cause the conflict and fix them manually as you do in a usual merge-conflict.\nAfter resolving the conflict, do not foregt to run git rebase --continue, otherwise you continue to stay in the conflict-resolution mode.\nYour git history will look like the following;\n\n\n\n\n\n%%{init: { 'logLevel': 'debug', 'theme': 'base', \n            'gitGraph': {'rotateCommitLabel': true,\n                         'mainBranchName': 'local'}}}%%\n    gitGraph\n       commit id: \"local-mod-1\"\n       branch remote\n       commit id: \"remote-mod-1\"\n       checkout local\n       merge remote id:\"pull\"\n       commit id: \"conflict-resolve\"\n\n\n Fig 3. git pull –rebase \n\n\n\nAt the above conflict-resolve node, you choose which local modifications should stay in the repository history.\nThen, now that you are able to push to the remote.\n## Step 3: push to the remote\n% git push origin HEAD\n ▶  REMARKS\n\nWhen hitting git pull --rebase, it’s possible that all differences automatically are resoloved.\n\nFor example, you modified some files but ther remote changes are not related to the files you’ve chnaged.\ngit pull --rebase automatically resolved the difference which does not cause the conflict.\n\nWhen you get confused and want to get out of the conflict-resolution mode without saving, hit the git rebase --abort"
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html",
+    "title": "最新コミットとunstaged差分の確認方法",
+    "section": "",
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#problem",
+    "title": "最新コミットとunstaged差分の確認方法",
+    "section": "",
+    "text": "After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.\nYou want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-1-using-git-diff",
+    "title": "最新コミットとunstaged差分の確認方法",
+    "section": "Solution 1: Using git diff",
+    "text": "Solution 1: Using git diff\ngit diff allows you to inspect changes in your code, from minor edits to major branch comparisons.\n ▶  Key Takeaways\n\n\n\n\n\n\n\nCommands\nExplaination\n\n\n\n\ngit diff\nCheck unstaged changes with HEAD\n\n\ngit diff --staged\nCheck staged changes with HEAD\n\n\ngit diff &lt;commit1&gt; &lt;commit2&gt;\nCompare two specific commits\n\n\ngit diff main feature-branch\nCompare branches\n\n\ngit diff HEAD -- &lt;file/directory-path&gt;\nCheck single file/directory changes with HEAD\n\n\ngit diff --stat\nShows a summary of changes for each file, such as how many lines were added and deleted\n\n\n\n ▶  Viewing Changes in the Working Directory\nTo see all changes in your working directory that haven’t been staged,\ngit diff\nThis command shows the differences between your working directory and the last commit in your terminal display.\nIf you want to see staged changes with your latest commit,\ngit diff --staged\n ▶  Comparing with a Specific Commit\nTo see differences between your current state and a specific commit,\n## (1) Compared with latest commit\ngit diff\ngit diff HEAD\n\n## (2) Compared with specific commit\ngit diff &lt;commit-hash&gt;\n\n## (3) Comparing two specific commits\ngit diff &lt;commit-hash1&gt; &lt;commit-hash2&gt;\n\n## (4) Comparing the HEAD with the HEAD~1\ngit diff HEAD~1 HEAD\n ▶  Comparing Branches\nYou can also use git diff to compare different branches.\ngit diff main feature-branch\n ▶  Shows a summary of changes for each file\nWhen you want to see a summary of changes for each file, such as how many lines were added and deleted, use git diff --stat. If you want to compare the current branch with gh-pages branch in .github/ directory,\n% git diff --stat gh-pages .github/ \n .github/ISSUE_TEMPLATE/fix_documentation.yml | 39 +++++++++++++++++++++++++++++++++++++++\n .github/ISSUE_TEMPLATE/fix_typos.yml         | 32 ++++++++++++++++++++++++++++++++\n .github/pull_request_template.md             | 25 +++++++++++++++++++++++++\n .github/workflows/publish.yml                | 26 ++++++++++++++++++++++++++\n .github/workflows/rss-to-twitter.yml         | 20 ++++++++++++++++++++\n 5 files changed, 142 insertions(+)\nThe number shows how many lines are modified for each files."
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#solution-2-using-git-difftool",
+    "title": "最新コミットとunstaged差分の確認方法",
+    "section": "Solution 2: Using git difftool",
+    "text": "Solution 2: Using git difftool\ngit difftool is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.\nThe syntax of git difftool is similar to git diff. For example,\n\n\n\n\n\n\n\ngit difftool commands\ngit diff commands\n\n\n\n\ngit difftool\ngit diff\n\n\ngit difftool --stagedgit difftool --cached\ngit diff --staged\n\n\ngit difftool &lt;commit1&gt; &lt;commit2&gt;\ngit diff &lt;commit1&gt; &lt;commit2&gt;\n\n\ngit difftool main feature-branch\ngit diff main feature-branch\n\n\ngit difftool HEAD -- &lt;file/directory-path&gt;\ngit diff HEAD -- &lt;file/directory-path&gt;\n\n\n\n ▶  Choosing an editor \nYou can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is\ngit config --global diff.tool your_preferred_tool\nFor example, if you prefer to vscode,\ngit config --global diff.tool vscode\nTo check if you successfully configure difftool editor,\ngit config -l\nthen, you can check what editor is you default git difftool editor.\n ▶  Choosing an editor temporarily\nIf you temporarily show the diff in vimdiff,\ngit difftool HEAD~1 HEAD --tool=vimdiff"
+  },
+  {
+    "objectID": "posts/2024-11-06-check-diff-with-git-difftool/index.html#appendix-role-of----in-git",
+    "href": "posts/2024-11-06-check-diff-with-git-difftool/index.html#appendix-role-of----in-git",
+    "title": "最新コミットとunstaged差分の確認方法",
+    "section": "Appendix: Role of -- in Git",
+    "text": "Appendix: Role of -- in Git\nIn git command, -- is a seperator between options and paths. It is useful when a name could be ambiguous—e.g., if a branch or tag has the same name as a file.\nIf the path (file or directory) does not conflict with a branch or tag name, Git automatically treats it as a path.\n\nExample 1 \ngit diff feature -- file.txt\nIn the above command, feature could be interpreted as either a branch or a file. Using -- explicitly tells Git that anything after it is a path, not a branch or option.\n\n\n\nExample 2 \ngit diff README.md\nGit sees that README.md is not a branch or tag, so it is interpreted as a file path. Therefore, the command works correctly even without --."
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "",
+    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#problem",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "",
+    "text": "I want to set up an SSH connection for a GitHub repository with my macOS"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#solution",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "Solution",
+    "text": "Solution\nSteps\n\nGenerate a new ssh key\nAdd the SSH Key to the SSH Agent\nRegister the public key to GitHub\ntest ssh connection\nupdate the ssh config file\n\nSetup\n\n\n1. Generate a new ssh key\n\nssh-keygen -t ed25519 -C \"hoshinokirby@gmail.com\" -f ~/.ssh/kirby_github_key\n\nOption -t specifies the type of key to generate. ed25519 is faster and more secure than older algorithms like RSA and produces shorter keys while maintaining strong security.\nOption -C adds a comment to the key for identification purposes.\n-f specifies the filename and location for the generated key pair. This will generate two files\n\nkirby_github_key: The private key (keep this secure! do not share!).\nkirby_github_key.pub: The public key (you upload this to GitHub).\n\n\n\n2. Add the SSH Key to the SSH Agent\n\neval \"$(ssh-agent -s)\"\nssh-add ./.ssh/kirby_github_key\n\nThe ssh-add command adds your private SSH key to the SSH authentication agent (ssh-agent) so it can be used for SSH connections without repeatedly asking for the key’s passphrase. If the key (kirby_github_key) isn’t added to ssh-agent, SSH won’t know to use it. You might encounter the error like this;\nPermission denied (publickey).\n\n\n3. Register the public key to GitHub\n\ncat ~/.ssh/kirby_github_key.pub\n\nAfter opening the file, copy the strings and register it at the Github at Settings &gt; SSH and GPG keys &gt; New SSH key\nThen, test your connection by\n\n\n4. test ssh connection\n\n$ ssh -T git@github.com\n\nif connection established successfully, the following message will pop up\nEnter passphrase for key '/Users/hosinokkirby/.ssh/kirby_github_key': \nHi Kirby! You've successfully authenticated, but GitHub does not provide shell access.\nUpdate the ssh config file\nRunning ssh-add munally evewrytime will be troublesome. To avoid it, you can configure SSH to use the key automatically by editing your ~/.ssh/config file:\n\n\n~/.ssh/config\n\nHost github github.com\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/kirby_github_key\n  IdentitiesOnly yes\n  TCPKeepAlive yes"
+  },
+  {
+    "objectID": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
+    "href": "posts/2024-12-17-access-to-github-via-ssh/index.html#appendix-trouble-connecting-via-ssh-with-a-private-key",
+    "title": "OGG… How can I set up ssh connection to GitHub repository?",
+    "section": "Appendix: ❗ Trouble Connecting via SSH with a Private Key",
+    "text": "Appendix: ❗ Trouble Connecting via SSH with a Private Key\n\n\n\n\n\n\nNotesummary\n\n\n\n\nSSH is strict about private key security to protect against unauthorized access.\nAlways keep your private keys readable only by you.\nUse chmod 600 your_key_file to ensure proper permission settings.\n\n\n\nTrouble\nWhen trying to connect using a SSH command, You might encounter an error like:\nWARNING: UNPROTECTED PRIVATE KEY FILE!\nIt is required that your private key files are NOT accessible by others.\nThis private key will be ignored.\nAs a result, the SSH connection fails.\nRoot Cause\n\nThis error happens because the file permissions of the private key file are too loose.\nFor example, if the file permissions are set to 666 (readable and writable by everyone), SSH refuses to use the key for security reasons.\n\nSolution\nYou can fix the issue by restricting the file’s permissions so that only the owner can read/write the file:\n% chmod 600 &lt;your-private-key-path&gt;\nAfter changing the permissions, try running the same SSH command again."
   },
   {
     "objectID": "posts/2025-06-06-organize-commits-using-git-rebase/index.html",

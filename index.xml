@@ -10,7 +10,548 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Fri, 15 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 18 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I git clone a private GitLab through a jump server?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-05-18-git-clone-via-jump-server/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>You cannot reach a private internal GitLab (<code>private-git.example.com</code>) directly from your local machine — only an SSH-accessible jump server can.</li>
+<li>Tunnel <code>git clone</code> through the jump server so that authentication (HTTPS + <code>.netrc</code> PAT) keeps working, without changing how the URL looks.</li>
+</ul>
+<pre><code>local ─── ✕ no direct route ─── private GitLab
+   │
+   └─── jump server ─── private GitLab</code></pre>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Open a SOCKS5 proxy on the jump server and keep it alive.</label></li>
+<li><label><input type="checkbox">Route only requests to the private GitLab host through that proxy.</label></li>
+<li><label><input type="checkbox">Clone the repository as if the network barrier did not exist.</label></li>
+</ul>
+</section>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+<p>Open an SSH connection to the jump server as a SOCKS5 proxy, then let <code>git</code> use that proxy.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 1. Open the jump server as a SOCKS5 proxy (keep the session open)</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh</span> JumpServer <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-D</span> 1080</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 2. Configure git to use the proxy (one-time setup)</span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> http.https://private-git.example.com.proxy socks5h://localhost:1080</span>
+<span id="cb2-6"></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3. Clone</span></span>
+<span id="cb2-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone https://private-git.example.com/gitlab/org/repo-name</span></code></pre></div></div>
+</section>
+<section id="why-direct-access-fails-back-to-tcpip-basics" class="level2">
+<h2 class="anchored" data-anchor-id="why-direct-access-fails-back-to-tcpip-basics">Why direct access fails — back to TCP/IP basics</h2>
+<p>When <code>git</code> (or a browser) makes an HTTPS request, two things happen under the hood.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[Application&lt;br/&gt;git / browser] --&gt;|① name → IP| B[DNS resolution]
+    B --&gt;|② connect to IP| C[TCP/TLS connection]
+    C --&gt; D[Server]
+
+    classDef app   fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef infra fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef host  fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class A app
+    class B,C infra
+    class D host
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<section id="step-①-dns-resolution" class="level3">
+<h3 class="anchored" data-anchor-id="step-①-dns-resolution">Step ① DNS resolution</h3>
+<p>A hostname like <code>private-git.example.com</code> is for humans. The network only speaks <strong>IP addresses</strong> (<code>10.x.x.x</code> etc.), so a DNS server is asked to translate the name into an IP.</p>
+<ul>
+<li>Public hosts → resolvable from any DNS on the internet</li>
+<li>Internal hosts → <strong>only registered in an internal DNS</strong></li>
+</ul>
+</section>
+<section id="step-②-tcp-connection" class="level3">
+<h3 class="anchored" data-anchor-id="step-②-tcp-connection">Step ② TCP connection</h3>
+<p>Once you have an IP, you open a TCP connection to its port (443 for HTTPS).</p>
+<ul>
+<li>Public hosts → reachable over the internet</li>
+<li>Internal hosts → <strong>only reachable from within the internal network</strong></li>
+</ul>
+<p>To reach an internal private server you need <strong>both</strong>: the ability to resolve its hostname <em>and</em> a network path to its IP. A local machine sitting outside the corporate network has neither.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph Local[Local: outside network]
+        L[git]
+    end
+
+    subgraph Internal[Internal network]
+        DNS[Internal DNS]
+        Git[GitLab]
+    end
+
+    L -.-&gt;|✕ cannot resolve| DNS
+    L -.-&gt;|✕ cannot connect| Git
+
+    classDef outside fill:#fde2e2,stroke:#c0392b,color:#7b1d1d
+    classDef inside  fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class L outside
+    class DNS,Git inside
+    style Local   fill:#fff5f5,stroke:#c0392b,stroke-dasharray:4 3
+    style Internal fill:#f3f9ee,stroke:#3a7d2b
+    linkStyle 0,1 stroke:#c0392b,color:#c0392b
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>This is where the jump server enters the picture.</p>
+</section>
+</section>
+<section id="using-the-jump-server-as-a-dns-tcp-proxy" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-jump-server-as-a-dns-tcp-proxy">Using the jump server as a “DNS + TCP proxy”</h2>
+<p>The jump server lives <strong>inside</strong> the internal network, so it can already resolve internal hostnames and reach internal services. The trick is to ask it: <em>“please do the DNS lookup and TCP connection on my behalf.”</em></p>
+<p>That’s exactly what a SOCKS5 proxy does.</p>
+<section id="what-is-socks5" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-socks5">What is SOCKS5?</h3>
+<p>SOCKS5 is a proxy protocol that sits between a client and a server and forwards raw TCP. Unlike an HTTP proxy, it does not inspect or rewrite the payload — so HTTPS, SSH, or any other TCP-based protocol can pass through.</p>
+<p><code>ssh -D 1080</code> means <em>“open a SOCKS5 listener on local port 1080; any traffic that arrives there is forwarded through the SSH session and originates from the jump server.”</em></p>
+</section>
+<section id="socks5-vs-socks5h" class="level3">
+<h3 class="anchored" data-anchor-id="socks5-vs-socks5h"><code>socks5</code> vs <code>socks5h</code></h3>
+<p>SOCKS5 has two modes that differ in <strong>where DNS resolution happens</strong>.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph S5["socks5 (no h)"]
+        direction TB
+        X1[git] --&gt;|"① resolve DNS locally&lt;br/&gt;→ fails (no internal DNS)"| X2[Local DNS]
+    end
+
+    subgraph S5H["socks5h (with h)"]
+        direction TB
+        Y1[git] --&gt;|"① forward the hostname&lt;br/&gt;to the proxy"| Y2[SOCKS5h proxy]
+        Y2 --&gt;|"② resolve on the jump&lt;br/&gt;server side"| Y3[Internal DNS]
+    end
+
+    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef fail   fill:#fde2e2,stroke:#c0392b,color:#7b1d1d
+    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class X1,Y1 app
+    class X2 fail
+    class Y2 proxy
+    class Y3 inside
+    style S5  fill:#fff5f5,stroke:#c0392b,stroke-dasharray:4 3
+    style S5H fill:#f3f9ee,stroke:#3a7d2b
+    linkStyle 0 stroke:#c0392b,color:#c0392b
+    linkStyle 1,2 stroke:#3a7d2b,color:#3a7d2b
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Protocol</th>
+<th>DNS resolution</th>
+<th>What happens in this scenario</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>socks5</code></td>
+<td>Local</td>
+<td><code>private-git.example.com</code> fails to resolve locally</td>
+</tr>
+<tr class="even">
+<td><code>socks5h</code></td>
+<td>Proxy (jump server)</td>
+<td>Jump server resolves it via internal DNS → success</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The trailing <code>h</code> stands for <em>“hostname resolution on the proxy side.”</em> For internal hostnames, <code>socks5h</code> is the only sane choice.</p>
+</section>
+</section>
+<section id="end-to-end-flow" class="level2">
+<h2 class="anchored" data-anchor-id="end-to-end-flow">End-to-end flow</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph L[Local]
+        G[git clone] --&gt; P[localhost:1080&lt;br/&gt;SOCKS5h listener]
+        P --&gt; S[ssh -D 1080]
+    end
+
+    subgraph B[Jump server]
+        SD[sshd] --&gt; D[Resolve via&lt;br/&gt;internal DNS]
+        D --&gt; O[TCP connect]
+    end
+
+    subgraph I[Internal network]
+        GL[private-git.example.com:443]
+    end
+
+    S -.-&gt;|SSH-encrypted tunnel| SD
+    O --&gt; GL
+
+    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class G app
+    class P,S,SD,D,O proxy
+    class GL inside
+    style L fill:#f5f9ff,stroke:#2c6cb0
+    style B fill:#fffbe9,stroke:#b8860b
+    style I fill:#f3f9ee,stroke:#3a7d2b
+    linkStyle 3 stroke:#b8860b,color:#b8860b,stroke-dasharray:4 3
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Locally, <code>git</code> only ever talks to <code>localhost:1080</code>. Everything beyond that — DNS lookup, the TCP/TLS handshake to GitLab — is delegated to the jump server.</p>
+</section>
+<section id="step-by-step" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step">Step-by-step</h2>
+<section id="prerequisites" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
+<p><code>~/.ssh/config</code> already has the jump server configured:</p>
+<pre><code>Host JumpServer
+    HostName jumphost-internal
+    User your-username
+    ProxyCommand ssh -W %h:%p bastion</code></pre>
+<p><code>~/.netrc</code> already has GitLab credentials:</p>
+<pre><code>machine private-git.example.com
+  login your-username
+  password your-PAT</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No <code>protocol</code> line is needed. <code>git</code> only reads <code>machine</code> / <code>login</code> / <code>password</code> from <code>.netrc</code>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Encrypt <code>.netrc</code> with GPG instead of leaving it plaintext
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>~/.netrc</code> stores your PAT in <strong>plaintext</strong>. Even with <code>chmod 600</code>, anyone who gains read access to your home directory (backup, stolen laptop, malicious process) gets your token. The safer pattern is to keep credentials in a GPG-encrypted <code>~/.netrc.gpg</code> and let <code>git</code> decrypt it on demand.</p>
+<p><span class="mini-section">1. Encrypt the file with your GPG public key</span></p>
+<p>Use <strong>public-key encryption</strong> (<code>-e -r &lt;recipient&gt;</code>), not a passphrase. That way only the holder of the matching private key can decrypt — no shared secret to remember or leak.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">chmod</span> 600 ~/.netrc</span>
+<span id="cb5-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> you@example.com ~/.netrc    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># produces ~/.netrc.gpg</span></span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shred</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> ~/.netrc                      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># securely remove the plaintext</span></span></code></pre></div></div>
+<ul>
+<li><code>-e</code> ── encrypt</li>
+<li><code>-r you@example.com</code> ── recipient (must match a key in your keyring; use the email or key-ID shown by <code>gpg --list-keys</code>)</li>
+</ul>
+<p>If you don’t have a key yet:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--quick-generate-key</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Your Name &lt;you@example.com&gt;"</span> default default 0</span></code></pre></div></div>
+<p><span class="mini-section">2. Tell <code>git</code> to read it through GPG</span></p>
+<p>Configure <code>git-credential-netrc</code> (ships with Git’s <code>contrib/</code>) as the credential helper:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> credential.helper <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb7-2">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"netrc -f ~/.netrc.gpg -v"</span></span></code></pre></div></div>
+<p>On each push/clone, <code>git</code> invokes GPG, <code>gpg-agent</code> prompts for your private key’s passphrase (cached for the session), and the plaintext credentials never touch disk.</p>
+<p><span class="mini-section">3. Verify</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ls</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-la</span> ~/.netrc<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span>    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># only ~/.netrc.gpg should exist</span></span>
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone https://private-git.example.com/gitlab/org/repo-name</span></code></pre></div></div>
+<p>If the helper script is not on <code>PATH</code>, point to it explicitly: <code>/usr/share/doc/git/contrib/credential/netrc/git-credential-netrc.pl</code>.</p>
+</div>
+</div>
+</section>
+<section id="step-1open-the-socks5-tunnel-on-the-jump-server" class="level3">
+<h3 class="anchored" data-anchor-id="step-1open-the-socks5-tunnel-on-the-jump-server">Step 1｜Open the SOCKS5 tunnel on the jump server</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ssh</span> JumpServer <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-D</span> 1080</span></code></pre></div></div>
+<p><code>-D 1080</code> opens a SOCKS5 listener on local port 1080. <strong>Keep this terminal open</strong> for the duration of the work session.</p>
+<p>Sanity check:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">nc</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-zv</span> localhost 1080</span>
+<span id="cb10-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Connection to localhost 1080 port [tcp/*] succeeded!</span></span></code></pre></div></div>
+</section>
+<section id="step-2point-git-at-the-proxy-one-time" class="level3">
+<h3 class="anchored" data-anchor-id="step-2point-git-at-the-proxy-one-time">Step 2｜Point git at the proxy (one-time)</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> http.https://private-git.example.com.proxy socks5h://localhost:1080</span></code></pre></div></div>
+<p>Anatomy of the command:</p>
+<pre><code>git config --global  http.https://private-git.example.com.proxy  socks5h://localhost:1080
+           ─────────  ────────────────────────────────────────  ──────────────────────
+           scope      config key (URL-scoped)                   value</code></pre>
+<ul>
+<li><code>--global</code> ── writes to <code>~/.gitconfig</code></li>
+<li><code>http.&lt;URL&gt;.proxy</code> ── <strong>applies the proxy only to that URL</strong>, not all of git</li>
+<li><code>socks5h://localhost:1080</code> ── the proxy address</li>
+</ul>
+<p>Resulting <code>~/.gitconfig</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb13-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">[http "https://private-git.example.com"]</span></span>
+<span id="cb13-2"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">    proxy </span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> socks5h://localhost:1080</span></span></code></pre></div></div>
+<p>Other remotes (GitHub, etc.) are unaffected.</p>
+</section>
+<section id="step-3clone" class="level3">
+<h3 class="anchored" data-anchor-id="step-3clone">Step 3｜Clone</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone https://private-git.example.com/gitlab/org/repo-name</span></code></pre></div></div>
+<p><code>.netrc</code> is read automatically, so no interactive username/PAT prompt appears.</p>
+</section>
+</section>
+<section id="pip-install-works-the-same-way" class="level2">
+<h2 class="anchored" data-anchor-id="pip-install-works-the-same-way"><code>pip install</code> works the same way</h2>
+<p>If <code>requirements.txt</code> references a private repo with <code>git+https</code>, the same proxy carries it.</p>
+<pre><code>git+https://private-git.example.com/gitlab/org/common-ml.git@v0.1.0</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pip</span> install <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> requirements.txt</span></code></pre></div></div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb17-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> SOCKS5</span></span>
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb17-3">    A proxy protocol that forwards raw TCP between a client and a</span>
+<span id="cb17-4">    server. Unlike an HTTP proxy it does not inspect the payload, so</span>
+<span id="cb17-5">    HTTPS, SSH, and other TCP protocols pass through transparently.</span>
+<span id="cb17-6"></span>
+<span id="cb17-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> socks5h</span></span>
+<span id="cb17-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb17-9">    A SOCKS5 variant in which the proxy server, not the client,</span>
+<span id="cb17-10">    performs DNS resolution. Required when the target hostname is</span>
+<span id="cb17-11">    only resolvable from the proxy's side of the network.</span>
+<span id="cb17-12"></span>
+<span id="cb17-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Jump server (bastion)</span></span>
+<span id="cb17-14"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb17-15">    A machine inside a restricted network that authorized users SSH</span>
+<span id="cb17-16">    into in order to reach further internal resources. Used here as</span>
+<span id="cb17-17">    the "DNS + TCP delegate" for the local machine.</span>
+<span id="cb17-18"></span>
+<span id="cb17-19"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> .netrc</span></span>
+<span id="cb17-20"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb17-21">    A per-user file (`~/.netrc`) that stores hostname/login/password</span>
+<span id="cb17-22">    triples. `git` and `curl` read it automatically to authenticate</span>
+<span id="cb17-23">    against the named host without prompting.</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-httplturlgt">Git Documentation &gt; git-config (<code>http.&lt;url&gt;.*</code>)</a></li>
+<li><a href="https://man.openbsd.org/ssh#D">OpenSSH Manual &gt; ssh (<code>-D</code> dynamic port forwarding)</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1928">RFC 1928 — SOCKS Protocol Version 5</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git clone</category>
+  <category>ssh</category>
+  <category>socks5</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-05-18-git-clone-via-jump-server/</guid>
+  <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What’s the difference between git diff, git diff --cached, and git diff HEAD?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -5849,90 +6390,6 @@ font-style: inherit;">=</span>origin/new-feature</span></code></pre></div></div>
   <category>git branch</category>
   <guid>https://ohgoshgit.github.io/posts/2024-10-31-push-remote-with-different-branchname/</guid>
   <pubDate>Thu, 31 Oct 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… I just want to save the current repository into another remote…</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you are working on a GitHub-hosted repository, <code>LinearModels</code>, remotely and/or locally with your colleagues. Development is going on at the current repository, but your boss has asked you to mirror the current repository into gitlab repository, <code>https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</code>, while keeping the history as of now.</p>
-</section>
-<section id="solution-git-clone-bare" class="level2">
-<h2 class="anchored" data-anchor-id="solution-git-clone-bare">Solution: git clone –bare</h2>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<ol type="1">
-<li>Create a bare clone of the repository</li>
-<li>Mirror-push to the new repository</li>
-<li>Remove the temporary old local repository</li>
-</ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 1</span></span>
-<span id="cb1-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git clone <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--bare</span> https://github.com/EXAMPLE-USER/LinearModels.git</span>
-<span id="cb1-3"></span>
-<span id="cb1-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 2</span></span>
-<span id="cb1-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> cd LinearModels.git</span>
-<span id="cb1-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git push <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--mirror</span> https://gitlab.econometrics.com/EXAMPLE-USER/NEW-REPOSITORY.git</span>
-<span id="cb1-7"></span>
-<span id="cb1-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 3</span></span>
-<span id="cb1-9"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> cd ..</span>
-<span id="cb1-10"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> rm <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-rf</span> LinearModels.git</span></code></pre></div></div>
-<div class="blog-custom-border">
-<p><strong>📘 REMARKS</strong> <br></p>
-<ul>
-<li>A non-bare <code>git clone</code> downloads both the snapshot and history to the local machine. However, a <code>git clone --bare</code> only copies the history, allowing for a quicker transfer to a new remote repository.</li>
-<li>Additionally, you can create a non-bare repository from a bare repository. In most cases, when pushing, the new repository should be non-bare．</li>
-<li>The mirroring process is conducted through communication between the local and the new remote repository, so the old remote repository does not receive any notifications or updates of the new repository.</li>
-</ul>
-</div>
-<section id="why-not-no-bare-git-clone-and-git-push-mirror" class="level3">
-<h3 class="anchored" data-anchor-id="why-not-no-bare-git-clone-and-git-push-mirror">Why not no-bare git clone and git push –mirror?</h3>
-<p>When running <code>git clone origin-url</code>, you will get all of the tags copied, a local branch master (<code>HEAD</code>) tracking a remote branch <code>origin/master</code>, and remote branches <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>.</p>
-<p>If you do <code>git push --mirror</code> a non-bare cloned repository, it also pushes your remote branches, <code>origin/test1</code>, <code>origin/test2</code>, and <code>origin/test3</code>, because mirror implies everything. Then, you would get branches named <code>origin/origin/test1</code>.</p>
-</section>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository">GitHub Docs &gt; Duplicating a repository</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <category>git clone</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/</guid>
-  <pubDate>Fri, 26 Jul 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
