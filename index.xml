@@ -2412,6 +2412,30 @@ font-style: inherit;">)</span></span></code></pre></div></div>
 </table>
 </div>
 </section>
+<section id="file-modification-commands" class="level3">
+<h3 class="anchored">File Modification Commands</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Discard file changes</strong></td>
+<td><code>git restore &lt;file-path&gt;</code></td>
+<td>Discard local changes and restore the file to the current <code>HEAD</code> state</td>
+</tr>
+</tbody>
+</table>
 <section id="commands-for-branch" class="level3">
 <h3 class="anchored" data-anchor-id="commands-for-branch">commands for branch</h3>
 <div class="no-border-top-table">
@@ -2535,7 +2559,6 @@ font-style: inherit;">)</span></span></code></pre></div></div>
 </tbody>
 </table>
 </div>
-</section>
 </section>
 <section id="config-command" class="level2">
 <h2 class="anchored" data-anchor-id="config-command">Config command</h2>
@@ -2666,6 +2689,9 @@ font-style: inherit;">)</span></span></code></pre></div></div>
 </div>
 
 
+</section>
+</section>
+</div>
 </section>
 </section>
 
