@@ -4,7 +4,7 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2025-08-06"
-date-modified: "2026-05-10"
+date-modified: "2026-05-19"
 categories: [cheatsheet]
 ---
 
@@ -26,6 +26,16 @@ categories: [cheatsheet]
 : {tbl-colwidths="[25,35,40]"}
 
 ::::
+
+### File Modification Commands
+
+:::: {.no-border-top-table}
+
+| Category                          | Command Example               | Description                                                            |
+| --------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
+| **Discard file changes**          | `git restore <file-path>`     | Discard local changes and restore the file to the current `HEAD` state |
+: {tbl-colwidths="[25,35,40]"}
+
 
 ### commands for branch
 
@@ -97,8 +107,8 @@ categories: [cheatsheet]
 |                        |`gh repo create <REPONAME> --public --source=. --remote=origin --org <ORG_NAME>`| Create a public repo under the specified organization |
 |                        |`gh repo create <REPONAME> --private --source=. --remote=origin`| Create a private repo under your GitHub space |
 | **Delete Repo**        | `gh repo delete <ONWER>/<REPONAME>`| Delete the target repository from GitHub, while your local repo remains intact|
-
 : {tbl-colwidths="[25,35,40]"}
+
 ::::
 
 
