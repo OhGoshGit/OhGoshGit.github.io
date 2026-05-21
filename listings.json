@@ -23,6 +23,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-05-21-poetry-add-from-gitlab-in-intra-server/index.html",
       "/posts/2026-05-18-git-clone-via-jump-server/index.html",
       "/posts/2026-05-14-git-diff-vs-diff-HEAD/index.html",
       "/posts/2026-05-14-git-diff-with-untracked-files/index.html",

@@ -10,7 +10,367 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Mon, 18 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 21 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… Why does poetry add fail through a SOCKS5h proxy when git clone works?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-05-21-poetry-add-from-gitlab-in-intra-server/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>You can already <code>git clone</code> from an internal GitLab (<code>gitlab.internal</code>) through an SSH tunnel acting as a SOCKS5h proxy.</li>
+<li>But when you run <code>poetry add git+https://gitlab.internal/...</code>, Poetry raises a connection error — even though nothing changed on the network side.</li>
+<li>Understand <em>why</em> the failure happens and apply the one-line fix.</li>
+</ul>
+<p><span class="mini-section">Network Path for Internal GitLab Access</span></p>
+<pre><code>local ─── SSH -D 1080 ──► step server ──► internal GitLab
+          (SOCKS5h proxy)</code></pre>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Understand why <code>git clone</code> succeeds but <code>poetry add</code> fails in the same network setup.</label></li>
+<li><label><input type="checkbox">Identify the role of dulwich (Poetry’s default Git backend) in the failure.</label></li>
+<li><label><input type="checkbox">Fix the issue with <code>poetry config system-git-client true</code> (Poetry ≥ 2.0).</label></li>
+</ul>
+</section>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+<p>Poetry uses <strong>dulwich</strong> (pure-Python Git) by default. Dulwich’s HTTP client (urllib3) does not support SOCKS proxies, so it cannot handle the <code>socks5h://</code> scheme your SOCKS5h tunnel requires. Switching to the <strong>system Git client</strong> (libcurl) fixes it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Global: applies to all projects for the current user</span></span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">poetry</span> config system-git-client true</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Local: stored in poetry.toml (project-only)</span></span>
+<span id="cb2-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">poetry</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--local</span> system-git-client true</span></code></pre></div></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Poetry version note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>system-git-client</code> was introduced as <code>experimental.system-git-client</code> in Poetry <strong>1.2.0</strong> and <strong>renamed to <code>system-git-client</code></strong> in Poetry <strong>2.0.0</strong>. The commands above use the 2.0 name. On 1.x, replace <code>system-git-client</code> with <code>experimental.system-git-client</code>.</p>
+</div>
+</div>
+</section>
+<section id="the-network-path" class="level2">
+<h2 class="anchored" data-anchor-id="the-network-path">The network path</h2>
+<pre><code>local → SSH -D 1080 → step server (SOCKS5h) → HTTPS → gitlab.internal</code></pre>
+<p>The step server acts as a SOCKS5h proxy: you forward a local port through SSH, and the step server performs both DNS resolution and the TCP connection to GitLab on your behalf. The <code>h</code> suffix matters — it tells the proxy to resolve the hostname itself, which is the only way <code>gitlab.internal</code> can be reached from outside the internal network.</p>
+<p><img src="https://ohgoshgit.github.io/posts/2026-05-21-poetry-add-from-gitlab-in-intra-server/dulwich-socks5h-proxy-failure-en.svg" class="img-fluid"></p>
+</section>
+<section id="why-git-clone-succeeds" class="level2">
+<h2 class="anchored" data-anchor-id="why-git-clone-succeeds">Why <code>git clone</code> succeeds</h2>
+<p>When you run <code>git clone https://gitlab.internal/...</code> with</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ~/.gitconfig</span></span>
+<span id="cb4-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">[http "https://gitlab.internal"]</span></span>
+<span id="cb4-3"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">    proxy </span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> socks5h://127.0.0.1:1080</span></span></code></pre></div></div>
+<p>the <strong>system Git</strong> client delegates HTTP(S) to <strong>libcurl</strong>. libcurl natively understands <code>socks5h://</code>, so the flow looks like this:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[git clone&lt;br/&gt;libcurl] --&gt;|"① socks5h CONNECT&lt;br/&gt;sends hostname as-is"| B[localhost:1080&lt;br/&gt;SSH -D tunnel]
+    B --&gt;|SSH-encrypted| C[Step server]
+    C --&gt;|"② resolve gitlab.internal&lt;br/&gt;via internal DNS"| D[gitlab.internal:443]
+
+    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class A app
+    class B,C proxy
+    class D inside
+    style B fill:#fffbe9,stroke:#b8860b
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>libcurl forwards the bare hostname <code>gitlab.internal</code> to the proxy inside the SOCKS5 <code>CONNECT</code> request. The step server resolves it against the internal DNS and connects to the real IP — the local machine never needs to resolve the hostname at all.</p>
+</section>
+<section id="why-poetry-add-fails-the-dulwich-problem" class="level2">
+<h2 class="anchored" data-anchor-id="why-poetry-add-fails-the-dulwich-problem">Why <code>poetry add</code> fails (the dulwich problem)</h2>
+<p>By default, Poetry uses <strong>dulwich</strong> for all Git operations. Dulwich is a pure-Python Git implementation that uses <strong>urllib3</strong> for HTTP(S) transport. urllib3 has no SOCKS proxy support, and it does not recognise the <code>socks5h://</code> scheme.</p>
+<p>The failure happens in two steps:</p>
+<p><strong>Problem 1 — <code>socks5h://</code> scheme is unrecognised</strong></p>
+<p>Dulwich’s <code>HttpGitClient</code> passes the proxy URL to urllib3’s <code>ProxyManager</code>. urllib3 only knows <code>http://</code> and <code>https://</code> proxy schemes. When it sees <code>socks5h://</code>, it either ignores the proxy entirely or raises an error before any connection is made.</p>
+<p><strong>Problem 2 — DNS resolution falls back to the local machine</strong></p>
+<p>Without a working SOCKS proxy, urllib3 tries to resolve <code>gitlab.internal</code> on the local machine. The hostname only exists in the internal DNS, so the local resolver returns <code>NXDOMAIN</code> and the connection fails immediately.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[poetry add&lt;br/&gt;dulwich / urllib3] --&gt;|"socks5h:// → unrecognised&lt;br/&gt;falls back to local DNS"| B["gitlab.internal&lt;br/&gt;→ NXDOMAIN ✕"]
+
+    classDef fail fill:#fde2e2,stroke:#c0392b,color:#7b1d1d
+    class A,B fail
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>system git (libcurl)</th>
+<th>dulwich (urllib3)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Git backend</td>
+<td>System <code>git</code> binary</td>
+<td>Pure Python</td>
+</tr>
+<tr class="even">
+<td>SOCKS5h support</td>
+<td>Native (libcurl)</td>
+<td>None</td>
+</tr>
+<tr class="odd">
+<td>DNS resolution</td>
+<td>Delegated to proxy</td>
+<td>Local — fails for <code>*.internal</code></td>
+</tr>
+<tr class="even">
+<td><code>git clone</code> works?</td>
+<td>Yes</td>
+<td>Yes (if <code>git.proxy</code> is set — dulwich <em>does</em> read <code>http.proxy</code> for plain HTTP/HTTPS schemes, but cannot handle SOCKS)</td>
+</tr>
+<tr class="odd">
+<td><code>poetry add</code> works?</td>
+<td><strong>Yes</strong></td>
+<td><strong>No</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Why can dulwich sometimes handle <code>http.proxy</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dulwich does read <code>git config http.proxy</code> and passes it to urllib3. The problem is not that dulwich ignores the proxy config — it’s that urllib3 <em>only</em> supports <code>http://</code> and <code>https://</code> proxy schemes. A <code>socks5h://</code> value is silently dropped, leaving dulwich to resolve the hostname locally.</p>
+</div>
+</div>
+</section>
+<section id="the-fix" class="level2">
+<h2 class="anchored" data-anchor-id="the-fix">The fix</h2>
+<p>Switch Poetry to use the system Git client, which routes through libcurl and handles <code>socks5h://</code> correctly.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Poetry ≥ 2.0</span></span>
+<span id="cb5-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">poetry</span> config system-git-client true          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># global</span></span>
+<span id="cb5-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">poetry</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--local</span> system-git-client true  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># project-local (writes poetry.toml)</span></span></code></pre></div></div>
+<p>You can verify the setting:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">poetry</span> config system-git-client</span>
+<span id="cb6-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># true</span></span></code></pre></div></div>
+<p>After that, <code>poetry add git+https://gitlab.internal/org/repo.git</code> goes through the same libcurl path as <code>git clone</code> and succeeds.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Prerequisite: <code>git</code> must be installed
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With <code>system-git-client true</code>, Poetry calls the system <code>git</code> binary. If <code>git</code> is not on <code>PATH</code>, Poetry will error out. In most development environments this is a non-issue, but it matters for minimal Docker images built without Git.</p>
+</div>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> dulwich</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb7-3">    A pure-Python Git implementation that does not depend on the system `git`</span>
+<span id="cb7-4">    binary or any native code. Poetry uses it by default to maximise portability.</span>
+<span id="cb7-5">    Its HTTP transport layer is built on urllib3, which currently has no SOCKS proxy</span>
+<span id="cb7-6">    support — the root cause of the `poetry add` failure in SOCKS5h environments.</span>
+<span id="cb7-7"></span>
+<span id="cb7-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> system-git-client</span></span>
+<span id="cb7-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb7-10">    A Poetry configuration option (`poetry config system-git-client true`) that</span>
+<span id="cb7-11">    replaces dulwich with the system `git` binary for all Git operations.</span>
+<span id="cb7-12">    Introduced as `experimental.system-git-client` in Poetry 1.2.0 and renamed to</span>
+<span id="cb7-13">    `system-git-client` in Poetry 2.0.0. When enabled, Git HTTP(S) transport is</span>
+<span id="cb7-14">    handled by libcurl, which natively supports SOCKS5h proxies.</span>
+<span id="cb7-15"></span>
+<span id="cb7-16"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> SOCKS5</span></span>
+<span id="cb7-17"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb7-18">    A proxy protocol that forwards raw TCP between a client and a server.</span>
+<span id="cb7-19">    Unlike an HTTP proxy it does not inspect or rewrite the payload,</span>
+<span id="cb7-20">    so HTTPS, SSH, and other TCP-based protocols pass through transparently.</span>
+<span id="cb7-21"></span>
+<span id="cb7-22"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> SOCKS5h</span></span>
+<span id="cb7-23"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb7-24">    A SOCKS5 variant where the proxy server — not the client — performs</span>
+<span id="cb7-25">    DNS resolution. Required when the target hostname (e.g. `gitlab.internal`)</span>
+<span id="cb7-26">    only exists in an internal DNS that the local machine cannot reach.</span>
+<span id="cb7-27">    The trailing "h" stands for "hostname resolution on the proxy side."</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://python-poetry.org/docs/configuration/#system-git-client">Poetry Documentation — <code>system-git-client</code></a></li>
+<li><a href="https://www.dulwich.io/docs/">Dulwich Documentation</a></li>
+<li><a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-httplturlgt">Git Documentation — <code>http.&lt;url&gt;.proxy</code></a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1928">RFC 1928 — SOCKS Protocol Version 5</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>poetry</category>
+  <category>git</category>
+  <category>network</category>
+  <category>socks5</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-05-21-poetry-add-from-gitlab-in-intra-server/</guid>
+  <pubDate>Thu, 21 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I git clone a private GitLab through a jump server?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -6329,136 +6689,6 @@ font-style: inherit;">&gt;</span></span></code></pre></div></div>
   <category>git push</category>
   <guid>https://ohgoshgit.github.io/posts/2024-11-01-push-to-multiple-origins/</guid>
   <pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… I just want to push a local git branch to a remote with a different name…</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-10-31-push-remote-with-different-branchname/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. . When you attempt to push this branch to the remote repository, you realize that it doesn’t follow the branch naming convention. The correct format should be <code>dev-2.2.x-0001/ml-prediction-enhancement</code>.</p>
-</section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<p>There are two ways to resolve this:</p>
-<ol type="1">
-<li>Rename your local branch to follow the naming convention, then push it to the remote.</li>
-<li>Push your current branch to the remote using the correct branch name without renaming it locally.</li>
-</ol>
-</section>
-<section id="solution-1-rename-your-local-branch-name" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1-rename-your-local-branch-name">### Solution 1: rename your local branch name</h2>
-<p>Renaming your local branch is explained on <a href="https://ohgoshgit.github.io/posts/2024-07-13-fix-wrong-branchname/index.html">this post</a>.</p>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 1: rename your local branch</span></span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-m</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>old-name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>new-name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb1-3"></span>
-<span id="cb1-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 2: push to the remote</span></span>
-<span id="cb1-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> push <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-u</span> origin HEAD</span></code></pre></div></div>
-</section>
-<section id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name" class="level2">
-<h2 class="anchored" data-anchor-id="solution-2-push-a-local-git-branch-to-a-remote-with-a-different-name">### Solution 2: Push a local git branch to a remote with a different name</h2>
-<p><code>git push origin local-branch-name:remote-branch-name</code> tells Git to push the local branch <code>local-branch-name</code> to the remote repository <code>origin</code> and create/update the branch named <code>remote-branch-name</code> there.</p>
-<p>But be aware the command carry some risks. If <code>remote-branch-name</code> already exists on the remote repository, this command will update it with the contents of your local branch. If others rely on the remote branch, your push might overwrite their changes, causing potential conflicts or loss of work.</p>
-<p>To mitigate the above risk, it’s better to check the status of the remnote branch first with <code>git fetch</code> and <code>git branch -a</code>. DO NOT USE <code>git push --force</code>.</p>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 1: git fetch and check your remote</span></span>
-<span id="cb2-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> fetch </span>
-<span id="cb2-3"></span>
-<span id="cb2-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 2: Make sure your new remote name will not cause a problem</span></span>
-<span id="cb2-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-a</span>  </span>
-<span id="cb2-6"></span>
-<span id="cb2-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 3: Push your local branch with different remote name</span></span>
-<span id="cb2-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> push origin local-branch-name:remote-branch-name</span></code></pre></div></div>
-<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>🍵 Green Tea Break: why use <code>git fetch</code> not <code>git pull</code>?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong> ▶&nbsp; <code>git fetch</code> keeps your local work untouched</strong></p>
-<ul>
-<li><code>git fetch</code> only downloads the updates from the remote repository without altering your working directory or merging these changes into your current branch.</li>
-<li><code>git pull</code> combines <code>git fetch</code> and <code>git merge</code>, fetching changes from the remote and immediately merging them into your current branch. This can cause conflicts if there are differences between your branch and the remote branch.</li>
-</ul>
-<p>If you just want to fetch remote information to avoid naming conflicts and don’t intend to pull remote changes into your local branch, it’s better to use <code>git fetch</code> because it helps avoid unexpected merges.</p>
-</div>
-</div>
-</section>
-<section id="use-cases" class="level2">
-<h2 class="anchored" data-anchor-id="use-cases">Use-cases</h2>
-<p><strong> ▶&nbsp; Temporarily Sharing Work</strong></p>
-<p>If you wants to share your work temporarily for a review or help, you might not want to overwrite an existing remote branch, so better to push your local branch with a temporary name, like <code>temp/20241031-login-test</code>.</p>
-<p><strong> ▶&nbsp; Avoid Naming Conflicts</strong></p>
-<p>If there is already a branch with the same name on the remote, you might want to push their local branch under a different name to avoid conflicts. For example, if there’s already a branch called <code>feature/login</code> on the remote, you might push you local <code>feature/login</code> branch as <code>feature/login-update</code>.</p>
-<p>In this case, after pushing to the remote, make sure the upstream branch points to your intended branch. It’s a good idea to run</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-vvv</span></span></code></pre></div></div>
-<p>and if the result is not what you expect, you can run</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--set-upstream-to</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>origin/new-feature</span></code></pre></div></div>
-<p>to set your upstream branch to the correct one.</p>
-
-
-</section>
-
- ]]></description>
-  <category>git branch</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-10-31-push-remote-with-different-branchname/</guid>
-  <pubDate>Thu, 31 Oct 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

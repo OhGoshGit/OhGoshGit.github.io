@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2026-05-21">
 
-<title>Gitってむずかしいわぁ．．．でもヘコタレへん – OhGoshGit!?!</title>
+<title>OGG… Why does poetry add fail through a SOCKS5h proxy when git clone works? – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -34,8 +71,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -77,35 +112,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -127,39 +133,13 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.css">
 <script type="text/javascript" src="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -380,16 +360,39 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Gitってむずかしいわぁ．．．でもヘコタレへん</h1>
-            <p class="subtitle lead">日常の分析/開発場面で直面したトラブルとその解決方法を平易な日本語で紹介します</p>
-                      </div>
+      <h1 class="title">OGG… Why does <code>poetry add</code> fail through a SOCKS5h proxy when <code>git clone</code> works?</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">poetry</div>
+                <div class="quarto-category">git</div>
+                <div class="quarto-category">network</div>
+                <div class="quarto-category">socks5</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta column-page-left">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026-05-21</p>
+      </div>
+    </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2026-05-21</p>
+      </div>
+    </div>
       
     </div>
     
@@ -398,8 +401,22 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(16)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Z2l0JTIwY2hlY2tvdXQ=">git checkout <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">🔎 Objective</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr">TL;DR</a></li>
+  <li><a href="#the-network-path" id="toc-the-network-path" class="nav-link" data-scroll-target="#the-network-path">The network path</a></li>
+  <li><a href="#why-git-clone-succeeds" id="toc-why-git-clone-succeeds" class="nav-link" data-scroll-target="#why-git-clone-succeeds">Why <code>git clone</code> succeeds</a></li>
+  <li><a href="#why-poetry-add-fails-the-dulwich-problem" id="toc-why-poetry-add-fails-the-dulwich-problem" class="nav-link" data-scroll-target="#why-poetry-add-fails-the-dulwich-problem">Why <code>poetry add</code> fails (the dulwich problem)</a></li>
+  <li><a href="#the-fix" id="toc-the-fix" class="nav-link" data-scroll-target="#the-fix">The fix</a></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">📘 References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -408,243 +425,235 @@ window.Quarto = {
 
 
 
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>You can already <code>git clone</code> from an internal GitLab (<code>gitlab.internal</code>) through an SSH tunnel acting as a SOCKS5h proxy.</li>
+<li>But when you run <code>poetry add git+https://gitlab.internal/...</code>, Poetry raises a connection error — even though nothing changed on the network side.</li>
+<li>Understand <em>why</em> the failure happens and apply the one-line fix.</li>
+</ul>
+<p><span class="mini-section">Network Path for Internal GitLab Access</span></p>
+<pre><code>local ─── SSH -D 1080 ──► step server ──► internal GitLab
+          (SOCKS5h proxy)</code></pre>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Understand why <code>git clone</code> succeeds but <code>poetry add</code> fails in the same network setup.</label></li>
+<li><label><input type="checkbox">Identify the role of dulwich (Poetry’s default Git backend) in the failure.</label></li>
+<li><label><input type="checkbox">Fix the issue with <code>poetry config system-git-client true</code> (Poetry ≥ 2.0).</label></li>
+</ul>
+</section>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+<p>Poetry uses <strong>dulwich</strong> (pure-Python Git) by default. Dulwich’s HTTP client (urllib3) does not support SOCKS proxies, so it cannot handle the <code>socks5h://</code> scheme your SOCKS5h tunnel requires. Switching to the <strong>system Git client</strong> (libcurl) fixes it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Global: applies to all projects for the current user</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> config system-git-client true</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Local: stored in poetry.toml (project-only)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> config <span class="at">--local</span> system-git-client true</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Poetry version note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>system-git-client</code> was introduced as <code>experimental.system-git-client</code> in Poetry <strong>1.2.0</strong> and <strong>renamed to <code>system-git-client</code></strong> in Poetry <strong>2.0.0</strong>. The commands above use the 2.0 name. On 1.x, replace <code>system-git-client</code> with <code>experimental.system-git-client</code>.</p>
+</div>
+</div>
+</section>
+<section id="the-network-path" class="level2">
+<h2 class="anchored" data-anchor-id="the-network-path">The network path</h2>
+<pre><code>local → SSH -D 1080 → step server (SOCKS5h) → HTTPS → gitlab.internal</code></pre>
+<p>The step server acts as a SOCKS5h proxy: you forward a local port through SSH, and the step server performs both DNS resolution and the TCP connection to GitLab on your behalf. The <code>h</code> suffix matters — it tells the proxy to resolve the hostname itself, which is the only way <code>gitlab.internal</code> can be reached from outside the internal network.</p>
+<p><img src="dulwich-socks5h-proxy-failure-en.svg" class="img-fluid"></p>
+</section>
+<section id="why-git-clone-succeeds" class="level2">
+<h2 class="anchored" data-anchor-id="why-git-clone-succeeds">Why <code>git clone</code> succeeds</h2>
+<p>When you run <code>git clone https://gitlab.internal/...</code> with</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ~/.gitconfig</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">[http "https://gitlab.internal"]</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">    proxy </span><span class="ot">=</span><span class="st"> socks5h://127.0.0.1:1080</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>the <strong>system Git</strong> client delegates HTTP(S) to <strong>libcurl</strong>. libcurl natively understands <code>socks5h://</code>, so the flow looks like this:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[git clone&lt;br/&gt;libcurl] --&gt;|"① socks5h CONNECT&lt;br/&gt;sends hostname as-is"| B[localhost:1080&lt;br/&gt;SSH -D tunnel]
+    B --&gt;|SSH-encrypted| C[Step server]
+    C --&gt;|"② resolve gitlab.internal&lt;br/&gt;via internal DNS"| D[gitlab.internal:443]
 
+    classDef app    fill:#e3eefc,stroke:#2c6cb0,color:#1a3c66
+    classDef proxy  fill:#fff4d6,stroke:#b8860b,color:#5a4209
+    classDef inside fill:#e2f0d9,stroke:#3a7d2b,color:#1f4d12
+    class A app
+    class B,C proxy
+    class D inside
+    style B fill:#fffbe9,stroke:#b8860b
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>libcurl forwards the bare hostname <code>gitlab.internal</code> to the proxy inside the SOCKS5 <code>CONNECT</code> request. The step server resolves it against the internal DNS and connects to the real IP — the local machine never needs to resolve the hostname at all.</p>
+</section>
+<section id="why-poetry-add-fails-the-dulwich-problem" class="level2">
+<h2 class="anchored" data-anchor-id="why-poetry-add-fails-the-dulwich-problem">Why <code>poetry add</code> fails (the dulwich problem)</h2>
+<p>By default, Poetry uses <strong>dulwich</strong> for all Git operations. Dulwich is a pure-Python Git implementation that uses <strong>urllib3</strong> for HTTP(S) transport. urllib3 has no SOCKS proxy support, and it does not recognise the <code>socks5h://</code> scheme.</p>
+<p>The failure happens in two steps:</p>
+<p><strong>Problem 1 — <code>socks5h://</code> scheme is unrecognised</strong></p>
+<p>Dulwich’s <code>HttpGitClient</code> passes the proxy URL to urllib3’s <code>ProxyManager</code>. urllib3 only knows <code>http://</code> and <code>https://</code> proxy schemes. When it sees <code>socks5h://</code>, it either ignores the proxy entirely or raises an error before any connection is made.</p>
+<p><strong>Problem 2 — DNS resolution falls back to the local machine</strong></p>
+<p>Without a working SOCKS proxy, urllib3 tries to resolve <code>gitlab.internal</code> on the local machine. The hostname only exists in the internal DNS, so the local resolver returns <code>NXDOMAIN</code> and the connection fails immediately.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[poetry add&lt;br/&gt;dulwich / urllib3] --&gt;|"socks5h:// → unrecognised&lt;br/&gt;falls back to local DNS"| B["gitlab.internal&lt;br/&gt;→ NXDOMAIN ✕"]
 
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
+    classDef fail fill:#fde2e2,stroke:#c0392b,color:#7b1d1d
+    class A,B fail
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-Date
-</th>
-
-<th>
-Title
-</th>
-
-<th>
-Reading Time
-</th>
-
+<tr class="header">
+<th></th>
+<th>system git (libcurl)</th>
+<th>dulwich (urllib3)</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1757808000000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1757980800000" data-listing-reading-time-sort="3" data-listing-word-count-sort="486" data-listing-title-sort="OGG... よく使われるGitブランチの命名規則とは？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-09-14</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-09-14-git-branch-naming/index.html" class="title listing-title">OGG… よく使われるGitブランチの命名規則とは？</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
+<tbody>
+<tr class="odd">
+<td>Git backend</td>
+<td>System <code>git</code> binary</td>
+<td>Pure Python</td>
 </tr>
-
-<tr data-index="1" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1754352000000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="203" data-listing-title-sort="あぁぁ... 特定のコミットからファイルを復元するにはどうすればいいんだ？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-08-05-restore-file-from-specific-commit/index.html" class="title listing-title">あぁぁ… 特定のコミットからファイルを復元するにはどうすればいいんだ？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tr class="even">
+<td>SOCKS5h support</td>
+<td>Native (libcurl)</td>
+<td>None</td>
 </tr>
-
-<tr data-index="2" data-categories="Z2l0JTIwY2hlY2tvdXQ=" data-listing-date-sort="1754265600000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="372" data-listing-title-sort="あぁぁ... 特定のディレクトリに対してgit sparse-checkoutを実行したい" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-04</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-08-04-git-sparse-checkout/index.html" class="title listing-title">あぁぁ… 特定のディレクトリに対してgit sparse-checkoutを実行したい</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tr class="odd">
+<td>DNS resolution</td>
+<td>Delegated to proxy</td>
+<td>Local — fails for <code>*.internal</code></td>
 </tr>
-
-<tr data-index="3" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="380" data-listing-title-sort="あぁぁ... git reset --hard と --mixed と --soft の違いは何？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-14</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html" class="title listing-title">あぁぁ… git reset –hard と –mixed と –soft の違いは何？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
+<tr class="even">
+<td><code>git clone</code> works?</td>
+<td>Yes</td>
+<td>Yes (if <code>git.proxy</code> is set — dulwich <em>does</em> read <code>http.proxy</code> for plain HTTP/HTTPS schemes, but cannot handle SOCKS)</td>
 </tr>
-
-<tr data-index="4" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="60" data-listing-title-sort="あぁぁ... とあるファイルについてgit addを取り消したい．．．" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-13</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html" class="title listing-title">あぁぁ… とあるファイルについてgit addを取り消したい．．．</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
+<tr class="odd">
+<td><code>poetry add</code> works?</td>
+<td><strong>Yes</strong></td>
+<td><strong>No</strong></td>
 </tr>
-
-<tr data-index="5" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="383" data-listing-title-sort="あぁぁ... 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-06</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html" class="title listing-title">あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="6" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618" data-listing-title-sort="あぁぁ... Gitで設定ファイルや秘密情報をどう管理すればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-05-how-to-manage-secrets/index.html" class="title listing-title">あぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="7" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="123" data-listing-title-sort="あぁぁ... GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-17</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html" class="title listing-title">あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="8" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1779358887000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-06</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html" class="title listing-title">OGG… How do I check unstaged differences with the latest commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="9" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1779358887000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/index.html" class="title listing-title">OGG… Should I use git rebase?</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-
-</tr>
-
-<tr data-index="10" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="あぁぁ... GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="11" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="あぁぁ... ローカルのGitブランチを異なる名前でリモートにプッシュしたい..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">あぁぁ… ローカルのGitブランチを異なる名前でリモートにプッシュしたい…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="12" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1749859200000" data-listing-reading-time-sort="1" data-listing-word-count-sort="58" data-listing-title-sort="あぁぁ... 現在のリポジトリを別のリモートに保存したい..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">あぁぁ… 現在のリポジトリを別のリモートに保存したい…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="13" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1779358887000" data-listing-reading-time-sort="3" data-listing-word-count-sort="552" data-listing-title-sort="あぁぁ... リモートブランチにpushも，リモート変更も，pullもできない..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">あぁぁ… リモートブランチにpushも，リモート変更も，pullもできない…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="14" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1779358887000" data-listing-reading-time-sort="1" data-listing-word-count-sort="78" data-listing-title-sort="あぁぁ... 間違ったbranch nameつけてしもうた..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">あぁぁ… 間違ったbranch nameつけてしもうた…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="15" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1779358887094" data-listing-date-modified-sort="1779358887000" data-listing-reading-time-sort="2" data-listing-word-count-sort="229" data-listing-title-sort="あぁぁ... 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Why can dulwich sometimes handle <code>http.proxy</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dulwich does read <code>git config http.proxy</code> and passes it to urllib3. The problem is not that dulwich ignores the proxy config — it’s that urllib3 <em>only</em> supports <code>http://</code> and <code>https://</code> proxy schemes. A <code>socks5h://</code> value is silently dropped, leaving dulwich to resolve the hostname locally.</p>
+</div>
+</div>
+</section>
+<section id="the-fix" class="level2">
+<h2 class="anchored" data-anchor-id="the-fix">The fix</h2>
+<p>Switch Poetry to use the system Git client, which routes through libcurl and handles <code>socks5h://</code> correctly.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Poetry ≥ 2.0</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> config system-git-client true          <span class="co"># global</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> config <span class="at">--local</span> system-git-client true  <span class="co"># project-local (writes poetry.toml)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can verify the setting:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> config system-git-client</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After that, <code>poetry add git+https://gitlab.internal/org/repo.git</code> goes through the same libcurl path as <code>git clone</code> and succeeds.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Prerequisite: <code>git</code> must be installed
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With <code>system-git-client true</code>, Poetry calls the system <code>git</code> binary. If <code>git</code> is not on <code>PATH</code>, Poetry will error out. In most development environments this is a non-issue, but it matters for minimal Docker images built without Git.</p>
+</div>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> dulwich</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    A pure-Python Git implementation that does not depend on the system `git`</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    binary or any native code. Poetry uses it by default to maximise portability.</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    Its HTTP transport layer is built on urllib3, which currently has no SOCKS proxy</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    support — the root cause of the `poetry add` failure in SOCKS5h environments.</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> system-git-client</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    A Poetry configuration option (`poetry config system-git-client true`) that</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    replaces dulwich with the system `git` binary for all Git operations.</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    Introduced as `experimental.system-git-client` in Poetry 1.2.0 and renamed to</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    `system-git-client` in Poetry 2.0.0. When enabled, Git HTTP(S) transport is</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    handled by libcurl, which natively supports SOCKS5h proxies.</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> SOCKS5</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    A proxy protocol that forwards raw TCP between a client and a server.</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    Unlike an HTTP proxy it does not inspect or rewrite the payload,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    so HTTPS, SSH, and other TCP-based protocols pass through transparently.</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> SOCKS5h</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    A SOCKS5 variant where the proxy server — not the client — performs</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    DNS resolution. Required when the target hostname (e.g. `gitlab.internal`)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    only exists in an internal DNS that the local machine cannot reach.</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    The trailing "h" stands for "hostname resolution on the proxy side."</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://python-poetry.org/docs/configuration/#system-git-client">Poetry Documentation — <code>system-git-client</code></a></li>
+<li><a href="https://www.dulwich.io/docs/">Dulwich Documentation</a></li>
+<li><a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-httplturlgt">Git Documentation — <code>http.&lt;url&gt;.proxy</code></a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1928">RFC 1928 — SOCKS Protocol Version 5</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
 <script>
     document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
         let modName = title.innerHTML;
@@ -1067,6 +1076,8 @@ Reading Time
     }
   });
   </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1084,7 +1095,7 @@ Reading Time
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
