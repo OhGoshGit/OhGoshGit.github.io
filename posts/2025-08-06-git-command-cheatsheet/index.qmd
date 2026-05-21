@@ -4,7 +4,7 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2025-08-06"
-date-modified: "2026-05-19"
+date-modified: "2026-05-21"
 categories: [cheatsheet]
 ---
 
@@ -31,10 +31,33 @@ categories: [cheatsheet]
 
 :::: {.no-border-top-table}
 
-| Category                          | Command Example               | Description                                                            |
-| --------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
-| **Discard file changes**          | `git restore <file-path>`     | Discard local changes and restore the file to the current `HEAD` state |
+| Category                  | Command Example           | Description                                                            |
+| ------------------------- | ------------------------- | ---------------------------------------------------------------------- |
+| **Unstage files**         | `git rm --cached -r .`    | Remove files from the Git index while keeping them in the working tree |
+| **Discard file changes**  | `git restore <file-path>` | Discard local changes and restore the file to the current `HEAD` state |
 : {tbl-colwidths="[25,35,40]"}
+
+
+::: {.callout-note}
+::: {.callout-note}
+## When to use `git rm --cached -r .` (before the initial commit)
+
+This command is used when you are in a repository that has **no commits yet** (i.e., `HEAD` does not exist), and you have accidentally staged all files using:
+
+```bash
+git add .
+```
+
+In this situation, normal commands like:
+
+```bash
+git restore --staged .
+git reset HEAD .
+```
+
+But these commands will fail because there is no HEAD in an initial repository state.
+
+:::
 
 
 ### commands for branch
