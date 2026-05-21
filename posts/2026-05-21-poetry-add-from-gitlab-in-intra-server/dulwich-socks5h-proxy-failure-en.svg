@@ -1,0 +1,167 @@
+<svg viewBox="0 0 1600 900" width="100%" preserveAspectRatio="xMidYMid meet"
+     xmlns="http://www.w3.org/2000/svg"
+     font-family="Meiryo, 'メイリオ', system-ui, sans-serif"
+     style="display:block; margin:0 auto;">
+
+  <!-- Background -->
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <!-- Defs: arrow markers -->
+  <defs>
+    <marker id="arrowNavy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#0E3666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#575757" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#D31804" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- ===== Header bar ===== -->
+  <rect x="0" y="0" width="1600" height="64" fill="#0E3666"/>
+  <text x="60" y="40" font-size="26" font-weight="700" fill="#FFFFFF">Why dulwich fails with SOCKS5h proxy chains</text>
+  <text x="1540" y="40" font-size="14" fill="#B4D7FF" text-anchor="end">Poetry default vs system-git-client</text>
+
+  <!-- ===== Section 1: Network path ===== -->
+  <text x="60" y="110" font-size="18" font-weight="700" fill="#0E3666">Network path</text>
+  <text x="60" y="132" font-size="13" fill="#575757">local → SSH tunnel → step server (SOCKS5h proxy) → HTTPS → internal GitLab</text>
+
+  <!-- Network chain boxes -->
+  <rect x="60" y="152" width="160" height="60" rx="8" fill="#E8F1FE" stroke="#428CE6" stroke-width="1.5"/>
+  <text x="140" y="178" font-size="14" font-weight="700" fill="#0E3666" text-anchor="middle">Local machine</text>
+  <text x="140" y="196" font-size="12" fill="#575757" text-anchor="middle">poetry add / git clone</text>
+
+  <line x1="220" y1="182" x2="298" y2="182" stroke="#0E3666" stroke-width="2" marker-end="url(#arrowNavy)"/>
+  <text x="259" y="172" font-size="11" fill="#575757" text-anchor="middle">SSH -D</text>
+
+  <rect x="300" y="152" width="200" height="60" rx="8" fill="#B4D7FF" stroke="#0E3666" stroke-width="1.5"/>
+  <text x="400" y="178" font-size="14" font-weight="700" fill="#0E3666" text-anchor="middle">Step server</text>
+  <text x="400" y="196" font-size="12" fill="#575757" text-anchor="middle">SOCKS5h proxy endpoint</text>
+
+  <line x1="500" y1="182" x2="578" y2="182" stroke="#0E3666" stroke-width="2" marker-end="url(#arrowNavy)"/>
+  <text x="539" y="172" font-size="11" fill="#575757" text-anchor="middle">HTTPS</text>
+
+  <rect x="580" y="152" width="200" height="60" rx="8" fill="#E8F1FE" stroke="#428CE6" stroke-width="1.5"/>
+  <text x="680" y="178" font-size="14" font-weight="700" fill="#0E3666" text-anchor="middle">Internal GitLab</text>
+  <text x="680" y="196" font-size="12" fill="#575757" text-anchor="middle">gitlab.internal</text>
+
+  <!-- ===== Divider ===== -->
+  <line x1="60" y1="240" x2="1540" y2="240" stroke="#DEDEDE" stroke-width="1"/>
+
+  <!-- ===== Section 2: system git (left panel) ===== -->
+  <rect x="60" y="260" width="700" height="280" rx="10" fill="#E8F1FE" stroke="none"/>
+  <text x="80" y="290" font-size="18" font-weight="700" fill="#0E3666">system git (system-git-client true)</text>
+
+  <!-- Step 1 -->
+  <rect x="80" y="310" width="280" height="70" rx="8" fill="#FFFFFF" stroke="#428CE6" stroke-width="1"/>
+  <rect x="80" y="310" width="6" height="70" rx="3" fill="#428CE6"/>
+  <text x="100" y="338" font-size="14" font-weight="700" fill="#0E3666">git clone (libcurl)</text>
+  <text x="100" y="358" font-size="12" fill="#575757">http.proxy = socks5h://127.0.0.1:1080</text>
+
+  <line x1="220" y1="380" x2="220" y2="408" stroke="#0E3666" stroke-width="2" marker-end="url(#arrowNavy)"/>
+
+  <!-- Step 2 -->
+  <rect x="80" y="410" width="280" height="70" rx="8" fill="#FFFFFF" stroke="#428CE6" stroke-width="1"/>
+  <rect x="80" y="410" width="6" height="70" rx="3" fill="#0E3666"/>
+  <text x="100" y="438" font-size="14" font-weight="700" fill="#0E3666">SOCKS5 CONNECT to step server</text>
+  <text x="100" y="458" font-size="12" fill="#575757">Sends hostname "gitlab.internal" as-is</text>
+
+  <line x1="360" y1="445" x2="408" y2="445" stroke="#0E3666" stroke-width="2" marker-end="url(#arrowNavy)"/>
+
+  <!-- Step 3 -->
+  <rect x="410" y="410" width="320" height="70" rx="8" fill="#B4D7FF" stroke="#0E3666" stroke-width="1"/>
+  <rect x="410" y="410" width="6" height="70" rx="3" fill="#0E3666"/>
+  <text x="430" y="438" font-size="14" font-weight="700" fill="#0E3666">Step server resolves DNS</text>
+  <text x="430" y="458" font-size="12" fill="#575757">gitlab.internal → 10.x.x.x (internal IP)</text>
+
+  <line x1="570" y1="480" x2="570" y2="508" stroke="#0E3666" stroke-width="2" marker-end="url(#arrowNavy)"/>
+
+  <!-- Result: Success -->
+  <rect x="410" y="510" width="320" height="24" rx="6" fill="#FFFFFF" stroke="#428CE6" stroke-width="1"/>
+  <text x="570" y="527" font-size="13" font-weight="700" fill="#428CE6" text-anchor="middle">→ clone succeeds</text>
+
+  <!-- Key insight callout -->
+  <text x="400" y="330" font-size="13" fill="#0E3666" font-weight="700">The "h" in socks5h</text>
+  <text x="400" y="348" font-size="12" fill="#575757">= hostname resolution</text>
+  <text x="400" y="364" font-size="12" fill="#575757">  delegated to proxy</text>
+
+  <!-- ===== Section 3: dulwich (right panel) ===== -->
+  <rect x="840" y="260" width="700" height="280" rx="10" fill="#FBE7E6" stroke="none"/>
+  <text x="860" y="290" font-size="18" font-weight="700" fill="#D31804">dulwich (Poetry default)</text>
+
+  <!-- Step 1 -->
+  <rect x="860" y="310" width="280" height="70" rx="8" fill="#FFFFFF" stroke="#D31804" stroke-width="1"/>
+  <rect x="860" y="310" width="6" height="70" rx="3" fill="#D31804"/>
+  <text x="880" y="338" font-size="14" font-weight="700" fill="#0E3666">dulwich HttpGitClient (urllib3)</text>
+  <text x="880" y="358" font-size="12" fill="#575757">socks5h:// scheme → not recognized</text>
+
+  <line x1="1000" y1="380" x2="1000" y2="408" stroke="#D31804" stroke-width="2" marker-end="url(#arrowRed)"/>
+
+  <!-- Step 2 -->
+  <rect x="860" y="410" width="280" height="70" rx="8" fill="#FFFFFF" stroke="#D31804" stroke-width="1"/>
+  <rect x="860" y="410" width="6" height="70" rx="3" fill="#D31804"/>
+  <text x="880" y="438" font-size="14" font-weight="700" fill="#D31804">Attempts local DNS resolution</text>
+  <text x="880" y="458" font-size="12" fill="#575757">gitlab.internal → NXDOMAIN</text>
+
+  <line x1="1140" y1="445" x2="1188" y2="445" stroke="#D31804" stroke-width="2" marker-end="url(#arrowRed)"/>
+
+  <!-- Step 3: Failure -->
+  <rect x="1190" y="410" width="320" height="70" rx="8" fill="#FFFFFF" stroke="#D31804" stroke-width="1.5"/>
+  <rect x="1190" y="410" width="6" height="70" rx="3" fill="#D31804"/>
+  <text x="1210" y="438" font-size="14" font-weight="700" fill="#D31804">Connection failure</text>
+  <text x="1210" y="458" font-size="12" fill="#575757">Internal hostname unresolvable locally</text>
+
+  <!-- X mark -->
+  <circle cx="1350" cy="524" r="14" fill="none" stroke="#D31804" stroke-width="2"/>
+  <line x1="1342" y1="516" x2="1358" y2="532" stroke="#D31804" stroke-width="2.5"/>
+  <line x1="1358" y1="516" x2="1342" y2="532" stroke="#D31804" stroke-width="2.5"/>
+  <text x="1375" y="530" font-size="13" font-weight="700" fill="#D31804">poetry add fails</text>
+
+  <!-- Root cause callout -->
+  <text x="1210" y="330" font-size="13" fill="#D31804" font-weight="700">Root cause</text>
+  <text x="1210" y="348" font-size="12" fill="#575757">dulwich (urllib3) has no</text>
+  <text x="1210" y="364" font-size="12" fill="#575757">SOCKS proxy support</text>
+
+  <!-- ===== Divider ===== -->
+  <line x1="60" y1="570" x2="1540" y2="570" stroke="#DEDEDE" stroke-width="1"/>
+
+  <!-- ===== Section 4: Comparison table ===== -->
+  <text x="60" y="600" font-size="18" font-weight="700" fill="#0E3666">socks5:// vs socks5h:// — where DNS resolution happens</text>
+
+  <!-- Table header -->
+  <rect x="60" y="618" width="700" height="36" rx="0" fill="#0E3666"/>
+  <text x="200" y="641" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Scheme</text>
+  <text x="440" y="641" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">DNS resolution</text>
+  <text x="640" y="641" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Result</text>
+
+  <!-- Row 1 -->
+  <rect x="60" y="654" width="700" height="36" rx="0" fill="#E8F1FE"/>
+  <text x="200" y="677" font-size="13" fill="#1A1A1A" text-anchor="middle">socks5://</text>
+  <text x="440" y="677" font-size="13" fill="#1A1A1A" text-anchor="middle">Local machine</text>
+  <text x="640" y="677" font-size="13" fill="#D31804" text-anchor="middle">gitlab.internal → NXDOMAIN</text>
+
+  <!-- Row 2 -->
+  <rect x="60" y="690" width="700" height="36" rx="0" fill="#FFFFFF" stroke="#DEDEDE" stroke-width="0.5"/>
+  <text x="200" y="713" font-size="13" fill="#1A1A1A" text-anchor="middle">socks5h://</text>
+  <text x="440" y="713" font-size="13" fill="#1A1A1A" text-anchor="middle">Proxy (step server)</text>
+  <text x="640" y="713" font-size="13" fill="#428CE6" text-anchor="middle">gitlab.internal → 10.x.x.x OK</text>
+
+  <!-- ===== Section 5: Solution ===== -->
+  <rect x="60" y="760" width="700" height="50" rx="8" fill="#FFFFFF" stroke="#428CE6" stroke-width="1.5"/>
+  <rect x="60" y="760" width="6" height="50" rx="3" fill="#428CE6"/>
+  <text x="80" y="782" font-size="14" font-weight="700" fill="#0E3666">Fix</text>
+  <text x="80" y="800" font-size="13" fill="#1A1A1A">poetry config system-git-client true → routes through libcurl, which handles socks5h correctly</text>
+
+  <!-- ===== Footer legend ===== -->
+  <line x1="60" y1="838" x2="1540" y2="838" stroke="#DEDEDE" stroke-width="1"/>
+  <rect x="60" y="850" width="14" height="14" rx="3" fill="#428CE6"/>
+  <text x="82" y="862" font-size="11" fill="#575757">libcurl (system git) path</text>
+  <rect x="280" y="850" width="14" height="14" rx="3" fill="#D31804"/>
+  <text x="302" y="862" font-size="11" fill="#575757">dulwich (urllib3) path</text>
+  <rect x="500" y="850" width="14" height="14" rx="3" fill="#B4D7FF"/>
+  <text x="522" y="862" font-size="11" fill="#575757">Executed on proxy side</text>
+  <text x="1540" y="862" font-size="11" fill="#575757" text-anchor="end">Applies to SSH tunnel + SOCKS5h configurations</text>
+
+</svg>
