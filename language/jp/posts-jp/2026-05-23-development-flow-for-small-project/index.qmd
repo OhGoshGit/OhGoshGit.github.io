@@ -1,0 +1,369 @@
+---
+title: "OGG... 小規模プロジェクトではどんなブランチ戦略を使うべきか？"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-05-23"
+date-modified: last-modified
+categories: [git branch, git flow, release, semver]
+---
+
+## 🔎 Objective
+
+- 小規模ライブラリ（例：`regmonkey-shellutils`）を少人数で開発するとき，`release` ブランチを含むGit Flow は大げさすぎる
+- それでも，安定した `main`，使いやすい `develop`，自動タグ付けと GitHub Release 公開を行うリリースプロセスが欲しい
+- トレーサビリティ，きれいな PR，再現可能なリリースを，余分な手順なしに実現できる最小限のワークフローがほしい
+
+## 🎯 Goal
+
+- [ ] `release` ブランチなしで，2ブランチ（`main` + `develop`）の簡略化 Git Flow を運用する．
+- [ ] ブランチ名だけでその目的・Issue・スコープが明確にわかるよう命名する．
+- [ ] `develop` → `main` のマージでリリースし，CI/CD にタグ付けと公開を任せる．
+- [ ] SemVer でパッケージをバージョン管理し，削除前に非推奨を告知する．
+
+## TL;DR
+
+永続ブランチは **`main` + `develop`** のみ．`develop` から `feature/<issue>/<task>`，`bugfix/<issue>/<task>` などを切り，PR でマージし直す．リリース時は `develop` で `VERSION` を上げ，`main` への PR を開き，CI に `vX.Y.Z` のタグ付けと GitHub Release の公開を任せる．`release` ブランチは完全に省略する．
+
+```
+feature/* ──PR──▶ develop ──PR──▶ main ──(CI/CD)──▶ vX.Y.Z tag + GitHub Release
+```
+
+## ブランチグラフ
+
+```{mermaid}
+%%{init: { 'logLevel': 'debug', 'theme': 'base',
+            'themeVariables': {
+                'git0': '#2c6cb0',
+                'git1': '#3a7d2b',
+                'git2': '#b8860b',
+                'gitBranchLabel0': '#ffffff',
+                'gitBranchLabel1': '#ffffff',
+                'gitBranchLabel2': '#ffffff',
+                'commitLabelColor': '#1a3c66',
+                'commitLabelBackground': '#e3eefc',
+                'tagLabelColor': '#1f4d12',
+                'tagLabelBackground': '#e2f0d9',
+                'tagLabelBorder': '#3a7d2b'
+            },
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+gitGraph
+   commit id: " " tag: "v1.0.0"
+
+   branch hotfix
+   checkout hotfix
+   commit id: "BUGFIX"
+
+   checkout main
+   branch develop
+   checkout develop
+   commit id: "start work"
+
+   branch feature/0001/login
+   checkout feature/0001/login
+   commit id: " "
+
+   checkout main
+   merge hotfix tag: "v1.0.1"
+
+   checkout develop
+   merge hotfix
+   commit id: "incorporate hotfix"
+
+   checkout develop
+   merge feature/0001/login
+   commit id: "login feature"
+
+   checkout main
+   merge develop tag: "v1.1.0"
+
+   checkout develop
+   commit id: "FEATURE"
+```
+
+上記が**簡略化 Git Flow** となります．2つ目の永続・統合ブランチ（`develop`）の存在が GitHub Flow との違いです．
+
+## このワークフローが機能するためのNice to have条件
+
+[1. リリースを完全に自動化する]{.mini-section}
+
+タグ付け，changelog 生成，GitHub Release の作成は，`main` へのマージのたびに CI/CD が行わなければならない．手作業は厳禁．
+
+- `main` へのマージ時に `VERSION` を読み取り，対応する `vX.Y.Z` タグを作成する．
+- リリースノートは自動生成する（例：GitHub の API 経由の "Generate release notes"，または [release-drafter](https://github.com/release-drafter/release-drafter)）．
+- 該当する場合，パッケージの公開（PyPI，npm，コンテナレジストリ）も同じジョブに含める．
+
+[2. テストを自動化し，すべての PR をゲートする]{.mini-section}
+
+- `develop` と `main` へのすべての PR が CI 上でフルテストスイートを実行する．
+- テストが失敗したらマージをブロックする．慣例ではなく，ブランチ保護で強制する．
+- 「全グリーン」が「変更されたコードにテストが存在しない」ではなく「リグレッションなし」を意味するだけのカバレッジを確保する．
+
+[3. コードが `main` に届く前にテストが存在する]{.mini-section}
+
+- 新機能は「テストは後で」ではなく，**テストとともに** `develop` に着地する．
+- バグ修正には，修正前のコードで失敗し修正後に通るリグレッションテストを含める．
+- ホットフィックスは唯一の例外で，不足しているテストは次の PR でバックフィルする．
+
+
+[4. `develop` → `main` の PR を小さく保つ]{.mini-section}
+
+リリース PR はワークフロー中で最もリスクの高いマージなので，レビュー可能な状態を保つ：
+
+- `develop` → `main` PR を十分な頻度で開き，差分が一度に読み切れるサイズに収める（目安：数十コミット，数百ではない）．
+- 6ヶ月分の `develop` を1本のリリース PR にまとめてはいけない．その頃には誰も各コミットの理由を覚えておらず，`git bisect` が唯一の診断手段になる．
+
+[5. `main` に直接コミットしない]{.mini-section}
+
+- `main` にコードが入る経路は，`develop` からの PR か `hotfix/*` ブランチからの PR のみ
+- 直接プッシュはブランチ保護で無効化
+
+::: {.callout-warning}
+## これらを満たせないなら GitHub Flow を使う
+
+- 簡略化 Git Flow の GitHub Flow に対する利点は，リリース間に `develop` で安定化できること
+- CI/CD とテストという安定作業が定義されていることが必要ですが，もしこれらを定義しないなら，`develop` ブランチは何も得をもたらさないオーバーヘッドであるだけなので，1ブランチの GitHub Flow を検討すべき
+:::
+
+## ブランチの種類
+
+[Syntax]{.mini-section}
+
+```ini
+<branch-type>/<issue-number>/<task-description>
+```
+
+`hotfix` ブランチなど一部は Issue 番号を省略できる：
+
+```ini
+hotfix/<task-description>
+```
+
+[命名規則]{.mini-section}
+
+:::{.no-border-top-table}
+
+| ブランチタイプ | 命名規則 | 目的 |
+|---|---|---|
+| **本番** | `main` | 本番環境用コード．永続ブランチ．ここへのマージが CI/CD をトリガーし，タグと GitHub Release を作成する． |
+| **統合** | `develop` | すべての機能と修正を統合する場所．永続ブランチ． |
+| **機能** | `feature/<issue>/<task>` | 新機能の作業．小規模な Issue は `develop` へ直接 PR する． |
+| **改善** | `enhancement/<issue>/<task>` | 既存機能の改善（UX，パフォーマンスなど）． |
+| **バグ修正** | `bugfix/<issue>/<task>` | 緊急でないバグ修正．テスト後，`develop` にマージする． |
+| **Issue 統合** | `issue/<issue>/integration` | **中〜大規模の Issue 専用．** 複数のサブタスクブランチを `develop` への1本の PR にまとめる前にステージングする． |
+| **ホットフィックス** | `hotfix/<issue>` | 本番環境の緊急修正．リリース後，`main` と `develop` の両方にマージし直す． |
+| **テスト** | `testing/<issue>/<task>` | 使い捨てのテスト・検証ブランチ．使用後に削除する． |
+| **ドキュメント** | `document/<issue>/<task>` | ドキュメント，ガイド，README． |
+| **リファクタリング** | `refactor/<issue>/<task>` | 動作を変えない内部的な再構成． |
+| **サンドボックス** | `sandbox/<task>` | 実験とプロトタイプ．安定ブランチへはマージしない． |
+
+: {tbl-colwidths="[22,33,45]"}
+
+:::
+
+[例]{.mini-section}
+
+| ブランチ名 | 用途 |
+|---|---|
+| `feature/0123/add-login` | 新機能 |
+| `bugfix/0123/fix-login-error` | 緊急でない修正 |
+| `issue/0123/integration` | 大きな Issue のサブタスク |
+| `hotfix/0145/critical-fix` | 本番の緊急対応 |
+
+## 開発フロー
+
+### Step 1 — `develop` からサブタスクブランチを切る
+
+Issue ごとに，サブタスクごとに `develop` からブランチを切る．
+
+```bash
+git switch develop
+git switch -c feature/0123/add-login
+git switch -c bugfix/0123/fix-login-error
+```
+
+- **小規模な Issue** → このブランチを直接 `develop` へ PR する（Step 3 へ）．
+- **中〜大規模な Issue** → サブタスクブランチを統合ブランチの下にまとめる（Step 2）．
+
+### Step 2 — オプション：大きな Issue のための統合ブランチ
+
+複数のサブタスクが1つの Issue に属し，まとめてレビューしたい場合：
+
+```bash
+git switch develop
+git switch -c issue/0123/integration
+git merge feature/0123/add-login
+git merge bugfix/0123/fix-login-error
+git push -u origin issue/0123/integration
+```
+
+その後，`issue/0123/integration` → `develop` の1本の PR を開く．レビュアーは Issue 全体を1箇所で確認でき，3本の PR を個別に追う必要がなくなる．
+
+### Step 3 — `develop` へマージする
+
+Issue ごと（小規模ならサブタスクごと）に `develop` を対象とした PR を開く．ローカルでマージする場合は `git merge --no-ff` を推奨する．ログにブランチトポロジーを残せるためだ．
+
+### Step 4 — リリース
+
+`develop` でバージョンを上げ，`develop` → `main` の PR を開く．
+
+```bash
+# develop 上で VERSION を更新してコミット
+git commit -am "RELEASE: bump version to 1.2.0"
+```
+
+PR を `main` にマージすると CI/CD がトリガーされ，次のことが起こる：
+
+1. `VERSION` を読み取り，対応する `vX.Y.Z` タグを作成し，自動生成ノート付きの GitHub Release を公開する．
+
+::: {.callout-note}
+## バージョンの変更は手作業
+
+`VERSION` は `main` への PR を開く前に手動で編集する．CI/CD ジョブはそれを *読み取る* だけで，次のバージョンの番号を決めることはない．バンプの種類（major / minor / patch）は人間が判断する．詳細は後述の [SemVer](#versioning-policy) を参照．
+:::
+
+### 運用まとめ
+
+:::{.no-border-top-table}
+
+| スコープ | ブランチ命名 | マージ先 | 備考 |
+|---|---|---|---|
+| **小規模 Issue** | `feature/<issue>/<task>`，`bugfix/<issue>/<task>` | `develop` へ直接 PR | 単一タスク，軽いレビュー |
+| **中〜大規模 Issue** | `issue/<issue>/integration` | サブタスクをステージング後，`develop` へ PR | `feature` / `bugfix` ブランチを1つのレビューにまとめる |
+
+: {tbl-colwidths="[24,38,24,14]"}
+
+:::
+
+## ブランチ削除ポリシー
+
+| ブランチタイプ | 削除タイミング | 備考 |
+|---|---|---|
+| `feature` / `bugfix` / `issue` | `develop` へのマージ後 | 即座に削除する．履歴ポインタを残したい場合はタグを使う． |
+
+## 命名規則
+
+### Rule 1 — 小文字とハイフンのみ
+
+- 常に小文字にする．大文字・小文字を区別するか否かが異なるファイルシステム間で問題が起きるため．
+- 単語は `-` で区切り，`_` や camelCase は使わない．
+
+📘 Example
+
+- ✅ `feature/user-login`
+- ❌ `Feature_UserLogin`，`FeatUserLogin`
+
+### Rule 2 — カテゴリトークンから始める
+
+- すべてのブランチは意図を示すトークンで始める：`feature`，`bugfix`，`document`，…
+- トークンと説明は `/` で区切る．
+
+📘 Example
+
+- ✅ `bugfix/payment-timeout`
+- ❌ `payment-timeout`（目的が不明）
+
+トークンがあれば，カテゴリ別にブランチをスクリプトで操作できる：
+
+```bash
+# すべての feature ブランチを一覧表示
+git branch --list "feature/*"
+
+# すべての feature ブランチをプッシュ
+git push origin 'refs/heads/feature/*'
+
+# マージ済みの feature ブランチをすべて削除
+git branch -D $(git branch --list "feature/*")
+```
+
+### Rule 3 — 短く保つ
+
+意図が伝わる長さでありながら，1行ログに収まる短さを保つ．
+
+📘 Example
+
+- ✅ `refactor/api-headers`
+- ❌ `refactor/update-the-way-we-handle-request-headers-in-api`
+
+### Rule 4 — 衝突するブランチを作らない
+
+Git はブランチを `.git/refs/heads/` 以下のパスとして保存する．そのため `feature` のようなフラットな名前は `feature/login-v2` のようなネストした名前をブロックする．同じ階層にファイルとディレクトリは同名で共存できません．
+
+```bash
+$ git switch -c bugfix/0123/fix-login-error
+Switched to a new branch 'bugfix/0123/fix-login-error'
+
+$ ls .git/refs/heads/bugfix/0123
+fix-login-error
+```
+
+カテゴリトークンをリーフブランチ名として使うことは禁止（`feature`，`bugfix`，…）．必ずその下に何かをネストすること．
+
+## バージョニングポリシー {#versioning-policy}
+
+`regmonkey-shellutils` は [Semantic Versioning](https://semver.org/)．`MAJOR.MINOR.PATCH`．を使用する．
+
+:::{.no-border-top-table}
+
+| リリース種別 | 内容 | 後方互換性？ | 例 |
+|---|---|---|---|
+| **Major** | 破壊的変更，非推奨 API の削除，仕様変更を伴う API 更新．リリースノートに記載する． | ❌ なし | `v1.0.0 → v2.0.0` |
+| **Minor** | 新機能，大きな非破壊的バグ修正，非推奨の告知． | ✅ あり | `v1.1.0 → v1.2.0` |
+| **Patch** | バグ修正，安定性・パフォーマンス改善．既存コードはそのまま動作する． | ✅ あり | `v1.2.1 → v1.2.2` |
+
+: {tbl-colwidths="[18,52,15,15]"}
+
+:::
+
+### 非推奨ポリシー
+
+1. 非推奨は **マイナーリリースで告知する**．
+2. 警告メッセージには以下を含める：
+   - 代替メソッドまたは属性．
+   - API が削除されるバージョン（例：`will be removed in 2.0.0`）．
+3. 非推奨の API は現在のメジャーバージョン（`1.x`）の残りの期間は動作し続ける．
+4. 削除は次のメジャーリリース（`2.0.0`）で行う．
+
+[非推奨フロー]{.mini-section}
+
+| バージョン | 状態 | 内容 |
+|---|---|---|
+| `1.2.0` | 🔔 告知 | `old_method()` が非推奨としてマークされる．警告は `new_method()` を指す． |
+| `1.3.0` | ⚠ 警告 | まだ動作し，警告も出る．移行を推奨． |
+| `2.0.0` | ⛔ 削除 | `old_method()` が削除される． |
+
+::: {.callout-warning}
+## 告知ステップを省略しない
+
+- マイナーリリースでの非推奨警告を省いてメジャーリリースで API を削除するのは，SemVer がユーザーと交わす契約違反
+
+:::
+
+## 用語集
+
+::: {.glossary-container}
+
+```yml
+- def: リグレッションテスト (Regression test)
+  description: |
+    すでにリリースした動作を固定するテスト．後から加えた変更がその動作を
+    暗黙のうちに壊せないようにする．
+
+- def: 後方互換性 (Backward compatibility)
+  description: |
+    新しいバージョンが，旧バージョン向けに書かれたコードでも動作し続けること．
+    公開 API・呼び出しシグネチャ・観測可能な動作が同じであることを意味する．
+    SemVer ではマイナーリリースとパッチリリースがこれを保証し，
+    メジャーリリースのみが壊すことを許される．
+
+```
+
+:::
+
+
+📘 References
+
+- [Semantic Versioning](https://semver.org/)
+- [Atlassian — Gitflow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+- [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow)
