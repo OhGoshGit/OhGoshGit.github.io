@@ -17,6 +17,16 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Restore Quarto freeze/cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            _freeze
+            .quarto
+          key: quarto-freeze-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            quarto-freeze-${{ runner.os }}-
+
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
@@ -24,3 +34,12 @@ jobs:
         env:
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.OHGOSHGIT_PUBLISH_WORKFLOW }}
+
+      - name: Save Quarto freeze/cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            _freeze
+            .quarto
+          key: quarto-freeze-${{ runner.os }}-${{ github.sha }}

@@ -29,5 +29,6 @@ bfg_check_list/
 # quarto
 _site/
 /.quarto/
+_freeze/
 
 **/*.quarto_ipynb
