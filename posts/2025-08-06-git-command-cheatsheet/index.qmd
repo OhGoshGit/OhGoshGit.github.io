@@ -8,6 +8,40 @@ date-modified: "2026-05-23"
 categories: [cheatsheet]
 ---
 
+## Git Rules
+
+### Commit Reference Notation
+
+:::: {.no-border-top-table}
+
+| Notation         | Meaning                                                  | Example                        |
+| ---------------- | -------------------------------------------------------- | ------------------------------ |
+| `HEAD`           | The current commit (tip of the checked-out branch)       | `git show HEAD`                |
+| `HEAD~1` / `HEAD~` | 1st ancestor following the **first parent** chain      | `git diff HEAD~1 HEAD`         |
+| `HEAD~N`         | Nth ancestor following the first parent chain            | `git diff HEAD~3 HEAD`         |
+| `HEAD^1` / `HEAD^` | 1st parent of HEAD (identical to `HEAD~1` for linear history) | `git show HEAD^`          |
+| `HEAD^2`         | 2nd parent of HEAD — only exists on merge commits        | `git show HEAD^2`              |
+| `HEAD^^`         | Grandparent via first-parent chain (same as `HEAD~2`)    | `git show HEAD^^`              |
+| `<ref>^{commit}` | Dereference a tag or ref to its underlying commit object | `git cat-file -e v1.0^{commit}`|
+: {tbl-colwidths="[20,50,30]"}
+
+::::
+
+::: {.callout-note}
+## `~` vs `^` — when they differ
+
+`~N` always follows the **first parent** N times (useful for linear history and rebase workflows).
+`^N` selects the **Nth parent** of a single commit (only relevant for merge commits, where `^1` is the branch you merged into and `^2` is the branch you merged from).
+
+```bash
+# On a merge commit M with two parents A and B:
+git show M^1   # → A (the branch that was merged into)
+git show M^2   # → B (the branch that was merged from)
+git show M~1   # → A (same as ^1, first-parent)
+```
+:::
+
+
 ## Git command
 
 ### Basic Commands
