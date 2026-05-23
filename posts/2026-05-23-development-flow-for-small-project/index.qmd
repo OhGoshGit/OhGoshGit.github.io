@@ -1,0 +1,376 @@
+---
+title: "OGG... What branch strategy should a small solo project actually use?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-05-23"
+date-modified: "2026-05-23"
+categories: [git branch, git flow, release, semver]
+---
+
+## 🔎 Objective
+
+- You are the only (or one of very few) maintainers of a small library — say `regmonkey-shellutils` — and full Git Flow with `release` branches is overkill.
+- You still want a stable `main`, a usable `develop`, and a release process that auto-tags and publishes a GitHub Release.
+- Pick the smallest workflow that gives you traceability, clean PRs, and reproducible releases without ceremony.
+
+## 🎯 Goal
+
+- [ ] Run a two-branch (`main` + `develop`) simplified Git Flow without a `release` branch.
+- [ ] Name every branch so its purpose, issue, and scope are obvious from the name alone.
+- [ ] Ship a release by merging `develop` → `main` and letting CI/CD tag + publish.
+- [ ] Version the package with SemVer and announce deprecations before removing them.
+
+## TL;DR
+
+Use **`main` + `develop`** as the only permanent branches. Cut `feature/<issue>/<task>`, `bugfix/<issue>/<task>`, etc. off `develop`; merge them back via PR. To release, bump `VERSION` on `develop`, open a PR to `main`, and let CI tag `vX.Y.Z` and publish the GitHub Release. Skip the `release` branch entirely.
+
+```
+feature/* ──PR──▶ develop ──PR──▶ main ──(CI/CD)──▶ vX.Y.Z tag + GitHub Release
+```
+
+## The branch graph
+
+```{mermaid}
+%%{init: { 'logLevel': 'debug', 'theme': 'base',
+            'themeVariables': {
+                'git0': '#2c6cb0',
+                'git1': '#3a7d2b',
+                'git2': '#b8860b',
+                'gitBranchLabel0': '#ffffff',
+                'gitBranchLabel1': '#ffffff',
+                'gitBranchLabel2': '#ffffff',
+                'commitLabelColor': '#1a3c66',
+                'commitLabelBackground': '#e3eefc',
+                'tagLabelColor': '#1f4d12',
+                'tagLabelBackground': '#e2f0d9',
+                'tagLabelBorder': '#3a7d2b'
+            },
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+gitGraph
+   commit id: " " tag: "v1.0.0"
+
+   branch hotfix
+   checkout hotfix
+   commit id: "BUGFIX"
+
+   checkout main
+   branch develop
+   checkout develop
+   commit id: "start work"
+
+   branch feature/0001/login
+   checkout feature/0001/login
+   commit id: " "
+
+   checkout main
+   merge hotfix tag: "v1.0.1"
+
+   checkout develop
+   merge hotfix
+   commit id: "incorporate hotfix"
+
+   checkout develop
+   merge feature/0001/login
+   commit id: "login feature"
+
+   checkout main
+   merge develop tag: "v1.1.0"
+
+   checkout develop
+   commit id: "FEATURE"
+```
+
+This is **simplified Git Flow**: the second permanent branch (`develop`) is what separates it from GitHub Flow. The `release` branch is dropped because a solo / small-team project does not benefit from a parallel stabilisation lane — `develop` itself is the integration target, and `main` is what ships.
+
+## Nice to have conditions for this workflow to work
+
+The graph above only works if a handful of project-level practices are in place. Without them, the two-branch model collapses into "main is broken, nobody knows since when" within a few releases.
+
+[1. Release is fully automated]{.mini-section}
+
+Tagging, changelog generation, and the GitHub Release must be produced by CI/CD on every merge into `main` — never by hand.
+
+- A merge into `main` reads `VERSION` and creates the matching `vX.Y.Z` tag.
+- Release notes are auto-generated (e.g. GitHub's "Generate release notes" via API, or [release-drafter](https://github.com/release-drafter/release-drafter)).
+- If applicable, package publishing (PyPI, npm, container registry) is part of the same job.
+
+If any of these steps require a human at a keyboard, the temptation to "just merge straight to main, I'll tag later" eventually wins.
+
+[2. Tests are automated and gate every PR]{.mini-section}
+
+- Every PR into `develop` and `main` runs the full test suite on CI.
+- A failing suite blocks the merge — enforced by branch protection, not by convention.
+- Coverage is sufficient that "all green" actually means "no regressions" rather than "no tests exist for the changed code."
+
+[3. Tests exist before code reaches `main`]{.mini-section}
+
+The previous point is hollow if the suite is thin. As a rule of thumb:
+
+- New features land on `develop` **with** tests, not "tests to follow".
+- Bug fixes include a regression test that fails on the pre-fix code and passes after.
+- Hotfixes are the one exception, and the missing test gets backfilled in the next PR.
+
+This is what lets you trust `develop` → `main` PRs without a separate `release` branch — the integration testing that Git Flow puts on a release branch is replaced by the test suite running on `develop`.
+
+[4. `develop` → `main` PRs stay small]{.mini-section}
+
+The release PR is the riskiest merge in the workflow because it ships. Keep it reviewable:
+
+- Open the `develop` → `main` PR often enough that the diff fits in one sitting (rule of thumb: tens of commits, not hundreds).
+- Don't batch six months of `develop` into one release PR — by then nobody remembers why each commit landed, and `git bisect` is your only diagnostic.
+- If you find yourself wanting to "hold off on the release because the diff is scary", that is the signal that you should have released two weeks ago.
+
+[5. `main` is never committed to directly]{.mini-section}
+
+The only ways code enters `main` are (a) a PR from `develop`, or (b) a PR from a `hotfix/*` branch. Direct pushes are disabled in branch protection. This is what makes "what's in production" a question the Git history can always answer.
+
+::: {.callout-warning}
+## If you can't meet these, use GitHub Flow instead
+
+Simplified Git Flow's benefit over GitHub Flow is the ability to stabilise on `develop` between releases. That benefit is only real when CI/CD and tests are doing the stabilisation work for you. Without them, the extra `develop` branch is overhead that buys nothing — a single-branch GitHub Flow is the more honest choice.
+:::
+
+## Branch types
+
+[Basic syntax]{.mini-section}
+
+```ini
+<branch-type>/<issue-number>/<task-description>
+```
+
+`hotfix` branches and a couple of others may omit the issue number:
+
+```ini
+hotfix/<task-description>
+```
+
+[Naming convention]{.mini-section}
+
+:::{.no-border-top-table}
+
+| Branch type | Naming rule | Purpose |
+|---|---|---|
+| **Production** | `main` | Production-ready code. Permanent. Merging here triggers CI/CD to cut a tag and a GitHub Release. |
+| **Integration** | `develop` | Where all features and fixes are integrated. Permanent. |
+| **Feature** | `feature/<issue>/<task>` | New feature work. Small issues PR straight into `develop`. |
+| **Enhancement** | `enhancement/<issue>/<task>` | Improvements to existing features (UX, perf). |
+| **Bugfix** | `bugfix/<issue>/<task>` | Non-urgent bug fixes. Tested, then merged into `develop`. |
+| **Issue integration** | `issue/<issue>/integration` | **Medium-to-large issues only.** Stages multiple sub-task branches before one PR to `develop`. |
+| **Hotfix** | `hotfix/<issue>` | Emergency production fix. After release, merge back into both `main` and `develop`. |
+| **Testing** | `testing/<issue>/<task>` | Throwaway test / verification branches. Deleted after use. |
+| **Documentation** | `document/<issue>/<task>` | Documentation, guides, README. |
+| **Refactor** | `refactor/<issue>/<task>` | Internal restructuring with no behaviour change. |
+| **Sandbox** | `sandbox/<task>` | Experiments and proofs of concept. Never merged into stable branches. |
+
+: {tbl-colwidths="[22,38,40]"}
+
+:::
+
+[Examples]{.mini-section}
+
+| Branch name | Use |
+|---|---|
+| `feature/0123/add-login` | New feature |
+| `bugfix/0123/fix-login-error` | Non-urgent fix |
+| `issue/0123/integration` | Sub-tasks of a larger issue |
+| `hotfix/0145/critical-fix` | Production emergency |
+
+## Development flow
+
+### Step 1 — Cut a sub-task branch off `develop`
+
+For every issue, branch off `develop` per sub-task.
+
+```bash
+git switch develop
+git switch -c feature/0123/add-login
+git switch -c bugfix/0123/fix-login-error
+```
+
+- **Small issue** → PR this branch directly into `develop` (skip to Step 3).
+- **Medium / large issue** → group sub-task branches under an integration branch (Step 2).
+
+### Step 2 — Optional: integration branch for larger issues
+
+When several sub-tasks belong to one issue and you want a single review surface:
+
+```bash
+git switch develop
+git switch -c issue/0123/integration
+git merge feature/0123/add-login
+git merge bugfix/0123/fix-login-error
+git push -u origin issue/0123/integration
+```
+
+Then open one PR: `issue/0123/integration` → `develop`. Reviewers see the whole issue in one place instead of three drive-by PRs.
+
+### Step 3 — Merge into `develop`
+
+Open a PR per issue (or per sub-task for small ones) targeting `develop`. If you are merging locally, prefer `git merge --no-ff` so the branch topology survives in the log.
+
+### Step 4 — Release
+
+Bump the version on `develop`, then PR `develop` → `main`.
+
+```bash
+# Update VERSION on develop, then commit
+git commit -am "RELEASE: bump version to 1.2.0"
+```
+
+Merging the PR into `main` triggers CI/CD, which:
+
+1. Reads `VERSION`, creates the matching `vX.Y.Z` tag, and publishes a GitHub Release with auto-generated notes.
+
+::: {.callout-note}
+## Version bumps are manual
+
+`VERSION` is edited by hand before the `main` PR is opened. The CI/CD job only *reads* it — it never decides what the next version should be. Picking the right bump (major / minor / patch) is a human judgement, see [SemVer](#versioning-policy) below.
+:::
+
+### Operational summary
+
+:::{.no-border-top-table}
+
+| Scope | Branch naming | Target | Notes |
+|---|---|---|---|
+| **Small issue** | `feature/<issue>/<task>`, `bugfix/<issue>/<task>` | PR directly to `develop` | Single task, light review |
+| **Medium / large issue** | `issue/<issue>/integration` | Stage sub-tasks, then PR to `develop` | Bundles `feature` / `bugfix` branches into one review |
+
+: {tbl-colwidths="[24,38,24,14]"}
+
+:::
+
+## Branch deletion policy
+
+| Branch type | When to delete | Notes |
+|---|---|---|
+| `feature` / `bugfix` / `issue` | After merge into `develop` | Delete immediately. Use a tag if you really need to keep the history pointer. |
+
+## Naming rules
+
+### Rule 1 — Lowercase and hyphens only
+
+- Always lowercase: case-sensitive vs case-insensitive filesystems will bite you otherwise.
+- Separate words with `-`, not `_` or camelCase.
+
+📘 Example
+
+- ✅ `feature/user-login`
+- ❌ `Feature_UserLogin`, `FeatUserLogin`
+
+### Rule 2 — Start with a category token
+
+- Every branch begins with a token that states intent: `feature`, `bugfix`, `document`, …
+- Token and description are separated by `/`.
+
+📘 Example
+
+- ✅ `bugfix/payment-timeout`
+- ❌ `payment-timeout` (purpose unclear)
+
+Tokens also let you script over branches by category:
+
+```bash
+# List all feature branches
+git branch --list "feature/*"
+
+# Push every feature branch
+git push origin 'refs/heads/feature/*'
+
+# Delete all merged feature branches
+git branch -D $(git branch --list "feature/*")
+```
+
+### Rule 3 — Keep it short
+
+Long enough to convey intent, short enough to fit in a one-line log.
+
+📘 Example
+
+- ✅ `refactor/api-headers`
+- ❌ `refactor/update-the-way-we-handle-request-headers-in-api`
+
+### Rule 4 — Don't create branches that will collide
+
+Git stores branches as paths under `.git/refs/heads/`. That means a flat name like `feature` blocks any nested name like `feature/login-v2`, because the filesystem cannot have a file and a directory with the same name at the same level.
+
+```bash
+$ git switch -c bugfix/0123/fix-login-error
+Switched to a new branch 'bugfix/0123/fix-login-error'
+
+$ ls .git/refs/heads/bugfix/0123
+fix-login-error
+```
+
+So: never use a category token as a leaf branch name (`feature`, `bugfix`, …). Always nest something below it.
+
+## Versioning policy
+
+`regmonkey-shellutils` uses [Semantic Versioning](https://semver.org/) — `MAJOR.MINOR.PATCH`.
+
+:::{.no-border-top-table}
+
+| Release type | What it contains | Backwards compatible? | Example |
+|---|---|---|---|
+| **Major** | Breaking changes, removal of deprecated APIs, spec-changing API updates. Listed in the Release Notes. | ❌ No | `v1.0.0 → v2.0.0` |
+| **Minor** | New features, large non-breaking bug fixes, deprecation announcements. | ✅ Yes | `v1.1.0 → v1.2.0` |
+| **Patch** | Bug fixes, stability / performance improvements. Existing code keeps working. | ✅ Yes | `v1.2.1 → v1.2.2` |
+
+: {tbl-colwidths="[18,52,15,15]"}
+
+:::
+
+### Deprecation policy
+
+1. Deprecations are **announced in a minor release**.
+2. The warning message must include:
+   - The replacement method or attribute.
+   - The version in which the API will be removed (e.g. `will be removed in 2.0.0`).
+3. The deprecated API keeps working for the rest of the current major version (`1.x`).
+4. Removal happens in the next major release (`2.0.0`).
+
+[Deprecation flow]{.mini-section}
+
+| Version | State | What happens |
+|---|---|---|
+| `1.2.0` | 🔔 Announce | `old_method()` is marked deprecated. Warning points at `new_method()`. |
+| `1.3.0` | ⚠ Warn | Still works, still warns. Migration encouraged. |
+| `2.0.0` | ⛔ Remove | `old_method()` is gone. |
+
+::: {.callout-warning}
+## Don't skip the announce step
+
+Removing an API in a major release **without** a prior deprecation warning in a minor release breaks the contract SemVer makes with users. Even if you are the only consumer today, future-you (or a teammate who pinned to `^1.2`) will not get a runtime hint that the API is going away. Always land the deprecation warning at least one minor release before removal.
+:::
+
+## Glossary
+
+::: {.glossary-container}
+
+```yml
+- def: Regression test
+  description: |
+    A test that pins down behaviour you've already shipped, so a later
+    change cannot silently break it. For a bug fix, the regression test
+    fails on the pre-fix code and passes after — that is what proves the
+    bug stays fixed across future refactors.
+
+- def: Backward compatibility
+  description: |
+    A new version keeps working for code written against the previous
+    version: same public APIs, same call signatures, same observable
+    behaviour. Under SemVer, minor and patch releases preserve it;
+    only a major release is allowed to break it.
+
+```
+
+:::
+
+
+📘 References
+
+- [Semantic Versioning](https://semver.org/)
+- [Atlassian — Gitflow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+- [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow)
