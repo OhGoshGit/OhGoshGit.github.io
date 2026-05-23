@@ -4,7 +4,7 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2025-08-06"
-date-modified: "2026-05-21"
+date-modified: "2026-05-23"
 categories: [cheatsheet]
 ---
 
@@ -33,6 +33,7 @@ categories: [cheatsheet]
 
 | Category                  | Command Example           | Description                                                            |
 | ------------------------- | ------------------------- | ---------------------------------------------------------------------- |
+| **Find file first commit** | `git log --diff-filter=A -- file.py` | Find the commit in which a file was first added to the repository |
 | **Unstage files**         | `git rm --cached -r .`    | Remove files from the Git index while keeping them in the working tree |
 | **Discard file changes**  | `git restore <file-path>` | Discard local changes and restore the file to the current `HEAD` state |
 : {tbl-colwidths="[25,35,40]"}
