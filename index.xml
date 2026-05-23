@@ -3441,7 +3441,7 @@ font-style: inherit;">)</span></span></code></pre></div></div>
 </div>
 </section>
 <section id="file-modification-commands" class="level3">
-<h3 class="anchored">File Modification Commands</h3>
+<h3 class="anchored" data-anchor-id="file-modification-commands">File Modification Commands</h3>
 <div class="no-border-top-table">
 <table class="caption-top table">
 <colgroup>
@@ -3469,16 +3469,7 @@ font-style: inherit;">)</span></span></code></pre></div></div>
 </tr>
 </tbody>
 </table>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -3505,6 +3496,7 @@ font-style: inherit;">git</span> reset HEAD .</span></code></pre></div></div>
 <p>But these commands will fail because there is no HEAD in an initial repository state.</p>
 </div>
 </div>
+</section>
 <section id="commands-for-branch" class="level3">
 <h3 class="anchored" data-anchor-id="commands-for-branch">commands for branch</h3>
 <div class="no-border-top-table">
@@ -3628,6 +3620,7 @@ font-style: inherit;">git</span> reset HEAD .</span></code></pre></div></div>
 </tbody>
 </table>
 </div>
+</section>
 </section>
 <section id="config-command" class="level2">
 <h2 class="anchored" data-anchor-id="config-command">Config command</h2>
@@ -3758,11 +3751,6 @@ font-style: inherit;">git</span> reset HEAD .</span></code></pre></div></div>
 </div>
 
 
-</section>
-</section>
-</div>
-</div>
-</div>
 </section>
 </section>
 
