@@ -10,7 +10,676 @@
 <atom:link href="https://ohgoshgit.github.io/language/jp/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Sun, 14 Sep 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 23 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… 小規模プロジェクトではどんなブランチ戦略を使うべきか？</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/language/jp/posts-jp/2026-05-23-development-flow-for-small-project/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>小規模ライブラリ（例：<code>regmonkey-shellutils</code>）を少人数で開発するとき，<code>release</code> ブランチを含むGit Flow は大げさすぎる</li>
+<li>それでも，安定した <code>main</code>，使いやすい <code>develop</code>，自動タグ付けと GitHub Release 公開を行うリリースプロセスが欲しい</li>
+<li>トレーサビリティ，きれいな PR，再現可能なリリースを，余分な手順なしに実現できる最小限のワークフローがほしい</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"><code>release</code> ブランチなしで，2ブランチ（<code>main</code> + <code>develop</code>）の簡略化 Git Flow を運用する．</label></li>
+<li><label><input type="checkbox">ブランチ名だけでその目的・Issue・スコープが明確にわかるよう命名する．</label></li>
+<li><label><input type="checkbox"><code>develop</code> → <code>main</code> のマージでリリースし，CI/CD にタグ付けと公開を任せる．</label></li>
+<li><label><input type="checkbox">SemVer でパッケージをバージョン管理し，削除前に非推奨を告知する．</label></li>
+</ul>
+</section>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+<p>永続ブランチは <strong><code>main</code> + <code>develop</code></strong> のみ．<code>develop</code> から <code>feature/&lt;issue&gt;/&lt;task&gt;</code>，<code>bugfix/&lt;issue&gt;/&lt;task&gt;</code> などを切り，PR でマージし直す．リリース時は <code>develop</code> で <code>VERSION</code> を上げ，<code>main</code> への PR を開き，CI に <code>vX.Y.Z</code> のタグ付けと GitHub Release の公開を任せる．<code>release</code> ブランチは完全に省略する．</p>
+<pre><code>feature/* ──PR──▶ develop ──PR──▶ main ──(CI/CD)──▶ vX.Y.Z tag + GitHub Release</code></pre>
+</section>
+<section id="ブランチグラフ" class="level2">
+<h2 class="anchored" data-anchor-id="ブランチグラフ">ブランチグラフ</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base',
+            'themeVariables': {
+                'git0': '#2c6cb0',
+                'git1': '#3a7d2b',
+                'git2': '#b8860b',
+                'gitBranchLabel0': '#ffffff',
+                'gitBranchLabel1': '#ffffff',
+                'gitBranchLabel2': '#ffffff',
+                'commitLabelColor': '#1a3c66',
+                'commitLabelBackground': '#e3eefc',
+                'tagLabelColor': '#1f4d12',
+                'tagLabelBackground': '#e2f0d9',
+                'tagLabelBorder': '#3a7d2b'
+            },
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+gitGraph
+   commit id: " " tag: "v1.0.0"
+
+   branch hotfix
+   checkout hotfix
+   commit id: "BUGFIX"
+
+   checkout main
+   branch develop
+   checkout develop
+   commit id: "start work"
+
+   branch feature/0001/login
+   checkout feature/0001/login
+   commit id: " "
+
+   checkout main
+   merge hotfix tag: "v1.0.1"
+
+   checkout develop
+   merge hotfix
+   commit id: "incorporate hotfix"
+
+   checkout develop
+   merge feature/0001/login
+   commit id: "login feature"
+
+   checkout main
+   merge develop tag: "v1.1.0"
+
+   checkout develop
+   commit id: "FEATURE"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>上記が<strong>簡略化 Git Flow</strong> となります．2つ目の永続・統合ブランチ（<code>develop</code>）の存在が GitHub Flow との違いです．</p>
+</section>
+<section id="このワークフローが機能するためのnice-to-have条件" class="level2">
+<h2 class="anchored" data-anchor-id="このワークフローが機能するためのnice-to-have条件">このワークフローが機能するためのNice to have条件</h2>
+<p><span class="mini-section">1. リリースを完全に自動化する</span></p>
+<p>タグ付け，changelog 生成，GitHub Release の作成は，<code>main</code> へのマージのたびに CI/CD が行わなければならない．手作業は厳禁．</p>
+<ul>
+<li><code>main</code> へのマージ時に <code>VERSION</code> を読み取り，対応する <code>vX.Y.Z</code> タグを作成する．</li>
+<li>リリースノートは自動生成する（例：GitHub の API 経由の “Generate release notes”，または <a href="https://github.com/release-drafter/release-drafter">release-drafter</a>）．</li>
+<li>該当する場合，パッケージの公開（PyPI，npm，コンテナレジストリ）も同じジョブに含める．</li>
+</ul>
+<p><span class="mini-section">2. テストを自動化し，すべての PR をゲートする</span></p>
+<ul>
+<li><code>develop</code> と <code>main</code> へのすべての PR が CI 上でフルテストスイートを実行する．</li>
+<li>テストが失敗したらマージをブロックする．慣例ではなく，ブランチ保護で強制する．</li>
+<li>「全グリーン」が「変更されたコードにテストが存在しない」ではなく「リグレッションなし」を意味するだけのカバレッジを確保する．</li>
+</ul>
+<p><span class="mini-section">3. コードが <code>main</code> に届く前にテストが存在する</span></p>
+<ul>
+<li>新機能は「テストは後で」ではなく，<strong>テストとともに</strong> <code>develop</code> に着地する．</li>
+<li>バグ修正には，修正前のコードで失敗し修正後に通るリグレッションテストを含める．</li>
+<li>ホットフィックスは唯一の例外で，不足しているテストは次の PR でバックフィルする．</li>
+</ul>
+<p><span class="mini-section">4. <code>develop</code> → <code>main</code> の PR を小さく保つ</span></p>
+<p>リリース PR はワークフロー中で最もリスクの高いマージなので，レビュー可能な状態を保つ：</p>
+<ul>
+<li><code>develop</code> → <code>main</code> PR を十分な頻度で開き，差分が一度に読み切れるサイズに収める（目安：数十コミット，数百ではない）．</li>
+<li>6ヶ月分の <code>develop</code> を1本のリリース PR にまとめてはいけない．その頃には誰も各コミットの理由を覚えておらず，<code>git bisect</code> が唯一の診断手段になる．</li>
+</ul>
+<p><span class="mini-section">5. <code>main</code> に直接コミットしない</span></p>
+<ul>
+<li><code>main</code> にコードが入る経路は，<code>develop</code> からの PR か <code>hotfix/*</code> ブランチからの PR のみ</li>
+<li>直接プッシュはブランチ保護で無効化</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>これらを満たせないなら GitHub Flow を使う
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>簡略化 Git Flow の GitHub Flow に対する利点は，リリース間に <code>develop</code> で安定化できること</li>
+<li>CI/CD とテストという安定作業が定義されていることが必要ですが，もしこれらを定義しないなら，<code>develop</code> ブランチは何も得をもたらさないオーバーヘッドであるだけなので，1ブランチの GitHub Flow を検討すべき</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="ブランチの種類" class="level2">
+<h2 class="anchored" data-anchor-id="ブランチの種類">ブランチの種類</h2>
+<p><span class="mini-section">Syntax</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb2-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">&lt;branch-type&gt;/&lt;issue-number&gt;/&lt;task-description&gt;</span></span></code></pre></div></div>
+<p><code>hotfix</code> ブランチなど一部は Issue 番号を省略できる：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb3-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">hotfix/&lt;task-description&gt;</span></span></code></pre></div></div>
+<p><span class="mini-section">命名規則</span></p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 33%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ブランチタイプ</th>
+<th>命名規則</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>本番</strong></td>
+<td><code>main</code></td>
+<td>本番環境用コード．永続ブランチ．ここへのマージが CI/CD をトリガーし，タグと GitHub Release を作成する．</td>
+</tr>
+<tr class="even">
+<td><strong>統合</strong></td>
+<td><code>develop</code></td>
+<td>すべての機能と修正を統合する場所．永続ブランチ．</td>
+</tr>
+<tr class="odd">
+<td><strong>機能</strong></td>
+<td><code>feature/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>新機能の作業．小規模な Issue は <code>develop</code> へ直接 PR する．</td>
+</tr>
+<tr class="even">
+<td><strong>改善</strong></td>
+<td><code>enhancement/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>既存機能の改善（UX，パフォーマンスなど）．</td>
+</tr>
+<tr class="odd">
+<td><strong>バグ修正</strong></td>
+<td><code>bugfix/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>緊急でないバグ修正．テスト後，<code>develop</code> にマージする．</td>
+</tr>
+<tr class="even">
+<td><strong>Issue 統合</strong></td>
+<td><code>issue/&lt;issue&gt;/integration</code></td>
+<td><strong>中〜大規模の Issue 専用．</strong> 複数のサブタスクブランチを <code>develop</code> への1本の PR にまとめる前にステージングする．</td>
+</tr>
+<tr class="odd">
+<td><strong>ホットフィックス</strong></td>
+<td><code>hotfix/&lt;issue&gt;</code></td>
+<td>本番環境の緊急修正．リリース後，<code>main</code> と <code>develop</code> の両方にマージし直す．</td>
+</tr>
+<tr class="even">
+<td><strong>テスト</strong></td>
+<td><code>testing/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>使い捨てのテスト・検証ブランチ．使用後に削除する．</td>
+</tr>
+<tr class="odd">
+<td><strong>ドキュメント</strong></td>
+<td><code>document/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>ドキュメント，ガイド，README．</td>
+</tr>
+<tr class="even">
+<td><strong>リファクタリング</strong></td>
+<td><code>refactor/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>動作を変えない内部的な再構成．</td>
+</tr>
+<tr class="odd">
+<td><strong>サンドボックス</strong></td>
+<td><code>sandbox/&lt;task&gt;</code></td>
+<td>実験とプロトタイプ．安定ブランチへはマージしない．</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="mini-section">例</span></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>ブランチ名</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>feature/0123/add-login</code></td>
+<td>新機能</td>
+</tr>
+<tr class="even">
+<td><code>bugfix/0123/fix-login-error</code></td>
+<td>緊急でない修正</td>
+</tr>
+<tr class="odd">
+<td><code>issue/0123/integration</code></td>
+<td>大きな Issue のサブタスク</td>
+</tr>
+<tr class="even">
+<td><code>hotfix/0145/critical-fix</code></td>
+<td>本番の緊急対応</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="開発フロー" class="level2">
+<h2 class="anchored" data-anchor-id="開発フロー">開発フロー</h2>
+<section id="step-1-develop-からサブタスクブランチを切る" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-develop-からサブタスクブランチを切る">Step 1 — <code>develop</code> からサブタスクブランチを切る</h3>
+<p>Issue ごとに，サブタスクごとに <code>develop</code> からブランチを切る．</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch develop</span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> feature/0123/add-login</span>
+<span id="cb4-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> bugfix/0123/fix-login-error</span></code></pre></div></div>
+<ul>
+<li><strong>小規模な Issue</strong> → このブランチを直接 <code>develop</code> へ PR する（Step 3 へ）．</li>
+<li><strong>中〜大規模な Issue</strong> → サブタスクブランチを統合ブランチの下にまとめる（Step 2）．</li>
+</ul>
+</section>
+<section id="step-2-オプション大きな-issue-のための統合ブランチ" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-オプション大きな-issue-のための統合ブランチ">Step 2 — オプション：大きな Issue のための統合ブランチ</h3>
+<p>複数のサブタスクが1つの Issue に属し，まとめてレビューしたい場合：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch develop</span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> issue/0123/integration</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> merge feature/0123/add-login</span>
+<span id="cb5-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> merge bugfix/0123/fix-login-error</span>
+<span id="cb5-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin issue/0123/integration</span></code></pre></div></div>
+<p>その後，<code>issue/0123/integration</code> → <code>develop</code> の1本の PR を開く．レビュアーは Issue 全体を1箇所で確認でき，3本の PR を個別に追う必要がなくなる．</p>
+</section>
+<section id="step-3-develop-へマージする" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-develop-へマージする">Step 3 — <code>develop</code> へマージする</h3>
+<p>Issue ごと（小規模ならサブタスクごと）に <code>develop</code> を対象とした PR を開く．ローカルでマージする場合は <code>git merge --no-ff</code> を推奨する．ログにブランチトポロジーを残せるためだ．</p>
+</section>
+<section id="step-4-リリース" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-リリース">Step 4 — リリース</h3>
+<p><code>develop</code> でバージョンを上げ，<code>develop</code> → <code>main</code> の PR を開く．</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># develop 上で VERSION を更新してコミット</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-am</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"RELEASE: bump version to 1.2.0"</span></span></code></pre></div></div>
+<p>PR を <code>main</code> にマージすると CI/CD がトリガーされ，次のことが起こる：</p>
+<ol type="1">
+<li><code>VERSION</code> を読み取り，対応する <code>vX.Y.Z</code> タグを作成し，自動生成ノート付きの GitHub Release を公開する．</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>バージョンの変更は手作業
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>VERSION</code> は <code>main</code> への PR を開く前に手動で編集する．CI/CD ジョブはそれを <em>読み取る</em> だけで，次のバージョンの番号を決めることはない．バンプの種類（major / minor / patch）は人間が判断する．詳細は後述の SemVer を参照．</p>
+</div>
+</div>
+</section>
+<section id="運用まとめ" class="level3">
+<h3 class="anchored" data-anchor-id="運用まとめ">運用まとめ</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 38%">
+<col style="width: 24%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>スコープ</th>
+<th>ブランチ命名</th>
+<th>マージ先</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>小規模 Issue</strong></td>
+<td><code>feature/&lt;issue&gt;/&lt;task&gt;</code>，<code>bugfix/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td><code>develop</code> へ直接 PR</td>
+<td>単一タスク，軽いレビュー</td>
+</tr>
+<tr class="even">
+<td><strong>中〜大規模 Issue</strong></td>
+<td><code>issue/&lt;issue&gt;/integration</code></td>
+<td>サブタスクをステージング後，<code>develop</code> へ PR</td>
+<td><code>feature</code> / <code>bugfix</code> ブランチを1つのレビューにまとめる</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="ブランチ削除ポリシー" class="level2">
+<h2 class="anchored" data-anchor-id="ブランチ削除ポリシー">ブランチ削除ポリシー</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ブランチタイプ</th>
+<th>削除タイミング</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>feature</code> / <code>bugfix</code> / <code>issue</code></td>
+<td><code>develop</code> へのマージ後</td>
+<td>即座に削除する．履歴ポインタを残したい場合はタグを使う．</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="命名規則" class="level2">
+<h2 class="anchored" data-anchor-id="命名規則">命名規則</h2>
+<section id="rule-1-小文字とハイフンのみ" class="level3">
+<h3 class="anchored" data-anchor-id="rule-1-小文字とハイフンのみ">Rule 1 — 小文字とハイフンのみ</h3>
+<ul>
+<li>常に小文字にする．大文字・小文字を区別するか否かが異なるファイルシステム間で問題が起きるため．</li>
+<li>単語は <code>-</code> で区切り，<code>_</code> や camelCase は使わない．</li>
+</ul>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>feature/user-login</code></li>
+<li>❌ <code>Feature_UserLogin</code>，<code>FeatUserLogin</code></li>
+</ul>
+</section>
+<section id="rule-2-カテゴリトークンから始める" class="level3">
+<h3 class="anchored" data-anchor-id="rule-2-カテゴリトークンから始める">Rule 2 — カテゴリトークンから始める</h3>
+<ul>
+<li>すべてのブランチは意図を示すトークンで始める：<code>feature</code>，<code>bugfix</code>，<code>document</code>，…</li>
+<li>トークンと説明は <code>/</code> で区切る．</li>
+</ul>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>bugfix/payment-timeout</code></li>
+<li>❌ <code>payment-timeout</code>（目的が不明）</li>
+</ul>
+<p>トークンがあれば，カテゴリ別にブランチをスクリプトで操作できる：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># すべての feature ブランチを一覧表示</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"feature/*"</span></span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># すべての feature ブランチをプッシュ</span></span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push origin <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'refs/heads/feature/*'</span></span>
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># マージ済みの feature ブランチをすべて削除</span></span>
+<span id="cb7-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-D</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"feature/*"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span></span></code></pre></div></div>
+</section>
+<section id="rule-3-短く保つ" class="level3">
+<h3 class="anchored" data-anchor-id="rule-3-短く保つ">Rule 3 — 短く保つ</h3>
+<p>意図が伝わる長さでありながら，1行ログに収まる短さを保つ．</p>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>refactor/api-headers</code></li>
+<li>❌ <code>refactor/update-the-way-we-handle-request-headers-in-api</code></li>
+</ul>
+</section>
+<section id="rule-4-衝突するブランチを作らない" class="level3">
+<h3 class="anchored" data-anchor-id="rule-4-衝突するブランチを作らない">Rule 4 — 衝突するブランチを作らない</h3>
+<p>Git はブランチを <code>.git/refs/heads/</code> 以下のパスとして保存する．そのため <code>feature</code> のようなフラットな名前は <code>feature/login-v2</code> のようなネストした名前をブロックする．同じ階層にファイルとディレクトリは同名で共存できません．</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> bugfix/0123/fix-login-error</span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Switched</span> to a new branch <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bugfix/0123/fix-login-error'</span></span>
+<span id="cb8-3"></span>
+<span id="cb8-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> ls .git/refs/heads/bugfix/0123</span>
+<span id="cb8-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fix-login-error</span></span></code></pre></div></div>
+<p>カテゴリトークンをリーフブランチ名として使うことは禁止（<code>feature</code>，<code>bugfix</code>，…）．必ずその下に何かをネストすること．</p>
+</section>
+</section>
+<section id="versioning-policy" class="level2">
+<h2 class="anchored" data-anchor-id="versioning-policy">バージョニングポリシー</h2>
+<p><code>regmonkey-shellutils</code> は <a href="https://semver.org/">Semantic Versioning</a>．<code>MAJOR.MINOR.PATCH</code>．を使用する．</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 52%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>リリース種別</th>
+<th>内容</th>
+<th>後方互換性？</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Major</strong></td>
+<td>破壊的変更，非推奨 API の削除，仕様変更を伴う API 更新．リリースノートに記載する．</td>
+<td>❌ なし</td>
+<td><code>v1.0.0 → v2.0.0</code></td>
+</tr>
+<tr class="even">
+<td><strong>Minor</strong></td>
+<td>新機能，大きな非破壊的バグ修正，非推奨の告知．</td>
+<td>✅ あり</td>
+<td><code>v1.1.0 → v1.2.0</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Patch</strong></td>
+<td>バグ修正，安定性・パフォーマンス改善．既存コードはそのまま動作する．</td>
+<td>✅ あり</td>
+<td><code>v1.2.1 → v1.2.2</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="非推奨ポリシー" class="level3">
+<h3 class="anchored" data-anchor-id="非推奨ポリシー">非推奨ポリシー</h3>
+<ol type="1">
+<li>非推奨は <strong>マイナーリリースで告知する</strong>．</li>
+<li>警告メッセージには以下を含める：
+<ul>
+<li>代替メソッドまたは属性．</li>
+<li>API が削除されるバージョン（例：<code>will be removed in 2.0.0</code>）．</li>
+</ul></li>
+<li>非推奨の API は現在のメジャーバージョン（<code>1.x</code>）の残りの期間は動作し続ける．</li>
+<li>削除は次のメジャーリリース（<code>2.0.0</code>）で行う．</li>
+</ol>
+<p><span class="mini-section">非推奨フロー</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>バージョン</th>
+<th>状態</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>1.2.0</code></td>
+<td>🔔 告知</td>
+<td><code>old_method()</code> が非推奨としてマークされる．警告は <code>new_method()</code> を指す．</td>
+</tr>
+<tr class="even">
+<td><code>1.3.0</code></td>
+<td>⚠ 警告</td>
+<td>まだ動作し，警告も出る．移行を推奨．</td>
+</tr>
+<tr class="odd">
+<td><code>2.0.0</code></td>
+<td>⛔ 削除</td>
+<td><code>old_method()</code> が削除される．</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>告知ステップを省略しない
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>マイナーリリースでの非推奨警告を省いてメジャーリリースで API を削除するのは，SemVer がユーザーと交わす契約違反</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="用語集" class="level2">
+<h2 class="anchored" data-anchor-id="用語集">用語集</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb9-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> リグレッションテスト (Regression test)</span></span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-3">    すでにリリースした動作を固定するテスト．後から加えた変更がその動作を</span>
+<span id="cb9-4">    暗黙のうちに壊せないようにする．</span>
+<span id="cb9-5"></span>
+<span id="cb9-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> 後方互換性 (Backward compatibility)</span></span>
+<span id="cb9-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-8">    新しいバージョンが，旧バージョン向けに書かれたコードでも動作し続けること．</span>
+<span id="cb9-9">    公開 API・呼び出しシグネチャ・観測可能な動作が同じであることを意味する．</span>
+<span id="cb9-10">    SemVer ではマイナーリリースとパッチリリースがこれを保証し，</span>
+<span id="cb9-11">    メジャーリリースのみが壊すことを許される．</span></code></pre></div></div>
+</div>
+<p>📘 References</p>
+<ul>
+<li><a href="https://semver.org/">Semantic Versioning</a></li>
+<li><a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">Atlassian — Gitflow workflow</a></li>
+<li><a href="https://docs.github.com/en/get-started/using-github/github-flow">GitHub Flow</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <category>git flow</category>
+  <category>release</category>
+  <category>semver</category>
+  <guid>https://ohgoshgit.github.io/language/jp/posts-jp/2026-05-23-development-flow-for-small-project/</guid>
+  <pubDate>Sat, 23 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… よく使われるGitブランチの命名規則とは？</title>
   <dc:creator>Ryo Nakagami</dc:creator>

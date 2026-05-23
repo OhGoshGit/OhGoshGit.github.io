@@ -10,7 +10,675 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Thu, 21 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 23 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What branch strategy should a small solo project actually use?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-05-23-development-flow-for-small-project/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<ul>
+<li>You are the only (or one of very few) maintainers of a small library — say <code>regmonkey-shellutils</code> — and full Git Flow with <code>release</code> branches is overkill.</li>
+<li>You still want a stable <code>main</code>, a usable <code>develop</code>, and a release process that auto-tags and publishes a GitHub Release.</li>
+<li>Pick the smallest workflow that gives you traceability, clean PRs, and reproducible releases without ceremony.</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Run a two-branch (<code>main</code> + <code>develop</code>) simplified Git Flow without a <code>release</code> branch.</label></li>
+<li><label><input type="checkbox">Name every branch so its purpose, issue, and scope are obvious from the name alone.</label></li>
+<li><label><input type="checkbox">Ship a release by merging <code>develop</code> → <code>main</code> and letting CI/CD tag + publish.</label></li>
+<li><label><input type="checkbox">Version the package with SemVer and announce deprecations before removing them.</label></li>
+</ul>
+</section>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+<p>Use <strong><code>main</code> + <code>develop</code></strong> as the only permanent branches. Cut <code>feature/&lt;issue&gt;/&lt;task&gt;</code>, <code>bugfix/&lt;issue&gt;/&lt;task&gt;</code>, etc. off <code>develop</code>; merge them back via PR. To release, bump <code>VERSION</code> on <code>develop</code>, open a PR to <code>main</code>, and let CI tag <code>vX.Y.Z</code> and publish the GitHub Release. Skip the <code>release</code> branch entirely.</p>
+<pre><code>feature/* ──PR──▶ develop ──PR──▶ main ──(CI/CD)──▶ vX.Y.Z tag + GitHub Release</code></pre>
+</section>
+<section id="the-branch-graph" class="level2">
+<h2 class="anchored" data-anchor-id="the-branch-graph">The branch graph</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base',
+            'themeVariables': {
+                'git0': '#2c6cb0',
+                'git1': '#3a7d2b',
+                'git2': '#b8860b',
+                'gitBranchLabel0': '#ffffff',
+                'gitBranchLabel1': '#ffffff',
+                'gitBranchLabel2': '#ffffff',
+                'commitLabelColor': '#1a3c66',
+                'commitLabelBackground': '#e3eefc',
+                'tagLabelColor': '#1f4d12',
+                'tagLabelBackground': '#e2f0d9',
+                'tagLabelBorder': '#3a7d2b'
+            },
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+gitGraph
+   commit id: " " tag: "v1.0.0"
+
+   branch hotfix
+   checkout hotfix
+   commit id: "BUGFIX"
+
+   checkout main
+   branch develop
+   checkout develop
+   commit id: "start work"
+
+   branch feature/0001/login
+   checkout feature/0001/login
+   commit id: " "
+
+   checkout main
+   merge hotfix tag: "v1.0.1"
+
+   checkout develop
+   merge hotfix
+   commit id: "incorporate hotfix"
+
+   checkout develop
+   merge feature/0001/login
+   commit id: "login feature"
+
+   checkout main
+   merge develop tag: "v1.1.0"
+
+   checkout develop
+   commit id: "FEATURE"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>This is <strong>simplified Git Flow</strong>: the second permanent branch (<code>develop</code>) is what separates it from GitHub Flow. The <code>release</code> branch is dropped because a solo / small-team project does not benefit from a parallel stabilisation lane — <code>develop</code> itself is the integration target, and <code>main</code> is what ships.</p>
+</section>
+<section id="nice-to-have-conditions-for-this-workflow-to-work" class="level2">
+<h2 class="anchored" data-anchor-id="nice-to-have-conditions-for-this-workflow-to-work">Nice to have conditions for this workflow to work</h2>
+<p>The graph above only works if a handful of project-level practices are in place. Without them, the two-branch model collapses into “main is broken, nobody knows since when” within a few releases.</p>
+<p><span class="mini-section">1. Release is fully automated</span></p>
+<p>Tagging, changelog generation, and the GitHub Release must be produced by CI/CD on every merge into <code>main</code> — never by hand.</p>
+<ul>
+<li>A merge into <code>main</code> reads <code>VERSION</code> and creates the matching <code>vX.Y.Z</code> tag.</li>
+<li>Release notes are auto-generated (e.g.&nbsp;GitHub’s “Generate release notes” via API, or <a href="https://github.com/release-drafter/release-drafter">release-drafter</a>).</li>
+<li>If applicable, package publishing (PyPI, npm, container registry) is part of the same job.</li>
+</ul>
+<p>If any of these steps require a human at a keyboard, the temptation to “just merge straight to main, I’ll tag later” eventually wins.</p>
+<p><span class="mini-section">2. Tests are automated and gate every PR</span></p>
+<ul>
+<li>Every PR into <code>develop</code> and <code>main</code> runs the full test suite on CI.</li>
+<li>A failing suite blocks the merge — enforced by branch protection, not by convention.</li>
+<li>Coverage is sufficient that “all green” actually means “no regressions” rather than “no tests exist for the changed code.”</li>
+</ul>
+<p><span class="mini-section">3. Tests exist before code reaches <code>main</code></span></p>
+<p>The previous point is hollow if the suite is thin. As a rule of thumb:</p>
+<ul>
+<li>New features land on <code>develop</code> <strong>with</strong> tests, not “tests to follow”.</li>
+<li>Bug fixes include a regression test that fails on the pre-fix code and passes after.</li>
+<li>Hotfixes are the one exception, and the missing test gets backfilled in the next PR.</li>
+</ul>
+<p>This is what lets you trust <code>develop</code> → <code>main</code> PRs without a separate <code>release</code> branch — the integration testing that Git Flow puts on a release branch is replaced by the test suite running on <code>develop</code>.</p>
+<p><span class="mini-section">4. <code>develop</code> → <code>main</code> PRs stay small</span></p>
+<p>The release PR is the riskiest merge in the workflow because it ships. Keep it reviewable:</p>
+<ul>
+<li>Open the <code>develop</code> → <code>main</code> PR often enough that the diff fits in one sitting (rule of thumb: tens of commits, not hundreds).</li>
+<li>Don’t batch six months of <code>develop</code> into one release PR — by then nobody remembers why each commit landed, and <code>git bisect</code> is your only diagnostic.</li>
+<li>If you find yourself wanting to “hold off on the release because the diff is scary”, that is the signal that you should have released two weeks ago.</li>
+</ul>
+<p><span class="mini-section">5. <code>main</code> is never committed to directly</span></p>
+<p>The only ways code enters <code>main</code> are (a) a PR from <code>develop</code>, or (b) a PR from a <code>hotfix/*</code> branch. Direct pushes are disabled in branch protection. This is what makes “what’s in production” a question the Git history can always answer.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>If you can’t meet these, use GitHub Flow instead
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Simplified Git Flow’s benefit over GitHub Flow is the ability to stabilise on <code>develop</code> between releases. That benefit is only real when CI/CD and tests are doing the stabilisation work for you. Without them, the extra <code>develop</code> branch is overhead that buys nothing — a single-branch GitHub Flow is the more honest choice.</p>
+</div>
+</div>
+</section>
+<section id="branch-types" class="level2">
+<h2 class="anchored" data-anchor-id="branch-types">Branch types</h2>
+<p><span class="mini-section">Basic syntax</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb2-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">&lt;branch-type&gt;/&lt;issue-number&gt;/&lt;task-description&gt;</span></span></code></pre></div></div>
+<p><code>hotfix</code> branches and a couple of others may omit the issue number:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb3-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">hotfix/&lt;task-description&gt;</span></span></code></pre></div></div>
+<p><span class="mini-section">Naming convention</span></p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 38%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Branch type</th>
+<th>Naming rule</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Production</strong></td>
+<td><code>main</code></td>
+<td>Production-ready code. Permanent. Merging here triggers CI/CD to cut a tag and a GitHub Release.</td>
+</tr>
+<tr class="even">
+<td><strong>Integration</strong></td>
+<td><code>develop</code></td>
+<td>Where all features and fixes are integrated. Permanent.</td>
+</tr>
+<tr class="odd">
+<td><strong>Feature</strong></td>
+<td><code>feature/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>New feature work. Small issues PR straight into <code>develop</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Enhancement</strong></td>
+<td><code>enhancement/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Improvements to existing features (UX, perf).</td>
+</tr>
+<tr class="odd">
+<td><strong>Bugfix</strong></td>
+<td><code>bugfix/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Non-urgent bug fixes. Tested, then merged into <code>develop</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Issue integration</strong></td>
+<td><code>issue/&lt;issue&gt;/integration</code></td>
+<td><strong>Medium-to-large issues only.</strong> Stages multiple sub-task branches before one PR to <code>develop</code>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Hotfix</strong></td>
+<td><code>hotfix/&lt;issue&gt;</code></td>
+<td>Emergency production fix. After release, merge back into both <code>main</code> and <code>develop</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Testing</strong></td>
+<td><code>testing/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Throwaway test / verification branches. Deleted after use.</td>
+</tr>
+<tr class="odd">
+<td><strong>Documentation</strong></td>
+<td><code>document/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Documentation, guides, README.</td>
+</tr>
+<tr class="even">
+<td><strong>Refactor</strong></td>
+<td><code>refactor/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Internal restructuring with no behaviour change.</td>
+</tr>
+<tr class="odd">
+<td><strong>Sandbox</strong></td>
+<td><code>sandbox/&lt;task&gt;</code></td>
+<td>Experiments and proofs of concept. Never merged into stable branches.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="mini-section">Examples</span></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Branch name</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>feature/0123/add-login</code></td>
+<td>New feature</td>
+</tr>
+<tr class="even">
+<td><code>bugfix/0123/fix-login-error</code></td>
+<td>Non-urgent fix</td>
+</tr>
+<tr class="odd">
+<td><code>issue/0123/integration</code></td>
+<td>Sub-tasks of a larger issue</td>
+</tr>
+<tr class="even">
+<td><code>hotfix/0145/critical-fix</code></td>
+<td>Production emergency</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="development-flow" class="level2">
+<h2 class="anchored" data-anchor-id="development-flow">Development flow</h2>
+<section id="step-1-cut-a-sub-task-branch-off-develop" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-cut-a-sub-task-branch-off-develop">Step 1 — Cut a sub-task branch off <code>develop</code></h3>
+<p>For every issue, branch off <code>develop</code> per sub-task.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch develop</span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> feature/0123/add-login</span>
+<span id="cb4-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> bugfix/0123/fix-login-error</span></code></pre></div></div>
+<ul>
+<li><strong>Small issue</strong> → PR this branch directly into <code>develop</code> (skip to Step 3).</li>
+<li><strong>Medium / large issue</strong> → group sub-task branches under an integration branch (Step 2).</li>
+</ul>
+</section>
+<section id="step-2-optional-integration-branch-for-larger-issues" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-optional-integration-branch-for-larger-issues">Step 2 — Optional: integration branch for larger issues</h3>
+<p>When several sub-tasks belong to one issue and you want a single review surface:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch develop</span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> issue/0123/integration</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> merge feature/0123/add-login</span>
+<span id="cb5-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> merge bugfix/0123/fix-login-error</span>
+<span id="cb5-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin issue/0123/integration</span></code></pre></div></div>
+<p>Then open one PR: <code>issue/0123/integration</code> → <code>develop</code>. Reviewers see the whole issue in one place instead of three drive-by PRs.</p>
+</section>
+<section id="step-3-merge-into-develop" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-merge-into-develop">Step 3 — Merge into <code>develop</code></h3>
+<p>Open a PR per issue (or per sub-task for small ones) targeting <code>develop</code>. If you are merging locally, prefer <code>git merge --no-ff</code> so the branch topology survives in the log.</p>
+</section>
+<section id="step-4-release" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-release">Step 4 — Release</h3>
+<p>Bump the version on <code>develop</code>, then PR <code>develop</code> → <code>main</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Update VERSION on develop, then commit</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-am</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"RELEASE: bump version to 1.2.0"</span></span></code></pre></div></div>
+<p>Merging the PR into <code>main</code> triggers CI/CD, which:</p>
+<ol type="1">
+<li>Reads <code>VERSION</code>, creates the matching <code>vX.Y.Z</code> tag, and publishes a GitHub Release with auto-generated notes.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Version bumps are manual
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>VERSION</code> is edited by hand before the <code>main</code> PR is opened. The CI/CD job only <em>reads</em> it — it never decides what the next version should be. Picking the right bump (major / minor / patch) is a human judgement, see SemVer below.</p>
+</div>
+</div>
+</section>
+<section id="operational-summary" class="level3">
+<h3 class="anchored" data-anchor-id="operational-summary">Operational summary</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 38%">
+<col style="width: 24%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scope</th>
+<th>Branch naming</th>
+<th>Target</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Small issue</strong></td>
+<td><code>feature/&lt;issue&gt;/&lt;task&gt;</code>, <code>bugfix/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>PR directly to <code>develop</code></td>
+<td>Single task, light review</td>
+</tr>
+<tr class="even">
+<td><strong>Medium / large issue</strong></td>
+<td><code>issue/&lt;issue&gt;/integration</code></td>
+<td>Stage sub-tasks, then PR to <code>develop</code></td>
+<td>Bundles <code>feature</code> / <code>bugfix</code> branches into one review</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="branch-deletion-policy" class="level2">
+<h2 class="anchored" data-anchor-id="branch-deletion-policy">Branch deletion policy</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Branch type</th>
+<th>When to delete</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>feature</code> / <code>bugfix</code> / <code>issue</code></td>
+<td>After merge into <code>develop</code></td>
+<td>Delete immediately. Use a tag if you really need to keep the history pointer.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="naming-rules" class="level2">
+<h2 class="anchored" data-anchor-id="naming-rules">Naming rules</h2>
+<section id="rule-1-lowercase-and-hyphens-only" class="level3">
+<h3 class="anchored" data-anchor-id="rule-1-lowercase-and-hyphens-only">Rule 1 — Lowercase and hyphens only</h3>
+<ul>
+<li>Always lowercase: case-sensitive vs case-insensitive filesystems will bite you otherwise.</li>
+<li>Separate words with <code>-</code>, not <code>_</code> or camelCase.</li>
+</ul>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>feature/user-login</code></li>
+<li>❌ <code>Feature_UserLogin</code>, <code>FeatUserLogin</code></li>
+</ul>
+</section>
+<section id="rule-2-start-with-a-category-token" class="level3">
+<h3 class="anchored" data-anchor-id="rule-2-start-with-a-category-token">Rule 2 — Start with a category token</h3>
+<ul>
+<li>Every branch begins with a token that states intent: <code>feature</code>, <code>bugfix</code>, <code>document</code>, …</li>
+<li>Token and description are separated by <code>/</code>.</li>
+</ul>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>bugfix/payment-timeout</code></li>
+<li>❌ <code>payment-timeout</code> (purpose unclear)</li>
+</ul>
+<p>Tokens also let you script over branches by category:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># List all feature branches</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"feature/*"</span></span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Push every feature branch</span></span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push origin <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'refs/heads/feature/*'</span></span>
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Delete all merged feature branches</span></span>
+<span id="cb7-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-D</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"feature/*"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span></span></code></pre></div></div>
+</section>
+<section id="rule-3-keep-it-short" class="level3">
+<h3 class="anchored" data-anchor-id="rule-3-keep-it-short">Rule 3 — Keep it short</h3>
+<p>Long enough to convey intent, short enough to fit in a one-line log.</p>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>refactor/api-headers</code></li>
+<li>❌ <code>refactor/update-the-way-we-handle-request-headers-in-api</code></li>
+</ul>
+</section>
+<section id="rule-4-dont-create-branches-that-will-collide" class="level3">
+<h3 class="anchored" data-anchor-id="rule-4-dont-create-branches-that-will-collide">Rule 4 — Don’t create branches that will collide</h3>
+<p>Git stores branches as paths under <code>.git/refs/heads/</code>. That means a flat name like <code>feature</code> blocks any nested name like <code>feature/login-v2</code>, because the filesystem cannot have a file and a directory with the same name at the same level.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> bugfix/0123/fix-login-error</span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Switched</span> to a new branch <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bugfix/0123/fix-login-error'</span></span>
+<span id="cb8-3"></span>
+<span id="cb8-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> ls .git/refs/heads/bugfix/0123</span>
+<span id="cb8-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fix-login-error</span></span></code></pre></div></div>
+<p>So: never use a category token as a leaf branch name (<code>feature</code>, <code>bugfix</code>, …). Always nest something below it.</p>
+</section>
+</section>
+<section id="versioning-policy" class="level2">
+<h2 class="anchored" data-anchor-id="versioning-policy">Versioning policy</h2>
+<p><code>regmonkey-shellutils</code> uses <a href="https://semver.org/">Semantic Versioning</a> — <code>MAJOR.MINOR.PATCH</code>.</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 52%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Release type</th>
+<th>What it contains</th>
+<th>Backwards compatible?</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Major</strong></td>
+<td>Breaking changes, removal of deprecated APIs, spec-changing API updates. Listed in the Release Notes.</td>
+<td>❌ No</td>
+<td><code>v1.0.0 → v2.0.0</code></td>
+</tr>
+<tr class="even">
+<td><strong>Minor</strong></td>
+<td>New features, large non-breaking bug fixes, deprecation announcements.</td>
+<td>✅ Yes</td>
+<td><code>v1.1.0 → v1.2.0</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Patch</strong></td>
+<td>Bug fixes, stability / performance improvements. Existing code keeps working.</td>
+<td>✅ Yes</td>
+<td><code>v1.2.1 → v1.2.2</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="deprecation-policy" class="level3">
+<h3 class="anchored" data-anchor-id="deprecation-policy">Deprecation policy</h3>
+<ol type="1">
+<li>Deprecations are <strong>announced in a minor release</strong>.</li>
+<li>The warning message must include:
+<ul>
+<li>The replacement method or attribute.</li>
+<li>The version in which the API will be removed (e.g.&nbsp;<code>will be removed in 2.0.0</code>).</li>
+</ul></li>
+<li>The deprecated API keeps working for the rest of the current major version (<code>1.x</code>).</li>
+<li>Removal happens in the next major release (<code>2.0.0</code>).</li>
+</ol>
+<p><span class="mini-section">Deprecation flow</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Version</th>
+<th>State</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>1.2.0</code></td>
+<td>🔔 Announce</td>
+<td><code>old_method()</code> is marked deprecated. Warning points at <code>new_method()</code>.</td>
+</tr>
+<tr class="even">
+<td><code>1.3.0</code></td>
+<td>⚠ Warn</td>
+<td>Still works, still warns. Migration encouraged.</td>
+</tr>
+<tr class="odd">
+<td><code>2.0.0</code></td>
+<td>⛔ Remove</td>
+<td><code>old_method()</code> is gone.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Don’t skip the announce step
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Removing an API in a major release <strong>without</strong> a prior deprecation warning in a minor release breaks the contract SemVer makes with users. Even if you are the only consumer today, future-you (or a teammate who pinned to <code>^1.2</code>) will not get a runtime hint that the API is going away. Always land the deprecation warning at least one minor release before removal.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb9-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Regression test</span></span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-3">    A test that pins down behaviour you've already shipped, so a later</span>
+<span id="cb9-4">    change cannot silently break it. For a bug fix, the regression test</span>
+<span id="cb9-5">    fails on the pre-fix code and passes after — that is what proves the</span>
+<span id="cb9-6">    bug stays fixed across future refactors.</span>
+<span id="cb9-7"></span>
+<span id="cb9-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Backward compatibility</span></span>
+<span id="cb9-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-10">    A new version keeps working for code written against the previous</span>
+<span id="cb9-11">    version: same public APIs, same call signatures, same observable</span>
+<span id="cb9-12">    behaviour. Under SemVer, minor and patch releases preserve it;</span>
+<span id="cb9-13">    only a major release is allowed to break it.</span></code></pre></div></div>
+</div>
+<p>📘 References</p>
+<ul>
+<li><a href="https://semver.org/">Semantic Versioning</a></li>
+<li><a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">Atlassian — Gitflow workflow</a></li>
+<li><a href="https://docs.github.com/en/get-started/using-github/github-flow">GitHub Flow</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git branch</category>
+  <category>git flow</category>
+  <category>release</category>
+  <category>semver</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-05-23-development-flow-for-small-project/</guid>
+  <pubDate>Sat, 23 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… Why does poetry add fail through a SOCKS5h proxy when git clone works?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -6370,325 +7038,6 @@ font-style: inherit;">A</span></span></code></pre></div></div>
   <category>git rebase</category>
   <guid>https://ohgoshgit.github.io/posts/2024-11-05-when-do-i-use-git-rebase/</guid>
   <pubDate>Tue, 05 Nov 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… How can I push my repository to githab and gitlab remote at once?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-11-01-push-to-multiple-origins/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Suppose you’re working on a local Git branch named <code>feature/ml-prediction-enhancement</code>. You want to push this project to both GitHub and GitLab.</p>
-<p><strong> ▶&nbsp; Example</strong></p>
-<ul>
-<li>you might want to push your code to GitHub for version control and collaboration while also deploying it to a Heroku server for hosting your application.</li>
-</ul>
-</section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<p>In Git, you can indeed configure multiple remote repositories for a single project. This allows you to push your project to different hosting services, such as GitHub and GitLab, simultaneously.</p>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<p>Here’s how you can set this up:</p>
-<ol type="1">
-<li>Add Multiple Remotes by using <code>git remote add</code> command</li>
-<li>Check Your Remotes with <code>git remote -v</code></li>
-<li>Pushing to Multiple Remotes</li>
-</ol>
-<p><strong> ▶&nbsp; Commands</strong></p>
-<p>Suppose you’re working on a local Git project named <code>hoshinokirby</code>. You want to push this project to both GitHub and GitLab.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 1: Add multiple Remotes</span></span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote add github https://github.com/user-name/hoshinokirby.git</span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote add gitlab https://gitlab.com/user-name/hoshinokirby.git</span>
-<span id="cb1-4"></span>
-<span id="cb1-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 2: Check Your Remotes</span></span>
-<span id="cb1-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-v</span></span></code></pre></div></div>
-<p>output should be like below:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">github</span>    https://github.com/user-name/hoshinokirby.git <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(fe</span>tch)</span>
-<span id="cb2-2">github    https://github.com/user-name/hoshinokirby.git (push)</span>
-<span id="cb2-3">gitlab    https://gitlab.com/user-name/hoshinokirby.git (fetch)</span>
-<span id="cb2-4">gitlab    https://gitlab.com/user-name/hoshinokirby.git (push)</span></code></pre></div></div>
-<p>Then,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 3: Push to Both Remotes:</span></span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> push github feature/ml-prediction-enhancement</span>
-<span id="cb3-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> push gitlab feature/ml-prediction-enhancement</span></code></pre></div></div>
-<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>🍵 Green Tea Break: <strong>Delete a Remote</strong>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>f you have added the wrong remote in your Git repository and want to delete it, you can do so using the <code>git remote remove</code> command. Removing a remote only affects your local configuration and does not impact the remote repository itself.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># remove the remote</span></span>
-<span id="cb4-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote remove <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb4-3"></span>
-<span id="cb4-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># shorthand version</span></span>
-<span id="cb4-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote rm <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-<p>Before running the above commands, make sure to double-check the remote name to avoid accidental deletions.</p>
-</div>
-</div>
-<section id="automate-pushing-to-both-remotes-by-shellscript" class="level3">
-<h3 class="anchored" data-anchor-id="automate-pushing-to-both-remotes-by-shellscript">Automate Pushing to Both Remotes by shellscript</h3>
-<p>The following script is designed to push a specified branch to all configured Git remotes.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#!/bin/bash</span></span>
-<span id="cb5-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#--------------------------------------</span></span>
-<span id="cb5-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Description</span></span>
-<span id="cb5-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   The script iterates over each remote and pushes the specified branch to it </span></span>
-<span id="cb5-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   using the git push command. The script retrieves the list of configured Git remotes </span></span>
-<span id="cb5-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   using the git remote command and stores it in the variable REMOTES.</span></span>
-<span id="cb5-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   If no remotes are found, the script prints an error message and exits with a status code of 1.</span></span>
-<span id="cb5-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#--------------------------------------</span></span>
-<span id="cb5-9"></span>
-<span id="cb5-10"></span>
-<span id="cb5-11"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Check if branch name is provided</span></span>
-<span id="cb5-12"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">[</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$1</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">]</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">then</span></span>
-<span id="cb5-13">  <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Usage: </span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$0</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> &lt;branch-name&gt;"</span></span>
-<span id="cb5-14">  <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">exit</span> 1</span>
-<span id="cb5-15"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">fi</span></span>
-<span id="cb5-16"></span>
-<span id="cb5-17"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Define the branch name</span></span>
-<span id="cb5-18"><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">BRANCH_NAME</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$1</span></span>
-<span id="cb5-19"></span>
-<span id="cb5-20"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Get the list of remotes</span></span>
-<span id="cb5-21"><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">REMOTES</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb5-22"></span>
-<span id="cb5-23"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Check if there are any remotes configured</span></span>
-<span id="cb5-24"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">[</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-z</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$REMOTES</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">]</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">then</span></span>
-<span id="cb5-25">  <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"No remotes found. Please configure a remote repository."</span></span>
-<span id="cb5-26">  <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">exit</span> 1</span>
-<span id="cb5-27"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">fi</span></span>
-<span id="cb5-28"></span>
-<span id="cb5-29"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Push to each remote</span></span>
-<span id="cb5-30"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$REMOTES</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">while</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">read</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-r</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">REMOTE</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">do</span></span>
-<span id="cb5-31">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> push <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$REMOTE</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$BRANCH_NAME</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span></span>
-<span id="cb5-32"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">done</span></span>
-<span id="cb5-33"></span>
-<span id="cb5-34"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">exit</span> 0</span></code></pre></div></div>
-<p>To use this script, follow these steps:</p>
-<ol type="1">
-<li>Save the script to a file, e.g., <code>push_to_remotes.sh</code></li>
-<li>Make the script executable:</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">chmod</span> +x push_to_remotes.sh</span></code></pre></div></div>
-<ol start="3" type="1">
-<li>Run the script with the branch name as an argument:</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">./push_to_remotes.sh</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>branch-name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-
-
-</section>
-</section>
-
- ]]></description>
-  <category>git push</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-11-01-push-to-multiple-origins/</guid>
-  <pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

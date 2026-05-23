@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2025-05-23">
+<meta name="dcterms.date" content="2026-05-23">
 
-<title>OGG… How do I switch the connection method for git push from HTTPS to SSH?? – OhGoshGit!?!</title>
+<title>OGG… What branch strategy should a small solo project actually use? – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -133,6 +133,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.css">
 <script type="text/javascript" src="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -357,9 +360,12 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG… How do I switch the connection method for git push from HTTPS to SSH??</h1>
+      <h1 class="title">OGG… What branch strategy should a small solo project actually use?</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">ssh</div>
+                <div class="quarto-category">git branch</div>
+                <div class="quarto-category">git flow</div>
+                <div class="quarto-category">release</div>
+                <div class="quarto-category">semver</div>
               </div>
                   </div>
   </div>
@@ -377,7 +383,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025-05-23</p>
+        <p class="date">2026-05-23</p>
       </div>
     </div>
     
@@ -399,11 +405,33 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a>
+  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective">🔎 Objective</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr">TL;DR</a></li>
+  <li><a href="#the-branch-graph" id="toc-the-branch-graph" class="nav-link" data-scroll-target="#the-branch-graph">The branch graph</a></li>
+  <li><a href="#nice-to-have-conditions-for-this-workflow-to-work" id="toc-nice-to-have-conditions-for-this-workflow-to-work" class="nav-link" data-scroll-target="#nice-to-have-conditions-for-this-workflow-to-work">Nice to have conditions for this workflow to work</a></li>
+  <li><a href="#branch-types" id="toc-branch-types" class="nav-link" data-scroll-target="#branch-types">Branch types</a></li>
+  <li><a href="#development-flow" id="toc-development-flow" class="nav-link" data-scroll-target="#development-flow">Development flow</a>
   <ul class="collapse">
-  <li><a href="#tips" id="toc-tips" class="nav-link" data-scroll-target="#tips">Tips</a></li>
+  <li><a href="#step-1-cut-a-sub-task-branch-off-develop" id="toc-step-1-cut-a-sub-task-branch-off-develop" class="nav-link" data-scroll-target="#step-1-cut-a-sub-task-branch-off-develop">Step 1 — Cut a sub-task branch off <code>develop</code></a></li>
+  <li><a href="#step-2-optional-integration-branch-for-larger-issues" id="toc-step-2-optional-integration-branch-for-larger-issues" class="nav-link" data-scroll-target="#step-2-optional-integration-branch-for-larger-issues">Step 2 — Optional: integration branch for larger issues</a></li>
+  <li><a href="#step-3-merge-into-develop" id="toc-step-3-merge-into-develop" class="nav-link" data-scroll-target="#step-3-merge-into-develop">Step 3 — Merge into <code>develop</code></a></li>
+  <li><a href="#step-4-release" id="toc-step-4-release" class="nav-link" data-scroll-target="#step-4-release">Step 4 — Release</a></li>
+  <li><a href="#operational-summary" id="toc-operational-summary" class="nav-link" data-scroll-target="#operational-summary">Operational summary</a></li>
   </ul></li>
+  <li><a href="#branch-deletion-policy" id="toc-branch-deletion-policy" class="nav-link" data-scroll-target="#branch-deletion-policy">Branch deletion policy</a></li>
+  <li><a href="#naming-rules" id="toc-naming-rules" class="nav-link" data-scroll-target="#naming-rules">Naming rules</a>
+  <ul class="collapse">
+  <li><a href="#rule-1-lowercase-and-hyphens-only" id="toc-rule-1-lowercase-and-hyphens-only" class="nav-link" data-scroll-target="#rule-1-lowercase-and-hyphens-only">Rule 1 — Lowercase and hyphens only</a></li>
+  <li><a href="#rule-2-start-with-a-category-token" id="toc-rule-2-start-with-a-category-token" class="nav-link" data-scroll-target="#rule-2-start-with-a-category-token">Rule 2 — Start with a category token</a></li>
+  <li><a href="#rule-3-keep-it-short" id="toc-rule-3-keep-it-short" class="nav-link" data-scroll-target="#rule-3-keep-it-short">Rule 3 — Keep it short</a></li>
+  <li><a href="#rule-4-dont-create-branches-that-will-collide" id="toc-rule-4-dont-create-branches-that-will-collide" class="nav-link" data-scroll-target="#rule-4-dont-create-branches-that-will-collide">Rule 4 — Don’t create branches that will collide</a></li>
+  </ul></li>
+  <li><a href="#versioning-policy" id="toc-versioning-policy" class="nav-link" data-scroll-target="#versioning-policy">Versioning policy</a>
+  <ul class="collapse">
+  <li><a href="#deprecation-policy" id="toc-deprecation-policy" class="nav-link" data-scroll-target="#deprecation-policy">Deprecation policy</a></li>
+  </ul></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -415,35 +443,537 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation.</p>
-</section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<ol type="1">
-<li><p><strong>Check your current remote URL:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If the URL starts with <code>https://</code>, you are using HTTPS.</p></li>
-<li><p><strong>Find your SSH URL:</strong></p>
-<p>On GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., <code>git@github.com:username/repo.git</code>).</p></li>
-<li><p><strong>Change the remote URL to SSH:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote set-url origin git@github.com:username/repo.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Verify the change:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The URL should now start with <code>git@</code>.</p></li>
-</ol>
-<section id="tips" class="level3">
-<h3 class="anchored" data-anchor-id="tips">Tips</h3>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
 <ul>
-<li><p>Make sure you have added your SSH key to your GitHub account. You can generate a key with <code>ssh-keygen</code> and add it using the GitHub SSH settings.</p></li>
-<li><p>Test your SSH connection with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-T</span> git@github.com</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>If you use multiple remotes or repositories, repeat these steps for each one.</p></li>
+<li>You are the only (or one of very few) maintainers of a small library — say <code>regmonkey-shellutils</code> — and full Git Flow with <code>release</code> branches is overkill.</li>
+<li>You still want a stable <code>main</code>, a usable <code>develop</code>, and a release process that auto-tags and publishes a GitHub Release.</li>
+<li>Pick the smallest workflow that gives you traceability, clean PRs, and reproducible releases without ceremony.</li>
+</ul>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Run a two-branch (<code>main</code> + <code>develop</code>) simplified Git Flow without a <code>release</code> branch.</label></li>
+<li><label><input type="checkbox">Name every branch so its purpose, issue, and scope are obvious from the name alone.</label></li>
+<li><label><input type="checkbox">Ship a release by merging <code>develop</code> → <code>main</code> and letting CI/CD tag + publish.</label></li>
+<li><label><input type="checkbox">Version the package with SemVer and announce deprecations before removing them.</label></li>
+</ul>
+</section>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+<p>Use <strong><code>main</code> + <code>develop</code></strong> as the only permanent branches. Cut <code>feature/&lt;issue&gt;/&lt;task&gt;</code>, <code>bugfix/&lt;issue&gt;/&lt;task&gt;</code>, etc. off <code>develop</code>; merge them back via PR. To release, bump <code>VERSION</code> on <code>develop</code>, open a PR to <code>main</code>, and let CI tag <code>vX.Y.Z</code> and publish the GitHub Release. Skip the <code>release</code> branch entirely.</p>
+<pre><code>feature/* ──PR──▶ develop ──PR──▶ main ──(CI/CD)──▶ vX.Y.Z tag + GitHub Release</code></pre>
+</section>
+<section id="the-branch-graph" class="level2">
+<h2 class="anchored" data-anchor-id="the-branch-graph">The branch graph</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: { 'logLevel': 'debug', 'theme': 'base',
+            'themeVariables': {
+                'git0': '#2c6cb0',
+                'git1': '#3a7d2b',
+                'git2': '#b8860b',
+                'gitBranchLabel0': '#ffffff',
+                'gitBranchLabel1': '#ffffff',
+                'gitBranchLabel2': '#ffffff',
+                'commitLabelColor': '#1a3c66',
+                'commitLabelBackground': '#e3eefc',
+                'tagLabelColor': '#1f4d12',
+                'tagLabelBackground': '#e2f0d9',
+                'tagLabelBorder': '#3a7d2b'
+            },
+            'gitGraph': {'rotateCommitLabel': true,
+                         'mainBranchName': 'main'}}}%%
+gitGraph
+   commit id: " " tag: "v1.0.0"
+
+   branch hotfix
+   checkout hotfix
+   commit id: "BUGFIX"
+
+   checkout main
+   branch develop
+   checkout develop
+   commit id: "start work"
+
+   branch feature/0001/login
+   checkout feature/0001/login
+   commit id: " "
+
+   checkout main
+   merge hotfix tag: "v1.0.1"
+
+   checkout develop
+   merge hotfix
+   commit id: "incorporate hotfix"
+
+   checkout develop
+   merge feature/0001/login
+   commit id: "login feature"
+
+   checkout main
+   merge develop tag: "v1.1.0"
+
+   checkout develop
+   commit id: "FEATURE"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>This is <strong>simplified Git Flow</strong>: the second permanent branch (<code>develop</code>) is what separates it from GitHub Flow. The <code>release</code> branch is dropped because a solo / small-team project does not benefit from a parallel stabilisation lane — <code>develop</code> itself is the integration target, and <code>main</code> is what ships.</p>
+</section>
+<section id="nice-to-have-conditions-for-this-workflow-to-work" class="level2">
+<h2 class="anchored" data-anchor-id="nice-to-have-conditions-for-this-workflow-to-work">Nice to have conditions for this workflow to work</h2>
+<p>The graph above only works if a handful of project-level practices are in place. Without them, the two-branch model collapses into “main is broken, nobody knows since when” within a few releases.</p>
+<p><span class="mini-section">1. Release is fully automated</span></p>
+<p>Tagging, changelog generation, and the GitHub Release must be produced by CI/CD on every merge into <code>main</code> — never by hand.</p>
+<ul>
+<li>A merge into <code>main</code> reads <code>VERSION</code> and creates the matching <code>vX.Y.Z</code> tag.</li>
+<li>Release notes are auto-generated (e.g.&nbsp;GitHub’s “Generate release notes” via API, or <a href="https://github.com/release-drafter/release-drafter">release-drafter</a>).</li>
+<li>If applicable, package publishing (PyPI, npm, container registry) is part of the same job.</li>
+</ul>
+<p>If any of these steps require a human at a keyboard, the temptation to “just merge straight to main, I’ll tag later” eventually wins.</p>
+<p><span class="mini-section">2. Tests are automated and gate every PR</span></p>
+<ul>
+<li>Every PR into <code>develop</code> and <code>main</code> runs the full test suite on CI.</li>
+<li>A failing suite blocks the merge — enforced by branch protection, not by convention.</li>
+<li>Coverage is sufficient that “all green” actually means “no regressions” rather than “no tests exist for the changed code.”</li>
+</ul>
+<p><span class="mini-section">3. Tests exist before code reaches <code>main</code></span></p>
+<p>The previous point is hollow if the suite is thin. As a rule of thumb:</p>
+<ul>
+<li>New features land on <code>develop</code> <strong>with</strong> tests, not “tests to follow”.</li>
+<li>Bug fixes include a regression test that fails on the pre-fix code and passes after.</li>
+<li>Hotfixes are the one exception, and the missing test gets backfilled in the next PR.</li>
+</ul>
+<p>This is what lets you trust <code>develop</code> → <code>main</code> PRs without a separate <code>release</code> branch — the integration testing that Git Flow puts on a release branch is replaced by the test suite running on <code>develop</code>.</p>
+<p><span class="mini-section">4. <code>develop</code> → <code>main</code> PRs stay small</span></p>
+<p>The release PR is the riskiest merge in the workflow because it ships. Keep it reviewable:</p>
+<ul>
+<li>Open the <code>develop</code> → <code>main</code> PR often enough that the diff fits in one sitting (rule of thumb: tens of commits, not hundreds).</li>
+<li>Don’t batch six months of <code>develop</code> into one release PR — by then nobody remembers why each commit landed, and <code>git bisect</code> is your only diagnostic.</li>
+<li>If you find yourself wanting to “hold off on the release because the diff is scary”, that is the signal that you should have released two weeks ago.</li>
+</ul>
+<p><span class="mini-section">5. <code>main</code> is never committed to directly</span></p>
+<p>The only ways code enters <code>main</code> are (a) a PR from <code>develop</code>, or (b) a PR from a <code>hotfix/*</code> branch. Direct pushes are disabled in branch protection. This is what makes “what’s in production” a question the Git history can always answer.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>If you can’t meet these, use GitHub Flow instead
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Simplified Git Flow’s benefit over GitHub Flow is the ability to stabilise on <code>develop</code> between releases. That benefit is only real when CI/CD and tests are doing the stabilisation work for you. Without them, the extra <code>develop</code> branch is overhead that buys nothing — a single-branch GitHub Flow is the more honest choice.</p>
+</div>
+</div>
+</section>
+<section id="branch-types" class="level2">
+<h2 class="anchored" data-anchor-id="branch-types">Branch types</h2>
+<p><span class="mini-section">Basic syntax</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;branch-type&gt;/&lt;issue-number&gt;/&lt;task-description&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>hotfix</code> branches and a couple of others may omit the issue number:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">hotfix/&lt;task-description&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="mini-section">Naming convention</span></p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 38%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Branch type</th>
+<th>Naming rule</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Production</strong></td>
+<td><code>main</code></td>
+<td>Production-ready code. Permanent. Merging here triggers CI/CD to cut a tag and a GitHub Release.</td>
+</tr>
+<tr class="even">
+<td><strong>Integration</strong></td>
+<td><code>develop</code></td>
+<td>Where all features and fixes are integrated. Permanent.</td>
+</tr>
+<tr class="odd">
+<td><strong>Feature</strong></td>
+<td><code>feature/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>New feature work. Small issues PR straight into <code>develop</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Enhancement</strong></td>
+<td><code>enhancement/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Improvements to existing features (UX, perf).</td>
+</tr>
+<tr class="odd">
+<td><strong>Bugfix</strong></td>
+<td><code>bugfix/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Non-urgent bug fixes. Tested, then merged into <code>develop</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Issue integration</strong></td>
+<td><code>issue/&lt;issue&gt;/integration</code></td>
+<td><strong>Medium-to-large issues only.</strong> Stages multiple sub-task branches before one PR to <code>develop</code>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Hotfix</strong></td>
+<td><code>hotfix/&lt;issue&gt;</code></td>
+<td>Emergency production fix. After release, merge back into both <code>main</code> and <code>develop</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Testing</strong></td>
+<td><code>testing/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Throwaway test / verification branches. Deleted after use.</td>
+</tr>
+<tr class="odd">
+<td><strong>Documentation</strong></td>
+<td><code>document/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Documentation, guides, README.</td>
+</tr>
+<tr class="even">
+<td><strong>Refactor</strong></td>
+<td><code>refactor/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>Internal restructuring with no behaviour change.</td>
+</tr>
+<tr class="odd">
+<td><strong>Sandbox</strong></td>
+<td><code>sandbox/&lt;task&gt;</code></td>
+<td>Experiments and proofs of concept. Never merged into stable branches.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="mini-section">Examples</span></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Branch name</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>feature/0123/add-login</code></td>
+<td>New feature</td>
+</tr>
+<tr class="even">
+<td><code>bugfix/0123/fix-login-error</code></td>
+<td>Non-urgent fix</td>
+</tr>
+<tr class="odd">
+<td><code>issue/0123/integration</code></td>
+<td>Sub-tasks of a larger issue</td>
+</tr>
+<tr class="even">
+<td><code>hotfix/0145/critical-fix</code></td>
+<td>Production emergency</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="development-flow" class="level2">
+<h2 class="anchored" data-anchor-id="development-flow">Development flow</h2>
+<section id="step-1-cut-a-sub-task-branch-off-develop" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-cut-a-sub-task-branch-off-develop">Step 1 — Cut a sub-task branch off <code>develop</code></h3>
+<p>For every issue, branch off <code>develop</code> per sub-task.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch develop</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> feature/0123/add-login</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> bugfix/0123/fix-login-error</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong>Small issue</strong> → PR this branch directly into <code>develop</code> (skip to Step 3).</li>
+<li><strong>Medium / large issue</strong> → group sub-task branches under an integration branch (Step 2).</li>
+</ul>
+</section>
+<section id="step-2-optional-integration-branch-for-larger-issues" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-optional-integration-branch-for-larger-issues">Step 2 — Optional: integration branch for larger issues</h3>
+<p>When several sub-tasks belong to one issue and you want a single review surface:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch develop</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> issue/0123/integration</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge feature/0123/add-login</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge bugfix/0123/fix-login-error</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin issue/0123/integration</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then open one PR: <code>issue/0123/integration</code> → <code>develop</code>. Reviewers see the whole issue in one place instead of three drive-by PRs.</p>
+</section>
+<section id="step-3-merge-into-develop" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-merge-into-develop">Step 3 — Merge into <code>develop</code></h3>
+<p>Open a PR per issue (or per sub-task for small ones) targeting <code>develop</code>. If you are merging locally, prefer <code>git merge --no-ff</code> so the branch topology survives in the log.</p>
+</section>
+<section id="step-4-release" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-release">Step 4 — Release</h3>
+<p>Bump the version on <code>develop</code>, then PR <code>develop</code> → <code>main</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Update VERSION on develop, then commit</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-am</span> <span class="st">"RELEASE: bump version to 1.2.0"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Merging the PR into <code>main</code> triggers CI/CD, which:</p>
+<ol type="1">
+<li>Reads <code>VERSION</code>, creates the matching <code>vX.Y.Z</code> tag, and publishes a GitHub Release with auto-generated notes.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Version bumps are manual
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>VERSION</code> is edited by hand before the <code>main</code> PR is opened. The CI/CD job only <em>reads</em> it — it never decides what the next version should be. Picking the right bump (major / minor / patch) is a human judgement, see <a href="#versioning-policy">SemVer</a> below.</p>
+</div>
+</div>
+</section>
+<section id="operational-summary" class="level3">
+<h3 class="anchored" data-anchor-id="operational-summary">Operational summary</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 38%">
+<col style="width: 24%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scope</th>
+<th>Branch naming</th>
+<th>Target</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Small issue</strong></td>
+<td><code>feature/&lt;issue&gt;/&lt;task&gt;</code>, <code>bugfix/&lt;issue&gt;/&lt;task&gt;</code></td>
+<td>PR directly to <code>develop</code></td>
+<td>Single task, light review</td>
+</tr>
+<tr class="even">
+<td><strong>Medium / large issue</strong></td>
+<td><code>issue/&lt;issue&gt;/integration</code></td>
+<td>Stage sub-tasks, then PR to <code>develop</code></td>
+<td>Bundles <code>feature</code> / <code>bugfix</code> branches into one review</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="branch-deletion-policy" class="level2">
+<h2 class="anchored" data-anchor-id="branch-deletion-policy">Branch deletion policy</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Branch type</th>
+<th>When to delete</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>feature</code> / <code>bugfix</code> / <code>issue</code></td>
+<td>After merge into <code>develop</code></td>
+<td>Delete immediately. Use a tag if you really need to keep the history pointer.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="naming-rules" class="level2">
+<h2 class="anchored" data-anchor-id="naming-rules">Naming rules</h2>
+<section id="rule-1-lowercase-and-hyphens-only" class="level3">
+<h3 class="anchored" data-anchor-id="rule-1-lowercase-and-hyphens-only">Rule 1 — Lowercase and hyphens only</h3>
+<ul>
+<li>Always lowercase: case-sensitive vs case-insensitive filesystems will bite you otherwise.</li>
+<li>Separate words with <code>-</code>, not <code>_</code> or camelCase.</li>
+</ul>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>feature/user-login</code></li>
+<li>❌ <code>Feature_UserLogin</code>, <code>FeatUserLogin</code></li>
+</ul>
+</section>
+<section id="rule-2-start-with-a-category-token" class="level3">
+<h3 class="anchored" data-anchor-id="rule-2-start-with-a-category-token">Rule 2 — Start with a category token</h3>
+<ul>
+<li>Every branch begins with a token that states intent: <code>feature</code>, <code>bugfix</code>, <code>document</code>, …</li>
+<li>Token and description are separated by <code>/</code>.</li>
+</ul>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>bugfix/payment-timeout</code></li>
+<li>❌ <code>payment-timeout</code> (purpose unclear)</li>
+</ul>
+<p>Tokens also let you script over branches by category:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all feature branches</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">--list</span> <span class="st">"feature/*"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Push every feature branch</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin <span class="st">'refs/heads/feature/*'</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete all merged feature branches</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-D</span> <span class="va">$(</span><span class="fu">git</span> branch <span class="at">--list</span> <span class="st">"feature/*"</span><span class="va">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="rule-3-keep-it-short" class="level3">
+<h3 class="anchored" data-anchor-id="rule-3-keep-it-short">Rule 3 — Keep it short</h3>
+<p>Long enough to convey intent, short enough to fit in a one-line log.</p>
+<p>📘 Example</p>
+<ul>
+<li>✅ <code>refactor/api-headers</code></li>
+<li>❌ <code>refactor/update-the-way-we-handle-request-headers-in-api</code></li>
+</ul>
+</section>
+<section id="rule-4-dont-create-branches-that-will-collide" class="level3">
+<h3 class="anchored" data-anchor-id="rule-4-dont-create-branches-that-will-collide">Rule 4 — Don’t create branches that will collide</h3>
+<p>Git stores branches as paths under <code>.git/refs/heads/</code>. That means a flat name like <code>feature</code> blocks any nested name like <code>feature/login-v2</code>, because the filesystem cannot have a file and a directory with the same name at the same level.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git switch <span class="at">-c</span> bugfix/0123/fix-login-error</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Switched</span> to a new branch <span class="st">'bugfix/0123/fix-login-error'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ls .git/refs/heads/bugfix/0123</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">fix-login-error</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>So: never use a category token as a leaf branch name (<code>feature</code>, <code>bugfix</code>, …). Always nest something below it.</p>
+</section>
+</section>
+<section id="versioning-policy" class="level2">
+<h2 class="anchored" data-anchor-id="versioning-policy">Versioning policy</h2>
+<p><code>regmonkey-shellutils</code> uses <a href="https://semver.org/">Semantic Versioning</a> — <code>MAJOR.MINOR.PATCH</code>.</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 52%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Release type</th>
+<th>What it contains</th>
+<th>Backwards compatible?</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Major</strong></td>
+<td>Breaking changes, removal of deprecated APIs, spec-changing API updates. Listed in the Release Notes.</td>
+<td>❌ No</td>
+<td><code>v1.0.0 → v2.0.0</code></td>
+</tr>
+<tr class="even">
+<td><strong>Minor</strong></td>
+<td>New features, large non-breaking bug fixes, deprecation announcements.</td>
+<td>✅ Yes</td>
+<td><code>v1.1.0 → v1.2.0</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Patch</strong></td>
+<td>Bug fixes, stability / performance improvements. Existing code keeps working.</td>
+<td>✅ Yes</td>
+<td><code>v1.2.1 → v1.2.2</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="deprecation-policy" class="level3">
+<h3 class="anchored" data-anchor-id="deprecation-policy">Deprecation policy</h3>
+<ol type="1">
+<li>Deprecations are <strong>announced in a minor release</strong>.</li>
+<li>The warning message must include:
+<ul>
+<li>The replacement method or attribute.</li>
+<li>The version in which the API will be removed (e.g.&nbsp;<code>will be removed in 2.0.0</code>).</li>
+</ul></li>
+<li>The deprecated API keeps working for the rest of the current major version (<code>1.x</code>).</li>
+<li>Removal happens in the next major release (<code>2.0.0</code>).</li>
+</ol>
+<p><span class="mini-section">Deprecation flow</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Version</th>
+<th>State</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>1.2.0</code></td>
+<td>🔔 Announce</td>
+<td><code>old_method()</code> is marked deprecated. Warning points at <code>new_method()</code>.</td>
+</tr>
+<tr class="even">
+<td><code>1.3.0</code></td>
+<td>⚠ Warn</td>
+<td>Still works, still warns. Migration encouraged.</td>
+</tr>
+<tr class="odd">
+<td><code>2.0.0</code></td>
+<td>⛔ Remove</td>
+<td><code>old_method()</code> is gone.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Don’t skip the announce step
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Removing an API in a major release <strong>without</strong> a prior deprecation warning in a minor release breaks the contract SemVer makes with users. Even if you are the only consumer today, future-you (or a teammate who pinned to <code>^1.2</code>) will not get a runtime hint that the API is going away. Always land the deprecation warning at least one minor release before removal.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> Regression test</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    A test that pins down behaviour you've already shipped, so a later</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    change cannot silently break it. For a bug fix, the regression test</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    fails on the pre-fix code and passes after — that is what proves the</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    bug stays fixed across future refactors.</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> Backward compatibility</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    A new version keeps working for code written against the previous</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    version: same public APIs, same call signatures, same observable</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    behaviour. Under SemVer, minor and patch releases preserve it;</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    only a major release is allowed to break it.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>📘 References</p>
+<ul>
+<li><a href="https://semver.org/">Semantic Versioning</a></li>
+<li><a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">Atlassian — Gitflow workflow</a></li>
+<li><a href="https://docs.github.com/en/get-started/using-github/github-flow">GitHub Flow</a></li>
 </ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
