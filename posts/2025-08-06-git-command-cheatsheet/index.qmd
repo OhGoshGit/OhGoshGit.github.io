@@ -37,8 +37,8 @@ categories: [cheatsheet]
 | **Discard file changes**  | `git restore <file-path>` | Discard local changes and restore the file to the current `HEAD` state |
 : {tbl-colwidths="[25,35,40]"}
 
+::::
 
-::: {.callout-note}
 ::: {.callout-note}
 ## When to use `git rm --cached -r .` (before the initial commit)
 
