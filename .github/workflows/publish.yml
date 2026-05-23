@@ -1,12 +1,7 @@
 on:
   workflow_dispatch:
-    inputs:
-      full_render:
-        description: "Force a full re-render (ignore diff)"
-        required: false
-        default: "false"
   push:
-    branches: main
+    branches: [main]
 
 name: Publish OhGoshGit
 
@@ -15,118 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      GH_PAGES_BRANCH: gh-pages
-      SITE_DIR: _site
-      PREV_SITE_DIR: _site_prev
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Fetch existing gh-pages site
-        id: fetch_prev
-        run: |
-          set -euo pipefail
-          if git ls-remote --exit-code --heads origin "$GH_PAGES_BRANCH" >/dev/null 2>&1; then
-            git fetch origin "$GH_PAGES_BRANCH":refs/remotes/origin/"$GH_PAGES_BRANCH"
-            git worktree add --detach "$PREV_SITE_DIR" "origin/$GH_PAGES_BRANCH"
-            mkdir -p "$SITE_DIR"
-            # Copy previous build into _site, excluding .git
-            rsync -a --exclude='.git' "$PREV_SITE_DIR"/ "$SITE_DIR"/
-            echo "has_prev=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_prev=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Determine render scope
-        id: scope
-        run: |
-          set -euo pipefail
-          FORCE_FULL="${{ github.event.inputs.full_render }}"
-          HAS_PREV="${{ steps.fetch_prev.outputs.has_prev }}"
-
-          if [ "$FORCE_FULL" = "true" ] || [ "$HAS_PREV" != "true" ]; then
-            echo "mode=full" >> "$GITHUB_OUTPUT"
-            echo "Reason: force_full=$FORCE_FULL has_prev=$HAS_PREV"
-            exit 0
-          fi
-
-          # Diff base: previous commit on main (best-effort).
-          BASE="${{ github.event.before }}"
-          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
-            BASE="HEAD~1"
-          fi
-          if ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
-            echo "mode=full" >> "$GITHUB_OUTPUT"
-            echo "Reason: no usable diff base"
-            exit 0
-          fi
-
-          CHANGED="$(git diff --name-only "$BASE" HEAD)"
-          echo "Changed files:"
-          echo "$CHANGED"
-
-          # Files that force a full render
-          if echo "$CHANGED" | grep -E '^(_quarto\.yml|styles\.css|_include/|\.github/workflows/publish\.yml)' >/dev/null; then
-            echo "mode=full" >> "$GITHUB_OUTPUT"
-            echo "Reason: global config changed"
-            exit 0
-          fi
-
-          # Filter to .qmd files
-          QMD_CHANGED="$(echo "$CHANGED" | grep -E '\.qmd$' || true)"
-          if [ -z "$QMD_CHANGED" ]; then
-            echo "mode=none" >> "$GITHUB_OUTPUT"
-            echo "Reason: no .qmd changes"
-            exit 0
-          fi
-
-          # Always re-render listing pages so new/removed posts appear
-          RENDER_LIST="$QMD_CHANGED"$'\n'"index.qmd"$'\n'"language/jp/index.qmd"
-          # Deduplicate and drop files that no longer exist (deleted posts)
-          RENDER_LIST="$(echo "$RENDER_LIST" | sort -u | while read -r f; do [ -n "$f" ] && [ -f "$f" ] && echo "$f"; done)"
-
-          echo "mode=partial" >> "$GITHUB_OUTPUT"
-          {
-            echo "files<<EOF"
-            echo "$RENDER_LIST"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-          echo "Reason: partial render"
-          echo "Render targets:"
-          echo "$RENDER_LIST"
-
-      - name: Render (full)
-        if: steps.scope.outputs.mode == 'full'
-        run: quarto render
-
-      - name: Render (partial)
-        if: steps.scope.outputs.mode == 'partial'
-        run: |
-          set -euo pipefail
-          # quarto render accepts multiple files as positional args
-          mapfile -t FILES <<< "${{ steps.scope.outputs.files }}"
-          quarto render "${FILES[@]}"
-
-      - name: Skip render (no changes)
-        if: steps.scope.outputs.mode == 'none'
-        run: echo "No .qmd changes; reusing previous _site as-is."
-
-      - name: Clean up worktree
-        if: always() && steps.fetch_prev.outputs.has_prev == 'true'
-        run: git worktree remove --force "$PREV_SITE_DIR" || true
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Render and Publish
+        uses: quarto-dev/quarto-actions/publish@v2
         with:
-          personal_token: ${{ secrets.OHGOSHGIT_PUBLISH_WORKFLOW }}
-          publish_branch: gh-pages
-          publish_dir: ./_site
-          user_name: "quarto-github-actions-publish"
-          user_email: "quarto-github-actions-publish@example.com"
-          commit_message: "Built site for gh-pages (${{ github.sha }})"
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.OHGOSHGIT_PUBLISH_WORKFLOW }}
