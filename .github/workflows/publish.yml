@@ -113,10 +113,11 @@ jobs:
         run: |
           set -euo pipefail
           # _site/ already contains the full previous build from gh-pages.
-          # --no-clean prevents quarto from wiping _site/ before writing outputs,
-          # so only the rendered files are overwritten.
-          mapfile -t FILES <<< "${{ steps.scope.outputs.targets }}"
-          quarto render --no-clean "${FILES[@]}"
+          # Render each file individually: quarto render <file> --no-clean
+          # (file must come before flags, and multiple files cannot be passed at once)
+          while IFS= read -r f; do
+            [ -n "$f" ] && quarto render "$f" --no-clean
+          done <<< "${{ steps.scope.outputs.targets }}"
 
       - name: No changes — skip render
         if: steps.scope.outputs.mode == 'none'
