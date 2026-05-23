@@ -32,6 +32,8 @@ def fetch_recent_items() -> list[dict]:
     cutoff = datetime.now(timezone.utc) - timedelta(minutes=UPDATE_WITHIN_MINUTES)
     items = []
     for entry in feed.entries:
+        if "/language/jp/" in entry.link:
+            continue
         published = entry.get("published_parsed") or entry.get("updated_parsed")
         if not published:
             continue

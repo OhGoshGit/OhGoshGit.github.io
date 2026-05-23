@@ -11,13 +11,16 @@ h3 {
 .mini-section {
   font-weight: bold;
   font-size: 1.1em;
-  display: inline-flex;
-  align-items: center;
 }
 
 .mini-section::before {
   content: "▶";
   margin-right: 0.4em;
+}
+
+.mini-section code {
+  font-size: 0.9em;
+  vertical-align: baseline;
 }
 
 .regmonkey_bold {
