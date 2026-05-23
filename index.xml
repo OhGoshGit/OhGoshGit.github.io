@@ -3458,11 +3458,16 @@ font-style: inherit;">)</span></span></code></pre></div></div>
 </thead>
 <tbody>
 <tr class="odd">
+<td><strong>Find file first commit</strong></td>
+<td><code>git log --diff-filter=A -- file.py</code></td>
+<td>Find the commit in which a file was first added to the repository</td>
+</tr>
+<tr class="even">
 <td><strong>Unstage files</strong></td>
 <td><code>git rm --cached -r .</code></td>
 <td>Remove files from the Git index while keeping them in the working tree</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Discard file changes</strong></td>
 <td><code>git restore &lt;file-path&gt;</code></td>
 <td>Discard local changes and restore the file to the current <code>HEAD</code> state</td>

@@ -384,7 +384,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">2026-05-21</p>
+        <p class="date-modified">2026-05-23</p>
       </div>
     </div>
       
@@ -501,11 +501,16 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </thead>
 <tbody>
 <tr class="odd">
+<td><strong>Find file first commit</strong></td>
+<td><code>git log --diff-filter=A -- file.py</code></td>
+<td>Find the commit in which a file was first added to the repository</td>
+</tr>
+<tr class="even">
 <td><strong>Unstage files</strong></td>
 <td><code>git rm --cached -r .</code></td>
 <td>Remove files from the Git index while keeping them in the working tree</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Discard file changes</strong></td>
 <td><code>git restore &lt;file-path&gt;</code></td>
 <td>Discard local changes and restore the file to the current <code>HEAD</code> state</td>
