@@ -9,7 +9,7 @@
 <link>https://ohgoshgit.github.io/</link>
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.9.37</generator>
+<generator>quarto-1.9.38</generator>
 <lastBuildDate>Sat, 23 May 2026 00:00:00 GMT</lastBuildDate>
 <item>
   <title>OGG… What branch strategy should a small solo project actually use?</title>
@@ -3502,29 +3502,65 @@ font-style: inherit;"># → A (same as ^1, first-parent)</span></span></code></p
 <td>clones the repository without checking out the files</td>
 </tr>
 <tr class="odd">
-<td><strong>Add all update</strong></td>
-<td><code>git add -u</code></td>
-<td>Stage modified and deleted files (but not new untracked files)</td>
-</tr>
-<tr class="even">
 <td><strong>Status</strong></td>
 <td><code>git status -sb</code></td>
 <td>Short and branch-aware status (great for quick checks)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Rename</strong></td>
 <td><code>git mv &lt;oldfilename&gt; &lt;newfilename&gt;</code></td>
 <td>Rename or move a file and stage the change for commit</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Remove</strong></td>
 <td><code>git rm --cached &lt;FILE_NAME&gt;</code></td>
 <td>Stop tracking a file in Git without deleting it from local</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Log</strong></td>
 <td><code>git log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'</code></td>
 <td>Display commit log with ISO date, short commit ID, author, and commit message</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="staging-commands" class="level3">
+<h3 class="anchored" data-anchor-id="staging-commands">Staging Commands</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Add all updates</strong></td>
+<td><code>git add -u</code></td>
+<td>Stage modified and deleted tracked files (exclude new untracked files)</td>
+</tr>
+<tr class="even">
+<td><strong>Add updates except <code>.qmd</code></strong></td>
+<td><code>git add -u -- . ':!*.qmd'</code></td>
+<td>Stage modified and deleted tracked files while excluding <code>.qmd</code> files</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>git add -u -- . ':(exclude)*.qmd'</code></td>
+<td>Same as above using explicit pathspec exclusion syntax</td>
+</tr>
+<tr class="even">
+<td><strong>Preview updates except <code>.qmd</code></strong></td>
+<td><code>git add -u -n -- . ':!*.qmd'</code></td>
+<td>Dry-run to preview which tracked file updates would be staged, excluding <code>.qmd</code> files</td>
 </tr>
 </tbody>
 </table>
@@ -3615,14 +3651,29 @@ font-style: inherit;">git</span> reset HEAD .</span></code></pre></div></div>
 <td>Create and checkout a new branch locally</td>
 </tr>
 <tr class="even">
-<td><strong>Checkout previous branch</strong></td>
+<td><strong>Checkout Previous Branch</strong></td>
 <td><code>git switch -</code></td>
-<td>Switch back to the previously checked-out branch.</td>
+<td>Switch back to the previously checked-out branch</td>
 </tr>
 <tr class="odd">
-<td><strong>Pull from all remotes</strong></td>
+<td><strong>Pull From All Remotes</strong></td>
 <td><code>git pull --all</code></td>
-<td>Update all of your local tracking branches which track remote branches.</td>
+<td>Update all local tracking branches from all configured remotes</td>
+</tr>
+<tr class="even">
+<td><strong>Delete Local Branch</strong></td>
+<td><code>git branch -d &lt;branch-name&gt;</code></td>
+<td>Delete a local branch safely (only if already merged)</td>
+</tr>
+<tr class="odd">
+<td><strong>Force Delete Local Branch</strong></td>
+<td><code>git branch -D &lt;branch-name&gt;</code></td>
+<td>Force delete a local branch even if unmerged</td>
+</tr>
+<tr class="even">
+<td><strong>Delete Remote Branch</strong></td>
+<td><code>git push origin --delete &lt;branch-name&gt;</code></td>
+<td>Delete a branch from the remote repository</td>
 </tr>
 </tbody>
 </table>

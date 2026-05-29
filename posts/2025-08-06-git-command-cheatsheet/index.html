@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -77,14 +77,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9d0488feef821e0963cb9b992faaf951.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-09ff48a8b205ef87bc5065fa21c1f189.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-9d0488feef821e0963cb9b992faaf951.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-4257037c6fae634585d83b223e3b57e3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-cf1746774714c0f0986919682a3695a6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-4257037c6fae634585d83b223e3b57e3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -406,6 +406,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
   <li><a href="#git-command" id="toc-git-command" class="nav-link" data-scroll-target="#git-command">Git command</a>
   <ul class="collapse">
   <li><a href="#basic-commands" id="toc-basic-commands" class="nav-link" data-scroll-target="#basic-commands">Basic Commands</a></li>
+  <li><a href="#staging-commands" id="toc-staging-commands" class="nav-link" data-scroll-target="#staging-commands">Staging Commands</a></li>
   <li><a href="#file-modification-commands" id="toc-file-modification-commands" class="nav-link" data-scroll-target="#file-modification-commands">File Modification Commands</a></li>
   <li><a href="#commands-for-branch" id="toc-commands-for-branch" class="nav-link" data-scroll-target="#commands-for-branch">commands for branch</a></li>
   <li><a href="#commands-for-commits" id="toc-commands-for-commits" class="nav-link" data-scroll-target="#commands-for-commits">commands for commits</a></li>
@@ -535,29 +536,65 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <td>clones the repository without checking out the files</td>
 </tr>
 <tr class="odd">
-<td><strong>Add all update</strong></td>
-<td><code>git add -u</code></td>
-<td>Stage modified and deleted files (but not new untracked files)</td>
-</tr>
-<tr class="even">
 <td><strong>Status</strong></td>
 <td><code>git status -sb</code></td>
 <td>Short and branch-aware status (great for quick checks)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Rename</strong></td>
 <td><code>git mv &lt;oldfilename&gt; &lt;newfilename&gt;</code></td>
 <td>Rename or move a file and stage the change for commit</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Remove</strong></td>
 <td><code>git rm --cached &lt;FILE_NAME&gt;</code></td>
 <td>Stop tracking a file in Git without deleting it from local</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Log</strong></td>
 <td><code>git log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'</code></td>
 <td>Display commit log with ISO date, short commit ID, author, and commit message</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="staging-commands" class="level3">
+<h3 class="anchored" data-anchor-id="staging-commands">Staging Commands</h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Command Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Add all updates</strong></td>
+<td><code>git add -u</code></td>
+<td>Stage modified and deleted tracked files (exclude new untracked files)</td>
+</tr>
+<tr class="even">
+<td><strong>Add updates except <code>.qmd</code></strong></td>
+<td><code>git add -u -- . ':!*.qmd'</code></td>
+<td>Stage modified and deleted tracked files while excluding <code>.qmd</code> files</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>git add -u -- . ':(exclude)*.qmd'</code></td>
+<td>Same as above using explicit pathspec exclusion syntax</td>
+</tr>
+<tr class="even">
+<td><strong>Preview updates except <code>.qmd</code></strong></td>
+<td><code>git add -u -n -- . ':!*.qmd'</code></td>
+<td>Dry-run to preview which tracked file updates would be staged, excluding <code>.qmd</code> files</td>
 </tr>
 </tbody>
 </table>
@@ -640,14 +677,29 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <td>Create and checkout a new branch locally</td>
 </tr>
 <tr class="even">
-<td><strong>Checkout previous branch</strong></td>
+<td><strong>Checkout Previous Branch</strong></td>
 <td><code>git switch -</code></td>
-<td>Switch back to the previously checked-out branch.</td>
+<td>Switch back to the previously checked-out branch</td>
 </tr>
 <tr class="odd">
-<td><strong>Pull from all remotes</strong></td>
+<td><strong>Pull From All Remotes</strong></td>
 <td><code>git pull --all</code></td>
-<td>Update all of your local tracking branches which track remote branches.</td>
+<td>Update all local tracking branches from all configured remotes</td>
+</tr>
+<tr class="even">
+<td><strong>Delete Local Branch</strong></td>
+<td><code>git branch -d &lt;branch-name&gt;</code></td>
+<td>Delete a local branch safely (only if already merged)</td>
+</tr>
+<tr class="odd">
+<td><strong>Force Delete Local Branch</strong></td>
+<td><code>git branch -D &lt;branch-name&gt;</code></td>
+<td>Force delete a local branch even if unmerged</td>
+</tr>
+<tr class="even">
+<td><strong>Delete Remote Branch</strong></td>
+<td><code>git push origin --delete &lt;branch-name&gt;</code></td>
+<td>Delete a branch from the remote repository</td>
 </tr>
 </tbody>
 </table>
