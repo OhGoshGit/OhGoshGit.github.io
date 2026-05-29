@@ -192,20 +192,17 @@ squash 7g8h9i Add tests
 ### general
 
 :::: {.no-border-top-table}
-| Category               | Command Example                | Description                                           |
-| ---------------------- | ------------------------------ | ----------------------------------------------------- |
-| **Check Organization** | `gh org list`                  |Show a list of organizations you belong to             |
-| **Check Organization Repo** | `gh repo list <ORG>`      |Show a list of repositories under a specific organization you belong to|
-| **Create Repo**        |`gh repo create <REPONAME> --public --source=. --remote=origin`| Create a public repo under your GitHub space |
-|                        |`gh repo create <REPONAME> --public --source=. --remote=origin --org <ORG_NAME>`| Create a public repo under the specified organization |
-|                        |`gh repo create <REPONAME> --private --source=. --remote=origin`| Create a private repo under your GitHub space |
-| **Delete Repo**        | `gh repo delete <ONWER>/<REPONAME>`| Delete the target repository from GitHub, while your local repo remains intact|
+
+| Category                       | Command Example                                                                            | Description                                                                        |
+| ------------------------------ | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| **Check Organization**         | `gh org list`                                                                              | Show a list of organizations you belong to                                         |
+| **Check Organization Repo**    | `gh repo list <ORG>`                                                                       | Show a list of repositories under a specific organization you belong to            |
+| **Create Repo**                | `gh repo create <REPONAME> --public --source=. --remote=origin`                            | Create a public repository under your GitHub account                               |
+|                                | `gh repo create <REPONAME> --public --source=. --remote=origin --org <ORG_NAME>`           | Create a public repository under the specified organization                        |
+|                                | `gh repo create <REPONAME> --private --source=. --remote=origin`                           | Create a private repository under your GitHub account                              |
+| **Delete Repo**                | `gh repo delete <OWNER>/<REPONAME>`                                                        | Delete the target repository from GitHub while keeping the local repository intact |
+| **Create Pull Request**        | `gh pr create --base <BASE_BRANCH> --head <HEAD_BRANCH> --title "<TITLE>" --body "<BODY>"` | Create a pull request from the specified source branch to the target branch        |
 : {tbl-colwidths="[25,35,40]"}
-
-::::
-
-
-
 
 ### Gist
 
