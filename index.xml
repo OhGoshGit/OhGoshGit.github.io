@@ -3854,27 +3854,30 @@ squash 7g8h9i Add tests
 <tr class="odd">
 <td><strong>Create Repo</strong></td>
 <td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin</code></td>
-<td>Create a public repo under your GitHub space</td>
+<td>Create a public repository under your GitHub account</td>
 </tr>
 <tr class="even">
 <td></td>
 <td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;</code></td>
-<td>Create a public repo under the specified organization</td>
+<td>Create a public repository under the specified organization</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td><code>gh repo create &lt;REPONAME&gt; --private --source=. --remote=origin</code></td>
-<td>Create a private repo under your GitHub space</td>
+<td>Create a private repository under your GitHub account</td>
 </tr>
 <tr class="even">
 <td><strong>Delete Repo</strong></td>
-<td><code>gh repo delete &lt;ONWER&gt;/&lt;REPONAME&gt;</code></td>
-<td>Delete the target repository from GitHub, while your local repo remains intact</td>
+<td><code>gh repo delete &lt;OWNER&gt;/&lt;REPONAME&gt;</code></td>
+<td>Delete the target repository from GitHub while keeping the local repository intact</td>
+</tr>
+<tr class="odd">
+<td><strong>Create Pull Request</strong></td>
+<td><code>gh pr create --base &lt;BASE_BRANCH&gt; --head &lt;HEAD_BRANCH&gt; --title "&lt;TITLE&gt;" --body "&lt;BODY&gt;"</code></td>
+<td>Create a pull request from the specified source branch to the target branch</td>
 </tr>
 </tbody>
 </table>
-</div>
-</section>
 <section id="gist" class="level3">
 <h3 class="anchored" data-anchor-id="gist">Gist</h3>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -3920,6 +3923,8 @@ squash 7g8h9i Add tests
 </div>
 
 
+</section>
+</div>
 </section>
 </section>
 
