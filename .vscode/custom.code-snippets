@@ -67,6 +67,18 @@
     ],
     "description": ""
   },
+  "example": {
+    "prefix": "exm",
+    "body": [
+      "::: {#exm- .custom_problem }",
+      "[title]{.def-title}",
+      "",
+      ":::",
+      "***",
+      "",
+    ],
+    "description": "example-block"
+  },
   "green tea break": {
     "scope": "quarto",
     "prefix": "green",
