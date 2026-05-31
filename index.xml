@@ -3548,16 +3548,21 @@ font-style: inherit;"># → A (same as ^1, first-parent)</span></span></code></p
 <td>Stage modified and deleted tracked files (exclude new untracked files)</td>
 </tr>
 <tr class="even">
+<td><strong>Add multiple extensions</strong></td>
+<td><code>git add -- '*.py' '*.R'</code></td>
+<td>Stage files matching either pattern</td>
+</tr>
+<tr class="odd">
 <td><strong>Add updates except <code>.qmd</code></strong></td>
 <td><code>git add -u -- . ':!*.qmd'</code></td>
 <td>Stage modified and deleted tracked files while excluding <code>.qmd</code> files</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td></td>
 <td><code>git add -u -- . ':(exclude)*.qmd'</code></td>
 <td>Same as above using explicit pathspec exclusion syntax</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Preview updates except <code>.qmd</code></strong></td>
 <td><code>git add -u -n -- . ':!*.qmd'</code></td>
 <td>Dry-run to preview which tracked file updates would be staged, excluding <code>.qmd</code> files</td>
