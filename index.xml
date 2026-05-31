@@ -10,7 +10,719 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Sat, 23 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 31 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What is a git pathspec and how do I use its magic signatures?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-05-31-git-pathspec/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>A <strong>pathspec</strong> is the path argument you pass to <code>git add</code>, <code>git diff</code>, <code>git restore</code>, etc. to limit which files a command touches</li>
+<li>It supports <strong>magic signatures</strong> — prefixes that change matching behaviour:</li>
+</ul>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Pathspec / Command</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Preview which paths a pathspec matches</td>
+<td><code>git ls-files -- &lt;pathspec&gt;</code></td>
+<td><code>git ls-files -- ':(glob)src/**/*.py'</code></td>
+</tr>
+<tr class="even">
+<td>Recursive, directory-aware glob</td>
+<td><code>:(glob)dir/**/*.ext</code></td>
+<td><code>git add ':(glob)src/**/*.py'</code></td>
+</tr>
+<tr class="odd">
+<td>Match only one directory level</td>
+<td><code>:(glob)dir/*/*.ext</code></td>
+<td><code>git add ':(glob)src/*/*.py'</code></td>
+</tr>
+<tr class="even">
+<td>Match from repository root</td>
+<td><code>:(top)&lt;path&gt;</code></td>
+<td><code>git restore ':(top)notebooks/'</code></td>
+</tr>
+<tr class="odd">
+<td>Exclude paths from a command</td>
+<td><code>:(exclude)&lt;pathspec&gt;</code></td>
+<td><code>git add . ':(exclude)*.lock'</code></td>
+</tr>
+<tr class="even">
+<td>Case-insensitive matching</td>
+<td><code>:(icase)&lt;pathspec&gt;</code></td>
+<td><code>git diff ':(icase)readme*'</code></td>
+</tr>
+<tr class="odd">
+<td>Treat special glob characters literally</td>
+<td><code>:(literal)&lt;name&gt;</code></td>
+<td><code>git add -- ':(literal)file[1].py'</code></td>
+</tr>
+<tr class="even">
+<td>Combine multiple pathspec magic options</td>
+<td><code>:(top,glob)&lt;pathspec&gt;</code></td>
+<td><code>git add ':(top,glob)src/**/*.py'</code></td>
+</tr>
+<tr class="odd">
+<td>Stage everything except a pattern</td>
+<td><code>git add . ':(exclude)&lt;pattern&gt;'</code></td>
+<td><code>git add . ':(exclude)*.lock'</code></td>
+</tr>
+<tr class="even">
+<td>Restore changes under a directory</td>
+<td><code>git restore &lt;pathspec&gt;</code></td>
+<td><code>git restore ':(top)notebooks/'</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Understand what a pathspec is and where Git accepts one</label></li>
+<li><label><input type="checkbox">Read the pathspec grammar: directory prefix + <code>fnmatch</code> pattern</label></li>
+<li><label><input type="checkbox">Use the magic signatures <code>top</code> / <code>literal</code> / <code>icase</code> / <code>glob</code> / <code>exclude</code></label></li>
+<li><label><input type="checkbox">Recognise common pathspec footguns in a data-science repo</label></li>
+</ul>
+</section>
+<section id="what-is-a-pathspec" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-pathspec">🔎 What is a pathspec?</h2>
+<p>A pathspec is the pattern Git uses to <strong>limit which paths a command operates on</strong>. It is the trailing <code>&lt;path&gt;...</code> argument accepted by <code>git ls-files</code>, <code>git ls-tree</code>, <code>git add</code>, <code>git grep</code>, <code>git diff</code>, <code>git restore</code>, <code>git stash push</code>, and many others.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>command<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">options</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>pathspec<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>...</span></code></pre></div></div>
+<p>The <code>--</code> separates options from pathspecs. Use it whenever a pathspec could be mistaken for a flag or a branch name (e.g.&nbsp;a file literally named <code>main</code>).</p>
+<p>Three matching rules apply to a plain (non-magic) pathspec:</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Rule</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Any path matches itself</td>
+<td><code>src/train.py</code> matches exactly that file</td>
+</tr>
+<tr class="even">
+<td>Text up to the <strong>last slash</strong> is a directory prefix</td>
+<td><code>data/*.csv</code> is scoped to the <code>data/</code> subtree</td>
+</tr>
+<tr class="odd">
+<td>The rest is an <code>fnmatch(3)</code> pattern</td>
+<td><code>*</code> and <code>?</code> <strong>can</strong> match <code>/</code> by default</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>A plain <code>*</code> crosses directory boundaries
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Unlike a shell glob, a bare pathspec <code>*</code> matches <code>/</code> too. So <code>Documentation/*.jpg</code> matches <code>Documentation/chapter_1/figure_1.jpg</code>, not just files directly under <code>Documentation/</code>. To stop <code>*</code> at a slash, use the <code>glob</code> magic (below).</p>
+</div>
+</div>
+</section>
+<section id="pathspec-rules-short-form-vs-long-form" class="level2">
+<h2 class="anchored" data-anchor-id="pathspec-rules-short-form-vs-long-form">Pathspec rules: short form vs long form</h2>
+<p>A pathspec that begins with a colon <code>:</code> carries <strong>magic</strong>.</p>
+<p><span class="mini-section">Short form</span></p>
+<pre><code>:&lt;signature letters&gt;&lt;pattern&gt;</code></pre>
+<p>The leading <code>:</code> is followed by zero or more <em>magic signature</em> letters, optionally terminated by another <code>:</code>, then the pattern.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">:/README.md</span>     <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># / = top    → README.md at repo root</span></span>
+<span id="cb3-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">:</span>!<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span>.lock        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ! = exclude → everything except *.lock</span></span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">:^*.lock</span>        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ^ is a synonym for !</span></span></code></pre></div></div>
+<p><span class="mini-section">Long form</span></p>
+<pre><code>:(word1,word2,...)&lt;pattern&gt;</code></pre>
+<p>The leading <code>:</code> is followed by <code>(</code>, a comma-separated list of <em>magic words</em>, and <code>)</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">top</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">src/**/*.py</span></span>
+<span id="cb5-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">icase,glob</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">readme*</span></span>
+<span id="cb5-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">exclude</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*.lock</span></span></code></pre></div></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A lone <code>:</code> means “no pathspec”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A pathspec of just <code>:</code> means <em>there is no pathspec</em>. Don’t combine it with other pathspecs.</p>
+</div>
+</div>
+</section>
+<section id="the-magic-signatures" class="level2">
+<h2 class="anchored" data-anchor-id="the-magic-signatures">The magic signatures</h2>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Long word</th>
+<th>Short sig</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>top</code></td>
+<td><code>/</code></td>
+<td>Match from the <strong>repo root</strong>, even when run from a subdirectory</td>
+</tr>
+<tr class="even">
+<td><code>literal</code></td>
+<td>—</td>
+<td>Treat <code>*</code> <code>?</code> <code>[</code> <code>]</code> as <strong>literal</strong> characters (no globbing)</td>
+</tr>
+<tr class="odd">
+<td><code>icase</code></td>
+<td>—</td>
+<td><strong>Case-insensitive</strong> match</td>
+</tr>
+<tr class="even">
+<td><code>glob</code></td>
+<td>—</td>
+<td>Shell-glob semantics: <code>*</code> does <strong>not</strong> match <code>/</code>; enables <code>**</code></td>
+</tr>
+<tr class="odd">
+<td><code>attr</code></td>
+<td>—</td>
+<td>Require gitattributes, e.g.&nbsp;<code>:(attr:text)</code></td>
+</tr>
+<tr class="even">
+<td><code>exclude</code></td>
+<td><code>!</code> or <code>^</code></td>
+<td><strong>Exclude</strong> matching paths from the result set</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="top-match-from-the-repo-root" class="level3">
+<h3 class="anchored" data-anchor-id="top-match-from-the-repo-root"><code>top</code> — match from the repo root</h3>
+<p>Run from anywhere in the tree; the pattern is resolved relative to the toplevel rather than the current directory.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> notebooks/</span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(top)pyproject.toml'</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># adds &lt;root&gt;/pyproject.toml, not notebooks/pyproject.toml</span></span></code></pre></div></div>
+</section>
+<section id="glob-make-work-and-stop-at" class="level3">
+<h3 class="anchored" data-anchor-id="glob-make-work-and-stop-at"><code>glob</code> — make <code>**</code> work and stop <code>*</code> at <code>/</code></h3>
+<p><code>glob</code> switches matching to <code>fnmatch</code> with <code>FNM_PATHNAME</code>, so <code>*</code> no longer crosses slashes, and <code>**</code> gains its familiar meaning:</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th>Matches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>**/foo</code></td>
+<td><code>foo</code> anywhere (leading <code>**/</code>)</td>
+</tr>
+<tr class="even">
+<td><code>abc/**</code></td>
+<td>everything inside <code>abc/</code>, infinite depth</td>
+</tr>
+<tr class="odd">
+<td><code>a/**/b</code></td>
+<td><code>a/b</code>, <code>a/x/b</code>, <code>a/x/y/b</code>, … (zero or more dirs)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(glob)src/**/*.py'</span>     <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># only .py under src/, at any depth, never crossing into other trees</span></span></code></pre></div></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>glob</code> and <code>literal</code> are mutually exclusive
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You cannot combine <code>:(glob,literal)</code> — glob magic is incompatible with literal magic. Other doubled-up asterisks like <code>a/***/b</code> are also invalid.</p>
+</div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 1</strong></span> <span class="def-title"><code>**</code> vs <code>*</code> under <code>:(glob)</code></span></p>
+<p>Compare these two commands and decide which files each one stages:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(glob)src/**/*.py'</span></span>
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(glob)src/*/*.py'</span></span></code></pre></div></div>
+<p>The only difference is <code>**</code> vs <code>*</code>. Under <code>:(glob)</code>, a single <code>*</code> <strong>stops at <code>/</code></strong> (it matches exactly one path segment), while <code>**</code> bounded by slashes matches <strong>zero or more</strong> segments.</p>
+<ul>
+<li><code>:(glob)src/**/*.py</code> → every <code>.py</code> <strong>at any depth</strong> under <code>src/</code> (<code>**</code> may even expand to nothing).</li>
+<li><code>:(glob)src/*/*.py</code> → only <code>.py</code> files <strong>exactly two levels</strong> below <code>src/</code> — one mandatory intermediate directory, no deeper.</li>
+</ul>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Path</th>
+<th style="text-align: center;"><code>src/**/*.py</code></th>
+<th style="text-align: center;"><code>src/*/*.py</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>src/train.py</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr class="even">
+<td><code>src/models/net.py</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr class="odd">
+<td><code>src/models/layers/conv.py</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So <code>src/*/*.py</code> would silently skip both <code>src/train.py</code> (too shallow) and <code>src/models/layers/conv.py</code> (too deep). Reach for <code>**</code> whenever you mean “anywhere in this subtree”.</p>
+</div>
+<hr>
+</section>
+<section id="literal-disable-wildcards" class="level3">
+<h3 class="anchored" data-anchor-id="literal-disable-wildcards"><code>literal</code> — disable wildcards</h3>
+<p>When a filename genuinely contains <code>*</code>, <code>?</code>, or <code>[ ]</code>, treat them as ordinary characters.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(literal)report[final].csv'</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the brackets are part of the name</span></span></code></pre></div></div>
+</section>
+<section id="icase-case-insensitive" class="level3">
+<h3 class="anchored" data-anchor-id="icase-case-insensitive"><code>icase</code> — case-insensitive</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(icase)readme*'</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># README.md, ReadMe.txt, readme.rst ...</span></span></code></pre></div></div>
+</section>
+<section id="exclude-subtract-from-the-set" class="level3">
+<h3 class="anchored" data-anchor-id="exclude-subtract-from-the-set"><code>exclude</code> — subtract from the set</h3>
+<p>After a path matches a non-exclude pathspec, it is run through the exclude pathspecs; if it matches one, it is dropped. If you supply <strong>only</strong> exclude pathspecs, the exclusion applies to the whole result set.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># stage everything except lockfiles and the data/ dir</span></span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add . <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(exclude)*.lock'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(exclude)data/'</span></span>
+<span id="cb11-3"></span>
+<span id="cb11-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># short form</span></span>
+<span id="cb11-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add . <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':!*.lock'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':!data/'</span></span></code></pre></div></div>
+</section>
+</section>
+<section id="commonly-used-pathspec-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="commonly-used-pathspec-patterns">Commonly used pathspec patterns</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Pathspec</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>All <code>.py</code> under <code>src/</code>, any depth</td>
+<td><code>':(glob)src/**/*.py'</code></td>
+</tr>
+<tr class="even">
+<td>A file at the repo root from a subdir</td>
+<td><code>':(top)pyproject.toml'</code></td>
+</tr>
+<tr class="odd">
+<td>Everything <strong>except</strong> lockfiles</td>
+<td><code>. ':(exclude)*.lock'</code></td>
+</tr>
+<tr class="even">
+<td>Everything except a whole directory</td>
+<td><code>. ':!data/'</code></td>
+</tr>
+<tr class="odd">
+<td>Case-insensitive readme</td>
+<td><code>':(icase)readme*'</code></td>
+</tr>
+<tr class="even">
+<td>Filename containing glob chars</td>
+<td><code>':(literal)v[2].csv'</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Pathspec replaces the <code>ls-files | grep</code> hack
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The pipeline in <a href="../../posts/2026-05-12-git-add-with-selected-files/index.html">OGG… How do I <code>git add</code> only files matching a pattern?</a> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-files <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-mo</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--exclude-standard</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-E</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test|bats'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xargs</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-I</span> {} git add {}</span></code></pre></div></div>
+<p>— can often be replaced by a single pathspec, with no subshell and no word-splitting hazards:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(glob)**/*test*'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(glob)**/*bats*'</span></span></code></pre></div></div>
+<p>Reach for the pipe only when you need filtering that pathspec can’t express (e.g.&nbsp;by file content or by <code>git ls-files</code> status flags like <code>-m</code>/<code>-o</code>).</p>
+</div>
+</div>
+</section>
+<section id="pathspec-gotchas-in-a-data-science-repo" class="level2">
+<h2 class="anchored" data-anchor-id="pathspec-gotchas-in-a-data-science-repo">🔬 Pathspec gotchas in a data-science repo</h2>
+<p><span class="mini-section">1. <code>git add .</code> sweeps in notebook checkpoints and data</span></p>
+<p>Running <code>git add .</code> in a notebook-heavy repo stages <code>.ipynb_checkpoints/</code>, large <code>data/*.parquet</code>, and <code>*.lock</code> files you never wanted committed. Scope the add instead of relying on <code>.gitignore</code> alone:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add . <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(exclude).ipynb_checkpoints/'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(exclude)data/'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(exclude)*.parquet'</span></span></code></pre></div></div>
+<p><span class="mini-section">2. The shell expands your glob before Git sees it</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add :<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">glob</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">src/**/*.py</span>     <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ❌ zsh/bash try to expand () and ** themselves</span></span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(glob)src/**/*.py'</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ✅ quote it so Git receives the pathspec verbatim</span></span></code></pre></div></div>
+<p>Always single-quote a pathspec that contains <code>:</code>, <code>(</code>, <code>)</code>, <code>*</code>, <code>!</code>, or <code>^</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>**</code> does nothing without <code>glob</code> magic
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A plain <code>git add 'src/**/*.py'</code> does <strong>not</strong> behave like a recursive glob — without <code>:(glob)</code>, <code>*</code> already crosses <code>/</code>, so the <code>**</code> is redundant and the semantics surprise you. Add <code>:(glob)</code> to get the directory-aware <code>**</code> you expect.</p>
+</div>
+</div>
+<p><span class="mini-section">3. <code>git restore -- &lt;pathspec&gt;</code> can silently match too much</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(top)notebooks/'</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># discards ALL working-tree changes under notebooks/</span></span></code></pre></div></div>
+<p><code>git restore</code> with a pathspec <strong>overwrites your working tree</strong>. Preview the set first with the same pathspec on a read-only command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-files <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(top)notebooks/'</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># exactly the files that would be touched</span></span></code></pre></div></div>
+<p><span class="mini-section">4. <code>attr:</code> reads from the working tree, not the tree object</span></p>
+<p>When matching against a tree object (e.g.&nbsp;an old commit), <code>:(attr:...)</code> requirements are still evaluated against the <strong>current</strong> working-tree <code>.gitattributes</code>, not the attributes as they were in that commit. Don’t assume historical attribute state.</p>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb18-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pathspec</span></span>
+<span id="cb18-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb18-3">    The path-limiting argument Git commands accept after `--`.</span>
+<span id="cb18-4">    Controls the subset of the tree or working tree a command</span>
+<span id="cb18-5">    operates on, via globs plus optional "magic" prefixes.</span>
+<span id="cb18-6"></span>
+<span id="cb18-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> magic signature</span></span>
+<span id="cb18-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb18-9">    A prefix on a pathspec (short form like `:/`, `:!`, or long</span>
+<span id="cb18-10">    form like `:(top)`, `:(exclude)`) that changes how the</span>
+<span id="cb18-11">    remaining pattern is matched.</span>
+<span id="cb18-12"></span>
+<span id="cb18-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> fnmatch(3)</span></span>
+<span id="cb18-14"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb18-15">    The C library function Git uses to match pathspec patterns.</span>
+<span id="cb18-16">    By default `*` and `?` match `/`; the `glob` magic adds the</span>
+<span id="cb18-17">    FNM_PATHNAME flag so they do not.</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec">Git Documentation &gt; gitglossary (pathspec)</a></li>
+<li><a href="https://git-scm.com/docs/git-ls-files">Git Documentation &gt; git-ls-files</a></li>
+<li><a href="../../posts/2026-05-12-git-add-with-selected-files/index.html">OGG… How do I <code>git add</code> only files matching a pattern?</a></li>
+<li><code>man gitglossary | col -b | grep -A72 'pathspec$'</code></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git add</category>
+  <category>pathspec</category>
+  <category>glob</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-05-31-git-pathspec/</guid>
+  <pubDate>Sun, 31 May 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What branch strategy should a small solo project actually use?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -3548,21 +4260,16 @@ font-style: inherit;"># → A (same as ^1, first-parent)</span></span></code></p
 <td>Stage modified and deleted tracked files (exclude new untracked files)</td>
 </tr>
 <tr class="even">
-<td><strong>Add multiple extensions</strong></td>
-<td><code>git add -- '*.py' '*.R'</code></td>
-<td>Stage files matching either pattern</td>
-</tr>
-<tr class="odd">
 <td><strong>Add updates except <code>.qmd</code></strong></td>
 <td><code>git add -u -- . ':!*.qmd'</code></td>
 <td>Stage modified and deleted tracked files while excluding <code>.qmd</code> files</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td></td>
 <td><code>git add -u -- . ':(exclude)*.qmd'</code></td>
 <td>Same as above using explicit pathspec exclusion syntax</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Preview updates except <code>.qmd</code></strong></td>
 <td><code>git add -u -n -- . ':!*.qmd'</code></td>
 <td>Dry-run to preview which tracked file updates would be staged, excluding <code>.qmd</code> files</td>
@@ -6316,895 +7023,6 @@ font-style: inherit;">git</span> diff README.md</span></code></pre></div></div>
   <category>git difftool</category>
   <guid>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/</guid>
   <pubDate>Wed, 06 Nov 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… Should I use git rebase?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-11-05-when-do-i-use-git-rebase/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Let’s say you’re working on a project with a <code>main</code> branch and a <code>feature</code> branch. While you are making changes to <code>feature</code> branch, the <code>main</code> branch has received some new commits from other developers.</p>
-<p>You want to incorporate these new commits into your <code>feature</code> branch, but not sure whether you should do it by <code>git rebase</code> or <code>git merge</code>.</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div id="fig-branch-development" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-branch-development-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div>
-<pre class="mermaid mermaid-js" data-label="fig-branch-development">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
-            'gitGraph': {'rotateCommitLabel': true,
-                         'mainBranchName': 'main'}}}%%
-    gitGraph
-       commit id: "A1"
-       commit id: "A2"
-       branch feature
-       commit id: "B1"
-       commit id: "B2"
-       checkout main
-       commit id: "A3"
-       commit id: "A4"
-       checkout feature
-       merge main id:"❓git merge or rebase?"
-</pre>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-branch-development-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Fig 1. Changes in <code>main</code> branch
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><strong> ▶&nbsp; Why not just ignore changes in the main branch for now?</strong></p>
-<p>Ignoring updates on the main branch for now is sometimes feasible, but there are a few important disadvantages to consider.</p>
-<ol type="1">
-<li><strong><u>Delaying sync increases potential conflicts</u></strong></li>
-</ol>
-<p>The longer your feature branch diverges from main, the more changes accumulate. When you finally integrate with <code>main</code>, you’re more likely to encounter a large, complex set of merge conflicts. Resolving conflicts with many changes can be time-consuming and prone to errors.</p>
-<ol start="2" type="1">
-<li><strong><u>Working in an outdated context</u></strong></li>
-</ol>
-<p>If <code>main</code> includes changes that affect the overall project (e.g., updates to libraries, modifications to shared components, or security fixes), ignoring them means you’re working in an increasingly outdated context. Your feature might develop incompatibilities that aren’t apparent until the final merge.</p>
-<p>Plus, Continuous Integration testing or Continuous Deployment　workflows typically run against the latest main code. By not keeping up with <code>main</code>, you risk your branch passing tests locally but failing in CI/CD because it lacks compatibility with newer changes.</p>
-<div class="nte- callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>🍵 Might Be Okay to Ignore main Changes
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>There are situations where you can safely ignore <code>main</code> temporarily:</p>
-<ul>
-<li>Isolated feature</li>
-<li>Short-lived feature branch</li>
-<li>Experimental branches</li>
-</ul>
-</div>
-</div>
-<section id="solution" class="level3">
-<h3 class="anchored" data-anchor-id="solution">Solution</h3>
-<p>There is no one-size-fits-all approach and it all comes down to what you value most.</p>
-<p><strong> ▶&nbsp; Pros and Cons</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Command</th>
-<th>Pros</th>
-<th>Cons</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>rebase</code></td>
-<td>Clean, linear history; ideal for local branches</td>
-<td>It’s possible that a “commit that was working fine” could turn into a “commit that doesn’t work.”</td>
-</tr>
-<tr class="even">
-<td><code>merge</code></td>
-<td>Maintains full history; safe for shared branches</td>
-<td>Creates new merge commits, making history less linear</td>
-</tr>
-</tbody>
-</table>
-<p>Generally speaking,</p>
-<ul>
-<li><code>git merge</code> pull the latest changes from main into the feature branch, creating a new merge commit</li>
-<li><code>git rebase</code> changes the base of the feature branch to the latest commit and then replays the changes in the feature branch from there</li>
-</ul>
-</section>
-<section id="incorporate-the-changes-by-git-rebase" class="level3">
-<h3 class="anchored" data-anchor-id="incorporate-the-changes-by-git-rebase">Incorporate the changes by <code>git rebase</code></h3>
-<p>At the branch development of Figure&nbsp;1, you can rebase the feature branch with the following steps:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 1: Checkout the feature branch</span></span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> switch feature</span>
-<span id="cb1-3"></span>
-<span id="cb1-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 2: rebase onto main:</span></span>
-<span id="cb1-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> rebase main</span></code></pre></div></div>
-<p>These commands tell Git to</p>
-<ul>
-<li>Temporarily remove B1, B2</li>
-<li>Fast-forward the branch to main’s latest commit (A3, A4)</li>
-<li>Apply B1, B2 on top of A4</li>
-</ul>
-<p>Then, git history will turn into the following</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div id="fig-branch-development-after-rebase" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-branch-development-after-rebase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div>
-<pre class="mermaid mermaid-js" data-label="fig-branch-development-after-rebase">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
-            'gitGraph': {'rotateCommitLabel': true,
-                         'mainBranchName': 'main'}}}%%
-    gitGraph
-       commit id: "A1"
-       commit id: "A2"
-       commit id: "A3"
-       commit id: "A4"
-       branch feature
-       commit id: "B1"
-       commit id: "B2"
-</pre>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-branch-development-after-rebase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Fig 2. git rebase
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><strong> ▶&nbsp; Conflicts caused by <code>git rebase</code></strong></p>
-<p>If there are changes in <code>main</code> that modify the same parts of code as your commits, Git won’t know how to reconcile those differences automatically. These overlapping changes are what cause conflicts.</p>
-<p>For example:</p>
-<ul>
-<li>Let’s say you edited <code>file_A.py</code> in your feature branch to add a new function.</li>
-<li>Meanwhile, another developer made a conflicting change to the same section of <code>file_A.py</code> in main.</li>
-</ul>
-<p>When rebase tries to apply your changes on top of main, Git encounters a conflict because it doesn’t know which version to keep. Instead, Git will list files with conflicts. You’ll see a message like</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">CONFLICT</span> <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">content</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span>: Merge conflict in file_A.py</span></code></pre></div></div>
-<p>Open each conflicted file. Git will add conflict markers to show where the differences are:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> HEAD</span>
-<span id="cb3-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">//</span> Code from main branch</span>
-<span id="cb3-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">=======</span></span>
-<span id="cb3-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">//</span> Code from your feature branch</span>
-<span id="cb3-5"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> your-commit-hash</span></code></pre></div></div>
-<p>You are expected to decide which parts of the code to keep and remove the conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) after resolving. Then,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># git add the modified files</span></span>
-<span id="cb4-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> add file_A.py</span>
-<span id="cb4-3"></span>
-<span id="cb4-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Continue the rebase</span></span>
-<span id="cb4-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--continue</span></span></code></pre></div></div>
-<p>If you want to start over or quit rebasing, you can abort the rebase with</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--abort</span></span></code></pre></div></div>
-<p><strong> ▶&nbsp; “commit that was working fine” could turn into a “not working”</strong></p>
-<p>When you rebase a branch, you’re reapplying commits onto a new base, which can potentially break previously functional code. So to minimize this risk, better to do the followings:</p>
-<ol type="1">
-<li><strong>Test after rebasing</strong>: After a rebase, test your feature branch to ensure that everything still works as expected.</li>
-<li><strong>Check each commit after conflicts</strong>: If you resolved conflicts during the rebase, double-check those areas to ensure the changes align with your intended functionality.</li>
-</ol>
-<p>In summary, rebasing changes the context in which your commits operate, so it’s important to verify that they still work as intended in the new context.</p>
-</section>
-</section>
-<section id="undo-git-rebase" class="level2">
-<h2 class="anchored" data-anchor-id="undo-git-rebase">Undo <code>git rebase</code></h2>
-<p>Let’s say you’re working on a <code>feature</code> branch. You rebased it onto the main branch to incorporate recent changes, but after the rebase, you realize that:</p>
-<ul>
-<li>You made a mistake resolving a conflict. or</li>
-<li>Some tests are failing because of unexpected interactions with the latest changes from <code>main</code>.</li>
-</ul>
-<p>In this case, You wants to undo the rebase and return the branch to its original state.</p>
-<p><strong> ▶&nbsp; Initial Setup</strong></p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div id="git-rebase-undo-initial-setup">
-<div>
-<pre class="mermaid mermaid-js" data-label="git-rebase-undo-initial-setup">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
-            'gitGraph': {'rotateCommitLabel': true,
-                         'mainBranchName': 'main'}}}%%
-    gitGraph
-       commit id: "A"
-       commit id: "B"
-       branch feature
-       commit id: "X"
-       commit id: "Y"
-       checkout main
-       commit id: "C"
-       commit id: "D"
-</pre>
-</div>
-<p>Fig 3. initial setup</p>
-</div>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git log <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--graph</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--all</span></span>
-<span id="cb6-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">HEAD -&gt; main</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb6-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb6-4"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:27:55 2024 +0900</span>
-<span id="cb6-5"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb6-6"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">D</span></span>
-<span id="cb6-7"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb6-8"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit cd439d184bd0d5a2ad9dc6993a1675862cee6495</span>
-<span id="cb6-9"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb6-10"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:27:29 2024 +0900</span>
-<span id="cb6-11"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb6-12"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">C</span></span>
-<span id="cb6-13"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>   </span>
-<span id="cb6-14"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit d4ac5504a56ee01fc7a62e09f0ed7dbdfc5a60d6 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(fe</span>ature)</span>
-<span id="cb6-15">| | Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
-<span id="cb6-16">| | Date:   Tue Nov 5 19:26:51 2024 +0900</span>
-<span id="cb6-17">| | </span>
-<span id="cb6-18">| |     Y</span>
-<span id="cb6-19">| | </span>
-<span id="cb6-20">| * commit 4fbd2929aa96ef8b7d07388e27e6b2f23c615199</span>
-<span id="cb6-21">|/  Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
-<span id="cb6-22">|   Date:   Tue Nov 5 19:26:20 2024 +0900</span>
-<span id="cb6-23">|   </span>
-<span id="cb6-24">|       X</span>
-<span id="cb6-25">| </span>
-<span id="cb6-26">* commit 963f1a18446313f9ee37c3dc33eab2909349b4b6</span>
-<span id="cb6-27">| Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
-<span id="cb6-28">| Date:   Tue Nov 5 19:25:46 2024 +0900</span>
-<span id="cb6-29">| </span>
-<span id="cb6-30">|     B</span>
-<span id="cb6-31">| </span>
-<span id="cb6-32">* commit feadb03ae713ab05b828e066c09bacb339756df7</span>
-<span id="cb6-33">  Author: Kirby &lt;hoshinokirby@gmail.com&gt;</span>
-<span id="cb6-34">  Date:   Tue Nov 5 19:25:27 2024 +0900</span></code></pre></div></div>
-<p>You rebase feature onto <code>D</code> of the <code>main</code> by the following commands:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> switch feature</span>
-<span id="cb7-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> rebase main</span></code></pre></div></div>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div id="git-rebase-undo-rebase">
-<div>
-<pre class="mermaid mermaid-js" data-label="git-rebase-undo-rebase">%%{init: { 'logLevel': 'debug', 'theme': 'base', 
-            'gitGraph': {'rotateCommitLabel': true,
-                         'mainBranchName': 'main'}}}%%
-    gitGraph
-       commit id: "A"
-       commit id: "B"
-       commit id: "C"
-       commit id: "D"
-       branch feature
-       commit id: "X"
-       commit id: "Y"
-</pre>
-</div>
-<p>Fig 4. git rebase with bugs</p>
-</div>
-</div>
-</div>
-<p>But after finishing the rebase, you realized that some tests are failing because of unexpected interactions with the latest changes from <code>main</code>.</p>
-<section id="solution-undoing-the-rebase" class="level3">
-<h3 class="anchored" data-anchor-id="solution-undoing-the-rebase">Solution: Undoing the Rebase</h3>
-<p>One way to undo a <code>git rebase</code> is by using <code>git reflog</code>, which keeps a history of where your branches have pointed over time, and <code>git reset --hard</code></p>
-<p><strong> ▶&nbsp; Steps</strong></p>
-<p>First, check the commit history at the <code>feature</code> branch by <code>git log</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git log <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--graph</span>      </span>
-<span id="cb8-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb8-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb8-4"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:26:51 2024 +0900</span>
-<span id="cb8-5"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-6"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Y</span></span>
-<span id="cb8-7"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-8"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 110878e53b16fd10c0d044a3a9d9cdf46db44861</span>
-<span id="cb8-9"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb8-10"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:26:20 2024 +0900</span>
-<span id="cb8-11"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-12"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">X</span></span>
-<span id="cb8-13"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-14"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 1625fb594bc6b4dfd4f670e1410f7f0ad1545b42 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(main)</span></span>
-<span id="cb8-15"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb8-16"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:27:55 2024 +0900</span>
-<span id="cb8-17"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-18"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">D</span></span>
-<span id="cb8-19"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-20"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit cd439d184bd0d5a2ad9dc6993a1675862cee6495</span>
-<span id="cb8-21"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb8-22"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:27:29 2024 +0900</span>
-<span id="cb8-23"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-24"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">C</span></span>
-<span id="cb8-25"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-26"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 963f1a18446313f9ee37c3dc33eab2909349b4b6</span>
-<span id="cb8-27"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb8-28"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:25:46 2024 +0900</span>
-<span id="cb8-29"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-30"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">B</span></span>
-<span id="cb8-31"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb8-32"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit feadb03ae713ab05b828e066c09bacb339756df7</span>
-<span id="cb8-33">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb8-34">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:25:27 2024 +0900</span>
-<span id="cb8-35"></span>
-<span id="cb8-36">      <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">A</span></span></code></pre></div></div>
-<p>Sadly, you have successfully rebased the feature branch onto commit-id <code>D</code> of the main. But no worried, run the <code>git reflog</code> command to see recent actions on your branch:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git reflog</span>
-<span id="cb9-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">14b3c5d</span> <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span> HEAD@{0}: rebase <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">finish</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span>: returning to refs/heads/feature</span>
-<span id="cb9-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">14b3c5d</span> <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span> HEAD@{1}: rebase <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">pick</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span>: Y</span>
-<span id="cb9-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">110878e</span> HEAD@{2}: rebase <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">pick</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span>: X</span>
-<span id="cb9-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">1625fb5</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(main)</span> HEAD@{3}: rebase <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">start</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span>: checkout main</span>
-<span id="cb9-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">d4ac550</span> HEAD@{4}: checkout: moving from feature to feature</span>
-<span id="cb9-7"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">d4ac550</span> HEAD@{5}: checkout: moving from main to feature</span>
-<span id="cb9-8"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">1625fb5</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(main)</span> HEAD@{6}: commit: D</span>
-<span id="cb9-9"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">cd439d1</span> HEAD@{7}: commit: C</span>
-<span id="cb9-10"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">963f1a1</span> HEAD@{8}: checkout: moving from feature to main</span>
-<span id="cb9-11"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">d4ac550</span> HEAD@{9}: commit: Y</span>
-<span id="cb9-12"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">4fbd292</span> HEAD@{10}: commit: X</span>
-<span id="cb9-13"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">963f1a1</span> HEAD@{11}: checkout: moving from main to feature</span>
-<span id="cb9-14"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">963f1a1</span> HEAD@{12}: commit: B</span>
-<span id="cb9-15"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">feadb03</span> HEAD@{13}: commit <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">initial</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span>: A</span></code></pre></div></div>
-<p>The line <code>1625fb5 (main) HEAD@{3}: rebase (start): checkout main</code> indicates when Git started the rebase process. So, if you want to undo the rebase, just reset to the entry <code>d4ac550 HEAD@{4}:</code> to go back to your previous state before the rebase.</p>
-<p>Use <code>git reset</code> to move your branch pointer back to the commit just before the rebase:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 1: Undo git rebase</span></span>
-<span id="cb10-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git reset <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--hard</span> HEAD@{4}</span>
-<span id="cb10-3"></span>
-<span id="cb10-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 2: check history</span></span>
-<span id="cb10-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git log <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--graph</span>      </span>
-<span id="cb10-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 14b3c5d00ff5df876cce8ca3ff167656b2732e02 <span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">HEAD -&gt; feature</span><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb10-7"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb10-8"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:26:51 2024 +0900</span>
-<span id="cb10-9"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb10-10"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Y</span></span>
-<span id="cb10-11"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb10-12"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 110878e53b16fd10c0d044a3a9d9cdf46db44861</span>
-<span id="cb10-13"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb10-14"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:26:20 2024 +0900</span>
-<span id="cb10-15"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb10-16"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">X</span></span>
-<span id="cb10-17"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb10-18"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit 963f1a18446313f9ee37c3dc33eab2909349b4b6</span>
-<span id="cb10-19"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb10-20"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:25:46 2024 +0900</span>
-<span id="cb10-21"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb10-22"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span>     <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">B</span></span>
-<span id="cb10-23"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> </span>
-<span id="cb10-24"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">*</span> commit feadb03ae713ab05b828e066c09bacb339756df7</span>
-<span id="cb10-25">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Author:</span> Kirby <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>hoshinokirby@gmail.com<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb10-26">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Date:</span>   Tue Nov 5 19:25:27 2024 +0900</span>
-<span id="cb10-27"></span>
-<span id="cb10-28">      <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">A</span></span></code></pre></div></div>
-</section>
-</section>
-<section id="git-rebase-or-git-merge" class="level2">
-<h2 class="anchored" data-anchor-id="git-rebase-or-git-merge"><code>git rebase</code> or <code>git merge</code>?</h2>
-<p>As explined above, if your goal is to maintain a clean and linear commit history and you’re working primarily with your own branches, <code>git rebase</code> is often the best choice. On the other hand, if you’re collaborating closely with others and want to ensure that history is preserved, or if you want to avoid rewriting shared commits, <code>git merge</code> is likely the better option.</p>
-<p><strong> ▶&nbsp; General Recommendation</strong></p>
-<ul>
-<li>If your feature branch is not shared yet, go with <code>git rebase</code> for a cleaner, linear history.</li>
-<li>If your feature branch is already shared or part of a collaborative workflow, stick with <code>git merge</code> to avoid potential conflicts for collaborators.</li>
-</ul>
-<section id="versioning-and-git-rebase-strategy" class="level3">
-<h3 class="anchored" data-anchor-id="versioning-and-git-rebase-strategy">Versioning and <code>git rebase</code> strategy</h3>
-<p>Let’s say you are working on a repository with the following versioning strategy:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Version class</th>
-<th>explained</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Major Version (<code>x</code>)</td>
-<td>Changes in the major version indicate breaking changes or significant new features.</td>
-</tr>
-<tr class="even">
-<td>Minor Version (<code>y</code>)</td>
-<td>Changes in the minor version often introduce new features that are backward-compatible.</td>
-</tr>
-<tr class="odd">
-<td>Patch Version (<code>z</code>)</td>
-<td>Changes in the patch version generally include bug fixes and minor improvements.</td>
-</tr>
-</tbody>
-</table>
-<p>Then, better to adopt the following <code>git rebase</code> strategy:</p>
-<p><strong> ▶&nbsp; Changes in <code>x</code> (Major Version):</strong></p>
-<ul>
-<li><strong>Recommendation: Always rebase.</strong></li>
-<li><strong>Reason</strong>: Major changes may have significant impacts and require integration with the latest code. Rebasing helps ensure that the new major features align correctly with the current state of the codebase, avoiding integration issues.</li>
-</ul>
-<p><strong> ▶&nbsp; Changes in <code>y</code> (Minor Version):</strong></p>
-<ul>
-<li><strong>Recommendation: Rebase as a precaution.</strong></li>
-<li><strong>Reason</strong>: While minor changes are generally backward-compatible, they can still introduce complexities. Rebasing hels ensuring the new minor features do not conflict with other updates.</li>
-</ul>
-<p><strong> ▶&nbsp; Changes in <code>z</code> (Patch Version):</strong></p>
-<ul>
-<li><strong>Recommendation: Rebase not required.</strong></li>
-<li><strong>Reason</strong>: Patch changes are typically small fixes. If the changes in the main branch are minimal, there may be no need to rebase.</li>
-</ul>
-
-
-</section>
-</section>
-
- ]]></description>
-  <category>git rebase</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-11-05-when-do-i-use-git-rebase/</guid>
-  <pubDate>Tue, 05 Nov 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ryo Nakagami">
-<meta name="dcterms.date" content="2025-08-06">
+<meta name="dcterms.date" content="2026-05-31">
 
-<title>OGG git cheatsheet – OhGoshGit!?!</title>
+<title>OGG… What is a git pathspec and how do I use its magic signatures? – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -357,9 +357,11 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">OGG git cheatsheet</h1>
+      <h1 class="title">OGG… What is a git pathspec and how do I use its magic signatures?</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">cheatsheet</div>
+                <div class="quarto-category">git add</div>
+                <div class="quarto-category">pathspec</div>
+                <div class="quarto-category">glob</div>
               </div>
                   </div>
   </div>
@@ -377,14 +379,14 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025-08-06</p>
+        <p class="date">2026-05-31</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">2026-05-23</p>
+        <p class="date-modified">2026-05-31</p>
       </div>
     </div>
       
@@ -399,25 +401,21 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#git-rules" id="toc-git-rules" class="nav-link active" data-scroll-target="#git-rules">Git Rules</a>
+  <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#what-is-a-pathspec" id="toc-what-is-a-pathspec" class="nav-link" data-scroll-target="#what-is-a-pathspec">🔎 What is a pathspec?</a></li>
+  <li><a href="#pathspec-rules-short-form-vs-long-form" id="toc-pathspec-rules-short-form-vs-long-form" class="nav-link" data-scroll-target="#pathspec-rules-short-form-vs-long-form">Pathspec rules: short form vs long form</a></li>
+  <li><a href="#the-magic-signatures" id="toc-the-magic-signatures" class="nav-link" data-scroll-target="#the-magic-signatures">The magic signatures</a>
   <ul class="collapse">
-  <li><a href="#commit-reference-notation" id="toc-commit-reference-notation" class="nav-link" data-scroll-target="#commit-reference-notation">Commit Reference Notation</a></li>
+  <li><a href="#top-match-from-the-repo-root" id="toc-top-match-from-the-repo-root" class="nav-link" data-scroll-target="#top-match-from-the-repo-root"><code>top</code> — match from the repo root</a></li>
+  <li><a href="#glob-make-work-and-stop-at" id="toc-glob-make-work-and-stop-at" class="nav-link" data-scroll-target="#glob-make-work-and-stop-at"><code>glob</code> — make <code>**</code> work and stop <code>*</code> at <code>/</code></a></li>
+  <li><a href="#literal-disable-wildcards" id="toc-literal-disable-wildcards" class="nav-link" data-scroll-target="#literal-disable-wildcards"><code>literal</code> — disable wildcards</a></li>
+  <li><a href="#icase-case-insensitive" id="toc-icase-case-insensitive" class="nav-link" data-scroll-target="#icase-case-insensitive"><code>icase</code> — case-insensitive</a></li>
+  <li><a href="#exclude-subtract-from-the-set" id="toc-exclude-subtract-from-the-set" class="nav-link" data-scroll-target="#exclude-subtract-from-the-set"><code>exclude</code> — subtract from the set</a></li>
   </ul></li>
-  <li><a href="#git-command" id="toc-git-command" class="nav-link" data-scroll-target="#git-command">Git command</a>
-  <ul class="collapse">
-  <li><a href="#basic-commands" id="toc-basic-commands" class="nav-link" data-scroll-target="#basic-commands">Basic Commands</a></li>
-  <li><a href="#staging-commands" id="toc-staging-commands" class="nav-link" data-scroll-target="#staging-commands">Staging Commands</a></li>
-  <li><a href="#file-modification-commands" id="toc-file-modification-commands" class="nav-link" data-scroll-target="#file-modification-commands">File Modification Commands</a></li>
-  <li><a href="#commands-for-branch" id="toc-commands-for-branch" class="nav-link" data-scroll-target="#commands-for-branch">commands for branch</a></li>
-  <li><a href="#commands-for-commits" id="toc-commands-for-commits" class="nav-link" data-scroll-target="#commands-for-commits">commands for commits</a></li>
-  <li><a href="#diff-check" id="toc-diff-check" class="nav-link" data-scroll-target="#diff-check">diff check</a></li>
-  <li><a href="#custom-git-commands" id="toc-custom-git-commands" class="nav-link" data-scroll-target="#custom-git-commands">Custom Git Commands</a></li>
-  </ul></li>
-  <li><a href="#config-command" id="toc-config-command" class="nav-link" data-scroll-target="#config-command">Config command</a></li>
-  <li><a href="#github-cli-command" id="toc-github-cli-command" class="nav-link" data-scroll-target="#github-cli-command">GitHub CLI command</a>
-  <ul class="collapse">
-  <li><a href="#general" id="toc-general" class="nav-link" data-scroll-target="#general">general</a></li>
-  </ul></li>
+  <li><a href="#commonly-used-pathspec-patterns" id="toc-commonly-used-pathspec-patterns" class="nav-link" data-scroll-target="#commonly-used-pathspec-patterns">Commonly used pathspec patterns</a></li>
+  <li><a href="#pathspec-gotchas-in-a-data-science-repo" id="toc-pathspec-gotchas-in-a-data-science-repo" class="nav-link" data-scroll-target="#pathspec-gotchas-in-a-data-science-repo">🔬 Pathspec gotchas in a data-science repo</a></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">📘 References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -429,528 +427,455 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 
 
 
-<section id="git-rules" class="level2">
-<h2 class="anchored" data-anchor-id="git-rules">Git Rules</h2>
-<section id="commit-reference-notation" class="level3">
-<h3 class="anchored" data-anchor-id="commit-reference-notation">Commit Reference Notation</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>A <strong>pathspec</strong> is the path argument you pass to <code>git add</code>, <code>git diff</code>, <code>git restore</code>, etc. to limit which files a command touches</li>
+<li>It supports <strong>magic signatures</strong> — prefixes that change matching behaviour:</li>
+</ul>
 <div class="no-border-top-table">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 20%">
-<col style="width: 50%">
-<col style="width: 30%">
+<col style="width: 34%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Notation</th>
-<th>Meaning</th>
+<th>Goal</th>
+<th>Pathspec / Command</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>HEAD</code></td>
-<td>The current commit (tip of the checked-out branch)</td>
-<td><code>git show HEAD</code></td>
+<td>Preview which paths a pathspec matches</td>
+<td><code>git ls-files -- &lt;pathspec&gt;</code></td>
+<td><code>git ls-files -- ':(glob)src/**/*.py'</code></td>
 </tr>
 <tr class="even">
-<td><code>HEAD~1</code> / <code>HEAD~</code></td>
-<td>1st ancestor following the <strong>first parent</strong> chain</td>
-<td><code>git diff HEAD~1 HEAD</code></td>
+<td>Recursive, directory-aware glob</td>
+<td><code>:(glob)dir/**/*.ext</code></td>
+<td><code>git add ':(glob)src/**/*.py'</code></td>
 </tr>
 <tr class="odd">
-<td><code>HEAD~N</code></td>
-<td>Nth ancestor following the first parent chain</td>
-<td><code>git diff HEAD~3 HEAD</code></td>
+<td>Match only one directory level</td>
+<td><code>:(glob)dir/*/*.ext</code></td>
+<td><code>git add ':(glob)src/*/*.py'</code></td>
 </tr>
 <tr class="even">
-<td><code>HEAD^1</code> / <code>HEAD^</code></td>
-<td>1st parent of HEAD (identical to <code>HEAD~1</code> for linear history)</td>
-<td><code>git show HEAD^</code></td>
+<td>Match from repository root</td>
+<td><code>:(top)&lt;path&gt;</code></td>
+<td><code>git restore ':(top)notebooks/'</code></td>
 </tr>
 <tr class="odd">
-<td><code>HEAD^2</code></td>
-<td>2nd parent of HEAD — only exists on merge commits</td>
-<td><code>git show HEAD^2</code></td>
+<td>Exclude paths from a command</td>
+<td><code>:(exclude)&lt;pathspec&gt;</code></td>
+<td><code>git add . ':(exclude)*.lock'</code></td>
 </tr>
 <tr class="even">
-<td><code>HEAD^^</code></td>
-<td>Grandparent via first-parent chain (same as <code>HEAD~2</code>)</td>
-<td><code>git show HEAD^^</code></td>
+<td>Case-insensitive matching</td>
+<td><code>:(icase)&lt;pathspec&gt;</code></td>
+<td><code>git diff ':(icase)readme*'</code></td>
 </tr>
 <tr class="odd">
-<td><code>&lt;ref&gt;^{commit}</code></td>
-<td>Dereference a tag or ref to its underlying commit object</td>
-<td><code>git cat-file -e v1.0^{commit}</code></td>
+<td>Treat special glob characters literally</td>
+<td><code>:(literal)&lt;name&gt;</code></td>
+<td><code>git add -- ':(literal)file[1].py'</code></td>
+</tr>
+<tr class="even">
+<td>Combine multiple pathspec magic options</td>
+<td><code>:(top,glob)&lt;pathspec&gt;</code></td>
+<td><code>git add ':(top,glob)src/**/*.py'</code></td>
+</tr>
+<tr class="odd">
+<td>Stage everything except a pattern</td>
+<td><code>git add . ':(exclude)&lt;pattern&gt;'</code></td>
+<td><code>git add . ':(exclude)*.lock'</code></td>
+</tr>
+<tr class="even">
+<td>Restore changes under a directory</td>
+<td><code>git restore &lt;pathspec&gt;</code></td>
+<td><code>git restore ':(top)notebooks/'</code></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>~</code> vs <code>^</code> — when they differ
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p><code>~N</code> always follows the <strong>first parent</strong> N times (useful for linear history and rebase workflows). <code>^N</code> selects the <strong>Nth parent</strong> of a single commit (only relevant for merge commits, where <code>^1</code> is the branch you merged into and <code>^2</code> is the branch you merged from).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On a merge commit M with two parents A and B:</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> show M^1   <span class="co"># → A (the branch that was merged into)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> show M^2   <span class="co"># → B (the branch that was merged from)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> show M~1   <span class="co"># → A (same as ^1, first-parent)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Understand what a pathspec is and where Git accepts one</label></li>
+<li><label><input type="checkbox">Read the pathspec grammar: directory prefix + <code>fnmatch</code> pattern</label></li>
+<li><label><input type="checkbox">Use the magic signatures <code>top</code> / <code>literal</code> / <code>icase</code> / <code>glob</code> / <code>exclude</code></label></li>
+<li><label><input type="checkbox">Recognise common pathspec footguns in a data-science repo</label></li>
+</ul>
 </section>
-</section>
-<section id="git-command" class="level2">
-<h2 class="anchored" data-anchor-id="git-command">Git command</h2>
-<section id="basic-commands" class="level3">
-<h3 class="anchored" data-anchor-id="basic-commands">Basic Commands</h3>
-<div class="no-border-top-table">
+<section id="what-is-a-pathspec" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-pathspec">🔎 What is a pathspec?</h2>
+<p>A pathspec is the pattern Git uses to <strong>limit which paths a command operates on</strong>. It is the trailing <code>&lt;path&gt;...</code> argument accepted by <code>git ls-files</code>, <code>git ls-tree</code>, <code>git add</code>, <code>git grep</code>, <code>git diff</code>, <code>git restore</code>, <code>git stash push</code>, and many others.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="op">&lt;</span>command<span class="op">&gt;</span> <span class="pp">[</span><span class="ss">options</span><span class="pp">]</span> <span class="at">--</span> <span class="op">&lt;</span>pathspec<span class="op">&gt;</span>...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>--</code> separates options from pathspecs. Use it whenever a pathspec could be mistaken for a flag or a branch name (e.g.&nbsp;a file literally named <code>main</code>).</p>
+<p>Three matching rules apply to a plain (non-magic) pathspec:</p>
+<div class="no-border-top-table pb-3">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
+<col style="width: 50%">
+<col style="width: 50%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
+<th>Rule</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Check Git Version</strong></td>
-<td><code>git --version</code></td>
-<td>E.g. <code>git version 2.43.0</code></td>
+<td>Any path matches itself</td>
+<td><code>src/train.py</code> matches exactly that file</td>
 </tr>
 <tr class="even">
-<td><strong>Clone withou files</strong></td>
-<td><code>git clone --no-checkout &lt;repository-url&gt;</code></td>
-<td>clones the repository without checking out the files</td>
+<td>Text up to the <strong>last slash</strong> is a directory prefix</td>
+<td><code>data/*.csv</code> is scoped to the <code>data/</code> subtree</td>
 </tr>
 <tr class="odd">
-<td><strong>Status</strong></td>
-<td><code>git status -sb</code></td>
-<td>Short and branch-aware status (great for quick checks)</td>
-</tr>
-<tr class="even">
-<td><strong>Rename</strong></td>
-<td><code>git mv &lt;oldfilename&gt; &lt;newfilename&gt;</code></td>
-<td>Rename or move a file and stage the change for commit</td>
-</tr>
-<tr class="odd">
-<td><strong>Remove</strong></td>
-<td><code>git rm --cached &lt;FILE_NAME&gt;</code></td>
-<td>Stop tracking a file in Git without deleting it from local</td>
-</tr>
-<tr class="even">
-<td><strong>Log</strong></td>
-<td><code>git log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'</code></td>
-<td>Display commit log with ISO date, short commit ID, author, and commit message</td>
+<td>The rest is an <code>fnmatch(3)</code> pattern</td>
+<td><code>*</code> and <code>?</code> <strong>can</strong> match <code>/</code> by default</td>
 </tr>
 </tbody>
 </table>
 </div>
-</section>
-<section id="staging-commands" class="level3">
-<h3 class="anchored" data-anchor-id="staging-commands">Staging Commands</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Add all updates</strong></td>
-<td><code>git add -u</code></td>
-<td>Stage modified and deleted tracked files (exclude new untracked files)</td>
-</tr>
-<tr class="even">
-<td><strong>Add updates except <code>.qmd</code></strong></td>
-<td><code>git add -u -- . ':!*.qmd'</code></td>
-<td>Stage modified and deleted tracked files while excluding <code>.qmd</code> files</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td><code>git add -u -- . ':(exclude)*.qmd'</code></td>
-<td>Same as above using explicit pathspec exclusion syntax</td>
-</tr>
-<tr class="even">
-<td><strong>Preview updates except <code>.qmd</code></strong></td>
-<td><code>git add -u -n -- . ':!*.qmd'</code></td>
-<td>Dry-run to preview which tracked file updates would be staged, excluding <code>.qmd</code> files</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="file-modification-commands" class="level3">
-<h3 class="anchored" data-anchor-id="file-modification-commands">File Modification Commands</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Find file first commit</strong></td>
-<td><code>git log --diff-filter=A -- file.py</code></td>
-<td>Find the commit in which a file was first added to the repository</td>
-</tr>
-<tr class="even">
-<td><strong>Unstage files</strong></td>
-<td><code>git rm --cached -r .</code></td>
-<td>Remove files from the Git index while keeping them in the working tree</td>
-</tr>
-<tr class="odd">
-<td><strong>Discard file changes</strong></td>
-<td><code>git restore &lt;file-path&gt;</code></td>
-<td>Discard local changes and restore the file to the current <code>HEAD</code> state</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>When to use <code>git rm --cached -r .</code> (before the initial commit)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This command is used when you are in a repository that has <strong>no commits yet</strong> (i.e., <code>HEAD</code> does not exist), and you have accidentally staged all files using:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In this situation, normal commands like:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--staged</span> .</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> reset HEAD .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>But these commands will fail because there is no HEAD in an initial repository state.</p>
-</div>
-</div>
-</section>
-<section id="commands-for-branch" class="level3">
-<h3 class="anchored" data-anchor-id="commands-for-branch">commands for branch</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Create Branch</strong></td>
-<td><code>git switch -c &lt;branch-name&gt;</code></td>
-<td>Create and checkout a new branch locally</td>
-</tr>
-<tr class="even">
-<td><strong>Checkout Previous Branch</strong></td>
-<td><code>git switch -</code></td>
-<td>Switch back to the previously checked-out branch</td>
-</tr>
-<tr class="odd">
-<td><strong>Pull From All Remotes</strong></td>
-<td><code>git pull --all</code></td>
-<td>Update all local tracking branches from all configured remotes</td>
-</tr>
-<tr class="even">
-<td><strong>Delete Local Branch</strong></td>
-<td><code>git branch -d &lt;branch-name&gt;</code></td>
-<td>Delete a local branch safely (only if already merged)</td>
-</tr>
-<tr class="odd">
-<td><strong>Force Delete Local Branch</strong></td>
-<td><code>git branch -D &lt;branch-name&gt;</code></td>
-<td>Force delete a local branch even if unmerged</td>
-</tr>
-<tr class="even">
-<td><strong>Delete Remote Branch</strong></td>
-<td><code>git push origin --delete &lt;branch-name&gt;</code></td>
-<td>Delete a branch from the remote repository</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="commands-for-commits" class="level3">
-<h3 class="anchored" data-anchor-id="commands-for-commits">commands for commits</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Amend commit</strong></td>
-<td><code>git commit --amend</code></td>
-<td>Modify the most recent commit (message, content, or both) with editor starting up</td>
-</tr>
-<tr class="even">
-<td><strong>Commit all changes with message</strong></td>
-<td><code>git commit -am "&lt;commit message&gt;"</code></td>
-<td>Stage all tracked changes and commit with a message in one step</td>
-</tr>
-<tr class="odd">
-<td><strong>Interactive rebase</strong></td>
-<td><code>git rebase -i &lt;base&gt;</code></td>
-<td>Rewrite commit history interactively — squash, reorder, edit, or drop commits since <code>&lt;base&gt;</code> (e.g.&nbsp;<code>HEAD~3</code> or a branch name)</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>what is squash
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Squash</strong> combines multiple commits into one. During <code>git rebase -i</code>, marking a commit as <code>squash</code> (or <code>s</code>) folds it into the commit above it, letting you rewrite a single combined message. This keeps history clean by collapsing WIP commits before merging.</p>
-<pre><code>pick a1b2c3 Add feature skeleton
-squash d4e5f6 Fix typo
-squash 7g8h9i Add tests
-# → becomes one commit with a merged message
-# a1b2c3 is the oldest commit</code></pre>
-</div>
-</div>
-</section>
-<section id="diff-check" class="level3">
-<h3 class="anchored" data-anchor-id="diff-check">diff check</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>check staged diff</strong></td>
-<td><code>git diff --cached &lt;branch&gt;</code></td>
-<td>Compare staged changes in the index against the specified branch</td>
-</tr>
-<tr class="even">
-<td><strong>check diff between branches</strong></td>
-<td><code>git diff &lt;base-branch&gt;..&lt;target-branch&gt;</code></td>
-<td>Compare changes between two branches</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="custom-git-commands" class="level3">
-<h3 class="anchored" data-anchor-id="custom-git-commands">Custom Git Commands</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-issue2pr.sh"><strong>Convert a specific issue to PR</strong></a></td>
-<td><code>git issue2pr</code></td>
-<td>Create a Pull Request from the current branch and link it to a specific GitHub Issue.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-</section>
-<section id="config-command" class="level2">
-<h2 class="anchored" data-anchor-id="config-command">Config command</h2>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Default branch name</strong></td>
-<td><code>git config --global init.defaultBranch &lt;default branch name&gt;</code></td>
-<td>Set default branch when initializing new repos</td>
-</tr>
-<tr class="even">
-<td><strong>Enable color output</strong></td>
-<td><code>git config --global color.ui auto</code></td>
-<td>Automatically color Git output in the terminal.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="github-cli-command" class="level2">
-<h2 class="anchored" data-anchor-id="github-cli-command">GitHub CLI command</h2>
-<section id="general" class="level3">
-<h3 class="anchored" data-anchor-id="general">general</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Check Organization</strong></td>
-<td><code>gh org list</code></td>
-<td>Show a list of organizations you belong to</td>
-</tr>
-<tr class="even">
-<td><strong>Check Organization Repo</strong></td>
-<td><code>gh repo list &lt;ORG&gt;</code></td>
-<td>Show a list of repositories under a specific organization you belong to</td>
-</tr>
-<tr class="odd">
-<td><strong>Create Repo</strong></td>
-<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin</code></td>
-<td>Create a public repository under your GitHub account</td>
-</tr>
-<tr class="even">
-<td></td>
-<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;</code></td>
-<td>Create a public repository under the specified organization</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td><code>gh repo create &lt;REPONAME&gt; --private --source=. --remote=origin</code></td>
-<td>Create a private repository under your GitHub account</td>
-</tr>
-<tr class="even">
-<td><strong>Delete Repo</strong></td>
-<td><code>gh repo delete &lt;OWNER&gt;/&lt;REPONAME&gt;</code></td>
-<td>Delete the target repository from GitHub while keeping the local repository intact</td>
-</tr>
-<tr class="odd">
-<td><strong>Create Pull Request</strong></td>
-<td><code>gh pr create --base &lt;BASE_BRANCH&gt; --head &lt;HEAD_BRANCH&gt; --title "&lt;TITLE&gt;" --body "&lt;BODY&gt;"</code></td>
-<td>Create a pull request from the specified source branch to the target branch</td>
-</tr>
-</tbody>
-</table>
-<section id="gist" class="level3">
-<h3 class="anchored" data-anchor-id="gist">Gist</h3>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Warning
+<span class="screen-reader-only">Warning</span>A plain <code>*</code> crosses directory boundaries
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Even if a Gist is set to <code>Private</code>, it <strong>can still be accessed by anyone with the link</strong>. Do <strong>not</strong> store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.</p>
+<p>Unlike a shell glob, a bare pathspec <code>*</code> matches <code>/</code> too. So <code>Documentation/*.jpg</code> matches <code>Documentation/chapter_1/figure_1.jpg</code>, not just files directly under <code>Documentation/</code>. To stop <code>*</code> at a slash, use the <code>glob</code> magic (below).</p>
 </div>
 </div>
-<div class="no-border-top-table">
+</section>
+<section id="pathspec-rules-short-form-vs-long-form" class="level2">
+<h2 class="anchored" data-anchor-id="pathspec-rules-short-form-vs-long-form">Pathspec rules: short form vs long form</h2>
+<p>A pathspec that begins with a colon <code>:</code> carries <strong>magic</strong>.</p>
+<p><span class="mini-section">Short form</span></p>
+<pre><code>:&lt;signature letters&gt;&lt;pattern&gt;</code></pre>
+<p>The leading <code>:</code> is followed by zero or more <em>magic signature</em> letters, optionally terminated by another <code>:</code>, then the pattern.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">:/README.md</span>     <span class="co"># / = top    → README.md at repo root</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">:</span>!<span class="pp">*</span>.lock        <span class="co"># ! = exclude → everything except *.lock</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">:^*.lock</span>        <span class="co"># ^ is a synonym for !</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="mini-section">Long form</span></p>
+<pre><code>:(word1,word2,...)&lt;pattern&gt;</code></pre>
+<p>The leading <code>:</code> is followed by <code>(</code>, a comma-separated list of <em>magic words</em>, and <code>)</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">:</span><span class="er">(</span><span class="ex">top</span><span class="kw">)</span><span class="ex">src/**/*.py</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">:</span><span class="er">(</span><span class="ex">icase,glob</span><span class="kw">)</span><span class="ex">readme*</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">:</span><span class="er">(</span><span class="ex">exclude</span><span class="kw">)</span><span class="ex">*.lock</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A lone <code>:</code> means “no pathspec”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A pathspec of just <code>:</code> means <em>there is no pathspec</em>. Don’t combine it with other pathspecs.</p>
+</div>
+</div>
+</section>
+<section id="the-magic-signatures" class="level2">
+<h2 class="anchored" data-anchor-id="the-magic-signatures">The magic signatures</h2>
+<div class="no-border-top-table pb-3">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 60%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
+<th>Long word</th>
+<th>Short sig</th>
+<th>Effect</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Create Secret Gist from File</strong></td>
-<td><code>gh gist create &lt;filename&gt; -d "&lt;gist title&gt;"</code></td>
-<td>Create a secret gist with the given file and description</td>
+<td><code>top</code></td>
+<td><code>/</code></td>
+<td>Match from the <strong>repo root</strong>, even when run from a subdirectory</td>
 </tr>
 <tr class="even">
-<td><strong>Create Gist from standard output</strong></td>
-<td><code>cat cool.txt | gh gist create -d "&lt;gist title&gt;"</code></td>
-<td>Create a gist directly from command output or piped content</td>
+<td><code>literal</code></td>
+<td>—</td>
+<td>Treat <code>*</code> <code>?</code> <code>[</code> <code>]</code> as <strong>literal</strong> characters (no globbing)</td>
+</tr>
+<tr class="odd">
+<td><code>icase</code></td>
+<td>—</td>
+<td><strong>Case-insensitive</strong> match</td>
+</tr>
+<tr class="even">
+<td><code>glob</code></td>
+<td>—</td>
+<td>Shell-glob semantics: <code>*</code> does <strong>not</strong> match <code>/</code>; enables <code>**</code></td>
+</tr>
+<tr class="odd">
+<td><code>attr</code></td>
+<td>—</td>
+<td>Require gitattributes, e.g.&nbsp;<code>:(attr:text)</code></td>
+</tr>
+<tr class="even">
+<td><code>exclude</code></td>
+<td><code>!</code> or <code>^</code></td>
+<td><strong>Exclude</strong> matching paths from the result set</td>
 </tr>
 </tbody>
 </table>
 </div>
-
-
+<section id="top-match-from-the-repo-root" class="level3">
+<h3 class="anchored" data-anchor-id="top-match-from-the-repo-root"><code>top</code> — match from the repo root</h3>
+<p>Run from anywhere in the tree; the pattern is resolved relative to the toplevel rather than the current directory.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> notebooks/</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="st">':(top)pyproject.toml'</span>   <span class="co"># adds &lt;root&gt;/pyproject.toml, not notebooks/pyproject.toml</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+<section id="glob-make-work-and-stop-at" class="level3">
+<h3 class="anchored" data-anchor-id="glob-make-work-and-stop-at"><code>glob</code> — make <code>**</code> work and stop <code>*</code> at <code>/</code></h3>
+<p><code>glob</code> switches matching to <code>fnmatch</code> with <code>FNM_PATHNAME</code>, so <code>*</code> no longer crosses slashes, and <code>**</code> gains its familiar meaning:</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th>Matches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>**/foo</code></td>
+<td><code>foo</code> anywhere (leading <code>**/</code>)</td>
+</tr>
+<tr class="even">
+<td><code>abc/**</code></td>
+<td>everything inside <code>abc/</code>, infinite depth</td>
+</tr>
+<tr class="odd">
+<td><code>a/**/b</code></td>
+<td><code>a/b</code>, <code>a/x/b</code>, <code>a/x/y/b</code>, … (zero or more dirs)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="st">':(glob)src/**/*.py'</span>     <span class="co"># only .py under src/, at any depth, never crossing into other trees</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>glob</code> and <code>literal</code> are mutually exclusive
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You cannot combine <code>:(glob,literal)</code> — glob magic is incompatible with literal magic. Other doubled-up asterisks like <code>a/***/b</code> are also invalid.</p>
+</div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 1</strong></span> <span class="def-title"><code>**</code> vs <code>*</code> under <code>:(glob)</code></span></p>
+<p>Compare these two commands and decide which files each one stages:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="st">':(glob)src/**/*.py'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="st">':(glob)src/*/*.py'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The only difference is <code>**</code> vs <code>*</code>. Under <code>:(glob)</code>, a single <code>*</code> <strong>stops at <code>/</code></strong> (it matches exactly one path segment), while <code>**</code> bounded by slashes matches <strong>zero or more</strong> segments.</p>
+<ul>
+<li><code>:(glob)src/**/*.py</code> → every <code>.py</code> <strong>at any depth</strong> under <code>src/</code> (<code>**</code> may even expand to nothing).</li>
+<li><code>:(glob)src/*/*.py</code> → only <code>.py</code> files <strong>exactly two levels</strong> below <code>src/</code> — one mandatory intermediate directory, no deeper.</li>
+</ul>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Path</th>
+<th style="text-align: center;"><code>src/**/*.py</code></th>
+<th style="text-align: center;"><code>src/*/*.py</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>src/train.py</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr class="even">
+<td><code>src/models/net.py</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr class="odd">
+<td><code>src/models/layers/conv.py</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So <code>src/*/*.py</code> would silently skip both <code>src/train.py</code> (too shallow) and <code>src/models/layers/conv.py</code> (too deep). Reach for <code>**</code> whenever you mean “anywhere in this subtree”.</p>
+</div>
+<hr>
+</section>
+<section id="literal-disable-wildcards" class="level3">
+<h3 class="anchored" data-anchor-id="literal-disable-wildcards"><code>literal</code> — disable wildcards</h3>
+<p>When a filename genuinely contains <code>*</code>, <code>?</code>, or <code>[ ]</code>, treat them as ordinary characters.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="st">':(literal)report[final].csv'</span>   <span class="co"># the brackets are part of the name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="icase-case-insensitive" class="level3">
+<h3 class="anchored" data-anchor-id="icase-case-insensitive"><code>icase</code> — case-insensitive</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="st">':(icase)readme*'</span>   <span class="co"># README.md, ReadMe.txt, readme.rst ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="exclude-subtract-from-the-set" class="level3">
+<h3 class="anchored" data-anchor-id="exclude-subtract-from-the-set"><code>exclude</code> — subtract from the set</h3>
+<p>After a path matches a non-exclude pathspec, it is run through the exclude pathspecs; if it matches one, it is dropped. If you supply <strong>only</strong> exclude pathspecs, the exclusion applies to the whole result set.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stage everything except lockfiles and the data/ dir</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add . <span class="st">':(exclude)*.lock'</span> <span class="st">':(exclude)data/'</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># short form</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add . <span class="st">':!*.lock'</span> <span class="st">':!data/'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="commonly-used-pathspec-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="commonly-used-pathspec-patterns">Commonly used pathspec patterns</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Pathspec</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>All <code>.py</code> under <code>src/</code>, any depth</td>
+<td><code>':(glob)src/**/*.py'</code></td>
+</tr>
+<tr class="even">
+<td>A file at the repo root from a subdir</td>
+<td><code>':(top)pyproject.toml'</code></td>
+</tr>
+<tr class="odd">
+<td>Everything <strong>except</strong> lockfiles</td>
+<td><code>. ':(exclude)*.lock'</code></td>
+</tr>
+<tr class="even">
+<td>Everything except a whole directory</td>
+<td><code>. ':!data/'</code></td>
+</tr>
+<tr class="odd">
+<td>Case-insensitive readme</td>
+<td><code>':(icase)readme*'</code></td>
+</tr>
+<tr class="even">
+<td>Filename containing glob chars</td>
+<td><code>':(literal)v[2].csv'</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Pathspec replaces the <code>ls-files | grep</code> hack
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The pipeline in <a href="../../posts/2026-05-12-git-add-with-selected-files/index.html">OGG… How do I <code>git add</code> only files matching a pattern?</a> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="at">-mo</span> <span class="at">--exclude-standard</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'test|bats'</span> <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-I</span> {} git add {}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>— can often be replaced by a single pathspec, with no subshell and no word-splitting hazards:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="st">':(glob)**/*test*'</span> <span class="st">':(glob)**/*bats*'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Reach for the pipe only when you need filtering that pathspec can’t express (e.g.&nbsp;by file content or by <code>git ls-files</code> status flags like <code>-m</code>/<code>-o</code>).</p>
+</div>
 </div>
 </section>
+<section id="pathspec-gotchas-in-a-data-science-repo" class="level2">
+<h2 class="anchored" data-anchor-id="pathspec-gotchas-in-a-data-science-repo">🔬 Pathspec gotchas in a data-science repo</h2>
+<p><span class="mini-section">1. <code>git add .</code> sweeps in notebook checkpoints and data</span></p>
+<p>Running <code>git add .</code> in a notebook-heavy repo stages <code>.ipynb_checkpoints/</code>, large <code>data/*.parquet</code>, and <code>*.lock</code> files you never wanted committed. Scope the add instead of relying on <code>.gitignore</code> alone:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add . <span class="st">':(exclude).ipynb_checkpoints/'</span> <span class="st">':(exclude)data/'</span> <span class="st">':(exclude)*.parquet'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="mini-section">2. The shell expands your glob before Git sees it</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add :<span class="er">(</span><span class="ex">glob</span><span class="kw">)</span><span class="ex">src/**/*.py</span>     <span class="co"># ❌ zsh/bash try to expand () and ** themselves</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="st">':(glob)src/**/*.py'</span>   <span class="co"># ✅ quote it so Git receives the pathspec verbatim</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Always single-quote a pathspec that contains <code>:</code>, <code>(</code>, <code>)</code>, <code>*</code>, <code>!</code>, or <code>^</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>**</code> does nothing without <code>glob</code> magic
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A plain <code>git add 'src/**/*.py'</code> does <strong>not</strong> behave like a recursive glob — without <code>:(glob)</code>, <code>*</code> already crosses <code>/</code>, so the <code>**</code> is redundant and the semantics surprise you. Add <code>:(glob)</code> to get the directory-aware <code>**</code> you expect.</p>
+</div>
+</div>
+<p><span class="mini-section">3. <code>git restore -- &lt;pathspec&gt;</code> can silently match too much</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--</span> <span class="st">':(top)notebooks/'</span>   <span class="co"># discards ALL working-tree changes under notebooks/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>git restore</code> with a pathspec <strong>overwrites your working tree</strong>. Preview the set first with the same pathspec on a read-only command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="at">--</span> <span class="st">':(top)notebooks/'</span>   <span class="co"># exactly the files that would be touched</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="mini-section">4. <code>attr:</code> reads from the working tree, not the tree object</span></p>
+<p>When matching against a tree object (e.g.&nbsp;an old commit), <code>:(attr:...)</code> requirements are still evaluated against the <strong>current</strong> working-tree <code>.gitattributes</code>, not the attributes as they were in that commit. Don’t assume historical attribute state.</p>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> pathspec</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    The path-limiting argument Git commands accept after `--`.</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    Controls the subset of the tree or working tree a command</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    operates on, via globs plus optional "magic" prefixes.</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> magic signature</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    A prefix on a pathspec (short form like `:/`, `:!`, or long</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    form like `:(top)`, `:(exclude)`) that changes how the</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    remaining pattern is matched.</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> fnmatch(3)</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    The C library function Git uses to match pathspec patterns.</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    By default `*` and `?` match `/`; the `glob` magic adds the</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    FNM_PATHNAME flag so they do not.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec">Git Documentation &gt; gitglossary (pathspec)</a></li>
+<li><a href="https://git-scm.com/docs/git-ls-files">Git Documentation &gt; git-ls-files</a></li>
+<li><a href="../../posts/2026-05-12-git-add-with-selected-files/index.html">OGG… How do I <code>git add</code> only files matching a pattern?</a></li>
+<li><code>man gitglossary | col -b | grep -A72 'pathspec$'</code></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
