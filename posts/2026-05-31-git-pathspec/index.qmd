@@ -1,0 +1,336 @@
+---
+title: "OGG... What is a git pathspec and how do I use its magic signatures?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-05-31"
+date-modified: "2026-05-31"
+categories: [git add, pathspec, glob]
+---
+
+
+::: {.callout-note}
+## TL;DR
+
+- A **pathspec** is the path argument you pass to `git add`, `git diff`, `git restore`, etc. to limit which files a command touches
+- It supports **magic signatures** — prefixes that change matching behaviour:
+
+:::{.no-border-top-table}
+
+| Goal | Pathspec / Command | Example |
+|---|---|---|
+| Preview which paths a pathspec matches | `git ls-files -- <pathspec>` | `git ls-files -- ':(glob)src/**/*.py'` |
+| Recursive, directory-aware glob | `:(glob)dir/**/*.ext` | `git add ':(glob)src/**/*.py'` |
+| Match only one directory level | `:(glob)dir/*/*.ext` | `git add ':(glob)src/*/*.py'` |
+| Match from repository root | `:(top)<path>` | `git restore ':(top)notebooks/'` |
+| Exclude paths from a command | `:(exclude)<pathspec>` | `git add . ':(exclude)*.lock'` |
+| Case-insensitive matching | `:(icase)<pathspec>` | `git diff ':(icase)readme*'` |
+| Treat special glob characters literally | `:(literal)<name>` | `git add -- ':(literal)file[1].py'` |
+| Combine multiple pathspec magic options | `:(top,glob)<pathspec>` | `git add ':(top,glob)src/**/*.py'` |
+| Stage everything except a pattern | `git add . ':(exclude)<pattern>'` | `git add . ':(exclude)*.lock'` |
+| Restore changes under a directory | `git restore <pathspec>` | `git restore ':(top)notebooks/'` |
+: {tbl-colwidths="[34,33,33]"}
+
+:::
+
+
+:::
+
+
+## 🎯 Goal
+
+- [ ] Understand what a pathspec is and where Git accepts one
+- [ ] Read the pathspec grammar: directory prefix + `fnmatch` pattern
+- [ ] Use the magic signatures `top` / `literal` / `icase` / `glob` / `exclude`
+- [ ] Recognise common pathspec footguns in a data-science repo
+
+
+## 🔎 What is a pathspec?
+
+A pathspec is the pattern Git uses to **limit which paths a command operates on**. It is the trailing `<path>...` argument accepted by `git ls-files`, `git ls-tree`, `git add`, `git grep`, `git diff`, `git restore`, `git stash push`, and many others.
+
+```bash
+git <command> [options] -- <pathspec>...
+```
+
+The `--` separates options from pathspecs. Use it whenever a pathspec could be mistaken for a flag or a branch name (e.g. a file literally named `main`).
+
+Three matching rules apply to a plain (non-magic) pathspec:
+
+:::{.no-border-top-table .pb-3}
+
+| Rule | Meaning |
+|---|---|
+| Any path matches itself | `src/train.py` matches exactly that file |
+| Text up to the **last slash** is a directory prefix | `data/*.csv` is scoped to the `data/` subtree |
+| The rest is an `fnmatch(3)` pattern | `*` and `?` **can** match `/` by default |
+
+:::
+
+::: {.callout-warning}
+## A plain `*` crosses directory boundaries
+
+Unlike a shell glob, a bare pathspec `*` matches `/` too. So `Documentation/*.jpg` matches `Documentation/chapter_1/figure_1.jpg`, not just files directly under `Documentation/`. To stop `*` at a slash, use the `glob` magic (below).
+:::
+
+
+## Pathspec rules: short form vs long form
+
+A pathspec that begins with a colon `:` carries **magic**.
+
+[Short form]{.mini-section}
+
+```
+:<signature letters><pattern>
+```
+
+The leading `:` is followed by zero or more *magic signature* letters, optionally terminated by another `:`, then the pattern.
+
+```bash
+:/README.md     # / = top    → README.md at repo root
+:!*.lock        # ! = exclude → everything except *.lock
+:^*.lock        # ^ is a synonym for !
+```
+
+[Long form]{.mini-section}
+
+```
+:(word1,word2,...)<pattern>
+```
+
+The leading `:` is followed by `(`, a comma-separated list of *magic words*, and `)`.
+
+```bash
+:(top)src/**/*.py
+:(icase,glob)readme*
+:(exclude)*.lock
+```
+
+::: {.callout-tip}
+## A lone `:` means "no pathspec"
+
+A pathspec of just `:` means *there is no pathspec*. Don't combine it with other pathspecs.
+:::
+
+
+## The magic signatures
+
+:::{.no-border-top-table .pb-3}
+
+| Long word | Short sig | Effect |
+|---|---|---|
+| `top` | `/` | Match from the **repo root**, even when run from a subdirectory |
+| `literal` | — | Treat `*` `?` `[` `]` as **literal** characters (no globbing) |
+| `icase` | — | **Case-insensitive** match |
+| `glob` | — | Shell-glob semantics: `*` does **not** match `/`; enables `**` |
+| `attr` | — | Require gitattributes, e.g. `:(attr:text)` |
+| `exclude` | `!` or `^` | **Exclude** matching paths from the result set |
+: {tbl-colwidths="[20,20,60]"}
+
+
+:::
+
+### `top` — match from the repo root
+
+Run from anywhere in the tree; the pattern is resolved relative to the toplevel rather than the current directory.
+
+```bash
+cd notebooks/
+git add ':(top)pyproject.toml'   # adds <root>/pyproject.toml, not notebooks/pyproject.toml
+```
+
+### `glob` — make `**` work and stop `*` at `/`
+
+`glob` switches matching to `fnmatch` with `FNM_PATHNAME`, so `*` no longer crosses slashes, and `**` gains its familiar meaning:
+
+:::{.no-border-top-table .pb-3}
+
+| Pattern | Matches |
+|---|---|
+| `**/foo` | `foo` anywhere (leading `**/`) |
+| `abc/**` | everything inside `abc/`, infinite depth |
+| `a/**/b` | `a/b`, `a/x/b`, `a/x/y/b`, ... (zero or more dirs) |
+
+:::
+
+```bash
+git add ':(glob)src/**/*.py'     # only .py under src/, at any depth, never crossing into other trees
+```
+
+::: {.callout-warning}
+## `glob` and `literal` are mutually exclusive
+
+You cannot combine `:(glob,literal)` — glob magic is incompatible with literal magic. Other doubled-up asterisks like `a/***/b` are also invalid.
+:::
+
+::: {#exm- .custom_problem }
+[`**` vs `*` under `:(glob)`]{.def-title}
+
+Compare these two commands and decide which files each one stages:
+
+```bash
+git add ':(glob)src/**/*.py'
+git add ':(glob)src/*/*.py'
+```
+
+The only difference is `**` vs `*`. Under `:(glob)`, a single `*` **stops at `/`** (it matches exactly one path segment), while `**` bounded by slashes matches **zero or more** segments.
+
+- `:(glob)src/**/*.py` → every `.py` **at any depth** under `src/` (`**` may even expand to nothing).
+- `:(glob)src/*/*.py` → only `.py` files **exactly two levels** below `src/` — one mandatory intermediate directory, no deeper.
+
+:::{.no-border-top-table .pb-3}
+
+| Path | `src/**/*.py` | `src/*/*.py` |
+|---|:---:|:---:|
+| `src/train.py` | ✅ | ❌ |
+| `src/models/net.py` | ✅ | ✅ |
+| `src/models/layers/conv.py` | ✅ | ❌ |
+
+:::
+
+So `src/*/*.py` would silently skip both `src/train.py` (too shallow) and `src/models/layers/conv.py` (too deep). Reach for `**` whenever you mean "anywhere in this subtree".
+
+:::
+***
+
+
+
+### `literal` — disable wildcards
+
+When a filename genuinely contains `*`, `?`, or `[ ]`, treat them as ordinary characters.
+
+```bash
+git add ':(literal)report[final].csv'   # the brackets are part of the name
+```
+
+### `icase` — case-insensitive
+
+```bash
+git diff ':(icase)readme*'   # README.md, ReadMe.txt, readme.rst ...
+```
+
+### `exclude` — subtract from the set
+
+After a path matches a non-exclude pathspec, it is run through the exclude pathspecs; if it matches one, it is dropped. If you supply **only** exclude pathspecs, the exclusion applies to the whole result set.
+
+```bash
+# stage everything except lockfiles and the data/ dir
+git add . ':(exclude)*.lock' ':(exclude)data/'
+
+# short form
+git add . ':!*.lock' ':!data/'
+```
+
+
+## Commonly used pathspec patterns
+
+:::{.no-border-top-table}
+
+| Goal | Pathspec |
+|---|---|
+| All `.py` under `src/`, any depth | `':(glob)src/**/*.py'` |
+| A file at the repo root from a subdir | `':(top)pyproject.toml'` |
+| Everything **except** lockfiles | `. ':(exclude)*.lock'` |
+| Everything except a whole directory | `. ':!data/'` |
+| Case-insensitive readme | `':(icase)readme*'` |
+| Filename containing glob chars | `':(literal)v[2].csv'` |
+
+: {tbl-colwidths="[55,45]"}
+
+:::
+
+::: {.callout-tip}
+## Pathspec replaces the `ls-files | grep` hack
+
+The pipeline in [OGG... How do I `git add` only files matching a pattern?](../2026-05-12-git-add-with-selected-files/index.qmd) —
+
+```bash
+git ls-files -mo --exclude-standard | grep -E 'test|bats' | xargs -I {} git add {}
+```
+
+— can often be replaced by a single pathspec, with no subshell and no word-splitting hazards:
+
+```bash
+git add ':(glob)**/*test*' ':(glob)**/*bats*'
+```
+
+Reach for the pipe only when you need filtering that pathspec can't express (e.g. by file content or by `git ls-files` status flags like `-m`/`-o`).
+:::
+
+
+## 🔬 Pathspec gotchas in a data-science repo
+
+[1. `git add .` sweeps in notebook checkpoints and data]{.mini-section}
+
+Running `git add .` in a notebook-heavy repo stages `.ipynb_checkpoints/`, large `data/*.parquet`, and `*.lock` files you never wanted committed. Scope the add instead of relying on `.gitignore` alone:
+
+```bash
+git add . ':(exclude).ipynb_checkpoints/' ':(exclude)data/' ':(exclude)*.parquet'
+```
+
+[2. The shell expands your glob before Git sees it]{.mini-section}
+
+```bash
+git add :(glob)src/**/*.py     # ❌ zsh/bash try to expand () and ** themselves
+git add ':(glob)src/**/*.py'   # ✅ quote it so Git receives the pathspec verbatim
+```
+
+Always single-quote a pathspec that contains `:`, `(`, `)`, `*`, `!`, or `^`.
+
+::: {.callout-warning}
+## `**` does nothing without `glob` magic
+
+A plain `git add 'src/**/*.py'` does **not** behave like a recursive glob — without `:(glob)`, `*` already crosses `/`, so the `**` is redundant and the semantics surprise you. Add `:(glob)` to get the directory-aware `**` you expect.
+:::
+
+[3. `git restore -- <pathspec>` can silently match too much]{.mini-section}
+
+```bash
+git restore -- ':(top)notebooks/'   # discards ALL working-tree changes under notebooks/
+```
+
+`git restore` with a pathspec **overwrites your working tree**. Preview the set first with the same pathspec on a read-only command:
+
+```bash
+git ls-files -- ':(top)notebooks/'   # exactly the files that would be touched
+```
+
+[4. `attr:` reads from the working tree, not the tree object]{.mini-section}
+
+When matching against a tree object (e.g. an old commit), `:(attr:...)` requirements are still evaluated against the **current** working-tree `.gitattributes`, not the attributes as they were in that commit. Don't assume historical attribute state.
+
+
+## Glossary
+
+::: {.glossary-container}
+
+```yml
+- def: pathspec
+  description: |
+    The path-limiting argument Git commands accept after `--`.
+    Controls the subset of the tree or working tree a command
+    operates on, via globs plus optional "magic" prefixes.
+
+- def: magic signature
+  description: |
+    A prefix on a pathspec (short form like `:/`, `:!`, or long
+    form like `:(top)`, `:(exclude)`) that changes how the
+    remaining pattern is matched.
+
+- def: fnmatch(3)
+  description: |
+    The C library function Git uses to match pathspec patterns.
+    By default `*` and `?` match `/`; the `glob` magic adds the
+    FNM_PATHNAME flag so they do not.
+```
+
+:::
+
+
+📘 References
+---------
+
+- [Git Documentation > gitglossary (pathspec)](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
+- [Git Documentation > git-ls-files](https://git-scm.com/docs/git-ls-files)
+- [OGG... How do I `git add` only files matching a pattern?](../2026-05-12-git-add-with-selected-files/index.qmd)
+- `man gitglossary | col -b | grep -A72 'pathspec$'`
