@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-07-24-push-orphan-branch/index.html",
       "/posts/2026-05-31-git-pathspec/index.html",
       "/posts/2026-05-23-development-flow-for-small-project/index.html",
       "/posts/2026-05-21-poetry-add-from-gitlab-in-intra-server/index.html",

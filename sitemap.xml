@@ -146,11 +146,11 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/index.html</loc>
-    <lastmod>2026-05-31T08:33:30.832Z</lastmod>
+    <lastmod>2026-07-28T00:27:31.746Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/index.html</loc>
-    <lastmod>2026-05-31T08:33:30.832Z</lastmod>
+    <lastmod>2026-07-28T00:27:31.747Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/index.html</loc>
@@ -187,5 +187,9 @@
   <url>
     <loc>https://ohgoshgit.github.io/posts/2026-05-31-git-pathspec/index.html</loc>
     <lastmod>2026-05-31T08:33:30.841Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ohgoshgit.github.io/posts/2026-07-24-push-orphan-branch/index.html</loc>
+    <lastmod>2026-07-28T00:27:31.755Z</lastmod>
   </url>
 </urlset>

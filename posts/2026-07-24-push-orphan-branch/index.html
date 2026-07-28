@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2026-07-24">
 
-<title>Gitってむずかしいわぁ．．．でもヘコタレへん – OhGoshGit!?!</title>
+<title>OGG… How do I push a local repo into my monorepo as a new independent branch? – OhGoshGit!?!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,6 +28,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -37,8 +74,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -80,35 +115,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
 
 <script type="text/javascript">
@@ -131,38 +137,9 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <link rel="stylesheet" href="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.css">
 <script type="text/javascript" src="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<link rel="alternate" type="application/rss+xml" title="OhGoshGit!?!" href="index.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -383,16 +360,39 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Gitってむずかしいわぁ．．．でもヘコタレへん</h1>
-            <p class="subtitle lead">日常の分析/開発場面で直面したトラブルとその解決方法を平易な日本語で紹介します</p>
-                      </div>
+      <h1 class="title">OGG… How do I push a local repo into my monorepo as a new independent branch?</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">git push</div>
+                <div class="quarto-category">git branch</div>
+                <div class="quarto-category">git remote</div>
+                <div class="quarto-category">monorepo</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta column-page-left">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026-07-24</p>
+      </div>
+    </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2026-07-28</p>
+      </div>
+    </div>
       
     </div>
     
@@ -401,8 +401,23 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(17)</span></div><div class="category" data-category="YmZn">bfg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwYnJhbmNo">git branch <span class="quarto-category-count">(5)</span></div><div class="category" data-category="Z2l0JTIwY2hlY2tvdXQ=">git checkout <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY2xvbmU=">git clone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwY29tbWl0">git commit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZGlmZnRvb2w=">git difftool <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwZmxvdw==">git flow <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcHVzaA==">git push <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmViYXNl">git rebase <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0JTIwcmVzZXQ=">git reset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2l0JTIwcmVzdG9yZQ==">git restore <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2l0aWdub3Jl">gitignore <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmVsZWFzZQ==">release <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c2VtdmVy">semver <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3No">ssh <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#objective" id="toc-objective" class="nav-link" data-scroll-target="#objective">🔎 Objective</a></li>
+  <li><a href="#why-you-dont-need---orphan-here" id="toc-why-you-dont-need---orphan-here" class="nav-link" data-scroll-target="#why-you-dont-need---orphan-here">Why you don’t need <code>--orphan</code> here</a></li>
+  <li><a href="#solution-1-push-the-local-repo-as-a-new-branch" id="toc-solution-1-push-the-local-repo-as-a-new-branch" class="nav-link" data-scroll-target="#solution-1-push-the-local-repo-as-a-new-branch">Solution 1: push the local repo as a new branch</a></li>
+  <li><a href="#solution-2-start-a-fresh-independent-branch-inside-the-monorepo" id="toc-solution-2-start-a-fresh-independent-branch-inside-the-monorepo" class="nav-link" data-scroll-target="#solution-2-start-a-fresh-independent-branch-inside-the-monorepo">Solution 2: start a fresh independent branch inside the monorepo</a></li>
+  <li><a href="#solution-3-orphan-branch-that-carries-files-over-from-an-existing-branch" id="toc-solution-3-orphan-branch-that-carries-files-over-from-an-existing-branch" class="nav-link" data-scroll-target="#solution-3-orphan-branch-that-carries-files-over-from-an-existing-branch">Solution 3: orphan branch that carries files over from an existing branch</a>
+  <ul class="collapse">
+  <li><a href="#a-git-switch---orphan-git-restore-version" id="toc-a-git-switch---orphan-git-restore-version" class="nav-link" data-scroll-target="#a-git-switch---orphan-git-restore-version">(A) <code>git switch --orphan</code> + <code>git restore</code> version</a></li>
+  <li><a href="#b-git-checkout---orphan-git-checkout-branch----path-version" id="toc-b-git-checkout---orphan-git-checkout-branch----path-version" class="nav-link" data-scroll-target="#b-git-checkout---orphan-git-checkout-branch----path-version">(B) <code>git checkout --orphan</code> + <code>git checkout &lt;branch&gt; -- &lt;path&gt;</code> version</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -411,256 +426,236 @@ window.Quarto = {
 
 
 
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>A branch does <strong>not</strong> need to share an ancestor with <code>main</code></li>
+<li>If your local repo was born from its own <code>git init</code>, its history is already independent</li>
+</ul>
+<p>If you want to push the independent branch into the remote, just point a remote at the monorepo and push:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add origin git@github.com:<span class="op">&lt;</span>org<span class="op">&gt;</span>/<span class="op">&lt;</span>monorepo<span class="op">&gt;</span>.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> <span class="op">&lt;</span>unique-branch-name<span class="op">&gt;</span>   <span class="co"># rename the local branch to the target name</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin HEAD:<span class="op">&lt;</span>unique-branch-name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>No <code>--orphan</code> surgery needed</li>
+<li><code>--orphan</code> is only for starting a fresh history-less branch <em>from inside</em> the monorepo checkout.</li>
+</ul>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Push an already-committed local repo to a monorepo as a brand-new branch</label></li>
+<li><label><input type="checkbox">Keep that branch’s history independent (no shared ancestor with <code>main</code>)</label></li>
+<li><label><input type="checkbox">Know when <code>git switch --orphan</code> is actually the right tool</label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>You have a local Git repository that you already initialized with <code>git init</code> and committed into (a small data-science analysis, a sprint deliverable, a standalone package). Your team runs a <strong>monorepo</strong> where each branch keeps a <em>completely independent history</em></p>
+<ul>
+<li>one branch per project</li>
+<li>a project branch sharing no common ancestor with <code>main</code></li>
+</ul>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">monorepo</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> main                          ← its own root commit</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> ds/2026-price-elasticity      ← its own root commit</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> <span class="op">&lt;</span>unique-branch-name<span class="op">&gt;</span>   ← the branch you want to push</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now you want to push the local repository into the monorepo <strong>as a brand-new branch</strong>, without merging its history into <code>main</code> and without it inheriting anything from the existing branches.</p>
+<p>The questions are:</p>
+<ul>
+<li>How do I push a local repo’s history to a remote <em>as a new branch</em>?</li>
+<li>How do I make sure it stays <strong>independent</strong>?</li>
+</ul>
+</section>
+<section id="why-you-dont-need---orphan-here" class="level2">
+<h2 class="anchored" data-anchor-id="why-you-dont-need---orphan-here">Why you don’t need <code>--orphan</code> here</h2>
+<p>In Git, branches are <strong>not required</strong> to share a common ancestor. Two branches with totally unrelated histories can coexist in the same repository, and there is no special “make it independent” operation. Independence is a property of the <em>history</em>, not of the push.</p>
+<p>Your local repo already has its own root commit — created by its own <code>git init</code> — so it is independent by construction. A plain <code>push</code> is all you need: the pushed branch simply becomes another unrelated line of history in the monorepo.</p>
+<p>There are only two situations:</p>
+<ol type="1">
+<li>Your local repo <strong>already has commits</strong> → just push it to a new remote branch (this post’s main case).</li>
+<li>You are <strong>starting a fresh independent branch</strong> from inside the monorepo checkout → create an orphan branch first (see Solutions 2 and 3).</li>
+</ol>
+</section>
+<section id="solution-1-push-the-local-repo-as-a-new-branch" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-push-the-local-repo-as-a-new-branch">Solution 1: push the local repo as a new branch</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Register the monorepo as a remote of your local repo.</li>
+<li>Rename your current local branch to the target branch name with <code>git switch -c</code>, so local and remote names match.</li>
+<li>Push with <code>git push -u origin HEAD:&lt;new-branch&gt;</code></li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: move into your local repository (history already committed)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/local-repo</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: register the monorepo remote</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add origin git@github.com:<span class="op">&lt;</span>org<span class="op">&gt;</span>/<span class="op">&lt;</span>monorepo<span class="op">&gt;</span>.git</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: (optional) fetch first so you don't collide with an existing remote branch</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch origin</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-a</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: rename the local branch to the target name</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> <span class="op">&lt;</span>unique-branch-name<span class="op">&gt;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: push the current branch as a new remote branch</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin HEAD:<span class="op">&lt;</span>unique-branch-name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>After Step 4 the local branch name equals the remote one, so <code>git push -u origin &lt;unique-branch-name&gt;</code> would work too — but the <code>HEAD:&lt;new-branch&gt;</code> form is explicit about <em>what</em> goes <em>where</em> and works even when the names differ.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If the local repo already has an <code>origin</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>origin</code> is just a conventional name. If your local repo already points <code>origin</code> somewhere else (e.g.&nbsp;its own standalone remote), register the monorepo under a distinct name and push there instead:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add monorepo git@github.com:<span class="op">&lt;</span>org<span class="op">&gt;</span>/<span class="op">&lt;</span>monorepo<span class="op">&gt;</span>.git</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> monorepo HEAD:<span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><strong> ▶&nbsp; Verify the upstream</strong></p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-vvv</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>If the upstream is not what you expect, fix it with:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">--set-upstream-to</span><span class="op">=</span>origin/<span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="solution-2-start-a-fresh-independent-branch-inside-the-monorepo" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-start-a-fresh-independent-branch-inside-the-monorepo">Solution 2: start a fresh independent branch inside the monorepo</h2>
+<p>If instead you are inside the monorepo checkout and want to spin up a <em>new</em> project branch with no history yet, use <code>git switch --orphan</code>. An orphan branch has no parent commit, so its first commit becomes a fresh root.</p>
+<p><code>git switch --orphan</code> also <strong>empties the working tree</strong>: all tracked files disappear from both the worktree and the index. Untracked files — build artifacts, <code>__pycache__/</code>, etc. — survive.</p>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: create a history-less branch (tracked files are all removed)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">--orphan</span> <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: place this project's files, then make the first root commit</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Initial commit for &lt;new-branch&gt;"</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: push the independent branch</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="solution-3-orphan-branch-that-carries-files-over-from-an-existing-branch" class="level2">
+<h2 class="anchored" data-anchor-id="solution-3-orphan-branch-that-carries-files-over-from-an-existing-branch">Solution 3: orphan branch that carries files over from an existing branch</h2>
+<p>Sometimes the new independent branch should not start <em>completely</em> empty, e.g., you want to inherit a few files (<code>.gitignore</code>, <code>setup.sh</code>, CI config) from an existing branch, without inheriting its history.</p>
+<p>There are two ways to do this, depending on whether you use the modern <code>switch</code>/<code>restore</code> pair or the legacy <code>checkout</code> command.</p>
+<section id="a-git-switch---orphan-git-restore-version" class="level3">
+<h3 class="anchored" data-anchor-id="a-git-switch---orphan-git-restore-version">(A) <code>git switch --orphan</code> + <code>git restore</code> version</h3>
+<p><code>git switch --orphan</code> leaves you with a completely empty worktree and index. Pair it with <code>git restore --source=&lt;source-branch&gt;</code> to pull specific files back in — restored into <strong>both the worktree and the index</strong>, ready to commit immediately.</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: create a history-less branch (worktree and index start empty)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">--orphan</span> <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: pull over only the files you want to carry, from the source branch</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#         (restored into the worktree AND the index)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--source</span><span class="op">=&lt;</span>source-branch<span class="op">&gt;</span> --staged <span class="at">--worktree</span> <span class="at">--</span> .gitignore</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># multiple paths work too</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--source</span><span class="op">=&lt;</span>source-branch<span class="op">&gt;</span> --staged <span class="at">--worktree</span> <span class="at">--</span> .gitignore setup.sh scripts/</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: add this project's new files, then make the first root commit</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Initial commit for &lt;new-branch&gt;"</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: push the independent branch</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Carrying over everything</strong></p>
+<p>To carry <strong>all</strong> tracked files from the source branch, restore <code>.</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">--orphan</span> <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--source</span><span class="op">=&lt;</span>source-branch<span class="op">&gt;</span> --staged <span class="at">--worktree</span> <span class="at">--</span> .</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Initial commit"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="b-git-checkout---orphan-git-checkout-branch----path-version" class="level3">
+<h3 class="anchored" data-anchor-id="b-git-checkout---orphan-git-checkout-branch----path-version">(B) <code>git checkout --orphan</code> + <code>git checkout &lt;branch&gt; -- &lt;path&gt;</code> version</h3>
+<p>The legacy equivalent uses <code>git checkout --orphan</code>, which — unlike <code>switch</code> — keeps all files from the previous branch <strong>staged</strong> in the index rather than emptying it. You typically clear them out, then use <code>git checkout &lt;source-branch&gt; -- &lt;path&gt;</code> to bring specific files back from the source branch.</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: create a history-less branch (all previous branch's files are staged)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">--orphan</span> <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: clear out what came along, then pull over only the files you want</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rm <span class="at">-rf</span> .</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="op">&lt;</span>source-branch<span class="op">&gt;</span> -- .gitignore</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># multiple paths work too</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="op">&lt;</span>source-branch<span class="op">&gt;</span> -- .gitignore setup.sh</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: add this project's new files, then make the first root commit</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Initial commit for &lt;new-branch&gt;"</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: push the independent branch</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Carrying over everything</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">--orphan</span> <span class="op">&lt;</span>new-branch<span class="op">&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rm <span class="at">-rf</span> .</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="op">&lt;</span>source-branch<span class="op">&gt;</span> -- .</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Initial commit"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>git checkout &lt;source-branch&gt; -- .</code> restores every tracked file of <code>&lt;source-branch&gt;</code> into the worktree and the index, so a single commit gives you a branch whose <em>content</em> matches the source branch but whose <em>history</em> is one root commit.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>switch</code>/<code>restore</code> vs <code>checkout --orphan</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-Date
-</th>
-
-<th>
-Title
-</th>
-
-<th>
-Reading Time
-</th>
-
+<tr class="header">
+<th>You want to…</th>
+<th>Use</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="Z2l0JTIwYnJhbmNoJTJDZ2l0JTIwZmxvdyUyQ3JlbGVhc2UlMkNzZW12ZXI=" data-listing-date-sort="1779494400000" data-listing-file-modified-sort="1785198451751" data-listing-date-modified-sort="1785198451000" data-listing-reading-time-sort="6" data-listing-word-count-sort="1087" data-listing-title-sort="OGG... 小規模プロジェクトではどんなブランチ戦略を使うべきか？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2026-05-23</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2026-05-23-development-flow-for-small-project/index.html" class="title listing-title">OGG… 小規模プロジェクトではどんなブランチ戦略を使うべきか？</a>
-</td>
-<td>
-<span class="listing-reading-time">6 min</span>
-</td>
-
+<tbody>
+<tr class="odd">
+<td>Start from an empty tree, hand-pick files</td>
+<td><code>git switch --orphan</code> + <code>git restore --source=&lt;src&gt;</code></td>
 </tr>
-
-<tr data-index="1" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1757808000000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="1757980800000" data-listing-reading-time-sort="3" data-listing-word-count-sort="486" data-listing-title-sort="OGG... よく使われるGitブランチの命名規則とは？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-09-14</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-09-14-git-branch-naming/index.html" class="title listing-title">OGG… よく使われるGitブランチの命名規則とは？</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
+<tr class="even">
+<td>Keep the full current content staged, cut history only</td>
+<td><code>git checkout --orphan</code> + <code>git rm -rf .</code> + <code>git checkout &lt;src&gt; -- .</code></td>
 </tr>
-
-<tr data-index="2" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1754352000000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="203" data-listing-title-sort="あぁぁ... 特定のコミットからファイルを復元するにはどうすればいいんだ？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-08-05-restore-file-from-specific-commit/index.html" class="title listing-title">あぁぁ… 特定のコミットからファイルを復元するにはどうすればいいんだ？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="3" data-categories="Z2l0JTIwY2hlY2tvdXQ=" data-listing-date-sort="1754265600000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="1754352000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="372" data-listing-title-sort="あぁぁ... 特定のディレクトリに対してgit sparse-checkoutを実行したい" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-08-04</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-08-04-git-sparse-checkout/index.html" class="title listing-title">あぁぁ… 特定のディレクトリに対してgit sparse-checkoutを実行したい</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="4" data-categories="Z2l0JTIwcmVzZXQ=" data-listing-date-sort="1749859200000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="380" data-listing-title-sort="あぁぁ... git reset --hard と --mixed と --soft の違いは何？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-14</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html" class="title listing-title">あぁぁ… git reset –hard と –mixed と –soft の違いは何？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="5" data-categories="Z2l0JTIwcmVzdG9yZQ==" data-listing-date-sort="1749772800000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="60" data-listing-title-sort="あぁぁ... とあるファイルについてgit addを取り消したい．．．" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-13</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-13-how-to-unstage-files/index.html" class="title listing-title">あぁぁ… とあるファイルについてgit addを取り消したい．．．</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="6" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1749168000000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="383" data-listing-title-sort="あぁぁ... 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-06</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-06-organize-commits-using-git-rebase/index.html" class="title listing-title">あぁぁ… 複数の一時的なcommitを1つの意味のあるcommitにまとめるにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="7" data-categories="Z2l0aWdub3JlJTJDYmZn" data-listing-date-sort="1749081600000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618" data-listing-title-sort="あぁぁ... Gitで設定ファイルや秘密情報をどう管理すればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2025-06-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2025-06-05-how-to-manage-secrets/index.html" class="title listing-title">あぁぁ… Gitで設定ファイルや秘密情報をどう管理すればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-
-</tr>
-
-<tr data-index="8" data-categories="c3No" data-listing-date-sort="1734393600000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="123" data-listing-title-sort="あぁぁ... GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-12-17</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-12-17-access-to-github-via-ssh/index.html" class="title listing-title">あぁぁ… GitHubリポジトリへのSSH接続を設定するにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="9" data-categories="Z2l0JTIwZGlmZnRvb2w=" data-listing-date-sort="1730851200000" data-listing-file-modified-sort="1785198451750" data-listing-date-modified-sort="1785198451000" data-listing-reading-time-sort="3" data-listing-word-count-sort="539" data-listing-title-sort="OGG... How do I check unstaged differences with the latest commit?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-06</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-06-check-diff-with-git-difftool/index.html" class="title listing-title">OGG… How do I check unstaged differences with the latest commit?</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="10" data-categories="Z2l0JTIwcmViYXNl" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1785198451749" data-listing-date-modified-sort="1785198451000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2216" data-listing-title-sort="OGG... Should I use git rebase?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-05</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-05-when-do-i-use-git-rebase/index.html" class="title listing-title">OGG… Should I use git rebase?</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-
-</tr>
-
-<tr data-index="11" data-categories="Z2l0JTIwcHVzaA==" data-listing-date-sort="1730419200000" data-listing-file-modified-sort="1785198451749" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="あぁぁ... GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-11-01</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-11-01-push-to-multiple-origins/index.html" class="title listing-title">あぁぁ… GitHubとGitLabのリモートに同時にプッシュするにはどうすればええんや？</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
-<tr data-index="12" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1730332800000" data-listing-file-modified-sort="1785198451749" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="あぁぁ... ローカルのGitブランチを異なる名前でリモートにプッシュしたい..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-10-31</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/index.html" class="title listing-title">あぁぁ… ローカルのGitブランチを異なる名前でリモートにプッシュしたい…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="13" data-categories="Z2l0JTIwY2xvbmU=" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1785198451748" data-listing-date-modified-sort="1749859200000" data-listing-reading-time-sort="1" data-listing-word-count-sort="58" data-listing-title-sort="あぁぁ... 現在のリポジトリを別のリモートに保存したい..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-26</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-26-mirror-repository-to-newremote/index.html" class="title listing-title">あぁぁ… 現在のリポジトリを別のリモートに保存したい…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="14" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1721260800000" data-listing-file-modified-sort="1785198451748" data-listing-date-modified-sort="1785198451000" data-listing-reading-time-sort="3" data-listing-word-count-sort="552" data-listing-title-sort="あぁぁ... リモートブランチにpushも，リモート変更も，pullもできない..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-18</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-18-cannot-push-to-remote-branch/index.html" class="title listing-title">あぁぁ… リモートブランチにpushも，リモート変更も，pullもできない…</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-
-</tr>
-
-<tr data-index="15" data-categories="Z2l0JTIwYnJhbmNo" data-listing-date-sort="1720828800000" data-listing-file-modified-sort="1785198451747" data-listing-date-modified-sort="1785198451000" data-listing-reading-time-sort="1" data-listing-word-count-sort="78" data-listing-title-sort="あぁぁ... 間違ったbranch nameつけてしもうた..." data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-13</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-13-fix-wrong-branchname/index.html" class="title listing-title">あぁぁ… 間違ったbranch nameつけてしもうた…</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-
-</tr>
-
-<tr data-index="16" data-categories="Z2l0JTIwY29tbWl0" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1785198451747" data-listing-date-modified-sort="1785198451000" data-listing-reading-time-sort="2" data-listing-word-count-sort="229" data-listing-title-sort="あぁぁ... 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-07-12</span>
-</td>
-<td>
-<a href="../../language/jp/posts-jp/2024-07-12-committed-on-a-wrong-branch/index.html" class="title listing-title">あぁぁ… 新規作成したブランチにcommitしたかったのに，間違えてlocal mainにcommitしてもうた</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
 <script>
     document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
         let modName = title.innerHTML;
@@ -1083,6 +1078,8 @@ Reading Time
     }
   });
   </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1100,7 +1097,7 @@ Reading Time
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

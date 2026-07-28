@@ -9,8 +9,562 @@
 <link>https://ohgoshgit.github.io/</link>
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.9.38</generator>
-<lastBuildDate>Sun, 31 May 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.10.18</generator>
+<lastBuildDate>Fri, 24 Jul 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I push a local repo into my monorepo as a new independent branch?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-07-24-push-orphan-branch/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>A branch does <strong>not</strong> need to share an ancestor with <code>main</code></li>
+<li>If your local repo was born from its own <code>git init</code>, its history is already independent</li>
+</ul>
+<p>If you want to push the independent branch into the remote, just point a remote at the monorepo and push:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote add origin git@github.com:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>org<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>/<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>monorepo<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>.git</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>unique-branch-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># rename the local branch to the target name</span></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin HEAD:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>unique-branch-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+</div>
+<ul>
+<li>No <code>--orphan</code> surgery needed</li>
+<li><code>--orphan</code> is only for starting a fresh history-less branch <em>from inside</em> the monorepo checkout.</li>
+</ul>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Push an already-committed local repo to a monorepo as a brand-new branch</label></li>
+<li><label><input type="checkbox">Keep that branch’s history independent (no shared ancestor with <code>main</code>)</label></li>
+<li><label><input type="checkbox">Know when <code>git switch --orphan</code> is actually the right tool</label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>You have a local Git repository that you already initialized with <code>git init</code> and committed into (a small data-science analysis, a sprint deliverable, a standalone package). Your team runs a <strong>monorepo</strong> where each branch keeps a <em>completely independent history</em></p>
+<ul>
+<li>one branch per project</li>
+<li>a project branch sharing no common ancestor with <code>main</code></li>
+</ul>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">monorepo</span></span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> main                          ← its own root commit</span>
+<span id="cb2-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> ds/2026-price-elasticity      ← its own root commit</span>
+<span id="cb2-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└──</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>unique-branch-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>   ← the branch you want to push</span></code></pre></div></div>
+</div>
+<p>Now you want to push the local repository into the monorepo <strong>as a brand-new branch</strong>, without merging its history into <code>main</code> and without it inheriting anything from the existing branches.</p>
+<p>The questions are:</p>
+<ul>
+<li>How do I push a local repo’s history to a remote <em>as a new branch</em>?</li>
+<li>How do I make sure it stays <strong>independent</strong>?</li>
+</ul>
+</section>
+<section id="why-you-dont-need---orphan-here" class="level2">
+<h2 class="anchored" data-anchor-id="why-you-dont-need---orphan-here">Why you don’t need <code>--orphan</code> here</h2>
+<p>In Git, branches are <strong>not required</strong> to share a common ancestor. Two branches with totally unrelated histories can coexist in the same repository, and there is no special “make it independent” operation. Independence is a property of the <em>history</em>, not of the push.</p>
+<p>Your local repo already has its own root commit — created by its own <code>git init</code> — so it is independent by construction. A plain <code>push</code> is all you need: the pushed branch simply becomes another unrelated line of history in the monorepo.</p>
+<p>There are only two situations:</p>
+<ol type="1">
+<li>Your local repo <strong>already has commits</strong> → just push it to a new remote branch (this post’s main case).</li>
+<li>You are <strong>starting a fresh independent branch</strong> from inside the monorepo checkout → create an orphan branch first (see Solutions 2 and 3).</li>
+</ol>
+</section>
+<section id="solution-1-push-the-local-repo-as-a-new-branch" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1-push-the-local-repo-as-a-new-branch">Solution 1: push the local repo as a new branch</h2>
+<p><strong> ▶&nbsp; Steps</strong></p>
+<ol type="1">
+<li>Register the monorepo as a remote of your local repo.</li>
+<li>Rename your current local branch to the target branch name with <code>git switch -c</code>, so local and remote names match.</li>
+<li>Push with <code>git push -u origin HEAD:&lt;new-branch&gt;</code></li>
+</ol>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: move into your local repository (history already committed)</span></span>
+<span id="cb3-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> /path/to/local-repo</span>
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: register the monorepo remote</span></span>
+<span id="cb3-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote add origin git@github.com:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>org<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>/<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>monorepo<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>.git</span>
+<span id="cb3-6"></span>
+<span id="cb3-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: (optional) fetch first so you don't collide with an existing remote branch</span></span>
+<span id="cb3-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> fetch origin</span>
+<span id="cb3-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-a</span></span>
+<span id="cb3-10"></span>
+<span id="cb3-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 4: rename the local branch to the target name</span></span>
+<span id="cb3-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>unique-branch-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb3-13"></span>
+<span id="cb3-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 5: push the current branch as a new remote branch</span></span>
+<span id="cb3-15"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin HEAD:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>unique-branch-name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+</div>
+<p>After Step 4 the local branch name equals the remote one, so <code>git push -u origin &lt;unique-branch-name&gt;</code> would work too — but the <code>HEAD:&lt;new-branch&gt;</code> form is explicit about <em>what</em> goes <em>where</em> and works even when the names differ.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If the local repo already has an <code>origin</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>origin</code> is just a conventional name. If your local repo already points <code>origin</code> somewhere else (e.g.&nbsp;its own standalone remote), register the monorepo under a distinct name and push there instead:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> remote add monorepo git@github.com:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>org<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>/<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>monorepo<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>.git</span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> monorepo HEAD:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+</div>
+</div>
+</div>
+<p><strong> ▶&nbsp; Verify the upstream</strong></p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-vvv</span></span></code></pre></div></div>
+</div>
+<p>If the upstream is not what you expect, fix it with:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--set-upstream-to</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>origin/<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+</div>
+</section>
+<section id="solution-2-start-a-fresh-independent-branch-inside-the-monorepo" class="level2">
+<h2 class="anchored" data-anchor-id="solution-2-start-a-fresh-independent-branch-inside-the-monorepo">Solution 2: start a fresh independent branch inside the monorepo</h2>
+<p>If instead you are inside the monorepo checkout and want to spin up a <em>new</em> project branch with no history yet, use <code>git switch --orphan</code>. An orphan branch has no parent commit, so its first commit becomes a fresh root.</p>
+<p><code>git switch --orphan</code> also <strong>empties the working tree</strong>: all tracked files disappear from both the worktree and the index. Untracked files — build artifacts, <code>__pycache__/</code>, etc. — survive.</p>
+<p><strong> ▶&nbsp; Commands</strong></p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: create a history-less branch (tracked files are all removed)</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: place this project's files, then make the first root commit</span></span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add .</span>
+<span id="cb7-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial commit for &lt;new-branch&gt;"</span></span>
+<span id="cb7-7"></span>
+<span id="cb7-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: push the independent branch</span></span>
+<span id="cb7-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+</div>
+</section>
+<section id="solution-3-orphan-branch-that-carries-files-over-from-an-existing-branch" class="level2">
+<h2 class="anchored" data-anchor-id="solution-3-orphan-branch-that-carries-files-over-from-an-existing-branch">Solution 3: orphan branch that carries files over from an existing branch</h2>
+<p>Sometimes the new independent branch should not start <em>completely</em> empty, e.g., you want to inherit a few files (<code>.gitignore</code>, <code>setup.sh</code>, CI config) from an existing branch, without inheriting its history.</p>
+<p>There are two ways to do this, depending on whether you use the modern <code>switch</code>/<code>restore</code> pair or the legacy <code>checkout</code> command.</p>
+<section id="a-git-switch---orphan-git-restore-version" class="level3">
+<h3 class="anchored" data-anchor-id="a-git-switch---orphan-git-restore-version">(A) <code>git switch --orphan</code> + <code>git restore</code> version</h3>
+<p><code>git switch --orphan</code> leaves you with a completely empty worktree and index. Pair it with <code>git restore --source=&lt;source-branch&gt;</code> to pull specific files back in — restored into <strong>both the worktree and the index</strong>, ready to commit immediately.</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: create a history-less branch (worktree and index start empty)</span></span>
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-3"></span>
+<span id="cb8-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: pull over only the files you want to carry, from the source branch</span></span>
+<span id="cb8-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#         (restored into the worktree AND the index)</span></span>
+<span id="cb8-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=&lt;</span>source-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> --staged <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--worktree</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> .gitignore</span>
+<span id="cb8-7"></span>
+<span id="cb8-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># multiple paths work too</span></span>
+<span id="cb8-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=&lt;</span>source-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> --staged <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--worktree</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> .gitignore setup.sh scripts/</span>
+<span id="cb8-10"></span>
+<span id="cb8-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: add this project's new files, then make the first root commit</span></span>
+<span id="cb8-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add .</span>
+<span id="cb8-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial commit for &lt;new-branch&gt;"</span></span>
+<span id="cb8-14"></span>
+<span id="cb8-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 4: push the independent branch</span></span>
+<span id="cb8-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+<p><strong>Carrying over everything</strong></p>
+<p>To carry <strong>all</strong> tracked files from the source branch, restore <code>.</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=&lt;</span>source-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> --staged <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--worktree</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> .</span>
+<span id="cb9-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial commit"</span></span></code></pre></div></div>
+</section>
+<section id="b-git-checkout---orphan-git-checkout-branch----path-version" class="level3">
+<h3 class="anchored" data-anchor-id="b-git-checkout---orphan-git-checkout-branch----path-version">(B) <code>git checkout --orphan</code> + <code>git checkout &lt;branch&gt; -- &lt;path&gt;</code> version</h3>
+<p>The legacy equivalent uses <code>git checkout --orphan</code>, which — unlike <code>switch</code> — keeps all files from the previous branch <strong>staged</strong> in the index rather than emptying it. You typically clear them out, then use <code>git checkout &lt;source-branch&gt; -- &lt;path&gt;</code> to bring specific files back from the source branch.</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1: create a history-less branch (all previous branch's files are staged)</span></span>
+<span id="cb10-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb10-3"></span>
+<span id="cb10-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2: clear out what came along, then pull over only the files you want</span></span>
+<span id="cb10-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rm <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-rf</span> .</span>
+<span id="cb10-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>source-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> -- .gitignore</span>
+<span id="cb10-7"></span>
+<span id="cb10-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># multiple paths work too</span></span>
+<span id="cb10-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>source-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> -- .gitignore setup.sh</span>
+<span id="cb10-10"></span>
+<span id="cb10-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3: add this project's new files, then make the first root commit</span></span>
+<span id="cb10-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add .</span>
+<span id="cb10-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial commit for &lt;new-branch&gt;"</span></span>
+<span id="cb10-14"></span>
+<span id="cb10-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 4: push the independent branch</span></span>
+<span id="cb10-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> origin <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+<p><strong>Carrying over everything</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>new-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rm <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-rf</span> .</span>
+<span id="cb11-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>source-branch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> -- .</span>
+<span id="cb11-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial commit"</span></span></code></pre></div></div>
+<p><code>git checkout &lt;source-branch&gt; -- .</code> restores every tracked file of <code>&lt;source-branch&gt;</code> into the worktree and the index, so a single commit gives you a branch whose <em>content</em> matches the source branch but whose <em>history</em> is one root commit.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>switch</code>/<code>restore</code> vs <code>checkout --orphan</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>You want to…</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Start from an empty tree, hand-pick files</td>
+<td><code>git switch --orphan</code> + <code>git restore --source=&lt;src&gt;</code></td>
+</tr>
+<tr class="even">
+<td>Keep the full current content staged, cut history only</td>
+<td><code>git checkout --orphan</code> + <code>git rm -rf .</code> + <code>git checkout &lt;src&gt; -- .</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>git push</category>
+  <category>git branch</category>
+  <category>git remote</category>
+  <category>monorepo</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-07-24-push-orphan-branch/</guid>
+  <pubDate>Fri, 24 Jul 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What is a git pathspec and how do I use its magic signatures?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -6747,282 +7301,6 @@ font-style: inherit;">&gt;</span></span></code></pre></div></div>
   <category>git remote</category>
   <guid>https://ohgoshgit.github.io/posts/2024-12-04-chnage-remote-uri/</guid>
   <pubDate>Wed, 04 Dec 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>最新コミットとunstaged差分の確認方法</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>After committing changes to files in your working repository, you continue working on further developments. Then, you notice that you’ve accidentally made some errors in certain git-tracked files, and the class is not working.</p>
-<p>You want to check what changes you’ve made compared to the latest commit, but you’re not sure how to do it. It would also be helpful to view the differences in an editor.</p>
-</section>
-<section id="solution-1-using-git-diff" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1-using-git-diff">Solution 1: Using <code>git diff</code></h2>
-<p><code>git diff</code> allows you to inspect changes in your code, from minor edits to major branch comparisons.</p>
-<p><strong> ▶&nbsp; Key Takeaways</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Commands</th>
-<th>Explaination</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>git diff</code></td>
-<td>Check unstaged changes with HEAD</td>
-</tr>
-<tr class="even">
-<td><code>git diff --staged</code></td>
-<td>Check staged changes with HEAD</td>
-</tr>
-<tr class="odd">
-<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
-<td>Compare two specific commits</td>
-</tr>
-<tr class="even">
-<td><code>git diff main feature-branch</code></td>
-<td>Compare branches</td>
-</tr>
-<tr class="odd">
-<td><code>git diff HEAD -- &lt;file/directory-path&gt;</code></td>
-<td>Check single file/directory changes with HEAD</td>
-</tr>
-<tr class="even">
-<td><code>git diff --stat</code></td>
-<td>Shows a summary of changes for each file, such as how many lines were added and deleted</td>
-</tr>
-</tbody>
-</table>
-<p><strong> ▶&nbsp; Viewing Changes in the Working Directory</strong></p>
-<p>To see all changes in your working directory that haven’t been staged,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff</span></code></pre></div></div>
-<p>This command shows the differences between your working directory and the last commit in your terminal display.</p>
-<p>If you want to see staged changes with your latest commit,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--staged</span></span></code></pre></div></div>
-<p><strong> ▶&nbsp; Comparing with a Specific Commit</strong></p>
-<p>To see differences between your current state and a specific commit,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## (1) Compared with latest commit</span></span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff</span>
-<span id="cb3-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff HEAD</span>
-<span id="cb3-4"></span>
-<span id="cb3-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## (2) Compared with specific commit</span></span>
-<span id="cb3-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb3-7"></span>
-<span id="cb3-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## (3) Comparing two specific commits</span></span>
-<span id="cb3-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>commit-hash1<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>commit-hash2<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb3-10"></span>
-<span id="cb3-11"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## (4) Comparing the HEAD with the HEAD~1</span></span>
-<span id="cb3-12"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff HEAD<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">~</span>1 HEAD</span></code></pre></div></div>
-<p><strong> ▶&nbsp; Comparing Branches</strong></p>
-<p>You can also use <code>git diff</code> to compare different branches.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff main feature-branch</span></code></pre></div></div>
-<p><strong> ▶&nbsp; Shows a summary of changes for each file</strong></p>
-<p>When you want to see a summary of changes for each file, such as how many lines were added and deleted, use <code>git diff --stat</code>. If you want to compare the current branch with <code>gh-pages</code> branch in <code>.github/</code> directory,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git diff <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--stat</span> gh-pages .github/ </span>
-<span id="cb5-2"> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">.github/ISSUE_TEMPLATE/fix_documentation.yml</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">39</span> +++++++++++++++++++++++++++++++++++++++</span>
-<span id="cb5-3"> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">.github/ISSUE_TEMPLATE/fix_typos.yml</span>         <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">32</span> ++++++++++++++++++++++++++++++++</span>
-<span id="cb5-4"> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">.github/pull_request_template.md</span>             <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">25</span> +++++++++++++++++++++++++</span>
-<span id="cb5-5"> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">.github/workflows/publish.yml</span>                <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">26</span> ++++++++++++++++++++++++++</span>
-<span id="cb5-6"> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">.github/workflows/rss-to-twitter.yml</span>         <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">|</span> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">20</span> ++++++++++++++++++++</span>
-<span id="cb5-7"> <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">5</span> files changed, 142 insertions<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(+)</span></span></code></pre></div></div>
-<p>The number shows how many lines are modified for each files.</p>
-</section>
-<section id="solution-2-using-git-difftool" class="level2">
-<h2 class="anchored" data-anchor-id="solution-2-using-git-difftool">Solution 2: Using <code>git difftool</code></h2>
-<p><code>git difftool</code> is a Git command that lets you view differences between versions of files in an external, graphical diff tool. It’s particularly useful if you want to view the differences in an editor.</p>
-<p>The syntax of <code>git difftool</code> is similar to <code>git diff</code>. For example,</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><code>git difftool</code> commands</th>
-<th><code>git diff</code> commands</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>git difftool</code></td>
-<td><code>git diff</code></td>
-</tr>
-<tr class="even">
-<td><code>git difftool --staged</code><br><code>git difftool --cached</code></td>
-<td><code>git diff --staged</code></td>
-</tr>
-<tr class="odd">
-<td><code>git difftool &lt;commit1&gt; &lt;commit2&gt;</code></td>
-<td><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></td>
-</tr>
-<tr class="even">
-<td><code>git difftool main feature-branch</code></td>
-<td><code>git diff main feature-branch</code></td>
-</tr>
-<tr class="odd">
-<td><code>git difftool HEAD -- &lt;file/directory-path&gt;</code></td>
-<td><code>git diff HEAD -- &lt;file/directory-path&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong> ▶&nbsp; Choosing an editor </strong></p>
-<p>You can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> config <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--global</span> diff.tool your_preferred_tool</span></code></pre></div></div>
-<p>For example, if you prefer to vscode,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> config <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--global</span> diff.tool vscode</span></code></pre></div></div>
-<p>To check if you successfully configure difftool editor,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> config <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-l</span></span></code></pre></div></div>
-<p>then, you can check what editor is you default git difftool editor.</p>
-<p><strong> ▶&nbsp; Choosing an editor temporarily</strong></p>
-<p>If you temporarily show the diff in vimdiff,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> difftool HEAD<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">~</span>1 HEAD <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--tool</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>vimdiff</span></code></pre></div></div>
-</section>
-<section id="appendix-role-of----in-git" class="level2">
-<h2 class="anchored" data-anchor-id="appendix-role-of----in-git">Appendix: Role of <code>--</code> in Git</h2>
-<p>In git command, <code>--</code> is a seperator between options and paths. It is useful when a name could be ambiguous—e.g., if a branch or tag has the same name as a file.</p>
-<p>If the path (file or directory) does not conflict with a branch or tag name, Git automatically treats it as a path.</p>
-<div id="exm-" class="custom_problem theorem example">
-<p><span class="theorem-title"><strong>Example 1</strong></span> <br></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff feature <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--</span> file.txt</span></code></pre></div></div>
-<p>In the above command, <code>feature</code> could be interpreted as either a branch or a file. Using <code>--</code> explicitly tells Git that anything after it is a path, not a branch or option.</p>
-</div>
-<hr>
-<div id="exm-" class="custom_problem theorem example">
-<p><span class="theorem-title"><strong>Example 2</strong></span> <br></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> diff README.md</span></code></pre></div></div>
-<p>Git sees that <code>README.md</code> is not a branch or tag, so it is interpreted as a file path. Therefore, the command works correctly even without <code>--</code>.</p>
-</div>
-<hr>
-
-
-</section>
-
- ]]></description>
-  <category>git difftool</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-11-06-check-diff-with-git-difftool/</guid>
-  <pubDate>Wed, 06 Nov 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
