@@ -1,0 +1,270 @@
+---
+title: "OGG... How do I push a local repo into my monorepo as a new independent branch?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-07-24"
+date-modified: "2026-07-28"
+categories: [git push, git branch, git remote, monorepo]
+---
+
+::: {.callout-note}
+## TL;DR
+
+- A branch does **not** need to share an ancestor with `main`
+- If your local repo was born from its own `git init`, its history is already independent
+
+If you want to push the independent branch into the remote, just point a remote at the monorepo and push:
+
+
+:::{style="padding-left:1em;"}
+
+```bash
+git remote add origin git@github.com:<org>/<monorepo>.git
+git switch -c <unique-branch-name>   # rename the local branch to the target name
+git push -u origin HEAD:<unique-branch-name>
+```
+
+:::
+
+
+- No `--orphan` surgery needed
+- `--orphan` is only for starting a fresh history-less branch *from inside* the monorepo checkout.
+
+:::
+
+
+## 🎯 Goal
+
+- [ ] Push an already-committed local repo to a monorepo as a brand-new branch
+- [ ] Keep that branch's history independent (no shared ancestor with `main`)
+- [ ] Know when `git switch --orphan` is actually the right tool
+
+
+## 🔎 Objective
+
+You have a local Git repository that you already initialized with `git init` and committed into (a small data-science analysis, a sprint deliverable, a standalone package). Your team runs a **monorepo** where each branch keeps a *completely independent history*
+
+- one branch per project
+- a project branch sharing no common ancestor with `main`
+
+:::{style="padding-left:1em;"}
+
+```bash
+monorepo
+├── main                          ← its own root commit
+├── ds/2026-price-elasticity      ← its own root commit
+└── <unique-branch-name>   ← the branch you want to push
+```
+
+:::
+
+Now you want to push the local repository into the monorepo **as a brand-new branch**, without merging its history into `main` and without it inheriting anything from the existing branches.
+
+The questions are:
+
+- How do I push a local repo's history to a remote *as a new branch*?
+- How do I make sure it stays **independent**?
+
+
+## Why you don't need `--orphan` here
+
+In Git, branches are **not required** to share a common ancestor. Two branches with totally unrelated histories can coexist in the same repository, and there is no special "make it independent" operation. Independence is a property of the *history*, not of the push.
+
+Your local repo already has its own root commit — created by its own `git init` — so it is independent by construction. A plain `push` is all you need: the pushed branch simply becomes another unrelated line of history in the monorepo.
+
+There are only two situations:
+
+1. Your local repo **already has commits** → just push it to a new remote branch (this post's main case).
+2. You are **starting a fresh independent branch** from inside the monorepo checkout → create an orphan branch first (see Solutions 2 and 3).
+
+
+## Solution 1: push the local repo as a new branch
+
+<strong > &#9654;&nbsp; Steps</strong>
+
+1. Register the monorepo as a remote of your local repo.
+2. Rename your current local branch to the target branch name with `git switch -c`, so local and remote names match.
+3. Push with `git push -u origin HEAD:<new-branch>`
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+:::{style="padding-left:1em;"}
+
+```bash
+# Step 1: move into your local repository (history already committed)
+cd /path/to/local-repo
+
+# Step 2: register the monorepo remote
+git remote add origin git@github.com:<org>/<monorepo>.git
+
+# Step 3: (optional) fetch first so you don't collide with an existing remote branch
+git fetch origin
+git branch -a
+
+# Step 4: rename the local branch to the target name
+git switch -c <unique-branch-name>
+
+# Step 5: push the current branch as a new remote branch
+git push -u origin HEAD:<unique-branch-name>
+```
+
+:::
+
+After Step 4 the local branch name equals the remote one, so `git push -u origin <unique-branch-name>` would work too — but the `HEAD:<new-branch>` form is explicit about *what* goes *where* and works even when the names differ.
+
+::: {.callout-note}
+## If the local repo already has an `origin`
+
+`origin` is just a conventional name. If your local repo already points `origin` somewhere else (e.g. its own standalone remote), register the monorepo under a distinct name and push there instead:
+
+:::{style="padding-left:1em;"}
+```bash
+git remote add monorepo git@github.com:<org>/<monorepo>.git
+git push -u monorepo HEAD:<new-branch>
+```
+:::
+:::
+
+
+<strong > &#9654;&nbsp; Verify the upstream</strong>
+
+:::{style="padding-left:1em;"}
+
+```bash
+git branch -vvv
+```
+
+:::
+
+If the upstream is not what you expect, fix it with:
+
+:::{style="padding-left:1em;"}
+
+```bash
+git branch --set-upstream-to=origin/<new-branch>
+```
+
+:::
+
+## Solution 2: start a fresh independent branch inside the monorepo
+
+If instead you are inside the monorepo checkout and want to spin up a *new* project branch with no history yet, use `git switch --orphan`. An orphan branch has no parent commit, so its first commit becomes a fresh root.
+
+`git switch --orphan` also **empties the working tree**: all tracked files disappear from both the worktree and the index. Untracked files — build artifacts, `__pycache__/`, etc. — survive.
+
+<strong > &#9654;&nbsp; Commands</strong>
+
+:::{style="padding-left:1em;"}
+
+```bash
+# Step 1: create a history-less branch (tracked files are all removed)
+git switch --orphan <new-branch>
+
+# Step 2: place this project's files, then make the first root commit
+git add .
+git commit -m "Initial commit for <new-branch>"
+
+# Step 3: push the independent branch
+git push -u origin <new-branch>
+```
+
+:::
+
+## Solution 3: orphan branch that carries files over from an existing branch
+
+Sometimes the new independent branch should not start *completely* empty, e.g., you want to inherit a
+few files (`.gitignore`, `setup.sh`, CI config) from an existing branch, without inheriting its
+history. 
+
+There are two ways to do this, depending on whether you use the modern `switch`/`restore`
+pair or the legacy `checkout` command.
+
+### (A) `git switch --orphan` + `git restore` version
+
+`git switch --orphan` leaves you with a completely empty worktree and index. Pair it with
+`git restore --source=<source-branch>` to pull specific files back in — restored into **both the
+worktree and the index**, ready to commit immediately.
+
+[Commands]{.mini-section}
+
+```bash
+# Step 1: create a history-less branch (worktree and index start empty)
+git switch --orphan <new-branch>
+
+# Step 2: pull over only the files you want to carry, from the source branch
+#         (restored into the worktree AND the index)
+git restore --source=<source-branch> --staged --worktree -- .gitignore
+
+# multiple paths work too
+git restore --source=<source-branch> --staged --worktree -- .gitignore setup.sh scripts/
+
+# Step 3: add this project's new files, then make the first root commit
+git add .
+git commit -m "Initial commit for <new-branch>"
+
+# Step 4: push the independent branch
+git push -u origin <new-branch>
+```
+
+**Carrying over everything**
+
+To carry **all** tracked files from the source branch, restore `.`:
+
+```bash
+git switch --orphan <new-branch>
+git restore --source=<source-branch> --staged --worktree -- .
+git commit -m "Initial commit"
+```
+
+### (B) `git checkout --orphan` + `git checkout <branch> -- <path>` version
+
+The legacy equivalent uses `git checkout --orphan`, which — unlike `switch` — keeps all files from
+the previous branch **staged** in the index rather than emptying it. You typically clear them out,
+then use `git checkout <source-branch> -- <path>` to bring specific files back from the source
+branch.
+
+[Commands]{.mini-section}
+
+```bash
+# Step 1: create a history-less branch (all previous branch's files are staged)
+git checkout --orphan <new-branch>
+
+# Step 2: clear out what came along, then pull over only the files you want
+git rm -rf .
+git checkout <source-branch> -- .gitignore
+
+# multiple paths work too
+git checkout <source-branch> -- .gitignore setup.sh
+
+# Step 3: add this project's new files, then make the first root commit
+git add .
+git commit -m "Initial commit for <new-branch>"
+
+# Step 4: push the independent branch
+git push -u origin <new-branch>
+```
+
+**Carrying over everything**
+
+```bash
+git checkout --orphan <new-branch>
+git rm -rf .
+git checkout <source-branch> -- .
+git commit -m "Initial commit"
+```
+
+`git checkout <source-branch> -- .` restores every tracked file of `<source-branch>` into the
+worktree and the index, so a single commit gives you a branch whose *content* matches the source
+branch but whose *history* is one root commit.
+
+
+::: {.callout-note}
+### `switch`/`restore` vs `checkout --orphan`
+
+| You want to... | Use |
+|---|---|
+| Start from an empty tree, hand-pick files | `git switch --orphan` + `git restore --source=<src>` |
+| Keep the full current content staged, cut history only | `git checkout --orphan` + `git rm -rf .` + `git checkout <src> -- .` |
+
+:::
