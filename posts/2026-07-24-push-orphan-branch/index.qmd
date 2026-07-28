@@ -266,5 +266,132 @@ branch but whose *history* is one root commit.
 |---|---|
 | Start from an empty tree, hand-pick files | `git switch --orphan` + `git restore --source=<src>` |
 | Keep the full current content staged, cut history only | `git checkout --orphan` + `git rm -rf .` + `git checkout <src> -- .` |
+: {tbl-colwidths="[40,60]"}
 
 :::
+
+## Appendix: `--orphan` option
+
+The official documentation ([git-checkout(1)](https://git-scm.com/docs/git-checkout)) describes the option as:
+
+> `--orphan <new-branch>`
+>
+> Create a new unborn branch, named `<new-branch>`, started from `<start-point>` and switch to it. The first commit made on this new branch will have no parents and it will be the root of a new history totally disconnected from all the other branches and commits.
+>
+> The index and the working tree are adjusted as if you had previously run `git checkout <start-point>`. This allows you to start a new history that records a set of paths similar to `<start-point>` by easily running `git commit -a` to make the root commit.
+
+
+### What is `--orphan` actually for?
+
+The typical scenario is publishing the *files* of an internal repo without publishing its *history*:
+
+- you developed a repository in-house and now want to release it as OSS
+- old commits contain secrets (an API key, credentials) or internal-only code
+- you don't want the Git history to be visible at all
+
+[Situation]{.mini-section}
+
+:::{style="padding-left:1em;"}
+
+```bash
+main
+├── 2019  committed an API key by mistake
+├── 2020  added an internal-only library
+├── 2021  ...
+└── 2026  want to publish as OSS!
+```
+
+:::
+
+If you push `main` as-is, anyone can run `git log` and read the entire history. Instead, cut a history-less branch that carries only the current files:
+
+:::{style="padding-left:1em;"}
+
+```bash
+git checkout --orphan open-source   # current files stay staged in the index
+git commit -m "Initial open source release"
+```
+
+:::
+
+The `open-source` branch now contains exactly one root commit:
+
+:::{style="padding-left:1em;"}
+
+```bash
+open-source
+└── Initial open source release
+```
+
+:::
+
+so it can be pushed publicly without exposing anything that happened before it. With the modern commands the equivalent is Solution 3 (A) — `git switch --orphan` empties the worktree, so restore the files back before committing:
+
+:::{style="padding-left:1em;"}
+
+```bash
+git switch --orphan open-source
+git restore --source=main --staged --worktree -- .
+git commit -m "Initial open source release"
+```
+
+:::
+
+### If you don't want the files either
+
+To start from *nothing* — no history **and** no files — `git switch --orphan` alone is enough, since its worktree and index start empty:
+
+:::{style="padding-left:1em;"}
+
+```bash
+git switch --orphan experiment      # worktree and index are already empty
+```
+
+:::
+
+With the legacy command you have to empty the index yourself:
+
+:::{style="padding-left:1em;"}
+
+```bash
+git checkout --orphan experiment
+git rm -rf .
+```
+
+:::
+
+Either way you end up with an empty branch, so you can place a completely different project and make its root commit:
+
+:::{style="padding-left:1em;"}
+
+```bash
+cp -r ~/new-project/. .
+git add .
+git commit -m "Initial commit"
+```
+
+:::
+
+### `git switch -c` vs `--orphan`
+
+:::{.no-border-top-table}
+
+| | `git switch -c` | `git switch --orphan` | `git checkout --orphan` |
+|---|---|---|---|
+| Carries the current files over | ○ | × (worktree emptied) | ○ (kept staged) |
+| Carries the commit history | ○ | × | × |
+| First commit has a parent | ○ | × | × |
+| Starts a new disconnected root | × | ○ | ○ |
+
+: {tbl-colwidths="[34,22,22,22]"}
+
+:::
+
+Think of `--orphan` as the tool for "I may want the current files, but I want Git's history reset to zero and started fresh."
+
+
+
+📘 References
+----------
+
+- [`git checkout --orphan`](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt---orphannew-branch)
