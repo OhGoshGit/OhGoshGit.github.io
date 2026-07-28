@@ -530,8 +530,8 @@ font-style: inherit;">"Initial commit"</span></span></code></pre></div></div>
 <div class="callout-body-container callout-body">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 40%">
+<col style="width: 60%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -552,9 +552,197 @@ font-style: inherit;">"Initial commit"</span></span></code></pre></div></div>
 </table>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="appendix---orphan-option" class="level2">
+<h2 class="anchored" data-anchor-id="appendix---orphan-option">Appendix: <code>--orphan</code> option</h2>
+<p>The official documentation (<a href="https://git-scm.com/docs/git-checkout">git-checkout(1)</a>) describes the option as:</p>
+<blockquote class="blockquote">
+<p><code>--orphan &lt;new-branch&gt;</code></p>
+<p>Create a new unborn branch, named <code>&lt;new-branch&gt;</code>, started from <code>&lt;start-point&gt;</code> and switch to it. The first commit made on this new branch will have no parents and it will be the root of a new history totally disconnected from all the other branches and commits.</p>
+<p>The index and the working tree are adjusted as if you had previously run <code>git checkout &lt;start-point&gt;</code>. This allows you to start a new history that records a set of paths similar to <code>&lt;start-point&gt;</code> by easily running <code>git commit -a</code> to make the root commit.</p>
+</blockquote>
+<section id="what-is---orphan-actually-for" class="level3">
+<h3 class="anchored" data-anchor-id="what-is---orphan-actually-for">What is <code>--orphan</code> actually for?</h3>
+<p>The typical scenario is publishing the <em>files</em> of an internal repo without publishing its <em>history</em>:</p>
+<ul>
+<li>you developed a repository in-house and now want to release it as OSS</li>
+<li>old commits contain secrets (an API key, credentials) or internal-only code</li>
+<li>you don’t want the Git history to be visible at all</li>
+</ul>
+<p><span class="mini-section">Situation</span></p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">main</span></span>
+<span id="cb12-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> 2019  committed an API key by mistake</span>
+<span id="cb12-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> 2020  added an internal-only library</span>
+<span id="cb12-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> 2021  ...</span>
+<span id="cb12-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└──</span> 2026  want to publish as OSS!</span></code></pre></div></div>
+</div>
+<p>If you push <code>main</code> as-is, anyone can run <code>git log</code> and read the entire history. Instead, cut a history-less branch that carries only the current files:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> open-source   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># current files stay staged in the index</span></span>
+<span id="cb13-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial open source release"</span></span></code></pre></div></div>
+</div>
+<p>The <code>open-source</code> branch now contains exactly one root commit:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">open-source</span></span>
+<span id="cb14-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└──</span> Initial open source release</span></code></pre></div></div>
+</div>
+<p>so it can be pushed publicly without exposing anything that happened before it. With the modern commands the equivalent is Solution 3 (A) — <code>git switch --orphan</code> empties the worktree, so restore the files back before committing:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> open-source</span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>main <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--staged</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--worktree</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> .</span>
+<span id="cb15-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial open source release"</span></span></code></pre></div></div>
+</div>
+</section>
+<section id="if-you-dont-want-the-files-either" class="level3">
+<h3 class="anchored" data-anchor-id="if-you-dont-want-the-files-either">If you don’t want the files either</h3>
+<p>To start from <em>nothing</em> — no history <strong>and</strong> no files — <code>git switch --orphan</code> alone is enough, since its worktree and index start empty:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> experiment      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># worktree and index are already empty</span></span></code></pre></div></div>
+</div>
+<p>With the legacy command you have to empty the index yourself:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--orphan</span> experiment</span>
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> rm <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-rf</span> .</span></code></pre></div></div>
+</div>
+<p>Either way you end up with an empty branch, so you can place a completely different project and make its root commit:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cp</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> ~/new-project/. .</span>
+<span id="cb18-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add .</span>
+<span id="cb18-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Initial commit"</span></span></code></pre></div></div>
+</div>
+</section>
+<section id="git-switch--c-vs---orphan" class="level3">
+<h3 class="anchored" data-anchor-id="git-switch--c-vs---orphan"><code>git switch -c</code> vs <code>--orphan</code></h3>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>git switch -c</code></th>
+<th><code>git switch --orphan</code></th>
+<th><code>git checkout --orphan</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Carries the current files over</td>
+<td>○</td>
+<td>× (worktree emptied)</td>
+<td>○ (kept staged)</td>
+</tr>
+<tr class="even">
+<td>Carries the commit history</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr class="odd">
+<td>First commit has a parent</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr class="even">
+<td>Starts a new disconnected root</td>
+<td>×</td>
+<td>○</td>
+<td>○</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Think of <code>--orphan</code> as the tool for “I may want the current files, but I want Git’s history reset to zero and started fresh.”</p>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt---orphannew-branch"><code>git checkout --orphan</code></a></li>
+</ul>
+
+
 </section>
 
  ]]></description>
