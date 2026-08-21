@@ -95,3 +95,7 @@ ul.task-list li input[type="checkbox"] {
   padding-bottom: 0;
   margin-bottom: 0;
 }
+
+.code-area {
+  padding-left:1em
+}
