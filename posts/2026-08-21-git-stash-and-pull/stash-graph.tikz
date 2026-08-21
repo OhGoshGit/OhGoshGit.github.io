@@ -1,0 +1,41 @@
+\begin{tikzpicture}[
+    >={Latex[length=2.4mm]}, font=\small, line width=0.8pt,
+    commit/.style={circle, draw=#1!60!black, fill=#1!15, line width=1pt,
+                   minimum size=1.2cm, inner sep=0pt, font=\bfseries\large},
+    past/.style={circle, draw=gray!50, fill=gray!8, minimum size=0.55cm,
+                 inner sep=0pt},
+    note/.style={font=\footnotesize, align=center, text=black!70},
+    ref/.style={font=\ttfamily\footnotesize, align=center},
+    edge/.style={->, draw=gray!60},
+  ]
+
+  % ---- main line of history: ... -> H, and the index commit I
+  \node[past]                             (p0) {};
+  \node[past, right=0.75cm of p0]         (p1) {};
+  \node[commit=gray, right=1.15cm of p1]  (H)  {H};
+  \node[commit=orange, right=3.1cm of H]  (I)  {I};
+  % ---- W sits above the H--I midpoint, as in the git-stash(1) graph
+  \coordinate (mid) at ($(H)!0.5!(I)$);
+  \node[commit=blue] (W) at ($(mid)+(0,2.25)$) {W};
+
+  % ---- edges: parent -> child
+  \draw[edge] (p0) -- (p1);
+  \draw[edge] (p1) -- (H);
+  \draw[edge] (H) -- node[note, below=2pt, pos=0.5] {made a child of \texttt{H}} (I);
+  \draw[edge] (H) -- node[note, pos=0.52, anchor=south east, xshift=-1pt] {1st parent} (W);
+  \draw[edge] (I) -- node[note, pos=0.52, anchor=south west, xshift=1pt] {2nd parent} (W);
+
+  % ---- ref labels
+  \node[ref, text=black!58]  at ($(H)+(-1.0,0.95)$) {stash@\{0\}\^{}};
+  \node[ref, right=0.42cm of I, text=orange!45!black] {stash@\{0\}\^{}2};
+  \node[ref, right=0.42cm of W, text=blue!45!black]   {stash@\{0\}\\refs/stash};
+
+  % ---- what each commit's tree records
+  \node[note, below=0.32cm of H.south, text=black!62]
+        {\texttt{HEAD} when you stashed\\(the commit you were on)};
+  \node[note, below=0.32cm of I.south, text=orange!45!black]
+        {tree $=$ \textbf{index}\\(what was staged)};
+  \node[note, above=0.32cm of W.north, text=blue!45!black]
+        {tree $=$ \textbf{working directory}};
+
+\end{tikzpicture}
