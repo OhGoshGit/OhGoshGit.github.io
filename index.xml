@@ -10,7 +10,1434 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 24 Jul 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 21 Aug 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I pull with local changes and take back only part of my stash?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-08-21-git-stash-and-pull/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>git stash</code> lets you <code>pull</code> with dirty local changes</li>
+<li><code>git stash pop</code> is all-or-nothing</li>
+<li>To take back <strong>part</strong> of a stash, extract it path by path or hunk by hunk instead of popping</li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># step 1: -u also stashes untracked files</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wip"</span></span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># step 2</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> pull</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># step 3: check what is in there (only git-tracked files show up)</span></span>
+<span id="cb1-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash show <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-only</span> stash@{0}</span>
+<span id="cb1-9"></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># step 4: diff of one file</span></span>
+<span id="cb1-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}^'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/file</span>
+<span id="cb1-12"></span>
+<span id="cb1-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># step 5: pick hunks, worktree only</span></span>
+<span id="cb1-14"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/file</span>
+<span id="cb1-15"></span>
+<span id="cb1-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># step 6: only once you are done</span></span>
+<span id="cb1-17"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash drop stash@{0}</span></code></pre></div></div>
+</div>
+<ul>
+<li>Extracting a path <strong>overwrites</strong> the working-tree file with the stash version. It is not a merge</li>
+<li>There is no command to directly add files to an existing stash</li>
+</ul>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Stash local changes, <code>pull</code>, and inspect what the stash holds</label></li>
+<li><label><input type="checkbox">Diff a single file inside a stash</label></li>
+<li><label><input type="checkbox">Take back a stash file-by-file or hunk-by-hunk instead of popping the whole thing</label></li>
+<li><label><input type="checkbox">Review a stash in a GUI with <code>git difftool -d</code></label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>Suppose that</p>
+<ol type="1">
+<li>you have uncommitted local changes and <code>git pull</code> refuses to run, or</li>
+<li>you simply do not want to merge upstream on top of a dirty tree.</li>
+</ol>
+<p>Then, the usual workflow is:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wip"</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> pull</span>
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash pop</span></code></pre></div></div>
+</div>
+<section id="problems" class="level3">
+<h3 class="anchored" data-anchor-id="problems">⚠️ Problems</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>What Really We Want
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After pulling, how do you look inside the stash and take back <strong>only the parts you still want</strong>?</p>
+</div>
+</div>
+<p><code>git stash pop</code> is the problem.</p>
+<ol type="1">
+<li>It replays the <strong>entire</strong> stash</li>
+<li>If the pull touched the same lines, hands you conflict markers across every file at once.</li>
+</ol>
+<p>Often you only wanted two of the five stashed files, and the rest were scratch edits the upstream change has already made obsolete.</p>
+</section>
+</section>
+<section id="how-a-stash-is-stored" class="level2">
+<h2 class="anchored" data-anchor-id="how-a-stash-is-stored">How a stash is stored</h2>
+<p>A stash entry is not merely a temporary storage place for changed files, but a small <strong>commit graph</strong>, which is why you can address its parts with ordinary commit syntax. The <a href="https://git-scm.com/docs/git-stash">git-stash documentation</a> describes it as:</p>
+<blockquote class="blockquote">
+<p>A stash entry is represented as a commit whose tree records the state of the working directory, and its first parent is the commit at <code>HEAD</code> when the entry was created. The tree of the second parent records the state of the index when the entry is made, and it is made a child of the <code>HEAD</code> commit.</p>
+</blockquote>
+<p>and gives this ancestry graph, where <code>H</code> is the <code>HEAD</code> commit, <code>I</code> records the index and <code>W</code> records the working tree:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-08-21-git-stash-and-pull/stash-graph.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:88.0%"></p>
+</figure>
+</div>
+<p>Arrows point from parent to child, so <code>W</code>’s two parents are <code>H</code> (first) and <code>I</code> (second), and those are exactly what <code>^1</code> and <code>^2</code> select.</p>
+<p><code>W</code> is what <code>stash@{0}</code> resolves to. So the two refs you need are:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 36%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ref</th>
+<th>Graph node</th>
+<th>Holds</th>
+<th>Use it to</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>stash@{0}</code></td>
+<td><code>W</code></td>
+<td>the working-tree state when you stashed</td>
+<td>extract tracked files</td>
+</tr>
+<tr class="even">
+<td><code>stash@{0}^</code></td>
+<td><code>H</code></td>
+<td>the commit you were on (<code>HEAD</code> back then)</td>
+<td>anchor a diff so <em>only your</em> changes show</td>
+</tr>
+<tr class="odd">
+<td><code>stash@{0}^2</code></td>
+<td><code>I</code></td>
+<td>the index state when you stashed</td>
+<td>recover what was staged</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Verify the shape yourself with:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--graph</span> stash@{0}</span></code></pre></div></div>
+</div>
+<section id="git-stash-push-is-equivalent-to-git-stash" class="level3">
+<h3 class="anchored" data-anchor-id="git-stash-push-is-equivalent-to-git-stash"><code>git stash push</code> is equivalent to <code>git stash</code></h3>
+<p><code>push</code> is the full form of the save operation, and it is what every option in this post attaches to. The <a href="https://git-scm.com/docs/git-stash">git-stash documentation</a> gives the synopsis as:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash push [-p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--patch]</span> [-S <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--staged]</span> [-k <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--[no-]keep-index]</span></span>
+<span id="cb4-2">               <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[-u</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--include-untracked]</span> [-a <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--all]</span> [-q <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--quiet]</span></span>
+<span id="cb4-3">               <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-m</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--message</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>message<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>]</span>
+<span id="cb4-4">               <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[--pathspec-from-file=</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>file<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[--</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">pathspec</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">-</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">file</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">-</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">nul</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span>]</span>
+<span id="cb4-5">               <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[--]</span> [<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>pathspec<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>...]</span></code></pre></div></div>
+</div>
+<blockquote class="blockquote">
+<p>Save your local modifications to a new stash entry and roll them back to <code>HEAD</code> (in the working tree and in the index). The <code>&lt;message&gt;</code> part is optional and gives the description along with the stashed state.</p>
+</blockquote>
+<p>So the two commands below do the same thing — <code>push</code> is the default subcommand and may be omitted for a quick snapshot:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wip"</span>    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># explicit</span></span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wip"</span>         <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># same thing</span></span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Why the docs still recommend spelling out <code>push</code></span></p>
+<p>The equivalence stops as soon as you pass a pathspec. Quoting the documentation:</p>
+<blockquote class="blockquote">
+<p>For quickly making a snapshot, you can omit “push”. In this mode, pathspec elements are only allowed after a double hyphen <code>--</code> to prevent a misspelled subcommand from making an unwanted stash entry.</p>
+</blockquote>
+<p>Without <code>push</code>, Git cannot tell a <a href="../../posts/2026-05-31-git-pathspec/index.html">pathspec</a> from a subcommand you fumbled, so it refuses rather than guessing:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git stash a.txt</span>
+<span id="cb6-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fatal:</span> subcommand wasn<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'t specified; '</span>push<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">' can'</span>t be assumed due to unexpected token <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'a.txt'</span></span></code></pre></div></div>
+</div>
+<p>That is a safety feature, not a bug. It is what stops <code>git stash puhs</code> or <code>git stash lst</code> from silently stashing your whole working tree instead of erroring:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git stash puhs</span>
+<span id="cb7-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fatal:</span> subcommand wasn<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'t specified; '</span>push<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">' can'</span>t be assumed due to unexpected token <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'puhs'</span></span></code></pre></div></div>
+</div>
+<p>To limit a bare <code>git stash</code> to certain paths you must add <code>--</code>:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git stash push a.txt</code></td>
+<td>stashes <code>a.txt</code> only</td>
+</tr>
+<tr class="even">
+<td><code>git stash -- a.txt</code></td>
+<td>stashes <code>a.txt</code> only</td>
+</tr>
+<tr class="odd">
+<td><code>git stash a.txt</code></td>
+<td><strong>fatal</strong> — <code>push</code> cannot be assumed</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Prefer <code>git stash push</code> whenever you pass a pathspec: it needs no <code>--</code>, and it makes the command read the same as every other option-bearing form.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Options that select <em>what</em> gets stashed
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>push</code> is also the only form that takes the narrowing options, all of which leave the rest of your changes in the working tree:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Stashes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-p</code>, <code>--patch</code></td>
+<td>hunks you pick interactively</td>
+</tr>
+<tr class="even">
+<td><code>-S</code>, <code>--staged</code></td>
+<td>only what is staged in the index</td>
+</tr>
+<tr class="odd">
+<td><code>-u</code>, <code>--include-untracked</code></td>
+<td>tracked changes <strong>plus</strong> untracked files</td>
+</tr>
+<tr class="even">
+<td><code>-a</code>, <code>--all</code></td>
+<td>the above plus ignored files</td>
+</tr>
+<tr class="odd">
+<td><code>-k</code>, <code>--keep-index</code></td>
+<td>everything, but leaves the index intact in the worktree</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>-S</code> is the useful one when the operations side staged the YAML edits it wants to keep and left scratch edits unstaged:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git status <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--short</span></span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span>  a.txt</span>
+<span id="cb8-3"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span> b.txt</span>
+<span id="cb8-4"></span>
+<span id="cb8-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git stash <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-S</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"staged only"</span></span>
+<span id="cb8-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Saved</span> working directory and index state On main: staged only</span>
+<span id="cb8-7"></span>
+<span id="cb8-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git status <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--short</span></span>
+<span id="cb8-9"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span> b.txt</span></code></pre></div></div>
+</div>
+</div>
+</div>
+</section>
+<section id="u---include-untracked-option" class="level3">
+<h3 class="anchored" data-anchor-id="u---include-untracked-option"><code>-u</code>, <code>--include-untracked</code> option</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>-u</code> is short for <code>--include-untracked</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With <code>-u</code>, Git also stashes untracked files that are not currently tracked by Git. Git collects these files into a separate commit and attaches it to the stash as an additional parent.</p>
+</div>
+</div>
+<p>A stash created with <code>-u</code> has three parents.</p>
+<p>What I did is</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## step 1: git init</span></span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> init</span>
+<span id="cb9-3"></span>
+<span id="cb9-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## step 2: add README.md and initial commit</span></span>
+<span id="cb9-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">touch</span> README.md</span>
+<span id="cb9-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add README.md</span>
+<span id="cb9-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"initial commit"</span></span>
+<span id="cb9-8"></span>
+<span id="cb9-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step3: add mofitication to git-tracked file</span></span>
+<span id="cb9-10"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> fixed <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> README.md</span>
+<span id="cb9-11"></span>
+<span id="cb9-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 4: create new file</span></span>
+<span id="cb9-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">touch</span> esample.txt</span>
+<span id="cb9-14"></span>
+<span id="cb9-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Step 5: git stash</span></span>
+<span id="cb9-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wip"</span></span></code></pre></div></div>
+</div>
+<p>Then,</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--graph</span> stash@{0}</span>
+<span id="cb10-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*-.</span>   8afdbfe <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">refs/stash</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">On</span> main: wip</span>
+<span id="cb10-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">\ \ </span> </span>
+<span id="cb10-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> 6d00d09 untracked files on main: 5d1f1ea initial commit</span>
+<span id="cb10-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> 7bbada3 index on main: 5d1f1ea initial commit</span>
+<span id="cb10-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">/</span>  </span>
+<span id="cb10-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> 5d1f1ea <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HEAD</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> main<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">initial</span> commit</span></code></pre></div></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">stash@{0}</span></span>
+<span id="cb11-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> parent 1 → HEAD before stashing</span>
+<span id="cb11-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> parent 2 → the tracked changes <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">the</span> index<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb11-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└──</span> parent 3 → the untracked files      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># only with -u</span></span></code></pre></div></div>
+</div>
+<p>That third parent is addressable as <code>stash@{0}^3</code>, and it is the piece the <code>H</code>/<code>I</code>/<code>W</code> graph above does not cover.</p>
+<p>Three lines leave <code>8afdbfe</code>, so <code>stash@{0}</code> is not a single commit — it is a commit with three parents:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1">                 <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">8afdbfe</span>          <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>- stash@{0}</span>
+<span id="cb12-2">                <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">/</span>   <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span>   <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb12-3">               <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">v</span>    v    v</span>
+<span id="cb12-4">         <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">5d1f1ea</span> 7bbada3 6d00d09</span>
+<span id="cb12-5">            <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">^1</span>      ^2      ^3</span></code></pre></div></div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 24%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Commit</th>
+<th>Ref</th>
+<th>Records</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>5d1f1ea</code></td>
+<td><code>stash@{0}^1</code></td>
+<td>the <code>HEAD</code> you were on before stashing</td>
+</tr>
+<tr class="even">
+<td><code>7bbada3</code></td>
+<td><code>stash@{0}^2</code></td>
+<td>the index(what was staged)</td>
+</tr>
+<tr class="odd">
+<td><code>6d00d09</code></td>
+<td><code>stash@{0}^3</code></td>
+<td>the untracked files (<strong><code>-u</code> only</strong>)</td>
+</tr>
+<tr class="even">
+<td><code>8afdbfe</code></td>
+<td><code>stash@{0}</code></td>
+<td>the stash itself — its tree is the working directory</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>untracked files are not stored in the <code>stash@{0}</code> body itself, but in the third parent <code>stash@{0}^3</code></p>
+</div>
+</div>
+<p><span class="mini-section">Inspecting the untracked commit</span></p>
+<p><code>^3</code> is an ordinary commit, so ordinary commit commands work on it:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> show <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--stat</span> stash@{0}^3          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># which untracked files were stashed</span></span>
+<span id="cb13-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> ls-tree <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-only</span> stash@{0}^3   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># full file list</span></span></code></pre></div></div>
+</div>
+<p>And a single file can be pulled straight out of it:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}^3'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> notes.md</span></code></pre></div></div>
+</div>
+</section>
+</section>
+<section id="walking-through-the-operations-case" class="level2">
+<h2 class="anchored" data-anchor-id="walking-through-the-operations-case">🔨 Walking through the operations case</h2>
+<p>Consider a Docker-based HTML hosting service. Two sides touch the same repository:</p>
+<ul>
+<li>the <strong>development side</strong> commits a new version and pushes it</li>
+<li>the <strong>operations side</strong> runs <code>git pull</code> to take that version, but also edits git-tracked YAML files directly to keep the service running</li>
+</ul>
+<p>Both sides therefore end up editing the same tracked file:</p>
+<div class="code-area">
+<pre class="text"><code>                    config.yaml
+                         │
+        ┌────────────────┴────────────────┐
+        │                                 │
+  development side                 operations side
+  committed and pushed             edited in place, uncommitted
+        │                                 │
+        └────────── same file ────────────┘</code></pre>
+</div>
+<p>Running <code>git pull</code> in that state either refuses outright or merges upstream on top of a dirty tree. So the operations side stashes first.</p>
+<section id="step-1-stash-local-changes-and-pull" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-stash-local-changes-and-pull">Step 1: stash local changes and pull</h3>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wip"</span>        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># tracked modifications only</span></span>
+<span id="cb16-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash push <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-u</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wip"</span>     <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># -u (--include-untracked) also stashes new files</span></span>
+<span id="cb16-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> pull</span></code></pre></div></div>
+</div>
+</section>
+<section id="step-2-see-what-is-inside-the-stash" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-see-what-is-inside-the-stash">Step 2: see what is inside the stash</h3>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash list                                <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># every entry</span></span>
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash show <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-only</span> stash@{0}          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># which tracked files changed</span></span>
+<span id="cb17-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash show <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> stash@{0}                   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># full patch of tracked changes</span></span>
+<span id="cb17-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash show <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--only-untracked</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-only</span> stash@{0}   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the -u files</span></span></code></pre></div></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>git stash show &lt;stash&gt; -- &lt;path&gt;</code> is not valid
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The documented signature has no pathspec slot at all</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash show [-u <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--include-untracked</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">--only-untracked]</span> [<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>diff-options<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>] [<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>stash<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>]</span></code></pre></div></div>
+</div>
+<p>So a trailing path is read as a second revision:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git stash show <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> a.txt</span>
+<span id="cb19-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Too</span> many revisions specified: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'a.txt'</span></span></code></pre></div></div>
+</div>
+<p>For a single file, diff the stash against its parent instead:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># comapre stash with its parent</span></span>
+<span id="cb20-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}^'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/file</span>
+<span id="cb20-3"></span>
+<span id="cb20-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># comapre stash with the HEAD</span></span>
+<span id="cb20-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> diff HEAD <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span></span></code></pre></div></div>
+</div>
+</div>
+</div>
+<p><span class="mini-section">Why <code>stash@{0}^</code> and not <code>HEAD</code></span></p>
+<p>After a <code>pull</code>, <code>HEAD</code> has moved. Diffing against <code>HEAD</code> mixes <em>your</em> stashed edits with everything the pull brought in. <code>stash@{0}^</code> is the commit you were sitting on when you stashed, so it isolates your own changes:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 54%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git diff 'stash@{0}^' 'stash@{0}'</code></td>
+<td>only the changes you stashed</td>
+</tr>
+<tr class="even">
+<td><code>git diff HEAD 'stash@{0}'</code></td>
+<td>your changes <strong>plus</strong> everything the pull added, inverted</td>
+</tr>
+<tr class="odd">
+<td><code>git diff 'stash@{0}'</code></td>
+<td>stash vs your current working tree</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="step-3-take-back-only-part-of-the-stash" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-take-back-only-part-of-the-stash">Step 3: take back only part of the stash</h3>
+<section id="file-by-file" class="level4">
+<h4 class="anchored" data-anchor-id="file-by-file"><strong>File by file</strong></h4>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># modern form — worktree only, index untouched</span></span>
+<span id="cb21-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/file</span>
+<span id="cb21-3"></span>
+<span id="cb21-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># legacy form — writes the worktree AND stages the file</span></span>
+<span id="cb21-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/file</span></code></pre></div></div>
+</div>
+<p>The two differ in what they touch:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 27%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th><code>git status</code> afterwards</th>
+<th>Index</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git restore --source=&lt;stash&gt; -- &lt;path&gt;</code></td>
+<td><code>M path</code></td>
+<td>untouched</td>
+</tr>
+<tr class="even">
+<td><code>git checkout &lt;stash&gt; -- &lt;path&gt;</code></td>
+<td><code>M  path</code></td>
+<td>staged</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="hunk-by-hunk" class="level4">
+<h4 class="anchored" data-anchor-id="hunk-by-hunk"><strong>Hunk by hunk</strong></h4>
+<p>When a single file holds both edits you want and edits you don’t, add <code>-p</code>:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/file</span></code></pre></div></div>
+</div>
+<p>Git walks you through each hunk:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">@@</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-1</span> +1,2 @@</span>
+<span id="cb23-2"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">a</span></span>
+<span id="cb23-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">+a2</span></span>
+<span id="cb23-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">1/1</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Apply</span> this hunk to index and worktree <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">y,n,q,a,d,e,?</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]?</span></span></code></pre></div></div>
+</div>
+<p>Answer <code>y</code> to take a hunk, <code>n</code> to skip it, <code>e</code> to edit it by hand, <code>q</code> to stop.</p>
+</section>
+<section id="untracked-files" class="level4">
+<h4 class="anchored" data-anchor-id="untracked-files"><strong>Untracked files</strong></h4>
+<p>The main stash commit does not contain untracked paths, so the obvious command fails:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/new-file</span>
+<span id="cb24-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">error:</span> pathspec <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'path/to/new-file'</span> did not match any file<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">s</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">known</span> to git</span></code></pre></div></div>
+</div>
+<p>Those files sit on the undocumented third parent, so extraction needs <code>^3</code>:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}^3'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/new-file</span></code></pre></div></div>
+</div>
+<p>If you want <em>all</em> of them back rather than one path, <code>git stash pop</code> restores untracked files along with everything else, and it avoids relying on <code>^3</code>.</p>
+</section>
+</section>
+<section id="step-3-optional-take-everything-back-with-a-merge" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-optional-take-everything-back-with-a-merge">Step 3 (Optional): take everything back with a merge</h3>
+<p>Step 3 extracts by path, and extraction <strong>overwrites</strong>: <code>git restore --source=&lt;stash&gt; -- &lt;file&gt;</code> and <code>git checkout &lt;stash&gt; -- &lt;file&gt;</code> replace the working-tree file wholesale with the stash version.</p>
+<p>When upstream also touched the file, you want a real three-way merge instead:</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># merge the stash into the working tree, then drop the entry</span></span>
+<span id="cb26-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash pop</span>
+<span id="cb26-3"></span>
+<span id="cb26-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># same merge, but keeps the stash entry</span></span>
+<span id="cb26-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash apply</span></code></pre></div></div>
+</div>
+<p><code>pop</code> replays the stash on top of the post-<code>pull</code> tree. Where the two sides changed different lines Git merges them for you; where they collide you get ordinary conflict markers to resolve:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git stash pop</span>
+<span id="cb27-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Auto-merging</span> config.yaml</span>
+<span id="cb27-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">CONFLICT</span> <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">content</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">:</span> Merge conflict in config.yaml</span></code></pre></div></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>A conflicting <code>pop</code> does not drop the stash
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>On conflict the entry stays in the list, so nothing is lost. You need resolve the markers, then <code>git stash drop stash@{0}</code> yourself</li>
+<li>A clean <code>pop</code>, by contrast, drops it for you</li>
+<li>Use <code>git stash apply</code> when you would rather keep the entry either way.</li>
+</ul>
+</div>
+</div>
+<p><code>pop</code> is also the way to get <em>all</em> untracked files back at once, without relying on the <code>^3</code> parent from Step 3.</p>
+<p>If you are unsure which side touched what, inspect first with the <code>git diff 'stash@{0}^' 'stash@{0}'</code> command from Step 2, or hand-pick hunks with <code>git restore -p</code>, which shows you the conflict-prone lines before you accept them.</p>
+</section>
+<section id="step-4-clean-up" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-clean-up">Step 4: clean up</h3>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> stash drop stash@{0}   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># once you have everything you need</span></span></code></pre></div></div>
+</div>
+<p>Extracting files by path leaves the stash entry intact — unlike <code>pop</code>, nothing is consumed. Drop it only after you have confirmed the working tree holds what you want, because <code>drop</code> is <strong>not undoable</strong> through the <code>stash</code> UI.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A dropped stash is recoverable for a while
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The documentation is blunt that dropped entries “cannot be recovered through the normal safety mechanisms”, but offers this incantation to list stash commits that are still in the repository and merely unreachable:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> fsck <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--unreachable</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span></span>
+<span id="cb29-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> commit <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cut</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-d\ </span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f3</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span></span>
+<span id="cb29-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xargs</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--merges</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-walk</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--grep</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>WIP</span></code></pre></div></div>
+</div>
+<p>Then revive one with <code>git stash apply &lt;sha&gt;</code>.</p>
+<p>Note the <code>--grep=WIP</code> filter only matches the <strong>default</strong> stash message (<code>WIP on &lt;branch&gt;</code>). If you stashed with <code>-m "wip"</code>, the message becomes <code>On &lt;branch&gt;: wip</code> and this command silently finds nothing. Drop the <code>--grep</code> to see every unreachable merge commit:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> fsck <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--unreachable</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span></span>
+<span id="cb30-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> commit <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cut</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-d\ </span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f3</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span></span>
+<span id="cb30-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xargs</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--merges</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-walk</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span></span></code></pre></div></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="reviewing-a-stash-in-a-gui-with-difftool" class="level2">
+<h2 class="anchored" data-anchor-id="reviewing-a-stash-in-a-gui-with-difftool">Reviewing a stash in a GUI with <code>difftool</code></h2>
+<p><code>git difftool</code> takes the same arguments as <code>git diff</code>, so every form above works with a visual tool.</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># only your stashed changes</span></span>
+<span id="cb31-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> difftool <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}^'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span></span>
+<span id="cb31-3"></span>
+<span id="cb31-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># one file</span></span>
+<span id="cb31-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> difftool <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}^'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> path/to/file</span>
+<span id="cb31-6"></span>
+<span id="cb31-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># stash vs current worktree</span></span>
+<span id="cb31-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> difftool <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span></span>
+<span id="cb31-9"></span>
+<span id="cb31-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># whole change set at once</span></span>
+<span id="cb31-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> difftool <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-d</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}^'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stash@{0}'</span></span></code></pre></div></div>
+</div>
+<p><code>-d</code> (<code>--dir-diff</code>) is the one that matters here: instead of prompting per file, it materialises both sides into temporary directories and opens the tool once. In VS Code you get a side-by-side tree of every stashed file, which is how you decide what to extract before running the commands from Step 3.</p>
+</section>
+<section id="summary-choosing-between-the-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="summary-choosing-between-the-approaches">Summary: Choosing between the approaches</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 52%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Situation</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Want the whole stash back, upstream didn’t touch it</td>
+<td><code>git stash pop</code></td>
+</tr>
+<tr class="even">
+<td>Want the whole stash back, upstream <strong>did</strong> touch it</td>
+<td><code>git stash pop</code>, then resolve conflicts</td>
+</tr>
+<tr class="odd">
+<td>Want a few files, upstream didn’t touch them</td>
+<td><code>git restore --source='stash@{0}' -- &lt;paths&gt;</code></td>
+</tr>
+<tr class="even">
+<td>Want some hunks within a file</td>
+<td><code>git restore -p --source='stash@{0}' -- &lt;file&gt;</code></td>
+</tr>
+<tr class="odd">
+<td>Want one untracked file back</td>
+<td><code>git restore --source='stash@{0}^3' -- &lt;file&gt;</code> (undocumented)</td>
+</tr>
+<tr class="even">
+<td>Just want to look before deciding</td>
+<td><code>git difftool -d 'stash@{0}^' 'stash@{0}'</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb32-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> stash entry</span></span>
+<span id="cb32-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb32-3">    A commit whose tree records the working directory. Its first parent</span>
+<span id="cb32-4">    is the HEAD at stash time; its second parent records the index.</span>
+<span id="cb32-5">    A -u stash also gets an undocumented third parent holding the</span>
+<span id="cb32-6">    untracked files.</span>
+<span id="cb32-7"></span>
+<span id="cb32-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> stash@{0}</span></span>
+<span id="cb32-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb32-10">    Reflog syntax for the most recent entry; refs/stash holds the</span>
+<span id="cb32-11">    latest and older ones live in its reflog. `stash@{2.hours.ago}`</span>
+<span id="cb32-12">    works too, and a bare integer n is equivalent to stash@{n}.</span>
+<span id="cb32-13">    Quote it in zsh/bash so the braces survive.</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-stash">Git Documentation &gt; git-stash</a></li>
+<li><a href="https://git-scm.com/docs/git-restore">Git Documentation &gt; git-restore</a></li>
+<li><a href="https://git-scm.com/docs/git-difftool">Git Documentation &gt; git-difftool</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git stash</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-08-21-git-stash-and-pull/</guid>
+  <pubDate>Fri, 21 Aug 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I push a local repo into my monorepo as a new independent branch?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -5002,16 +6429,21 @@ font-style: inherit;"># → A (same as ^1, first-parent)</span></span></code></p
 <td>Stage modified and deleted tracked files (exclude new untracked files)</td>
 </tr>
 <tr class="even">
+<td><strong>Add multiple extensions</strong></td>
+<td><code>git add -- '*.py' '*.R'</code></td>
+<td>Stage files matching either pattern</td>
+</tr>
+<tr class="odd">
 <td><strong>Add updates except <code>.qmd</code></strong></td>
 <td><code>git add -u -- . ':!*.qmd'</code></td>
 <td>Stage modified and deleted tracked files while excluding <code>.qmd</code> files</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td></td>
 <td><code>git add -u -- . ':(exclude)*.qmd'</code></td>
 <td>Same as above using explicit pathspec exclusion syntax</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Preview updates except <code>.qmd</code></strong></td>
 <td><code>git add -u -n -- . ':!*.qmd'</code></td>
 <td>Dry-run to preview which tracked file updates would be staged, excluding <code>.qmd</code> files</td>
@@ -7302,193 +8734,6 @@ font-style: inherit;">&gt;</span></span></code></pre></div></div>
   <category>ssh</category>
   <guid>https://ohgoshgit.github.io/posts/2024-12-17-access-to-github-via-ssh/</guid>
   <pubDate>Tue, 17 Dec 2024 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… How can I modify the GitHub repository name?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2024-12-04-chnage-remote-uri/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Suppose you are working on a GitHub-hosted repository <code>myproject</code>. As your project evolves, you start wondering the original name is ambiguous or unclear to potential users or collaborators.</p>
-<p>So, you’ve decided to rename <code>myproject</code> to <code>assembled-kalmanfilter-coremodel</code>.</p>
-<p><strong> ▶&nbsp; Current Status</strong></p>
-<ul>
-<li>current repository url: <code>https://github.com/OhGoshGit/myproject.git</code></li>
-<li>remote name: <code>origin</code></li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git remote <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-v</span></span>
-<span id="cb1-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">origin</span>  https://github.com/OhGoshGit/myproject.git <span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">fetch</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">)</span></span>
-<span id="cb1-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">origin</span>  https://github.com/OhGoshGit/myproject.git <span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">push</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">)</span></span></code></pre></div></div>
-<p><strong> ▶&nbsp; ToBe</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> git remote <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-v</span></span>
-<span id="cb2-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">origin</span>  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git <span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">fetch</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">)</span></span>
-<span id="cb2-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">origin</span>  https://github.com/OhGoshGit/assembled-kalmanfilter-coremodel.git <span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">(</span><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">push</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">)</span></span></code></pre></div></div>
-</section>
-<section id="solutions" class="level2">
-<h2 class="anchored" data-anchor-id="solutions">Solutions</h2>
-<p>When you rename a repository, all existing information, with the exception of project site URLs, is automatically redirected to the new name, including:</p>
-<ul>
-<li>Issues</li>
-<li>Wikis</li>
-<li>Stars</li>
-<li>Followers</li>
-</ul>
-<p>However, it’s still a good idea to update any references.</p>
-<div style="padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;">
-<p><strong style="color:#ffa657">Warning !</strong> <br></p>
-<p>If you create a new repository under your account in the future, do not reuse the original name of the renamed repository. If you do, redirects to the renamed repository will no longer work.</p>
-</div>
-<div class="blog-custom-border">
-<p><strong> ▶&nbsp; Steps</strong></p>
-<ol type="1">
-<li><p>Log in to GitHub and navigate to the Repository</p>
-<ul>
-<li>Go to GitHub and log in to your account.</li>
-<li>Go to the repository you want to rename.</li>
-</ul></li>
-<li><p>Access Repository Settings:</p>
-<ul>
-<li>On the repository’s main page, click the <code>Settings</code> tab</li>
-</ul></li>
-<li><p>Edit the Repository Name:</p>
-<ul>
-<li>In the <code>General</code> section, you’ll see the <code>Repository name</code> field.</li>
-<li>Enter the new name for your repository in the text box.</li>
-</ul></li>
-<li><p>Confirm the Change:</p>
-<ul>
-<li>Click <code>Rename</code></li>
-</ul></li>
-<li><p>Update Your Local Repository:</p>
-<ul>
-<li>change an existing remote repository URL in your local repository by running <code>git remote set-url</code> command</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># When you use HTTPS</span></span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote set-url origin https://github.com/your-username/new-repository-name.git</span>
-<span id="cb3-3"></span>
-<span id="cb3-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># When you use SSH</span></span>
-<span id="cb3-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote set-url origin git@github.com:your-username/new-repository-name.git</span></code></pre></div></div></li>
-<li><p>Confirmation</p>
-<ul>
-<li>Test pushing or pulling to ensure the updated remote URL works correctly:</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-v</span></span>
-<span id="cb4-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> pull origin main</span></code></pre></div></div></li>
-<li><p>notify your collaborators</p>
-<ul>
-<li>If others are using the repository, notify them about the name change.</li>
-</ul></li>
-</ol>
-</div>
-<section id="git-remote-set-url-command" class="level3">
-<h3 class="anchored" data-anchor-id="git-remote-set-url-command"><code>git remote set-url</code> command</h3>
-<p>The <code>git remote set-url</code> command is used to update the URL of a remote repository in your local Git configuration. This is often necessary when the remote repository’s URL changes (e.g., due to renaming, migration, or switching protocols).</p>
-<p><strong> ▶&nbsp; Syntax</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote set-url <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>remote-name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>new-url<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-<ul>
-<li><code>&lt;remote-name&gt;</code>: The name of the remote (commonly <code>origin</code>)</li>
-<li><code>&lt;new-url&gt;</code>: The new URL for the remote repository</li>
-</ul>
-<p>The <code>git remote set-url</code> command only updates the URL; it does not create a new remote. If the remote name (e.g., <code>origin</code>) doesn’t exist, you’ll need to add it using <code>git remote add</code> first.</p>
-<p><strong> ▶&nbsp; Tips</strong></p>
-<p>If you’ve accidentally made a wrong <code>&lt;remote-name&gt;</code>, you can remove by the following command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote rm <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>wrong-remote-name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-</section>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories">GitHub Docs &gt; Managing remote repositories</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <category>git remote</category>
-  <guid>https://ohgoshgit.github.io/posts/2024-12-04-chnage-remote-uri/</guid>
-  <pubDate>Wed, 04 Dec 2024 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

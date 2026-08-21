@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ryo Nakagami">
+<meta name="dcterms.date" content="2026-08-21">
+
+<title>OGG… How do I pull with local changes and take back only part of my stash? – OhGoshGit!?!</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../.././img/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-7ba3355f1d3d7209749e0ea630aecb3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-f451a6d788f4d8302fe1c167c56f48ee.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-7ba3355f1d3d7209749e0ea630aecb3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-2W179PEWKM"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-NFVPRDHX');</script>
+  <!-- End Google Tag Manager -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.css">
+<script type="text/javascript" src="../../js/regmonkey_glossary_generator/regmonkey_glossary_generator.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OhGoshGit!?!</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://dangitgit.com/"> 
+<span class="menu-text">Dangit, Git!?!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About OhGoshGit!?!</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../.././language/jp/"> 
+<span class="menu-text">日本語</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../.././"> 
+<span class="menu-text">English</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/OhGoshGit/OhGoshGit.github.io"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">OGG… How do I pull with local changes and take back only part of my stash?</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">git stash</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://github.com/RyoNakagami">Ryo Nakagami</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026-08-21</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">2026-08-21</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">🎯 Goal</a></li>
+  <li><a href="#objective" id="toc-objective" class="nav-link" data-scroll-target="#objective">🔎 Objective</a>
+  <ul class="collapse">
+  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">⚠️ Problems</a></li>
+  </ul></li>
+  <li><a href="#how-a-stash-is-stored" id="toc-how-a-stash-is-stored" class="nav-link" data-scroll-target="#how-a-stash-is-stored">How a stash is stored</a>
+  <ul class="collapse">
+  <li><a href="#git-stash-push-is-equivalent-to-git-stash" id="toc-git-stash-push-is-equivalent-to-git-stash" class="nav-link" data-scroll-target="#git-stash-push-is-equivalent-to-git-stash"><code>git stash push</code> is equivalent to <code>git stash</code></a></li>
+  <li><a href="#u---include-untracked-option" id="toc-u---include-untracked-option" class="nav-link" data-scroll-target="#u---include-untracked-option"><code>-u</code>, <code>--include-untracked</code> option</a></li>
+  </ul></li>
+  <li><a href="#walking-through-the-operations-case" id="toc-walking-through-the-operations-case" class="nav-link" data-scroll-target="#walking-through-the-operations-case">🔨 Walking through the operations case</a>
+  <ul class="collapse">
+  <li><a href="#step-1-stash-local-changes-and-pull" id="toc-step-1-stash-local-changes-and-pull" class="nav-link" data-scroll-target="#step-1-stash-local-changes-and-pull">Step 1: stash local changes and pull</a></li>
+  <li><a href="#step-2-see-what-is-inside-the-stash" id="toc-step-2-see-what-is-inside-the-stash" class="nav-link" data-scroll-target="#step-2-see-what-is-inside-the-stash">Step 2: see what is inside the stash</a></li>
+  <li><a href="#step-3-take-back-only-part-of-the-stash" id="toc-step-3-take-back-only-part-of-the-stash" class="nav-link" data-scroll-target="#step-3-take-back-only-part-of-the-stash">Step 3: take back only part of the stash</a></li>
+  <li><a href="#step-3-optional-take-everything-back-with-a-merge" id="toc-step-3-optional-take-everything-back-with-a-merge" class="nav-link" data-scroll-target="#step-3-optional-take-everything-back-with-a-merge">Step 3 (Optional): take everything back with a merge</a></li>
+  <li><a href="#step-4-clean-up" id="toc-step-4-clean-up" class="nav-link" data-scroll-target="#step-4-clean-up">Step 4: clean up</a></li>
+  </ul></li>
+  <li><a href="#reviewing-a-stash-in-a-gui-with-difftool" id="toc-reviewing-a-stash-in-a-gui-with-difftool" class="nav-link" data-scroll-target="#reviewing-a-stash-in-a-gui-with-difftool">Reviewing a stash in a GUI with <code>difftool</code></a></li>
+  <li><a href="#summary-choosing-between-the-approaches" id="toc-summary-choosing-between-the-approaches" class="nav-link" data-scroll-target="#summary-choosing-between-the-approaches">Summary: Choosing between the approaches</a></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">📘 References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>git stash</code> lets you <code>pull</code> with dirty local changes</li>
+<li><code>git stash pop</code> is all-or-nothing</li>
+<li>To take back <strong>part</strong> of a stash, extract it path by path or hunk by hunk instead of popping</li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step 1: -u also stashes untracked files</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash push <span class="at">-u</span> <span class="at">-m</span> <span class="st">"wip"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step 2</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># step 3: check what is in there (only git-tracked files show up)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash show <span class="at">--name-only</span> stash@{0}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># step 4: diff of one file</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="st">'stash@{0}^'</span> <span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/file</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># step 5: pick hunks, worktree only</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">-p</span> <span class="at">--source</span><span class="op">=</span><span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/file</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># step 6: only once you are done</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash drop stash@{0}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Extracting a path <strong>overwrites</strong> the working-tree file with the stash version. It is not a merge</li>
+<li>There is no command to directly add files to an existing stash</li>
+</ul>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Stash local changes, <code>pull</code>, and inspect what the stash holds</label></li>
+<li><label><input type="checkbox">Diff a single file inside a stash</label></li>
+<li><label><input type="checkbox">Take back a stash file-by-file or hunk-by-hunk instead of popping the whole thing</label></li>
+<li><label><input type="checkbox">Review a stash in a GUI with <code>git difftool -d</code></label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>Suppose that</p>
+<ol type="1">
+<li>you have uncommitted local changes and <code>git pull</code> refuses to run, or</li>
+<li>you simply do not want to merge upstream on top of a dirty tree.</li>
+</ol>
+<p>Then, the usual workflow is:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash push <span class="at">-m</span> <span class="st">"wip"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash pop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="problems" class="level3">
+<h3 class="anchored" data-anchor-id="problems">⚠️ Problems</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>What Really We Want
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After pulling, how do you look inside the stash and take back <strong>only the parts you still want</strong>?</p>
+</div>
+</div>
+<p><code>git stash pop</code> is the problem.</p>
+<ol type="1">
+<li>It replays the <strong>entire</strong> stash</li>
+<li>If the pull touched the same lines, hands you conflict markers across every file at once.</li>
+</ol>
+<p>Often you only wanted two of the five stashed files, and the rest were scratch edits the upstream change has already made obsolete.</p>
+</section>
+</section>
+<section id="how-a-stash-is-stored" class="level2">
+<h2 class="anchored" data-anchor-id="how-a-stash-is-stored">How a stash is stored</h2>
+<p>A stash entry is not merely a temporary storage place for changed files, but a small <strong>commit graph</strong>, which is why you can address its parts with ordinary commit syntax. The <a href="https://git-scm.com/docs/git-stash">git-stash documentation</a> describes it as:</p>
+<blockquote class="blockquote">
+<p>A stash entry is represented as a commit whose tree records the state of the working directory, and its first parent is the commit at <code>HEAD</code> when the entry was created. The tree of the second parent records the state of the index when the entry is made, and it is made a child of the <code>HEAD</code> commit.</p>
+</blockquote>
+<p>and gives this ancestry graph, where <code>H</code> is the <code>HEAD</code> commit, <code>I</code> records the index and <code>W</code> records the working tree:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="stash-graph.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:88.0%"></p>
+</figure>
+</div>
+<p>Arrows point from parent to child, so <code>W</code>’s two parents are <code>H</code> (first) and <code>I</code> (second), and those are exactly what <code>^1</code> and <code>^2</code> select.</p>
+<p><code>W</code> is what <code>stash@{0}</code> resolves to. So the two refs you need are:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 36%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ref</th>
+<th>Graph node</th>
+<th>Holds</th>
+<th>Use it to</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>stash@{0}</code></td>
+<td><code>W</code></td>
+<td>the working-tree state when you stashed</td>
+<td>extract tracked files</td>
+</tr>
+<tr class="even">
+<td><code>stash@{0}^</code></td>
+<td><code>H</code></td>
+<td>the commit you were on (<code>HEAD</code> back then)</td>
+<td>anchor a diff so <em>only your</em> changes show</td>
+</tr>
+<tr class="odd">
+<td><code>stash@{0}^2</code></td>
+<td><code>I</code></td>
+<td>the index state when you stashed</td>
+<td>recover what was staged</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Verify the shape yourself with:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--graph</span> stash@{0}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="git-stash-push-is-equivalent-to-git-stash" class="level3">
+<h3 class="anchored" data-anchor-id="git-stash-push-is-equivalent-to-git-stash"><code>git stash push</code> is equivalent to <code>git stash</code></h3>
+<p><code>push</code> is the full form of the save operation, and it is what every option in this post attaches to. The <a href="https://git-scm.com/docs/git-stash">git-stash documentation</a> gives the synopsis as:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash push [-p <span class="kw">|</span> <span class="ex">--patch]</span> [-S <span class="kw">|</span> <span class="ex">--staged]</span> [-k <span class="kw">|</span> <span class="ex">--[no-]keep-index]</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>               <span class="ex">[-u</span> <span class="kw">|</span> <span class="ex">--include-untracked]</span> [-a <span class="kw">|</span> <span class="ex">--all]</span> [-q <span class="kw">|</span> <span class="ex">--quiet]</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>               <span class="ex">[</span><span class="er">(</span><span class="ex">-m</span> <span class="kw">|</span> <span class="ex">--message</span><span class="kw">)</span> <span class="op">&lt;</span>message<span class="op">&gt;</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="ex">[--pathspec-from-file=</span><span class="op">&lt;</span>file<span class="op">&gt;</span> <span class="pp">[--</span><span class="ss">pathspec</span><span class="pp">-</span><span class="ss">file</span><span class="pp">-</span><span class="ss">nul</span><span class="pp">]</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="ex">[--]</span> [<span class="op">&lt;</span>pathspec<span class="op">&gt;</span>...]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<blockquote class="blockquote">
+<p>Save your local modifications to a new stash entry and roll them back to <code>HEAD</code> (in the working tree and in the index). The <code>&lt;message&gt;</code> part is optional and gives the description along with the stashed state.</p>
+</blockquote>
+<p>So the two commands below do the same thing — <code>push</code> is the default subcommand and may be omitted for a quick snapshot:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash push <span class="at">-m</span> <span class="st">"wip"</span>    <span class="co"># explicit</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash <span class="at">-m</span> <span class="st">"wip"</span>         <span class="co"># same thing</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><span class="mini-section">Why the docs still recommend spelling out <code>push</code></span></p>
+<p>The equivalence stops as soon as you pass a pathspec. Quoting the documentation:</p>
+<blockquote class="blockquote">
+<p>For quickly making a snapshot, you can omit “push”. In this mode, pathspec elements are only allowed after a double hyphen <code>--</code> to prevent a misspelled subcommand from making an unwanted stash entry.</p>
+</blockquote>
+<p>Without <code>push</code>, Git cannot tell a <a href="../../posts/2026-05-31-git-pathspec/index.html">pathspec</a> from a subcommand you fumbled, so it refuses rather than guessing:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git stash a.txt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fatal:</span> subcommand wasn<span class="st">'t specified; '</span>push<span class="st">' can'</span>t be assumed due to unexpected token <span class="st">'a.txt'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>That is a safety feature, not a bug. It is what stops <code>git stash puhs</code> or <code>git stash lst</code> from silently stashing your whole working tree instead of erroring:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git stash puhs</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fatal:</span> subcommand wasn<span class="st">'t specified; '</span>push<span class="st">' can'</span>t be assumed due to unexpected token <span class="st">'puhs'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To limit a bare <code>git stash</code> to certain paths you must add <code>--</code>:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git stash push a.txt</code></td>
+<td>stashes <code>a.txt</code> only</td>
+</tr>
+<tr class="even">
+<td><code>git stash -- a.txt</code></td>
+<td>stashes <code>a.txt</code> only</td>
+</tr>
+<tr class="odd">
+<td><code>git stash a.txt</code></td>
+<td><strong>fatal</strong> — <code>push</code> cannot be assumed</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Prefer <code>git stash push</code> whenever you pass a pathspec: it needs no <code>--</code>, and it makes the command read the same as every other option-bearing form.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Options that select <em>what</em> gets stashed
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>push</code> is also the only form that takes the narrowing options, all of which leave the rest of your changes in the working tree:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Stashes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-p</code>, <code>--patch</code></td>
+<td>hunks you pick interactively</td>
+</tr>
+<tr class="even">
+<td><code>-S</code>, <code>--staged</code></td>
+<td>only what is staged in the index</td>
+</tr>
+<tr class="odd">
+<td><code>-u</code>, <code>--include-untracked</code></td>
+<td>tracked changes <strong>plus</strong> untracked files</td>
+</tr>
+<tr class="even">
+<td><code>-a</code>, <code>--all</code></td>
+<td>the above plus ignored files</td>
+</tr>
+<tr class="odd">
+<td><code>-k</code>, <code>--keep-index</code></td>
+<td>everything, but leaves the index intact in the worktree</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>-S</code> is the useful one when the operations side staged the YAML edits it wants to keep and left scratch edits unstaged:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git status <span class="at">--short</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">M</span>  a.txt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">M</span> b.txt</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git stash <span class="at">-S</span> <span class="at">-m</span> <span class="st">"staged only"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Saved</span> working directory and index state On main: staged only</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git status <span class="at">--short</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a> <span class="ex">M</span> b.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="u---include-untracked-option" class="level3">
+<h3 class="anchored" data-anchor-id="u---include-untracked-option"><code>-u</code>, <code>--include-untracked</code> option</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>-u</code> is short for <code>--include-untracked</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With <code>-u</code>, Git also stashes untracked files that are not currently tracked by Git. Git collects these files into a separate commit and attaches it to the stash as an additional parent.</p>
+</div>
+</div>
+<p>A stash created with <code>-u</code> has three parents.</p>
+<p>What I did is</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step 1: git init</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step 2: add README.md and initial commit</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> README.md</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add README.md</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"initial commit"</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">## Step3: add mofitication to git-tracked file</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> fixed <span class="op">&gt;</span> README.md</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 4: create new file</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> esample.txt</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 5: git stash</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash <span class="at">-u</span> <span class="at">-m</span> <span class="st">"wip"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Then,</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git log <span class="at">--oneline</span> <span class="at">--graph</span> stash@{0}</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">*-.</span>   8afdbfe <span class="er">(</span><span class="ex">refs/stash</span><span class="kw">)</span> <span class="ex">On</span> main: wip</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">\ \ </span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span> <span class="kw">|</span> <span class="ex">*</span> 6d00d09 untracked files on main: 5d1f1ea initial commit</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span> <span class="ex">*</span> 7bbada3 index on main: 5d1f1ea initial commit</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">/</span>  </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">*</span> 5d1f1ea <span class="er">(</span><span class="ex">HEAD</span> <span class="at">-</span><span class="op">&gt;</span> main<span class="kw">)</span> <span class="ex">initial</span> commit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">stash@{0}</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> parent 1 → HEAD before stashing</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> parent 2 → the tracked changes <span class="er">(</span><span class="ex">the</span> index<span class="kw">)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> parent 3 → the untracked files      <span class="co"># only with -u</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>That third parent is addressable as <code>stash@{0}^3</code>, and it is the piece the <code>H</code>/<code>I</code>/<code>W</code> graph above does not cover.</p>
+<p>Three lines leave <code>8afdbfe</code>, so <code>stash@{0}</code> is not a single commit — it is a commit with three parents:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>                 <span class="ex">8afdbfe</span>          <span class="op">&lt;</span>- stash@{0}</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                <span class="ex">/</span>   <span class="kw">|</span>   <span class="dt">\</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>               <span class="ex">v</span>    v    v</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>         <span class="ex">5d1f1ea</span> 7bbada3 6d00d09</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>            <span class="ex">^1</span>      ^2      ^3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 24%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Commit</th>
+<th>Ref</th>
+<th>Records</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>5d1f1ea</code></td>
+<td><code>stash@{0}^1</code></td>
+<td>the <code>HEAD</code> you were on before stashing</td>
+</tr>
+<tr class="even">
+<td><code>7bbada3</code></td>
+<td><code>stash@{0}^2</code></td>
+<td>the index(what was staged)</td>
+</tr>
+<tr class="odd">
+<td><code>6d00d09</code></td>
+<td><code>stash@{0}^3</code></td>
+<td>the untracked files (<strong><code>-u</code> only</strong>)</td>
+</tr>
+<tr class="even">
+<td><code>8afdbfe</code></td>
+<td><code>stash@{0}</code></td>
+<td>the stash itself — its tree is the working directory</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>untracked files are not stored in the <code>stash@{0}</code> body itself, but in the third parent <code>stash@{0}^3</code></p>
+</div>
+</div>
+<p><span class="mini-section">Inspecting the untracked commit</span></p>
+<p><code>^3</code> is an ordinary commit, so ordinary commit commands work on it:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> show <span class="at">--stat</span> stash@{0}^3          <span class="co"># which untracked files were stashed</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-tree <span class="at">-r</span> <span class="at">--name-only</span> stash@{0}^3   <span class="co"># full file list</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And a single file can be pulled straight out of it:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--source</span><span class="op">=</span><span class="st">'stash@{0}^3'</span> <span class="at">--</span> notes.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="walking-through-the-operations-case" class="level2">
+<h2 class="anchored" data-anchor-id="walking-through-the-operations-case">🔨 Walking through the operations case</h2>
+<p>Consider a Docker-based HTML hosting service. Two sides touch the same repository:</p>
+<ul>
+<li>the <strong>development side</strong> commits a new version and pushes it</li>
+<li>the <strong>operations side</strong> runs <code>git pull</code> to take that version, but also edits git-tracked YAML files directly to keep the service running</li>
+</ul>
+<p>Both sides therefore end up editing the same tracked file:</p>
+<div class="code-area">
+<pre class="text"><code>                    config.yaml
+                         │
+        ┌────────────────┴────────────────┐
+        │                                 │
+  development side                 operations side
+  committed and pushed             edited in place, uncommitted
+        │                                 │
+        └────────── same file ────────────┘</code></pre>
+</div>
+<p>Running <code>git pull</code> in that state either refuses outright or merges upstream on top of a dirty tree. So the operations side stashes first.</p>
+<section id="step-1-stash-local-changes-and-pull" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-stash-local-changes-and-pull">Step 1: stash local changes and pull</h3>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash push <span class="at">-m</span> <span class="st">"wip"</span>        <span class="co"># tracked modifications only</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash push <span class="at">-u</span> <span class="at">-m</span> <span class="st">"wip"</span>     <span class="co"># -u (--include-untracked) also stashes new files</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-2-see-what-is-inside-the-stash" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-see-what-is-inside-the-stash">Step 2: see what is inside the stash</h3>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash list                                <span class="co"># every entry</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash show <span class="at">--name-only</span> stash@{0}          <span class="co"># which tracked files changed</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash show <span class="at">-p</span> stash@{0}                   <span class="co"># full patch of tracked changes</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash show <span class="at">--only-untracked</span> <span class="at">--name-only</span> stash@{0}   <span class="co"># the -u files</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>git stash show &lt;stash&gt; -- &lt;path&gt;</code> is not valid
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The documented signature has no pathspec slot at all</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash show [-u <span class="kw">|</span> <span class="ex">--include-untracked</span> <span class="kw">|</span> <span class="ex">--only-untracked]</span> [<span class="op">&lt;</span>diff-options<span class="op">&gt;</span>] [<span class="op">&lt;</span>stash<span class="op">&gt;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>So a trailing path is read as a second revision:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git stash show <span class="at">-p</span> <span class="st">'stash@{0}'</span> <span class="at">--</span> a.txt</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Too</span> many revisions specified: <span class="st">'stash@{0}'</span> <span class="st">'a.txt'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For a single file, diff the stash against its parent instead:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># comapre stash with its parent</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="st">'stash@{0}^'</span> <span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/file</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># comapre stash with the HEAD</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff HEAD <span class="st">'stash@{0}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><span class="mini-section">Why <code>stash@{0}^</code> and not <code>HEAD</code></span></p>
+<p>After a <code>pull</code>, <code>HEAD</code> has moved. Diffing against <code>HEAD</code> mixes <em>your</em> stashed edits with everything the pull brought in. <code>stash@{0}^</code> is the commit you were sitting on when you stashed, so it isolates your own changes:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 54%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git diff 'stash@{0}^' 'stash@{0}'</code></td>
+<td>only the changes you stashed</td>
+</tr>
+<tr class="even">
+<td><code>git diff HEAD 'stash@{0}'</code></td>
+<td>your changes <strong>plus</strong> everything the pull added, inverted</td>
+</tr>
+<tr class="odd">
+<td><code>git diff 'stash@{0}'</code></td>
+<td>stash vs your current working tree</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="step-3-take-back-only-part-of-the-stash" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-take-back-only-part-of-the-stash">Step 3: take back only part of the stash</h3>
+<section id="file-by-file" class="level4">
+<h4 class="anchored" data-anchor-id="file-by-file"><strong>File by file</strong></h4>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modern form — worktree only, index untouched</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--source</span><span class="op">=</span><span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/file</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># legacy form — writes the worktree AND stages the file</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/file</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The two differ in what they touch:</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 27%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th><code>git status</code> afterwards</th>
+<th>Index</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git restore --source=&lt;stash&gt; -- &lt;path&gt;</code></td>
+<td><code>M path</code></td>
+<td>untouched</td>
+</tr>
+<tr class="even">
+<td><code>git checkout &lt;stash&gt; -- &lt;path&gt;</code></td>
+<td><code>M  path</code></td>
+<td>staged</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="hunk-by-hunk" class="level4">
+<h4 class="anchored" data-anchor-id="hunk-by-hunk"><strong>Hunk by hunk</strong></h4>
+<p>When a single file holds both edits you want and edits you don’t, add <code>-p</code>:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">-p</span> <span class="at">--source</span><span class="op">=</span><span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/file</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Git walks you through each hunk:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">@@</span> <span class="at">-1</span> +1,2 @@</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a> <span class="ex">a</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="ex">+a2</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">1/1</span><span class="kw">)</span> <span class="ex">Apply</span> this hunk to index and worktree <span class="pp">[</span><span class="ss">y,n,q,a,d,e,?</span><span class="pp">]?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Answer <code>y</code> to take a hunk, <code>n</code> to skip it, <code>e</code> to edit it by hand, <code>q</code> to stop.</p>
+</section>
+<section id="untracked-files" class="level4">
+<h4 class="anchored" data-anchor-id="untracked-files"><strong>Untracked files</strong></h4>
+<p>The main stash commit does not contain untracked paths, so the obvious command fails:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git restore <span class="at">--source</span><span class="op">=</span><span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/new-file</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">error:</span> pathspec <span class="st">'path/to/new-file'</span> did not match any file<span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">known</span> to git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Those files sit on the undocumented third parent, so extraction needs <code>^3</code>:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore <span class="at">--source</span><span class="op">=</span><span class="st">'stash@{0}^3'</span> <span class="at">--</span> path/to/new-file</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>If you want <em>all</em> of them back rather than one path, <code>git stash pop</code> restores untracked files along with everything else, and it avoids relying on <code>^3</code>.</p>
+</section>
+</section>
+<section id="step-3-optional-take-everything-back-with-a-merge" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-optional-take-everything-back-with-a-merge">Step 3 (Optional): take everything back with a merge</h3>
+<p>Step 3 extracts by path, and extraction <strong>overwrites</strong>: <code>git restore --source=&lt;stash&gt; -- &lt;file&gt;</code> and <code>git checkout &lt;stash&gt; -- &lt;file&gt;</code> replace the working-tree file wholesale with the stash version.</p>
+<p>When upstream also touched the file, you want a real three-way merge instead:</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># merge the stash into the working tree, then drop the entry</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash pop</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># same merge, but keeps the stash entry</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash apply</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>pop</code> replays the stash on top of the post-<code>pull</code> tree. Where the two sides changed different lines Git merges them for you; where they collide you get ordinary conflict markers to resolve:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> git stash pop</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Auto-merging</span> config.yaml</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="ex">CONFLICT</span> <span class="er">(</span><span class="ex">content</span><span class="kw">)</span><span class="bu">:</span> Merge conflict in config.yaml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>A conflicting <code>pop</code> does not drop the stash
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>On conflict the entry stays in the list, so nothing is lost. You need resolve the markers, then <code>git stash drop stash@{0}</code> yourself</li>
+<li>A clean <code>pop</code>, by contrast, drops it for you</li>
+<li>Use <code>git stash apply</code> when you would rather keep the entry either way.</li>
+</ul>
+</div>
+</div>
+<p><code>pop</code> is also the way to get <em>all</em> untracked files back at once, without relying on the <code>^3</code> parent from Step 3.</p>
+<p>If you are unsure which side touched what, inspect first with the <code>git diff 'stash@{0}^' 'stash@{0}'</code> command from Step 2, or hand-pick hunks with <code>git restore -p</code>, which shows you the conflict-prone lines before you accept them.</p>
+</section>
+<section id="step-4-clean-up" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-clean-up">Step 4: clean up</h3>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> stash drop stash@{0}   <span class="co"># once you have everything you need</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Extracting files by path leaves the stash entry intact — unlike <code>pop</code>, nothing is consumed. Drop it only after you have confirmed the working tree holds what you want, because <code>drop</code> is <strong>not undoable</strong> through the <code>stash</code> UI.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A dropped stash is recoverable for a while
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The documentation is blunt that dropped entries “cannot be recovered through the normal safety mechanisms”, but offers this incantation to list stash commits that are still in the repository and merely unreachable:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fsck <span class="at">--unreachable</span> <span class="kw">|</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> commit <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d\ </span> <span class="at">-f3</span> <span class="kw">|</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">xargs</span> git log <span class="at">--merges</span> <span class="at">--no-walk</span> <span class="at">--grep</span><span class="op">=</span>WIP</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Then revive one with <code>git stash apply &lt;sha&gt;</code>.</p>
+<p>Note the <code>--grep=WIP</code> filter only matches the <strong>default</strong> stash message (<code>WIP on &lt;branch&gt;</code>). If you stashed with <code>-m "wip"</code>, the message becomes <code>On &lt;branch&gt;: wip</code> and this command silently finds nothing. Drop the <code>--grep</code> to see every unreachable merge commit:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fsck <span class="at">--unreachable</span> <span class="kw">|</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> commit <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d\ </span> <span class="at">-f3</span> <span class="kw">|</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">xargs</span> git log <span class="at">--merges</span> <span class="at">--no-walk</span> <span class="at">--oneline</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="reviewing-a-stash-in-a-gui-with-difftool" class="level2">
+<h2 class="anchored" data-anchor-id="reviewing-a-stash-in-a-gui-with-difftool">Reviewing a stash in a GUI with <code>difftool</code></h2>
+<p><code>git difftool</code> takes the same arguments as <code>git diff</code>, so every form above works with a visual tool.</p>
+<p><span class="mini-section">Commands</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># only your stashed changes</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> difftool <span class="st">'stash@{0}^'</span> <span class="st">'stash@{0}'</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># one file</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> difftool <span class="st">'stash@{0}^'</span> <span class="st">'stash@{0}'</span> <span class="at">--</span> path/to/file</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co"># stash vs current worktree</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> difftool <span class="st">'stash@{0}'</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co"># whole change set at once</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> difftool <span class="at">-d</span> <span class="st">'stash@{0}^'</span> <span class="st">'stash@{0}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>-d</code> (<code>--dir-diff</code>) is the one that matters here: instead of prompting per file, it materialises both sides into temporary directories and opens the tool once. In VS Code you get a side-by-side tree of every stashed file, which is how you decide what to extract before running the commands from Step 3.</p>
+</section>
+<section id="summary-choosing-between-the-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="summary-choosing-between-the-approaches">Summary: Choosing between the approaches</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 52%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Situation</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Want the whole stash back, upstream didn’t touch it</td>
+<td><code>git stash pop</code></td>
+</tr>
+<tr class="even">
+<td>Want the whole stash back, upstream <strong>did</strong> touch it</td>
+<td><code>git stash pop</code>, then resolve conflicts</td>
+</tr>
+<tr class="odd">
+<td>Want a few files, upstream didn’t touch them</td>
+<td><code>git restore --source='stash@{0}' -- &lt;paths&gt;</code></td>
+</tr>
+<tr class="even">
+<td>Want some hunks within a file</td>
+<td><code>git restore -p --source='stash@{0}' -- &lt;file&gt;</code></td>
+</tr>
+<tr class="odd">
+<td>Want one untracked file back</td>
+<td><code>git restore --source='stash@{0}^3' -- &lt;file&gt;</code> (undocumented)</td>
+</tr>
+<tr class="even">
+<td>Just want to look before deciding</td>
+<td><code>git difftool -d 'stash@{0}^' 'stash@{0}'</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> stash entry</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    A commit whose tree records the working directory. Its first parent</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    is the HEAD at stash time; its second parent records the index.</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    A -u stash also gets an undocumented third parent holding the</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    untracked files.</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">def</span><span class="kw">:</span><span class="at"> stash@{0}</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">  description</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    Reflog syntax for the most recent entry; refs/stash holds the</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    latest and older ones live in its reflog. `stash@{2.hours.ago}`</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    works too, and a bare integer n is equivalent to stash@{n}.</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    Quote it in zsh/bash so the braces survive.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-stash">Git Documentation &gt; git-stash</a></li>
+<li><a href="https://git-scm.com/docs/git-restore">Git Documentation &gt; git-restore</a></li>
+<li><a href="https://git-scm.com/docs/git-difftool">Git Documentation &gt; git-difftool</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+    document.querySelectorAll('.custom_problem .theorem-title').forEach((title) => {
+        let modName = title.innerHTML;
+        modName = modName.replace("Exercise", "Problem");
+        modName = modName.replace("Example", "<strong>&#9654;</strong>&nbsp; Example");
+        title.innerHTML = modName;
+    });
+ </script>
+ 
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ohgoshgit\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="OhGoshGit/OhGoshGit.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ © Copyright RyoNak
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../LICENSE">
+<p>License</p>
+</a>
+  </li>  
+</ul>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/OhGoshGit/OhGoshGit.github.io/issues" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
