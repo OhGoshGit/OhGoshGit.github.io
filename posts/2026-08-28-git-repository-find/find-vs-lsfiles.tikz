@@ -1,0 +1,83 @@
+#| libraries: [decorations.pathreplacing]
+\begin{tikzpicture}[
+    >={Latex[length=2.0mm]}, font=\footnotesize, line width=0.6pt,
+    pat/.style={draw=black!45, fill=black!5, rounded corners=3pt,
+                align=center, minimum height=0.72cm, inner sep=5pt,
+                font=\ttfamily\small},
+    engine/.style={draw=#1!55!black, fill=#1!12, rounded corners=3pt,
+                   align=center, minimum height=0.85cm, minimum width=3.5cm,
+                   inner sep=5pt},
+    hit/.style={draw=green!45!black, fill=green!12, rounded corners=2pt,
+                align=center, minimum height=0.52cm, minimum width=3.4cm,
+                inner sep=2pt, font=\ttfamily\scriptsize},
+    miss/.style={draw=red!55!black, fill=red!9, rounded corners=2pt,
+                 align=center, minimum height=0.52cm, minimum width=3.4cm,
+                 inner sep=2pt, font=\ttfamily\scriptsize},
+    zone/.style={fill=#1!5, draw=#1!35, rounded corners=6pt, inner sep=7pt},
+    zlabel/.style={anchor=north, font=\bfseries\scriptsize, text=#1!45!black},
+    sig/.style={font=\scriptsize, inner sep=2pt, text=black!62},
+    verdict/.style={font=\scriptsize, align=center},
+  ]
+
+  % ================= left column: find =================
+  \node[engine=red] (find)
+        {\ttfamily find . -name\\[1pt] \scriptsize walks every directory};
+  \node[miss, below=0.38cm of find] (f1) {.git/\dots\ \ node\_modules/\dots};
+  \node[miss, below=0.16cm of f1]   (f2) {build/gen.py};
+  \node[hit,  below=0.16cm of f2]   (f3) {src/train.py};
+  \node[hit,  below=0.16cm of f3]   (f4) {src/util.py};
+
+  % ================= braces on the left column =================
+  % 左zoneの右端はこのラベルで決まるので、右列より先に置いて基準にする
+  \draw[decorate, decoration={brace, amplitude=4pt}, draw=red!55!black]
+        ($(f1.north east)+(0.12,0)$) -- ($(f2.south east)+(0.12,0)$)
+        node[verdict, midway, anchor=west, xshift=0.14cm, text=red!50!black]
+        (lnoise) {noise};
+  \draw[decorate, decoration={brace, amplitude=4pt}, draw=green!45!black]
+        ($(f3.north east)+(0.12,0)$) -- ($(f4.south east)+(0.12,0)$)
+        node[verdict, midway, anchor=west, xshift=0.14cm, text=green!30!black]
+        (lwant) {wanted};
+
+  % ================= right column: git ls-files =================
+  % 列間は zone 同士の間隔で決まるため、左zoneの実際の右端 (lnoise/lwant) を基準にする
+  \coordinate (gcol) at ($(lnoise.east)+(0.85,0)$);
+  \node[engine=teal, anchor=north west] (gls)
+        at (gcol |- find.north)
+        {\ttfamily git ls-files\\[1pt] \scriptsize reads the index};
+  \node[hit, below=0.38cm of gls] (g1) {src/train.py};
+  \node[hit, below=0.16cm of g1]  (g2) {src/util.py};
+
+  \draw[decorate, decoration={brace, amplitude=4pt}, draw=green!45!black]
+        ($(g1.north east)+(0.12,0)$) -- ($(g2.south east)+(0.12,0)$)
+        node[verdict, midway, anchor=west, xshift=0.14cm, text=green!30!black]
+        (lgood) {all wanted};
+
+  % ================= the shared input, centred above both =================
+  \coordinate (mid) at ($(find.north)!0.5!(gls.north)$);
+  \node[pat] (pat) at ($(mid)+(0,1.75)$) {'*.py'};
+  \node[sig, left=0.20cm of pat] {name pattern};
+
+  % fan-out routed on a rail above both zone frames
+  \coordinate (rail) at ($(pat.south)+(0,-0.34)$);
+  \draw[draw=black!55] (pat.south) -- (rail);
+  \draw[->, draw=black!55] (rail) -| ($(find.north)+(0,0.68)$);
+  \draw[->, draw=black!55] (rail) -| ($(gls.north)+(0,0.68)$);
+
+  % ================= engine -> results =================
+  \draw[->, draw=red!50!black]  (find.south) -- (f1.north);
+  \draw[->, draw=teal!55!black] (gls.south)  -- (g1.north);
+
+  % ================= zone backgrounds =================
+  \coordinate (ztop)  at ($(find.north)+(0,0.56)$);
+  \coordinate (zbot)  at ($(f4.south)+(0,-0.18)$);
+  \coordinate (zbotg) at ($(g2.south)+(0,-0.18)$);
+
+  \begin{scope}[on background layer]
+    \node[zone=red,  fit=(find)(f4)(lnoise)(lwant)(find |- ztop)(find |- zbot)]  (zf) {};
+    \node[zone=teal, fit=(gls)(g2)(lgood)(gls |- ztop)(gls |- zbotg)]            (zg) {};
+  \end{scope}
+
+  \node[zlabel=red]  at ($(find.north)+(0,0.50)$) {filesystem walk};
+  \node[zlabel=teal] at ($(gls.north)+(0,0.50)$)  {index read};
+
+\end{tikzpicture}

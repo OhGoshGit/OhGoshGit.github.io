@@ -7,10 +7,26 @@ document.addEventListener("DOMContentLoaded", () => {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-  // Escape first, then re-introduce <code> for inline backticks.
-  // Backticks survive escapeHtml unchanged, so the regex still matches.
-  const renderInline = (s) => escapeHtml(s)
-    .replace(/`([^`]+)`/g, "<code>$1</code>");
+  // Escape first, then re-introduce inline markup. The markers (backticks,
+  // asterisks) survive escapeHtml unchanged, so the regexes still match.
+  //
+  // `code` is extracted first and parked in a placeholder so emphasis markers
+  // *inside* a code span stay literal — `a**b` must not become <strong>.
+  const renderInline = (s) => {
+    const codes = [];
+    let out = escapeHtml(s).replace(/`([^`]+)`/g, (_, code) => {
+      codes.push(code);
+      return `\u0000${codes.length - 1}\u0000`;
+    });
+
+    out = out
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")   // **bold**
+      // Emphasis must not open or close against whitespace, so arithmetic
+      // like "5 * 3 * 2" is left alone.
+      .replace(/(^|[^*\w])\*(\S|\S[^*]*\S)\*(?!\*)/g, "$1<em>$2</em>"); // *italic*
+
+    return out.replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${codes[i]}</code>`);
+  };
 
   const indentOf = (line) => {
     const m = line.match(/^[ \t]*/);
