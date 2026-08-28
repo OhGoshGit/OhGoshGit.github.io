@@ -38,7 +38,7 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/index.html</loc>
-    <lastmod>2026-08-21T07:37:51.535Z</lastmod>
+    <lastmod>2026-08-28T13:55:43.249Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2026-05-31-git-pathspec/index.html</loc>
@@ -162,7 +162,7 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/index.html</loc>
-    <lastmod>2026-08-21T07:37:51.536Z</lastmod>
+    <lastmod>2026-08-28T13:55:43.249Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html</loc>
@@ -195,5 +195,9 @@
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2024-10-31-push-remote-with-different-branchname/index.html</loc>
     <lastmod>2026-08-21T07:37:51.537Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ohgoshgit.github.io/posts/2026-08-28-git-repository-find/index.html</loc>
+    <lastmod>2026-08-28T13:55:43.264Z</lastmod>
   </url>
 </urlset>
