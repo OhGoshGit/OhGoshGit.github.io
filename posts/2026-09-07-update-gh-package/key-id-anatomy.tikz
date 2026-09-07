@@ -1,0 +1,85 @@
+#| mainfont: IPAGothic
+#| libraries: [decorations.pathreplacing]
+\begin{tikzpicture}[
+    >={Latex[length=2.0mm]}, font=\footnotesize, line width=0.6pt,
+    grp/.style={draw=black!35, fill=black!4, rounded corners=2pt,
+                align=center, minimum height=0.62cm, minimum width=1.75cm,
+                inner sep=3pt, font=\ttfamily\small},
+    grplong/.style={draw=teal!55!black, fill=teal!12, rounded corners=2pt,
+                    align=center, minimum height=0.62cm, minimum width=1.75cm,
+                    inner sep=3pt, font=\ttfamily\small},
+    grpshort/.style={draw=orange!65!black, fill=orange!16, rounded corners=2pt,
+                     align=center, minimum height=0.62cm, minimum width=1.75cm,
+                     inner sep=3pt, font=\ttfamily\small},
+    zone/.style={fill=#1!5, draw=#1!35, rounded corners=6pt, inner sep=7pt},
+    zlabel/.style={anchor=north, font=\bfseries\scriptsize, text=#1!45!black},
+    sig/.style={font=\scriptsize, inner sep=2pt, text=black!62},
+    tag/.style={font=\scriptsize, align=center},
+    bitlab/.style={font=\scriptsize, text=black!45, inner sep=1pt},
+  ]
+
+  % ================================================================
+  % top block: the new key
+  % ================================================================
+  \node[grp]      (n1) {7F38BBB5};
+  \node[grp, right=0.10cm of n1] (n2) {9D064DBC};
+  \node[grp, right=0.10cm of n2] (n3) {B3D84D72};
+  \node[grplong,  right=0.10cm of n3] (n4) {5612B364};
+  \node[grpshort, right=0.10cm of n4] (n5) {62313325};
+
+  \node[sig, left=0.30cm of n1, align=right]
+        {new key\\ fingerprint};
+
+  % 32bit-per-group ruler above the row
+  \node[bitlab, above=0.10cm of n1] {32 bits};
+  \node[bitlab, above=0.10cm of n2] {32 bits};
+  \node[bitlab, above=0.10cm of n3] {32 bits};
+  \node[bitlab, above=0.10cm of n4] {32 bits};
+  \node[bitlab, above=0.10cm of n5] {32 bits};
+
+  % --- brace: long key ID = last 64 bits ---
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, draw=teal!55!black]
+        ($(n4.south west)+(0,-0.10)$) -- ($(n5.south east)+(0,-0.10)$)
+        node[tag, midway, below=0.16cm, text=teal!35!black]
+        (nlong) {\ttfamily 5612B36462313325\\[1pt] long key ID (64 bits)};
+
+  % --- brace: short key ID = last 32 bits ---
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, draw=orange!65!black]
+        ($(nlong.south east)+(-1.75,-0.10)$) -- ($(nlong.south east)+(0,-0.10)$)
+        node[tag, midway, below=0.16cm, text=orange!45!black]
+        (nshort) {\ttfamily 62313325\\[1pt] short key ID (32 bits)};
+
+  % ================================================================
+  % bottom block: the old (expired) key -- same relationship
+  % ================================================================
+  \node[grp, below=3.45cm of n1] (o1) {2C610620};
+  \node[grp, right=0.10cm of o1] (o2) {1985B60E};
+  \node[grp, right=0.10cm of o2] (o3) {6C7AC873};
+  \node[grplong,  right=0.10cm of o3] (o4) {23F3D4EA};
+  \node[grpshort, right=0.10cm of o4] (o5) {75716059};
+
+  \node[sig, left=0.30cm of o1, align=right]
+        {old key\\ fingerprint\\ (expired)};
+
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, draw=teal!55!black]
+        ($(o4.south west)+(0,-0.10)$) -- ($(o5.south east)+(0,-0.10)$)
+        node[tag, midway, below=0.16cm, text=teal!35!black]
+        (olong) {\ttfamily 23F3D4EA75716059\\[1pt] long key ID (64 bits)};
+
+  % ================================================================
+  % zone backgrounds
+  % ================================================================
+  \coordinate (ntop) at ($(n1.north)+(0,0.46)$);
+  \coordinate (otop) at ($(o1.north)+(0,0.46)$);
+
+  \begin{scope}[on background layer]
+    \node[zone=blue, fit=(n1)(n5)(nlong)(nshort)(n1 |- ntop)(nshort)] (zn) {};
+    \node[zone=red,  fit=(o1)(o5)(olong)(o1 |- otop)(olong)] (zo) {};
+  \end{scope}
+
+  \node[tag, anchor=west, text=blue!45!black, font=\bfseries\scriptsize]
+        at ($(zn.north west)+(0.30,-0.18)$) {NO\_PUBKEY 5612B36462313325};
+  \node[tag, anchor=west, text=red!50!black, font=\bfseries\scriptsize]
+        at ($(zo.north west)+(0.30,-0.18)$) {EXPKEYSIG 23F3D4EA75716059};
+
+\end{tikzpicture}
