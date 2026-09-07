@@ -10,7 +10,351 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 28 Aug 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… Cannot Update GitHub CLI in Ubuntu?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-09-07-update-gh-package/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>The GitHub CLI APT repository signing key was rotated. The old key expired on <strong>2026-09-05</strong></li>
+<li>Your local keyring still holds only the old key, so <code>apt update</code> refuses the <code>gh</code> repository</li>
+<li>Replace the <code>gh</code> keyring, in the path your source entry actually points at, then update the index and upgrade <code>gh</code></li>
+<li>Only APT and RPM installs are affected: a <code>gh</code> installed through Homebrew, a binary from GitHub Releases, or a source build never touches this keyring and needs no action.</li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> gh <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--version</span></span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> version 2.100.0 <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-09-03</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">https://github.com/cli/cli/releases/tag/v2.100.0</span></span></code></pre></div></div>
+</div>
+</div>
+</div>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">🔎 Problem</h2>
+<p>Suppose that <code>apt update</code> starts complaining about the GitHub CLI repository, while every other repository updates fine:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> sudo apt update</span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb2-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">W:</span> An error occurred during the signature verification. The repository is not updated and the previous index files will be used. GPG error: https://cli.github.com/packages stable InRelease: The following signatures were invalid: EXPKEYSIG 23F3D4EA75716059 GitHub CLI <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>opensource+cli@github.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> The following signatures couldn<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'t be verified because the public key is not available: NO_PUBKEY 5612B36462313325</span></span>
+<span id="cb2-4"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">W: Failed to fetch https://cli.github.com/packages/dists/stable/InRelease  The following signatures were invalid: EXPKEYSIG 23F3D4EA75716059 GitHub CLI &lt;opensource+cli@github.com&gt; The following signatures couldn'</span>t be verified because the public key is not available: NO_PUBKEY 5612B36462313325</span>
+<span id="cb2-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">W:</span> Some index files failed to download. They have been ignored, or old ones used instead.</span></code></pre></div></div>
+</div>
+<p>Nothing is broken system-wide. But the point is <strong><code>gh</code> can no longer be updated</strong>, and the warning reappears on every <code>apt update</code>.</p>
+<section id="why-the-two-lines-are-different-failures" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-two-lines-are-different-failures">Why the two lines are different failures</h3>
+<p>The message looks like one problem repeated twice. It is two, and reading them apart is what tells you the fix is a keyring swap rather than a source-list edit.</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Line</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>EXPKEYSIG 23F3D4EA75716059</code></td>
+<td>The signature <strong>verified</strong> against a key you hold, with fingerprint <code>2C6106201985B60E6C7AC87323F3D4EA75716059</code><br> The key <strong>expired</strong> at <code>2026-09-05T12:44:10Z</code></td>
+</tr>
+<tr class="even">
+<td><code>NO_PUBKEY 5612B36462313325</code></td>
+<td>The repository is <strong>also</strong> signed with a new key, <code>7F38BBB59D064DBCB3D84D725612B36462313325</code>, and that public key is <strong>not in your local keyring</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Put together, they describe a single state: GitHub rotated the signing key, published an updated keyring file containing <strong>both</strong> keys on <strong>2026-04-08</strong>, and your machine installed <code>gh</code> before that date and never re-ran the setup steps. The old key carried you until it expired, and today it no longer does.</p>
+</section>
+<section id="check-the-github-cli-apt-keyring" class="level3">
+<h3 class="anchored" data-anchor-id="check-the-github-cli-apt-keyring">Check the GitHub CLI APT keyring</h3>
+<p>APT repository keyring files are typically stored under <code>/etc/apt/keyrings/</code>.</p>
+<p>For the GitHub CLI repository, check the keyring with:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--show-keys</span> /etc/apt/keyrings/githubcli-archive-keyring.gpg</span></code></pre></div></div>
+</div>
+<p>Then, you will see</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pub</span>   rsa4096 2022-09-06 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">SC</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> [expired: 2026-09-05]</span>
+<span id="cb4-2">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2C6106201985B60E6C7AC87323F3D4EA75716059</span></span>
+<span id="cb4-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">uid</span>                      GitHub CLI <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>opensource+cli@github.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb4-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sub</span>   rsa4096 2022-09-06 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">E</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> [expired: 2026-09-05]</span>
+<span id="cb4-5"></span>
+<span id="cb4-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg:</span> WARNING: No valid encryption subkey left over.</span></code></pre></div></div>
+</div>
+<p>The <code>gpg --show-keys</code> command displays information stored in the specified keyring file, including the public key fingerprint, user ID, subkeys, and expiration dates.</p>
+<p>In this case, the fingerprint is:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2C6106201985B60E6C7AC87323F3D4EA75716059</span></span></code></pre></div></div>
+</div>
+<p>Its suffix, <code>23F3D4EA75716059</code>, matches the key ID reported by APT in an <code>EXPKEYSIG</code> error:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">EXPKEYSIG</span> 23F3D4EA75716059</span></code></pre></div></div>
+</div>
+<p>This confirms that the expired key reported by APT is the same GitHub CLI repository key stored in <code>/etc/apt/keyrings/githubcli-archive-keyring.gpg</code> (For more detail, see <a href="../../posts/2026-09-07-update-gh-package/index.html#appendix-the-key-id-is-not-a-separate-value">Appendix</a>)</p>
+</section>
+</section>
+<section id="solution-replace-the-keyring-file" class="level2">
+<h2 class="anchored" data-anchor-id="solution-replace-the-keyring-file">🔨 Solution: replace the keyring file</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Commands
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sudo</span> wget <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-qO</span> /etc/apt/keyrings/githubcli-archive-keyring.gpg https://cli.github.com/packages/githubcli-archive-keyring.gpg <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb7-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">&amp;&amp;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sudo</span> chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg</span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sudo</span> apt update</span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sudo</span> apt install <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--only-upgrade</span> gh</span></code></pre></div></div>
+</div>
+</div>
+</div>
+<p><span class="mini-section">Check your local keyrings</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> gpg <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--show-keys</span> /etc/apt/keyrings/githubcli-archive-keyring.gpg</span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pub</span>   rsa4096 2022-09-06 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">SC</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> [expired: 2026-09-05]</span>
+<span id="cb8-3">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2C6106201985B60E6C7AC87323F3D4EA75716059</span></span>
+<span id="cb8-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">uid</span>                      GitHub CLI <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>opensource+cli@github.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sub</span>   rsa4096 2022-09-06 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">E</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> [expired: 2026-09-05]</span>
+<span id="cb8-6"></span>
+<span id="cb8-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg:</span> WARNING: No valid encryption subkey left over.</span>
+<span id="cb8-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pub</span>   rsa4096 2026-04-07 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">SC</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb8-9">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">7F38BBB59D064DBCB3D84D725612B36462313325</span></span>
+<span id="cb8-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">uid</span>                      GitHub CLI <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>opensource+cli@github.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb8-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sub</span>   rsa4096 2026-04-07 <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">E</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span></span></code></pre></div></div>
+</div>
+<ul>
+<li>Two <code>pub</code> entries mean the swap worked; the expired one is expected to still be there, since the repository metadata is signed by both.</li>
+<li><strong>One <code>pub</code> entry means you might still be holding the old keyring</strong>, so re-check the path from <code>signed-by=</code>.</li>
+</ul>
+<p>After checking your keyrings, update the apt repository index with <code>apt update</code>.</p>
+<p><span class="mini-section">Upgrade and check</span></p>
+<p>Before running <code>apt upgrade</code>, the version would look like</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> gh <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--version</span></span>
+<span id="cb9-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> version 2.97.0 <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-07-31</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb9-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">https://github.com/cli/cli/releases/tag/v2.97.0</span></span></code></pre></div></div>
+<p>After upgrading (as of 2026-09-07):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> gh <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--version</span></span>
+<span id="cb10-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> version 2.100.0 <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-09-03</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb10-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">https://github.com/cli/cli/releases/tag/v2.100.0</span></span></code></pre></div></div>
+</section>
+<section id="appendix-the-key-id-is-not-a-separate-value" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-the-key-id-is-not-a-separate-value">📘 Appendix: The key ID is not a separate value</h2>
+<p>The 16-digit ID in the error message and the 40-digit fingerprint are not two different identifiers. A <strong>key ID is a suffix of the fingerprint</strong>: the long key ID is its low 64 bits, i.e.&nbsp;the last 16 hex digits, and the short key ID is the low 32 bits, the last 8.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-09-07-update-gh-package/key-id-anatomy.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:88.0%"></p>
+</figure>
+</div>
+<p>So <code>NO_PUBKEY 5612B36462313325</code> and the fingerprint <code>7F38BBB59D064DBCB3D84D725612B36462313325</code> refer to the same key, and the same holds for the expired one.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://github.com/cli/cli/issues/13118#new-users">Upcoming PGP signing key rotation for GitHub CLI Linux packages [September 2026] #13118</a></li>
+<li><a href="https://github.com/cli/cli/blob/trunk/docs/install_linux.md">GitHub CLI &gt; Installation on Linux and BSD</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>gh</category>
+  <category>Linux</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-09-07-update-gh-package/</guid>
+  <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… Is there a git find for searching files by name?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -9371,67 +9715,6 @@ font-style: inherit;">--help</span></span></code></pre></div></div></li>
   <category>bfg</category>
   <guid>https://ohgoshgit.github.io/posts/2025-06-05-how-to-manage-secrets/</guid>
   <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… How do I switch the connection method for git push from HTTPS to SSH??</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2025-05-23-switch-https-ssh/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>You are currently using HTTPS to push to your remote Git repository, but you want to switch to using SSH for authentication. This is often necessary to use SSH keys for better security and automation.</p>
-</section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
-<ol type="1">
-<li><p><strong>Check your current remote URL:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-v</span></span></code></pre></div></div>
-<p>If the URL starts with <code>https://</code>, you are using HTTPS.</p></li>
-<li><p><strong>Find your SSH URL:</strong></p>
-<p>On GitHub, go to your repository page, click the “Code” button, and select “SSH” to copy the SSH URL (e.g., <code>git@github.com:username/repo.git</code>).</p></li>
-<li><p><strong>Change the remote URL to SSH:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote set-url origin git@github.com:username/repo.git</span></code></pre></div></div></li>
-<li><p><strong>Verify the change:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> remote <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-v</span></span></code></pre></div></div>
-<p>The URL should now start with <code>git@</code>.</p></li>
-</ol>
-<section id="tips" class="level3">
-<h3 class="anchored" data-anchor-id="tips">Tips</h3>
-<ul>
-<li><p>Make sure you have added your SSH key to your GitHub account. You can generate a key with <code>ssh-keygen</code> and add it using the GitHub SSH settings.</p></li>
-<li><p>Test your SSH connection with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ssh</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-T</span> git@github.com</span></code></pre></div></div></li>
-<li><p>If you use multiple remotes or repositories, repeat these steps for each one.</p></li>
-</ul>
-
-
-</section>
-</section>
-
- ]]></description>
-  <category>ssh</category>
-  <guid>https://ohgoshgit.github.io/posts/2025-05-23-switch-https-ssh/</guid>
-  <pubDate>Fri, 23 May 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
