@@ -4,7 +4,7 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2024-11-06"
-date-modified: last-modified
+date-modified: "2026-09-08"
 categories: [git difftool]
 ---
 
@@ -20,7 +20,7 @@ It would also be helpful to view the differences in an editor.
 
 `git diff` allows you to inspect changes in your code, from minor edits to major branch comparisons.
 
-<strong > &#9654;&nbsp; Key Takeaways</strong>
+[Key Takeaways]{.mini-section}
 
 |Commands|Explaination|
 |---|---|
@@ -31,7 +31,7 @@ It would also be helpful to view the differences in an editor.
 |`git diff HEAD <file/directory-path>`|Check single file/directory changes with HEAD|
 |`git diff --stat`|Shows a summary of changes for each file, such as how many lines were added and deleted|
 
-<strong > &#9654;&nbsp; Viewing Changes in the Working Directory</strong>
+[Viewing Changes in the Working Directory]{.mini-section}
 
 To see all changes in your working directory that haven’t been staged,
 
@@ -47,7 +47,7 @@ If you want to see staged changes with your latest commit,
 git diff --staged
 ```
 
-<strong > &#9654;&nbsp; Comparing with a Specific Commit</strong>
+[Comparing with a Specific Commit]{.mini-section}
 
 To see differences between your current state and a specific commit,
 
@@ -66,7 +66,7 @@ git diff <commit-hash1> <commit-hash2>
 git diff HEAD~1 HEAD
 ```
 
-<strong > &#9654;&nbsp; Comparing Branches</strong>
+[Comparing Branches]{.mini-section}
 
 You can also use `git diff` to compare different branches.
 
@@ -74,7 +74,7 @@ You can also use `git diff` to compare different branches.
 git diff main feature-branch
 ```
 
-<strong > &#9654;&nbsp;  Shows a summary of changes for each file</strong>
+[Shows a summary of changes for each file]{.mini-section}
 
 When you want to see a summary of changes for each file, such as how many lines were added and deleted, use `git diff --stat`.
 If you want to compare the current branch with `gh-pages` branch in `.github/` directory,
@@ -107,7 +107,7 @@ The syntax of `git difftool` is similar to `git diff`. For example,
 |`git difftool main feature-branch`|`git diff main feature-branch`|
 |`git difftool HEAD <file/directory-path>`|`git diff HEAD <file/directory-path>`|
 
-<strong > &#9654;&nbsp; Choosing an editor </strong>
+[Choosing an editor ]{.mini-section}
 
 You can set your preferred tool globally so it opens automatically each time you use the command.
 The setup syntax is
@@ -130,7 +130,7 @@ git config -l
 
 then, you can check what editor is you default git difftool editor.
 
-<strong > &#9654;&nbsp; Choosing an editor temporarily</strong>
+[Choosing an editor temporarily]{.mini-section}
 
 If you temporarily show the diff in vimdiff, 
 

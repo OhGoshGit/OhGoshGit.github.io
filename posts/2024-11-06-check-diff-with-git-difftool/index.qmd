@@ -1,10 +1,10 @@
 ---
-title: "最新コミットとunstaged差分の確認方法"
+title: "OGG… How do I check unstaged differences with the latest commit?"
 author: 
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2024-11-06"
-date-modified: last-modified
+date-modified: "2026-09-08"
 categories: [git difftool]
 ---
 
