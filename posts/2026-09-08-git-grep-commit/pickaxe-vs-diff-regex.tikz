@@ -1,0 +1,90 @@
+\begin{tikzpicture}[
+    >={Latex[length=2.0mm]}, font=\footnotesize, line width=0.6pt,
+    commit/.style={draw=black!45, fill=black!5, rounded corners=3pt,
+                   align=center, minimum height=0.62cm, minimum width=1.25cm,
+                   inner sep=3pt, font=\ttfamily\small},
+    cnt/.style={font=\scriptsize, inner sep=2pt, text=black!62, align=center},
+    hit/.style={draw=green!45!black, fill=green!14, rounded corners=2pt,
+                minimum height=0.5cm, minimum width=1.25cm, inner sep=1pt,
+                align=center, font=\scriptsize, text=green!25!black},
+    miss/.style={draw=red!55!black, fill=red!8, rounded corners=2pt,
+                 minimum height=0.5cm, minimum width=1.25cm, inner sep=1pt,
+                 align=center, font=\scriptsize, text=red!45!black},
+    flag/.style={draw=#1!55!black, fill=#1!12, rounded corners=3pt,
+                 align=right, minimum height=0.5cm, inner sep=5pt},
+    note/.style={font=\scriptsize, text=black!62, align=left},
+  ]
+
+  % ================= the commit ladder =================
+  \node[commit] (c1) {C1};
+  \node[commit, right=0.45cm of c1] (c2) {C2};
+  \node[commit, right=0.45cm of c2] (c3) {C3};
+  \node[commit, right=0.45cm of c3] (c4) {C4};
+  \node[commit, right=0.45cm of c4] (c5) {C5};
+  \node[commit, right=0.45cm of c5] (c6) {C6};
+
+  \foreach \a/\b in {c1/c2, c2/c3, c3/c4, c4/c5, c5/c6}
+    \draw[->, draw=black!45] (\a.east) -- (\b.west);
+
+  % what each commit does to app.py
+  \node[cnt, above=0.16cm of c1] {add\\a foo};
+  \node[cnt, above=0.16cm of c2] {edit the\\foo line};
+  \node[cnt, above=0.16cm of c3] {add a\\2nd foo};
+  \node[cnt, above=0.16cm of c4] {reorder\\foo lines};
+  \node[cnt, above=0.16cm of c5] {unrelated\\change};
+  \node[cnt, above=0.16cm of c6] {delete\\one foo};
+
+  % occurrence count of "foo" after each commit
+  \node[cnt, below=0.20cm of c1] (n1) {$0\!\to\!1$};
+  \node[cnt, below=0.20cm of c2] (n2) {$1\!\to\!1$};
+  \node[cnt, below=0.20cm of c3] (n3) {$1\!\to\!2$};
+  \node[cnt, below=0.20cm of c4] (n4) {$2\!\to\!2$};
+  \node[cnt, below=0.20cm of c5] (n5) {$2\!\to\!2$};
+  \node[cnt, below=0.20cm of c6] (n6) {$2\!\to\!1$};
+
+  \node[note, left=0.30cm of n1, text=black!55] (nlab)
+        {\# of \texttt{foo}};
+
+  % ================= row: -S (pickaxe, counts) =================
+  \coordinate (rS) at ($(n1.south)+(0,-0.72)$);
+  \node[hit,  anchor=north] (s1) at (c1 |- rS) {hit};
+  \node[miss, anchor=north] (s2) at (c2 |- rS) {skip};
+  \node[hit,  anchor=north] (s3) at (c3 |- rS) {hit};
+  \node[miss, anchor=north] (s4) at (c4 |- rS) {skip};
+  \node[miss, anchor=north] (s5) at (c5 |- rS) {skip};
+  \node[hit,  anchor=north] (s6) at (c6 |- rS) {hit};
+
+  \node[flag=orange, anchor=east] (fS) at ($(s1.west)+(-0.40,0)$)
+        {\ttfamily -S'foo'};
+
+  % ================= row: -G (regex on the patch) =================
+  \coordinate (rG) at ($(s1.south)+(0,-0.62)$);
+  \node[hit,  anchor=north] (g1) at (c1 |- rG) {hit};
+  \node[hit,  anchor=north] (g2) at (c2 |- rG) {hit};
+  \node[hit,  anchor=north] (g3) at (c3 |- rG) {hit};
+  \node[hit,  anchor=north] (g4) at (c4 |- rG) {hit};
+  \node[miss, anchor=north] (g5) at (c5 |- rG) {skip};
+  \node[hit,  anchor=north] (g6) at (c6 |- rG) {hit};
+
+  \node[flag=blue, anchor=east] (fG) at ($(g1.west)+(-0.40,0)$)
+        {\ttfamily -G'foo'};
+
+  % ================= what each flag actually asks =================
+  \node[note, anchor=west, text=orange!45!black] (qS)
+        at ($(s6.east)+(0.34,0)$)
+        {\emph{did the number of}\\\emph{\texttt{foo} change?}};
+  \node[note, anchor=west, text=blue!45!black] (qG)
+        at ($(g6.east)+(0.34,0)$)
+        {\emph{did a \texttt{foo} line appear}\\\emph{on a \texttt{+} or \texttt{-} line?}};
+
+  % ================= callouts for the two decisive commits =================
+  \coordinate (cbot) at ($(g1.south)+(0,-0.52)$);
+  \coordinate (cmid) at ($(c1.west)!0.5!(c6.east)$);
+  \node[note, anchor=north, text width=11.6cm] (why) at (cmid |- cbot)
+        {\textcolor{black!70}{%
+         \textbf{C2, C4} touch a \texttt{foo} line without changing how many there are
+         --- only \texttt{-G} sees them.\\
+         \textbf{C5} never puts \texttt{foo} on a \texttt{+}/\texttt{-} line --- the one
+         commit both flags skip.}};
+
+\end{tikzpicture}
