@@ -4,7 +4,7 @@ author:
    - name: "Ryo Nakagami"
      url: https://github.com/RyoNakagami
 date: "2024-12-04"
-date-modified: last-modified
+date-modified: "2026-09-08"
 categories: [git remote]
 ---
 
@@ -46,13 +46,14 @@ When you rename a repository, all existing information, with the exception of pr
 
 However, it’s still a good idea to update any references.
 
-<div style='padding-left: 2em; padding-right: 2em; border-radius: 0em; border-style:solid; border-color:#ffa657;'>
-<strong style="color:#ffa657">Warning !</strong> <br> 
+
+::: {.callout-warning}
 
 If you create a new repository under your account in the future, do not reuse the original name of the renamed repository. 
 If you do, redirects to the renamed repository will no longer work.
 
-</div>
+:::
+
 
 
 
