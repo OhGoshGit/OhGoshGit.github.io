@@ -10,7 +10,1465 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I find which commits added or removed a string?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-09-08-git-grep-commit/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>git grep</code> searches the <strong>current</strong> working tree. To search <strong>history</strong>, you need <code>git log -G &lt;regex&gt;</code>, which matches commits who add or remove a line matching the regex</li>
+<li>Use <code>--name-status</code> to see which paths each of those commits touched</li>
+<li>Use <code>--diff-filter</code> to keep only additions, modifications, deletions, or renames</li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># every commit in the last 20 whose patch touches a </span><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TODO</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">, with the affected paths</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--format</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'commit %h'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-status</span> HEAD~20..HEAD</span></code></pre></div></div>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Search commit <strong>history</strong> for a string with <code>git log -G</code>, not just the working tree</label></li>
+<li><label><input type="checkbox">Group the result as <em>commit → the files it changed</em> with <code>--name-status</code></label></li>
+<li><label><input type="checkbox">Narrow the result to a change type (added / modified / deleted / renamed) with <code>--diff-filter</code></label></li>
+<li><label><input type="checkbox">Wrap the whole pipeline in <code>git-grep-commit</code> when you want machine-readable output</label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>Suppose that a <code>TODO</code> marker used to exist somewhere in the repository and is now gone. You want to know <strong>which commit removed it, and from which file</strong>.</p>
+<p><span class="mini-section"><code>git grep</code> cannot answer this</span></p>
+<p><code>git grep</code> searches a single tree:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ nothing: the string is gone from HEAD</span></span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> </span></code></pre></div></div>
+</div>
+<p><span class="mini-section"><code>git log -G</code> searches history</span></p>
+<p>The default output tells you the commits and nothing about the files:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ which files? unknown</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> HEAD~20..HEAD</span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">9f2c1ab</span> Drop the leftover TODO markers</span>
+<span id="cb3-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">3ad77e0</span> Add TODO for the retry path</span></code></pre></div></div>
+</div>
+<p>And once you add <code>--name-status</code>, the output is correct but not something another program can read:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-status</span> HEAD~20..HEAD</span>
+<span id="cb4-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">commit</span> 9f2c1ab...</span>
+<span id="cb4-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> ...</span>
+<span id="cb4-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Date:</span> ...</span>
+<span id="cb4-5"></span>
+<span id="cb4-6">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Drop</span> the leftover TODO markers</span>
+<span id="cb4-7"></span>
+<span id="cb4-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">D</span>       src/legacy.py</span>
+<span id="cb4-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span>       src/worker.py</span>
+<span id="cb4-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">...</span></span></code></pre></div></div>
+</div>
+<p><span class="mini-section">What Really We Want</span></p>
+<ul>
+<li>One record per commit, with the affected paths nested under it</li>
+<li>A way to say “only the commits that <strong>added</strong> it” versus “only the ones that <strong>deleted</strong> it”</li>
+<li>Output that survives a pipe, JSON or YAML, and filenames that do not break the format</li>
+</ul>
+</section>
+<section id="search-options--s-or--g" class="level2">
+<h2 class="anchored" data-anchor-id="search-options--s-or--g">Search Options: <code>-S</code> or <code>-G</code></h2>
+<p><code>git log</code> has two flags that search the patch instead of the tree.</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Flag</th>
+<th>Selects commits where</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-S &lt;string&gt;</code></td>
+<td>Look for differences that change the number of occurrences of the specified string</td>
+</tr>
+<tr class="even">
+<td><code>-G &lt;regex&gt;</code></td>
+<td>Display commits where lines matching the regex were added or deleted in diff</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The practical difference: a commit that moves a line containing <code>TODO</code> from one file to another changes no occurrence count, so <code>-S</code> skips it, while <code>-G</code> reports it because both a <code>+</code> line and a <code>-</code> line matched.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>-G</code> matches the diff, so it never sees an unchanged line
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If a file <em>contains</em> <code>TODO</code> but a commit did not touch that line, no <code>-G</code> search will return that commit. <code>-G</code> answers <em>“which commit changed a matching line”</em>, never <em>“which commit had a matching line in its tree”</em>. For the latter you need <code>git grep 'TODO' &lt;commit&gt;</code>, one commit at a time.</p>
+</div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 1</strong></span> <span class="def-title"><code>git log -S</code> vs <code>git log -G</code></span></p>
+<p>Build a sandbox whose six commits each move the occurrence count of <code>foo</code> differently:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create sandbox repository</span></span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mkdir</span> sandbox-git-log</span>
+<span id="cb5-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> sandbox-git-log</span>
+<span id="cb5-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> init</span>
+<span id="cb5-5"></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># C1: created with one "foo" -&gt; count 0 -&gt; 1</span></span>
+<span id="cb5-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> app.py <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;&lt;'EOF'</span></span>
+<span id="cb5-8"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def main():</span></span>
+<span id="cb5-9"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    x = foo(1)</span></span>
+<span id="cb5-10"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return x</span></span>
+<span id="cb5-11"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">EOF</span></span>
+<span id="cb5-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add app.py <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">&amp;&amp;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C1: add foo (count 0 -&gt; 1)"</span></span>
+<span id="cb5-13"></span>
+<span id="cb5-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># C2: rewrite the line containing foo, but the count stays 1</span></span>
+<span id="cb5-15"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> app.py <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;&lt;'EOF'</span></span>
+<span id="cb5-16"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def main():</span></span>
+<span id="cb5-17"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    y = foo(2)</span></span>
+<span id="cb5-18"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return y</span></span>
+<span id="cb5-19"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">EOF</span></span>
+<span id="cb5-20"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-am</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C2: modify the foo line (count 1 -&gt; 1)"</span></span>
+<span id="cb5-21"></span>
+<span id="cb5-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># C3: add one more line containing foo -&gt; 1 -&gt; 2</span></span>
+<span id="cb5-23"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> app.py <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;&lt;'EOF'</span></span>
+<span id="cb5-24"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def main():</span></span>
+<span id="cb5-25"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    y = foo(2)</span></span>
+<span id="cb5-26"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    z = foo(3)</span></span>
+<span id="cb5-27"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return y + z</span></span>
+<span id="cb5-28"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">EOF</span></span>
+<span id="cb5-29"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-am</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C3: add another foo (count 1 -&gt; 2)"</span></span>
+<span id="cb5-30"></span>
+<span id="cb5-31"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># C4: only reorder the foo lines -&gt; 2 -&gt; 2</span></span>
+<span id="cb5-32"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> app.py <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;&lt;'EOF'</span></span>
+<span id="cb5-33"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def main():</span></span>
+<span id="cb5-34"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    z = foo(3)</span></span>
+<span id="cb5-35"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    y = foo(2)</span></span>
+<span id="cb5-36"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return y + z</span></span>
+<span id="cb5-37"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">EOF</span></span>
+<span id="cb5-38"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-am</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C4: reorder foo lines (count 2 -&gt; 2)"</span></span>
+<span id="cb5-39"></span>
+<span id="cb5-40"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># C5: a change unrelated to foo -&gt; foo never appears in the diff</span></span>
+<span id="cb5-41"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> app.py <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;&lt;'EOF'</span></span>
+<span id="cb5-42"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def main():</span></span>
+<span id="cb5-43"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    z = foo(3)</span></span>
+<span id="cb5-44"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    y = foo(2)</span></span>
+<span id="cb5-45"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return y + z</span></span>
+<span id="cb5-46"></span>
+<span id="cb5-47"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def helper():</span></span>
+<span id="cb5-48"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return 42</span></span>
+<span id="cb5-49"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">EOF</span></span>
+<span id="cb5-50"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-am</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C5: unrelated change (no foo in diff)"</span></span>
+<span id="cb5-51"></span>
+<span id="cb5-52"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># C6: delete one foo -&gt; 2 -&gt; 1</span></span>
+<span id="cb5-53"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> app.py <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;&lt;'EOF'</span></span>
+<span id="cb5-54"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def main():</span></span>
+<span id="cb5-55"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    y = foo(2)</span></span>
+<span id="cb5-56"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return y</span></span>
+<span id="cb5-57"></span>
+<span id="cb5-58"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">def helper():</span></span>
+<span id="cb5-59"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    return 42</span></span>
+<span id="cb5-60"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">EOF</span></span>
+<span id="cb5-61"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-am</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C6: remove one foo (count 2 -&gt; 1)"</span></span></code></pre></div></div>
+</div>
+<p>What the setup builds, and what each flag is asked to look at:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-09-08-git-grep-commit/pickaxe-vs-diff-regex.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:92.0%"></p>
+</figure>
+</div>
+<p>Now ask the two questions:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"===== all commits ====="</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--reverse</span></span>
+<span id="cb6-3"></span>
+<span id="cb6-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span></span>
+<span id="cb6-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"===== git log -S'foo' (only commits where the count changed) ====="</span></span>
+<span id="cb6-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--reverse</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-S</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo'</span></span>
+<span id="cb6-7"></span>
+<span id="cb6-8"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span></span>
+<span id="cb6-9"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"===== git log -G'foo' (commits whose diff added/removed a foo line) ====="</span></span>
+<span id="cb6-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--reverse</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo'</span></span>
+<span id="cb6-11"></span>
+<span id="cb6-12"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span></span>
+<span id="cb6-13"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"===== note: --pickaxe-regex keeps the </span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\"</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">count</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\"</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> semantics for -S ====="</span></span>
+<span id="cb6-14"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--reverse</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-S</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo\(.\)'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--pickaxe-regex</span></span></code></pre></div></div>
+</div>
+<p>Then</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=====</span> all commits =====</span>
+<span id="cb7-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">4fa154f</span> C1: add foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">abc2106</span> C2: modify the foo line <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 1 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">0811d13</span> C3: add another foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 1 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 2<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ff3428a</span> C4: reorder foo lines <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 2<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">6bcca99</span> C5: unrelated change <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">no</span> foo in diff<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">31b4874</span> <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HEAD</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> main<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">C6:</span> remove one foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-8"></span>
+<span id="cb7-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=====</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-S</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo'</span> <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">only</span> commits where the count changed<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=====</span></span>
+<span id="cb7-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">4fa154f</span> C1: add foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">0811d13</span> C3: add another foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 1 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 2<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-12"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">31b4874</span> <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HEAD</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> main<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">C6:</span> remove one foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-13"></span>
+<span id="cb7-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=====</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo'</span> <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">commits</span> whose diff added/removed a foo line<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=====</span></span>
+<span id="cb7-15"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">4fa154f</span> C1: add foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-16"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">abc2106</span> C2: modify the foo line <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 1 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-17"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">0811d13</span> C3: add another foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 1 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 2<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-18"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ff3428a</span> C4: reorder foo lines <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 2<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-19"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">31b4874</span> <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HEAD</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> main<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">C6:</span> remove one foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-20"></span>
+<span id="cb7-21"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=====</span> note: <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--pickaxe-regex</span> keeps the <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"count"</span> semantics for <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-S</span> =====</span>
+<span id="cb7-22"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">4fa154f</span> C1: add foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-23"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">0811d13</span> C3: add another foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 1 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 2<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb7-24"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">31b4874</span> <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HEAD</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> main<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">C6:</span> remove one foo <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">count</span> 2 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> 1<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span></code></pre></div></div>
+</div>
+<p><code>C2</code> and <code>C4</code> are the whole point of the sandbox: both touch a <code>foo</code> line, neither changes how many <code>foo</code> there are, so only <code>-G</code> reports them. <code>C5</code> is the mirror case — it is the one commit both flags skip, because <code>foo</code> never appears on a <code>+</code> or <code>-</code> line.</p>
+</div>
+<hr>
+</section>
+<section id="why-git-log--g-alone-is-still-not-enough" class="level2">
+<h2 class="anchored" data-anchor-id="why-git-log--g-alone-is-still-not-enough">Why <code>git log -G</code> alone is still not enough</h2>
+<p><span class="mini-section">The default output drops the files</span></p>
+<p><code>-G</code> gets you the right commits, but tells you nothing about the paths inside them:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ which files? unknown</span></span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> HEAD~20..HEAD</span>
+<span id="cb8-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">9f2c1ab</span> Drop the leftover TODO markers</span>
+<span id="cb8-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">3ad77e0</span> Add TODO for the retry path</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">What Really We Want</span></p>
+<ul>
+<li>One record per commit, with the affected paths nested under it</li>
+<li>A way to say “only the commits that <strong>added</strong> it” versus “only the ones that <strong>deleted</strong> it”</li>
+<li>Output that survives a pipe, JSON or YAML, and filenames that do not break the format</li>
+</ul>
+</section>
+<section id="solution-git-log--g-with---name-status" class="level2">
+<h2 class="anchored" data-anchor-id="solution-git-log--g-with---name-status">Solution: <code>git log -G</code> with <code>--name-status</code></h2>
+<p><span class="mini-section">Key Takeaways</span></p>
+<ul>
+<li><code>-G &lt;regex&gt;</code> picks the <strong>commits</strong></li>
+<li><code>--name-status</code> prints the <strong>paths</strong> each selected commit changed, one per line, prefixed by a status letter</li>
+<li><code>--format='commit %h'</code> replaces the multi-line header with a single parseable line</li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;regex&gt;'</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[--</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">regexp</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">-</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">ignore</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">-</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">case</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[--</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">diff</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">-</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">filter=AM</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb9-2">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--format</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'commit %h'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-status</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb9-3">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>revision-range<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> -- <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;pathspec&gt;'</span></span></code></pre></div></div>
+</div>
+<p>Everything after <code>--</code> is a <a href="../../posts/2026-05-31-git-pathspec/index.html">pathspec</a>, so the history search composes with Git-native path matching, magic signatures included:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--format</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'commit %h'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-status</span> HEAD~20..HEAD <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'*.qmd'</span></span>
+<span id="cb10-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--format</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'commit %h'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-status</span> HEAD~20..HEAD <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">':(glob)**/*.qmd'</span></span></code></pre></div></div>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 2</strong></span> <br></p>
+<p>Back in the sandbox from the previous example, <code>%n</code> inside <code>--format</code> lets you add fields on their own lines — here the author date with <code>%ai</code> — while keeping one commit per record:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-G</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--format</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'commit %h%n%ai'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-status</span> HEAD</span>
+<span id="cb11-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">commit</span> 31b4874</span>
+<span id="cb11-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-09-08</span> 17:47:50 +0900</span>
+<span id="cb11-4"></span>
+<span id="cb11-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span>       app.py</span>
+<span id="cb11-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">commit</span> ff3428a</span>
+<span id="cb11-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-09-08</span> 17:46:51 +0900</span>
+<span id="cb11-8"></span>
+<span id="cb11-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span>       app.py</span>
+<span id="cb11-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">commit</span> 0811d13</span>
+<span id="cb11-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-09-08</span> 17:45:18 +0900</span>
+<span id="cb11-12"></span>
+<span id="cb11-13"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span>       app.py</span>
+<span id="cb11-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">commit</span> abc2106</span>
+<span id="cb11-15"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-09-08</span> 17:44:46 +0900</span>
+<span id="cb11-16"></span>
+<span id="cb11-17"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">M</span>       app.py</span>
+<span id="cb11-18"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">commit</span> 4fa154f</span>
+<span id="cb11-19"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2026-09-08</span> 17:44:04 +0900</span>
+<span id="cb11-20"></span>
+<span id="cb11-21"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">A</span>       app.py</span></code></pre></div></div>
+</div>
+<p>Two things to read off this output:</p>
+<ul>
+<li>The five commits are exactly the <code>-G</code> hits from the previous example, newest first, and <code>C5</code> is absent — <code>--name-status</code> never resurrects a commit that <code>-G</code> did not select</li>
+<li><code>app.py</code> is <code>A</code> in the oldest commit and <code>M</code> in every later one, which is the status letter <code>--diff-filter</code> matches on</li>
+</ul>
+</div>
+<hr>
+<section id="narrowing-by-change-type-with---diff-filter" class="level3">
+<h3 class="anchored" data-anchor-id="narrowing-by-change-type-with---diff-filter">Narrowing by change type with <code>--diff-filter</code></h3>
+<p><code>-G</code> selects commits; <code>--diff-filter</code> selects <strong>paths within</strong> those commits by status letter. Uppercase letters include, lowercase letters exclude:</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 78%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Filter</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>Added paths only</td>
+</tr>
+<tr class="even">
+<td><code>M</code></td>
+<td>Modified paths only</td>
+</tr>
+<tr class="odd">
+<td><code>D</code></td>
+<td>Deleted paths only</td>
+</tr>
+<tr class="even">
+<td><code>R</code></td>
+<td>Renamed paths only</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>Copied paths only</td>
+</tr>
+<tr class="even">
+<td><code>AM</code></td>
+<td>Added or modified paths</td>
+</tr>
+<tr class="odd">
+<td><code>ad</code></td>
+<td>Exclude added and deleted paths</td>
+</tr>
+<tr class="even">
+<td><code>AM*</code></td>
+<td>If a commit contains an added or modified path, select <strong>all</strong> changed paths in that commit</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>T</code>, <code>U</code>, <code>X</code>, and <code>B</code> are accepted as well. The <code>*</code> is not a wildcard: it switches Git to all-or-none behaviour, which is why it is only ever useful <strong>combined</strong> with other letters, as in <code>AM*</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>“Which commit introduced it” is <code>--diff-filter=A</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The two questions this post opened with map straight onto two filters:</p>
+<ul>
+<li><strong>when was this file first added with the marker</strong> → <code>--diff-filter=A</code></li>
+<li><strong>when was it deleted</strong> → <code>--diff-filter=D</code></li>
+</ul>
+<p>Without a filter you get both, plus every modification in between.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="solution-wrapping-it-in-git-grep-commit" class="level2">
+<h2 class="anchored" data-anchor-id="solution-wrapping-it-in-git-grep-commit">Solution: wrapping it in <code>git-grep-commit</code></h2>
+<p>The <code>git log -G</code> one-liner is correct but long, and its output still needs parsing before anything else can consume it. <a href="https://github.com/RyoNakagami/regmonkey-gitcommand/blob/develop/src/git-grep-commit.sh"><code>git-grep-commit</code></a> names the pipeline once and groups the affected paths by commit, in a table, JSON, or YAML.</p>
+<p>Revision ranges and every path after <code>--</code> are passed straight through to Git, magic pathspecs included, so nothing you already know stops working.</p>
+<p><strong> ▶&nbsp; Usage</strong></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">git-grep-commit</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">options</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>regex<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> [<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>revision<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> ...] [-- <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>pathspec<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> ...]</span></code></pre></div></div>
+</div>
+<p><strong> ▶&nbsp; Options</strong></p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-f</code>, <code>--format &lt;format&gt;</code></td>
+<td>Output as <code>table</code> (default), <code>json</code>, or <code>yml</code>; <code>yaml</code> is accepted as an alias for <code>yml</code></td>
+</tr>
+<tr class="even">
+<td><code>-i</code>, <code>--ignore-case</code></td>
+<td>Match the patch regex case-insensitively</td>
+</tr>
+<tr class="odd">
+<td><code>--diff-filter &lt;filter&gt;</code></td>
+<td>Apply Git’s native diff filter. Both <code>--diff-filter=AM</code> and <code>--diff-filter AM</code> are accepted</td>
+</tr>
+<tr class="even">
+<td><code>--long-date</code></td>
+<td>Display the author date in ISO 8601 format (<code>%ai</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>--short-date</code></td>
+<td>Display the author date as YYYY-MM-DD (<code>%as</code>).</td>
+</tr>
+<tr class="even">
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show the help message</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exm-" class="custom_problem theorem example">
+<p><span class="theorem-title"><strong>Example 3</strong></span> <span class="def-title">Reading the two output formats</span></p>
+<p>Ask for every commit whose patch touched <code>foo</code>, and the default <code>table</code> format answers it in one row per changed path:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep-commit <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo'</span></span>
+<span id="cb13-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">COMMIT</span>   STATUS  PATH</span>
+<span id="cb13-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-----------------------</span></span>
+<span id="cb13-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">31b4874</span>  M       app.py</span>
+<span id="cb13-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ff3428a</span>  M       app.py</span>
+<span id="cb13-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">0811d13</span>  M       app.py</span>
+<span id="cb13-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">abc2106</span>  M       app.py</span>
+<span id="cb13-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">4fa154f</span>  A       app.py</span></code></pre></div></div>
+<p>Commits are listed newest first, exactly as <code>git log</code> orders them, so the <strong>last</strong> row is the oldest. That bottom row is the interesting one: <code>4fa154f</code> is the only <code>A</code>, so it is the commit that added <code>app.py</code> with <code>foo</code> already in it. Everything above is a later <code>M</code> that added or removed a <code>foo</code> line again. Reading upwards is therefore reading the marker’s history forwards, and <code>--diff-filter=A</code> would have printed that last row alone.</p>
+<p>The same query as YAML keeps the paths <strong>grouped under their commit</strong> instead of repeating the commit on every row:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep-commit <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'foo'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f</span> yml</span>
+<span id="cb14-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> commit: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"31b4874"</span></span>
+<span id="cb14-3">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">files:</span></span>
+<span id="cb14-4">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> status: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"M"</span></span>
+<span id="cb14-5">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"app.py"</span></span>
+<span id="cb14-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> commit: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ff3428a"</span></span>
+<span id="cb14-7">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">files:</span></span>
+<span id="cb14-8">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> status: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"M"</span></span>
+<span id="cb14-9">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"app.py"</span></span>
+<span id="cb14-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> commit: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"0811d13"</span></span>
+<span id="cb14-11">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">files:</span></span>
+<span id="cb14-12">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> status: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"M"</span></span>
+<span id="cb14-13">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"app.py"</span></span>
+<span id="cb14-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> commit: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"abc2106"</span></span>
+<span id="cb14-15">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">files:</span></span>
+<span id="cb14-16">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> status: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"M"</span></span>
+<span id="cb14-17">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"app.py"</span></span>
+<span id="cb14-18"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> commit: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"4fa154f"</span></span>
+<span id="cb14-19">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">files:</span></span>
+<span id="cb14-20">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> status: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span></span>
+<span id="cb14-21">      <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"app.py"</span></span></code></pre></div></div>
+<p>Here each commit touched a single file, so <code>files</code> never holds more than one entry and the two formats carry the same information. The nesting earns its keep once a commit changes several paths: the table repeats the commit hash on each line and leaves the grouping for you to reconstruct, while <code>-f yml</code> (or <code>-f json</code>) hands a downstream <code>yq</code>/<code>jq</code> the commit and its file list as one object.</p>
+</div>
+<hr>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Quote <code>*</code> and <code>AM*</code> in the shell
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>--diff-filter='*'</code> and <code>--diff-filter='AM*'</code> must be quoted. Unquoted, the shell expands <code>*</code> against the files in the current directory before Git ever sees it.</p>
+</div>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">📘 Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb15-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> git log -G</span></span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb15-3">    Selects commits whose patch contains an added or removed line</span>
+<span id="cb15-4">    matching the regex. Searches the **diff**, not the tree, so an</span>
+<span id="cb15-5">    unchanged matching line never selects a commit.</span>
+<span id="cb15-6"></span>
+<span id="cb15-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> git log -S</span></span>
+<span id="cb15-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb15-9">    The "pickaxe". Selects commits where the number of occurrences of</span>
+<span id="cb15-10">    the string changed, which is the narrower question of when a string</span>
+<span id="cb15-11">    was introduced or removed. Add `--pickaxe-regex` to treat the</span>
+<span id="cb15-12">    argument as a regex rather than a literal string.</span>
+<span id="cb15-13"></span>
+<span id="cb15-14"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> --diff-filter</span></span>
+<span id="cb15-15"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb15-16">    Filters the paths reported for a commit by status letter — `A`dded,</span>
+<span id="cb15-17">    `M`odified, `D`eleted, `R`enamed, `C`opied, and others. Uppercase</span>
+<span id="cb15-18">    includes, lowercase excludes, and `*` switches to all-or-none</span>
+<span id="cb15-19">    selection for the whole commit.</span>
+<span id="cb15-20"></span>
+<span id="cb15-21"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> --name-status</span></span>
+<span id="cb15-22"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb15-23">    Prints the paths a commit changed, one per line, each prefixed by</span>
+<span id="cb15-24">    its status letter. Rename and copy lines carry both the old and the</span>
+<span id="cb15-25">    new path.</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-log">Git Documentation &gt; git-log</a></li>
+<li><a href="https://git-scm.com/docs/git-diff-tree#Documentation/git-diff-tree.txt---diff-filterACDMRTUXB82308203">Git Documentation &gt; git-diff-tree &gt; –diff-filter</a></li>
+<li><a href="https://github.com/RyoNakagami/regmonkey-gitcommand/blob/develop/src/git-grep-commit.sh">regmonkey-gitcommand repository &gt; git-grep-commit.sh</a></li>
+<li><a href="../../posts/2026-08-28-git-repository-find/index.html">OGG… Is there a <code>git find</code> for searching files by name?</a></li>
+<li><a href="../../posts/2026-05-31-git-pathspec/index.html">OGG… What is a git pathspec and how do I use its magic signatures?</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git log</category>
+  <category>git commit</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-09-08-git-grep-commit/</guid>
+  <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… Cannot Update GitHub CLI in Ubuntu?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -9404,317 +10862,6 @@ font-style: inherit;">--abort</span></span></code></pre></div></div>
   <category>git rebase</category>
   <guid>https://ohgoshgit.github.io/posts/2025-06-06-organize-commits-using-git-rebase/</guid>
   <pubDate>Fri, 06 Jun 2025 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… How do I manage config and secret information in Git?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2025-06-05-how-to-manage-secrets/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="objective" class="level2">
-<h2 class="anchored" data-anchor-id="objective">Objective</h2>
-<p>Prevent accidental commits and secure management of configuration files and secret credentials (e.g., API keys, tokens, passwords) in Git projects.</p>
-</section>
-<section id="goal" class="level2">
-<h2 class="anchored" data-anchor-id="goal">Goal</h2>
-<p>Ensure sensitive information is excluded from version control while still allowing safe configuration in development and production environments.</p>
-</section>
-<section id="guidline" class="level2">
-<h2 class="anchored" data-anchor-id="guidline">Guidline</h2>
-<ol type="1">
-<li><p><strong>Use <code>.gitignore</code> to exclude sensitive files</strong></p>
-<p>Add entries like <code>config.yml</code>, <code>.env</code>, or <code>secrets.json</code> to <code>.gitignore</code>.</p></li>
-<li><p><strong>Store templates of sensitive files</strong></p>
-<p>Include <code>config.sample.yml</code> or <code>.env.example</code> in the repo to show required structure. It would be nice to add a document about how to use the template.</p></li>
-<li><p><strong>Use environment variables in your code</strong></p>
-<p>Instead of hardcoding sensitive values like API keys in your source code, load them from environment variables at runtime.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> yaml</span>
-<span id="cb1-2"></span>
-<span id="cb1-3"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">with</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">open</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"../config/config.yml"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"r"</span>) <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">as</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">file</span>:</span>
-<span id="cb1-4">    config <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> yaml.safe_load(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">file</span>)</span></code></pre></div></div></li>
-<li><p><strong>Audit and remove accidental commits:</strong></p>
-<p>If you accidentally committed a secret (like an API key), even after deleting the file or rotating the key, it might still exist in Git history and be accessible to others. You need to remove recrets from history Use a tool like <code>BFG Repo-Cleaner</code>.</p></li>
-</ol>
-</section>
-<section id="example-in-my-project" class="level2">
-<h2 class="anchored" data-anchor-id="example-in-my-project">Example in my project</h2>
-<p><span class="mini-section">manageing secrets in development</span></p>
-<ol type="1">
-<li><p><strong>Add <code>config/</code> to <code>.gitignore</code></strong></p>
-<pre><code># .gitignore
-config/</code></pre></li>
-<li><p><strong>Add a template file: <code>config/config_template.yml</code></strong></p>
-<p>Create a safe, non-sensitive example config file that shows the expected structure of real credentials:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># config/config_template.yml</span></span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_config</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span></span>
-<span id="cb3-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_url</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"https://hogehoge"</span></span>
-<span id="cb3-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_key_id</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"hogehoge"</span></span>
-<span id="cb3-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_secret</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"hogehoge"</span></span></code></pre></div></div>
-<p>Then commit it manually with <code>-f</code> (force), since it lives inside an ignored folder:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> add <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-f</span> config/config_template.yml</span>
-<span id="cb4-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ENV: Add config template for API config"</span></span></code></pre></div></div></li>
-<li><p><strong>Document how to create a real config.yml from the template</strong></p>
-<p>Provide a short note (e.g.&nbsp;in your README) explaining how to set up the actual config file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">cp</span> config/config_template.yml config/config.yml</span></code></pre></div></div>
-<p>Then edit <code>config.yml</code> <strong>manually</strong> and replace each placeholder value with your actual secrets:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_config</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span></span>
-<span id="cb6-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_url</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"https://your.api.endpoint"</span></span>
-<span id="cb6-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_key_id</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"your_api_key_id"</span></span>
-<span id="cb6-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">api_secret</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"your_secret_token"</span></span></code></pre></div></div></li>
-<li><p><strong>Create passwords.txt under config/ for use with BFG Repo-Cleaner</strong></p>
-<p>If you accidentally commit secrets, prepare a list of them to clean from your Git history.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb7-1">your_api_key_here==&gt;REMOVED</span>
-<span id="cb7-2">secret_token_123==&gt;REMOVED</span></code></pre></div></div>
-<p>Each line follows the format:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb8-1">original_string==&gt;replacement_string</span></code></pre></div></div></li>
-</ol>
-<p><span class="mini-section">If you accidentally commit secrets</span></p>
-<div style="padding-left:2em;">
-<p>Here’s how to use BFG to remove sensitive values from Git history:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">bfg</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--replace-text</span> .bfg/passwords.txt</span>
-<span id="cb9-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> reflog expire <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--expire</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>now <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--all</span></span>
-<span id="cb9-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> gc <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--prune</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>now <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--aggressive</span></span>
-<span id="cb9-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> push <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-f</span></span></code></pre></div></div>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>command</th>
-<th>explanation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>bfg --replace-text ...</code></td>
-<td>replaces secrets in your repo history</td>
-</tr>
-<tr class="even">
-<td><code>git reflog expire</code></td>
-<td>drops internal backup references</td>
-</tr>
-<tr class="odd">
-<td><code>git gc</code></td>
-<td>garbage collects dangling commits</td>
-</tr>
-<tr class="even">
-<td><code>git push -f</code></td>
-<td>force-pushes the cleaned history (⚠️ coordinate with team!)</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-<section id="appendix-how-to-install-bfg-repo-cleaner" class="level2">
-<h2 class="anchored" data-anchor-id="appendix-how-to-install-bfg-repo-cleaner">Appendix: How to install BFG Repo-Cleaner</h2>
-<p>AS of 2025-06-03, v1.15.0 is the lastest.</p>
-<ol type="1">
-<li><p><strong>Download the BFG JAR File</strong></p>
-<p>Use <code>wget</code> to download the JAR (Java ARchive) file of BFG version 1.15.0 from Maven Central (an official Java package repository).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> cd <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>your-target-directory<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb10-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> wget https://repo1.maven.org/maven2/com/madgag/bfg/1.15.0/bfg-1.15.0.jar</span></code></pre></div></div>
-<p>After download, you’ll see this file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> ls</span>
-<span id="cb11-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">bfg-1.15.0.jar</span></span></code></pre></div></div></li>
-<li><p><strong>(Optional) Move the JAR to a Tool Directory and Create a Shell Alias</strong></p>
-<p>If you’re using Zsh (common on macOS and many Linux setups), add the alias to <code>.zshrc</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> echo <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"alias bfg='java -jar &lt;your-target-directory&gt;/bfg-1.15.0.jar'"</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;&gt;</span> ~/.zshrc</span>
-<span id="cb12-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> source ~/.zshrc</span></code></pre></div></div>
-<p>If you’re using Bash, modify <code>.bashrc</code> instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> echo <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"alias bfg='java -jar ~/.tool.d/bfg-1.15.0.jar'"</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;&gt;</span> ~/.bashrc</span>
-<span id="cb13-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> source ~/.bashrc</span></code></pre></div></div>
-<p>Then, check if your setting works properly</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">%</span> bfg <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--help</span></span></code></pre></div></div></li>
-</ol>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://rtyley.github.io/bfg-repo-cleaner/">BFG Repo-Cleaner</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <category>gitignore</category>
-  <category>bfg</category>
-  <guid>https://ohgoshgit.github.io/posts/2025-06-05-how-to-manage-secrets/</guid>
-  <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
