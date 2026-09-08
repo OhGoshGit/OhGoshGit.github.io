@@ -85,9 +85,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../../site_libs/bootstrap/bootstrap-7ba3355f1d3d7209749e0ea630aecb3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../../site_libs/bootstrap/bootstrap-dark-f451a6d788f4d8302fe1c167c56f48ee.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../../../site_libs/bootstrap/bootstrap-7ba3355f1d3d7209749e0ea630aecb3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../site_libs/bootstrap/bootstrap-1c7952751926433cfd85c06b8d6404ac.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../site_libs/bootstrap/bootstrap-dark-06b092253a62a957cc9eb5d1e0327e6d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../../site_libs/bootstrap/bootstrap-1c7952751926433cfd85c06b8d6404ac.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -387,7 +387,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">2026-08-21</p>
+        <p class="date-modified">2026-09-08</p>
       </div>
     </div>
       
@@ -424,7 +424,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <section id="solution-1-using-git-diff" class="level2">
 <h2 class="anchored" data-anchor-id="solution-1-using-git-diff">Solution 1: Using <code>git diff</code></h2>
 <p><code>git diff</code> allows you to inspect changes in your code, from minor edits to major branch comparisons.</p>
-<p><strong> ▶&nbsp; Key Takeaways</strong></p>
+<p><span class="mini-section">Key Takeaways</span></p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -463,13 +463,13 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </tr>
 </tbody>
 </table>
-<p><strong> ▶&nbsp; Viewing Changes in the Working Directory</strong></p>
+<p><span class="mini-section">Viewing Changes in the Working Directory</span></p>
 <p>To see all changes in your working directory that haven’t been staged,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This command shows the differences between your working directory and the last commit in your terminal display.</p>
 <p>If you want to see staged changes with your latest commit,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="at">--staged</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong> ▶&nbsp; Comparing with a Specific Commit</strong></p>
+<p><span class="mini-section">Comparing with a Specific Commit</span></p>
 <p>To see differences between your current state and a specific commit,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## (1) Compared with latest commit</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span>
@@ -483,10 +483,10 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">## (4) Comparing the HEAD with the HEAD~1</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff HEAD<span class="pp">~</span>1 HEAD</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong> ▶&nbsp; Comparing Branches</strong></p>
+<p><span class="mini-section">Comparing Branches</span></p>
 <p>You can also use <code>git diff</code> to compare different branches.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff main feature-branch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong> ▶&nbsp; Shows a summary of changes for each file</strong></p>
+<p><span class="mini-section">Shows a summary of changes for each file</span></p>
 <p>When you want to see a summary of changes for each file, such as how many lines were added and deleted, use <code>git diff --stat</code>. If you want to compare the current branch with <code>gh-pages</code> branch in <code>.github/</code> directory,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%</span> git diff <span class="at">--stat</span> gh-pages .github/ </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="ex">.github/ISSUE_TEMPLATE/fix_documentation.yml</span> <span class="kw">|</span> <span class="ex">39</span> +++++++++++++++++++++++++++++++++++++++</span>
@@ -535,7 +535,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 </tr>
 </tbody>
 </table>
-<p><strong> ▶&nbsp; Choosing an editor </strong></p>
+<p><span class="mini-section">Choosing an editor</span></p>
 <p>You can set your preferred tool globally so it opens automatically each time you use the command. The setup syntax is</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> diff.tool your_preferred_tool</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For example, if you prefer to vscode,</p>
@@ -543,7 +543,7 @@ gtag('config', 'G-2W179PEWKM', { 'anonymize_ip': true});
 <p>To check if you successfully configure difftool editor,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>then, you can check what editor is you default git difftool editor.</p>
-<p><strong> ▶&nbsp; Choosing an editor temporarily</strong></p>
+<p><span class="mini-section">Choosing an editor temporarily</span></p>
 <p>If you temporarily show the diff in vimdiff,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> difftool HEAD<span class="pp">~</span>1 HEAD <span class="at">--tool</span><span class="op">=</span>vimdiff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
