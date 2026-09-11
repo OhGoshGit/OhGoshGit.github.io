@@ -1,0 +1,72 @@
+#| mainfont: Noto Sans CJK JP
+\begin{tikzpicture}[
+    >={Latex[length=2.0mm]}, font=\footnotesize, line width=0.6pt,
+    store/.style={draw=#1!55!black, fill=#1!12, rounded corners=3pt,
+                  align=center, minimum height=0.85cm, minimum width=3.1cm,
+                  inner sep=4pt, font=\ttfamily\small, text=#1!30!black},
+    blob/.style={draw=black!35, fill=white, rounded corners=2pt,
+                 align=left, minimum width=3.1cm, inner sep=4pt,
+                 font=\ttfamily\scriptsize, text=black!70},
+    cmd/.style={draw=#1!55!black, fill=#1!12, rounded corners=3pt,
+                align=center, minimum height=0.55cm, inner sep=4pt,
+                font=\ttfamily\scriptsize, text=#1!30!black},
+    note/.style={font=\scriptsize, text=black!62, align=center},
+    lnote/.style={font=\scriptsize, text=black!62, align=left},
+    hit/.style={font=\scriptsize, text=green!25!black},
+    miss/.style={font=\scriptsize, text=red!45!black},
+  ]
+
+  % ================= the three stores =================
+  \node[store=gray]                              (head) {HEAD};
+  \node[store=orange, right=2.0cm of head]       (idx)  {index};
+  \node[store=blue,   right=2.0cm of idx]        (wt)   {working tree};
+
+  \node[note, above=0.14cm of head] {last commit};
+  \node[note, above=0.14cm of idx]  {staged for the\\next commit};
+  \node[note, above=0.14cm of wt]   {the files you\\are editing now};
+
+  % movement between the stores: edits flow right-to-left, wt -> index -> commit
+  \draw[<-, draw=black!45] (head.east) -- node[note, midway, below=1pt] {\ttfamily git commit} (idx.west);
+  \draw[<-, draw=black!45] (idx.east)  -- node[note, midway, below=1pt] {\ttfamily git add} (wt.west);
+
+  % ================= what each store holds =================
+  \node[blob, below=0.55cm of head] (bhead)
+        {apple\\[-1pt]banana};
+  \node[blob, below=0.55cm of idx]  (bidx)
+        {apple\\[-1pt]banana\\[-1pt]NEW};
+  \node[blob, below=0.55cm of wt]   (bwt)
+        {apple\\[-1pt]banana\\[-1pt]NEW\\[-1pt]NEWER};
+
+  \node[lnote, left=0.30cm of bhead, text=black!55] (flab) {\ttfamily foo.txt};
+
+  % ================= the three search commands =================
+  \coordinate (rcmd) at ($(bhead.south)+(0,-0.62)$);
+  \node[cmd=gray,   anchor=north] (chead) at (head |- rcmd) {git grep P HEAD};
+  \node[cmd=orange, anchor=north] (cidx)  at (idx  |- rcmd) {git grep --cached P};
+  \node[cmd=blue,   anchor=north] (cwt)   at (wt   |- rcmd) {git grep P};
+
+  \foreach \b/\c in {bhead/chead, bidx/cidx, bwt/cwt}
+    \draw[->, draw=black!45] (\c.north) -- (\b.south);
+
+  % ================= hit / miss per pattern (green = hit, red = no hit) =================
+  \coordinate (rnew) at ($(chead.south)+(0,-0.50)$);
+  \node[miss, anchor=north] at (head |- rnew) {\texttt{NEW} $\to$ no hit};
+  \node[hit,  anchor=north] at (idx  |- rnew) {\texttt{NEW} $\to$ hit};
+  \node[hit,  anchor=north] at (wt   |- rnew) {\texttt{NEW} $\to$ hit};
+
+  \coordinate (rnewer) at ($(rnew)+(0,-0.38)$);
+  \node[miss, anchor=north] at (head |- rnewer) {\texttt{NEWER} $\to$ no hit};
+  \node[miss, anchor=north] at (idx  |- rnewer) {\texttt{NEWER} $\to$ no hit};
+  \node[hit,  anchor=north] at (wt   |- rnewer) {\texttt{NEWER} $\to$ hit};
+
+  % ================= the takeaway =================
+  \coordinate (cbot) at ($(rnewer)+(0,-0.62)$);
+  \coordinate (cmid) at ($(head.west)!0.5!(wt.east)$);
+  \node[lnote, anchor=north, text width=12.4cm, align=left] at (cmid |- cbot)
+        {\textcolor{black!70}{%
+         Each command searches \textbf{one} store, never a diff between two.
+         \texttt{git grep} is not \textit{search the latest commit}: by default it reads
+         the \textbf{tracked files in the working tree}, so saved-but-uncommitted
+         edits are already visible to it.}};
+
+\end{tikzpicture}
