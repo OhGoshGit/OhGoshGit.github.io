@@ -10,7 +10,492 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 11 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What’s the difference between git grep, git grep --cached, and git grep HEAD?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-09-11-git-grep-head/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>git grep PATTERN</code> searches the <strong>tracked files in the working tree</strong></li>
+<li><code>git grep PATTERN HEAD</code> searches the <strong>blobs in the <code>HEAD</code> commit</strong></li>
+<li><code>git grep --cached PATTERN</code> searches the <strong>index</strong></li>
+<li>None of the three searches untracked files. Add <code>--untracked</code> for that</li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># did my uncommitted edits introduce this string, or was it already committed?</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> grep <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span>        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># working tree: what I have now</span></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> grep <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span> HEAD   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># HEAD: what I last committed</span></span></code></pre></div></div>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Know which store each of <code>git grep</code> / <code>git grep --cached</code> / <code>git grep HEAD</code> reads</label></li>
+<li><label><input type="checkbox">Know that untracked files need <code>--untracked</code></label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p><code>git grep</code> earns its keep when you are about to change something, or have just changed it. Before a refactor you want every call site of the symbol you are about to rename; after the refactor you want to confirm none survived. Both are questions about the code <strong>in front of you</strong>, which is exactly what <code>git grep</code> answers faster than <code>grep -r</code>, <strong>because it skips gitignored paths and <code>.git/</code> for free</strong>.</p>
+<p>The trap shows up the moment the question shifts from <em>“what does the code say”</em> to <em>“did <strong>I</strong> do that”</em>. Suppose a <code>TODO</code> marker turns up in a review:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'TODO'</span></span>
+<span id="cb2-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">src/worker.py:41:</span>    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TODO</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">: retry on timeout</span></span></code></pre></div></div>
+</div>
+<p>Is that marker something you just added and forgot to commit, or has it been in <code>main</code> for months? A single <code>git grep</code> cannot tell you, because it only ever looked at one version of the file.</p>
+</section>
+<section id="where-each-command-looks" class="level2">
+<h2 class="anchored" data-anchor-id="where-each-command-looks">Where each command looks</h2>
+<p>Git keeps your file in three places at once, and each form of <code>git grep</code> reads exactly one of them.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-09-11-git-grep-head/grep-head-vs-cached.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:96.0%"></p>
+</figure>
+</div>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 32%">
+<col style="width: 20%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Searches</th>
+<th>uncommitted edits</th>
+<th>untracked</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git grep PATTERN</code></td>
+<td>Tracked files in the working tree</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git grep --cached PATTERN</code></td>
+<td>The index (staging area)</td>
+<td>✓ staged only</td>
+<td>✗</td>
+</tr>
+<tr class="odd">
+<td><code>git grep PATTERN HEAD</code></td>
+<td>Blobs in the <code>HEAD</code> commit</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><code>git grep --untracked PATTERN</code></td>
+<td>Working tree <strong>plus</strong> untracked files</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a href="https://git-scm.com/docs/git-grep">official documentation</a> describes the search space as <em>“tracked files in the work tree, blobs registered in the index file, or blobs in given tree objects”</em>, and for the <code>&lt;tree&gt;</code> argument: <em>“Instead of searching tracked files in the working tree, search blobs in the given trees.”</em></p>
+</section>
+<section id="walking-through" class="level2">
+<h2 class="anchored" data-anchor-id="walking-through">Walking through</h2>
+<p>Set up a file whose three stores disagree:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mkdir</span> sandbox-git-grep <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">&amp;&amp;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> sandbox-git-grep</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> init</span>
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">printf</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'apple\nbanana\n'</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> foo.txt</span>
+<span id="cb3-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add foo.txt <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">&amp;&amp;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"initial commit"</span></span>
+<span id="cb3-6"></span>
+<span id="cb3-7"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"NEW"</span>   <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> foo.txt   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># then stage it</span></span>
+<span id="cb3-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add foo.txt</span>
+<span id="cb3-9"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"NEWER"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> foo.txt   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># left in the working tree only</span></span></code></pre></div></div>
+</div>
+<p>Which leaves:</p>
+<div class="code-area">
+<pre class="text"><code>HEAD          apple, banana                 (neither NEW nor NEWER)
+index         apple, banana, NEW            (NEW only)
+working tree  apple, banana, NEW, NEWER     (both)</code></pre>
+</div>
+<p><span class="mini-section">Searching for <code>NEW</code></span></p>
+<p><code>NEW</code> was staged, so everything except <code>HEAD</code> finds it:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep NEW</span>
+<span id="cb5-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">foo.txt:NEW</span></span>
+<span id="cb5-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">foo.txt:NEWER</span></span>
+<span id="cb5-4"></span>
+<span id="cb5-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--cached</span> NEW</span>
+<span id="cb5-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">foo.txt:NEW</span></span>
+<span id="cb5-7"></span>
+<span id="cb5-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep NEW HEAD</span>
+<span id="cb5-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ nothing: HEAD still holds only apple and banana</span></span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Searching for <code>NEWER</code></span></p>
+<p><code>NEWER</code> was never staged, so only the working tree has it:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep NEWER</span>
+<span id="cb6-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">foo.txt:NEWER</span></span>
+<span id="cb6-3"></span>
+<span id="cb6-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--cached</span> NEWER</span>
+<span id="cb6-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ nothing: not staged</span></span>
+<span id="cb6-6"></span>
+<span id="cb6-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep NEWER HEAD</span>
+<span id="cb6-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ nothing: not committed</span></span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Searching backwards, for a line you removed</span></p>
+<p>The relationship runs the other way too. Overwrite <code>foo.txt</code> so <code>banana</code> is gone from disk but still in the last commit:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> printf <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'apple\norange\n'</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> foo.txt</span>
+<span id="cb7-2"></span>
+<span id="cb7-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep banana</span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ nothing: the working tree no longer has it</span></span>
+<span id="cb7-5"></span>
+<span id="cb7-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep banana HEAD</span>
+<span id="cb7-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HEAD:foo.txt:banana</span></span>
+<span id="cb7-8"></span>
+<span id="cb7-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep orange</span>
+<span id="cb7-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">foo.txt:orange</span></span>
+<span id="cb7-11"></span>
+<span id="cb7-12"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep orange HEAD</span>
+<span id="cb7-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ nothing: never committed</span></span></code></pre></div></div>
+</div>
+<p>Running the two commands side by side is what makes the pair useful — the difference between their outputs <em>is</em> the answer to “did my uncommitted work introduce or remove this string”.</p>
+<section id="untracked-files-need---untracked" class="level3">
+<h3 class="anchored" data-anchor-id="untracked-files-need---untracked">Untracked files need <code>--untracked</code></h3>
+<p>A brand-new file that has never been <code>git add</code>ed has no index entry, so none of the three forms above will look at it. The documentation is explicit: <code>--untracked</code> means <em>“In addition to searching in the tracked files in the working tree, search also in untracked files.”</em></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> echo <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TODO: wire this up"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> scratch.py   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># never added</span></span>
+<span id="cb8-2"></span>
+<span id="cb8-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep TODO</span>
+<span id="cb8-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ⚠️ nothing</span></span>
+<span id="cb8-5"></span>
+<span id="cb8-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> git grep <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--untracked</span> TODO</span>
+<span id="cb8-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">scratch.py:TODO:</span> wire this up</span></code></pre></div></div>
+</div>
+<p>This mirrors <code>git diff</code>, which also ignores untracked files — see <a href="../../posts/2026-05-14-git-diff-vs-diff-HEAD/index.html">OGG… What’s the difference between <code>git diff</code>, <code>git diff --cached</code>, and <code>git diff HEAD</code>?</a>.</p>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Search the code as it is on disk right now</td>
+<td><code>git grep PATTERN</code></td>
+</tr>
+<tr class="even">
+<td>Search what the next commit would contain</td>
+<td><code>git grep --cached PATTERN</code></td>
+</tr>
+<tr class="odd">
+<td>Search the last committed state</td>
+<td><code>git grep PATTERN HEAD</code></td>
+</tr>
+<tr class="even">
+<td>Search an older commit, branch, or tag</td>
+<td><code>git grep PATTERN &lt;tree-ish&gt;</code></td>
+</tr>
+<tr class="odd">
+<td>Include files never added to Git</td>
+<td><code>git grep --untracked PATTERN</code></td>
+</tr>
+<tr class="even">
+<td>Find <em>which commit</em> added or removed a line</td>
+<td><code>git log -G PATTERN</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">📘 Glossary</h2>
+<div class="glossary-container">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb9-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Working tree</span></span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-3">    The files as they exist on disk in your checkout. `git grep` with no</span>
+<span id="cb9-4">    tree-ish reads these, restricted to the ones Git tracks, so saved but</span>
+<span id="cb9-5">    uncommitted edits are visible to it.</span>
+<span id="cb9-6"></span>
+<span id="cb9-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Index (staging area)</span></span>
+<span id="cb9-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-9">    The snapshot `git add` writes to and `git commit` turns into a commit.</span>
+<span id="cb9-10">    `git grep --cached` searches the blobs registered here.</span>
+<span id="cb9-11"></span>
+<span id="cb9-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> tree-ish</span></span>
+<span id="cb9-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-14">    Any argument Git can resolve to a tree object — `HEAD`, `HEAD~1`, a</span>
+<span id="cb9-15">    branch name, a tag, a raw SHA. `git grep PATTERN &lt;tree-ish&gt;` searches</span>
+<span id="cb9-16">    the blobs in that tree instead of the working tree.</span>
+<span id="cb9-17"></span>
+<span id="cb9-18"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">def</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Untracked file</span></span>
+<span id="cb9-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">  description</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">: </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb9-20">    A file with no index entry, because it has never been `git add`ed.</span>
+<span id="cb9-21">    Invisible to `git grep`, `git grep --cached`, and `git grep HEAD`</span>
+<span id="cb9-22">    alike; `--untracked` is what brings it into the search.</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">📘 References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/git-grep">Git Documentation &gt; git-grep</a></li>
+<li><a href="../../posts/2026-09-08-git-grep-commit/index.html">OGG… How do I find which commits added or removed a string?</a></li>
+<li><a href="../../posts/2026-05-14-git-diff-vs-diff-HEAD/index.html">OGG… What’s the difference between <code>git diff</code>, <code>git diff --cached</code>, and <code>git diff HEAD</code>?</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>git grep</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-09-11-git-grep-head/</guid>
+  <pubDate>Fri, 11 Sep 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I find which commits added or removed a string?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -10657,211 +11142,6 @@ font-style: inherit;">"restore --staged"</span></span></code></pre></div></div>
   <category>git restore</category>
   <guid>https://ohgoshgit.github.io/posts/2025-06-13-how-to-unstage-files/</guid>
   <pubDate>Fri, 13 Jun 2025 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… How do I consolidate multiple temporary commits into a single meaningful one?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2025-06-06-organize-commits-using-git-rebase/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="objective" class="level2">
-<h2 class="anchored" data-anchor-id="objective">Objective</h2>
-<ul>
-<li>Improve the readability and maintainability of the Git commit history by consolidating multiple small or intermediate commits into a single meaningful unit.</li>
-<li>This is especially useful before code review or merging into the main branch to ensure a clean and understandable history.</li>
-</ul>
-</section>
-<section id="goal" class="level2">
-<h2 class="anchored" data-anchor-id="goal">Goal</h2>
-<ul class="task-list">
-<li><label><input type="checkbox">Consolidate multiple recent commits into a single, well-described commit.</label></li>
-<li><label><input type="checkbox">Remove unnecessary intermediate commits (e.g., typo fixes, debug logs) by squashing them.</label></li>
-<li><label><input type="checkbox">Make commit history easier to understand for reviewers, increasing review efficiency and clarity.</label></li>
-</ul>
-</section>
-<section id="guideline" class="level2">
-<h2 class="anchored" data-anchor-id="guideline">Guideline</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Preferably, ensure the following conditions:</p>
-<ul>
-<li>Commits have not yet been pushed to the remote repository (e.g., GitHub).</li>
-<li>The work is done on a local branch.</li>
-</ul>
-<p>Otherwise, you will likely need to use a force push (<code>git push -f</code>) after rebasing, which can overwrite history on the remote. Please proceed with caution because <span class="regmonkey_bold">rewriting commit history on pushed commits can disrupt collaboration</span>.</p>
-</div>
-</div>
-<section id="steps-for-consolidating-commits" class="level3">
-<h3 class="anchored" data-anchor-id="steps-for-consolidating-commits">Steps for consolidating commits</h3>
-<ol type="1">
-<li><p><strong>Check recent commits</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> log <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--oneline</span></span></code></pre></div></div></li>
-<li><p><strong>Start interactive rebase</strong></p>
-<p>To squash the last 3 commits, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-i</span> HEAD~3</span></code></pre></div></div></li>
-</ol>
-<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Syntax
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The syntax is</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-i</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>base-commit<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-<ul>
-<li>You can only specify a single base commit to rebase onto</li>
-<li>You cannot run a commad which is working as <code>git rebase -i &lt;commit-id1&gt; to &lt;commit-id2&gt;</code></li>
-</ul>
-</div>
-</div>
-<ol start="3" type="1">
-<li><p><strong>Edit the rebase instruction list</strong></p>
-<p>After running the <code>git rebase</code>, the output would be</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb4-1">pick abc123 fix typo</span>
-<span id="cb4-2">pick def456 add <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">new</span> test <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">case</span></span>
-<span id="cb4-3">pick ghi789 finalize logic</span></code></pre></div></div>
-<p>commit ids are sorted by top to bottom = older to newer. In the above example, the first line (<code>abc123</code>) is the oldest of the commits being rebased.</p>
-<p>If you want to squash the latest two commits into the oldest one, modify it to:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb5-1">pick abc123 fix typo</span>
-<span id="cb5-2">squash def456 add <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">new</span> test <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">case</span></span>
-<span id="cb5-3">squash ghi789 finalize logic</span></code></pre></div></div></li>
-<li><p><strong>Edit the commit message</strong></p>
-<p>A new editor screen will prompt you to combine the commit messages. Edit as needed, e.g.:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">Finalize</span> logic with test case</span>
-<span id="cb6-2"></span>
-<span id="cb6-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">-</span> Fixed typo</span>
-<span id="cb6-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">-</span> Added test case</span>
-<span id="cb6-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">-</span> Finalized core logic</span></code></pre></div></div>
-<p>Then, save and exit. It would be recommended to verify the new commit history by</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> log <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--oneline</span></span></code></pre></div></div></li>
-</ol>
-<div class="callout callout-style-default callout-note callout-titled" style="margin-left:2em">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Tips
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If something goes wrong during the rebase, you can cancel it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> rebase <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--abort</span></span></code></pre></div></div>
-</div>
-</div>
-</section>
-</section>
-<section id="appendix-what-git-rebase-operations-are-possible" class="level2">
-<h2 class="anchored" data-anchor-id="appendix-what-git-rebase-operations-are-possible">Appendix: What <code>git rebase</code> operations are possible?</h2>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Command</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>pick</code></td>
-<td>Use the commit as-is (no changes to message or content).</td>
-</tr>
-<tr class="even">
-<td><code>reword</code></td>
-<td>Keep the commit content, but edit the commit message.</td>
-</tr>
-<tr class="odd">
-<td><code>edit</code></td>
-<td>Pause and allow you to amend the commit (edit files, message, etc.).</td>
-</tr>
-<tr class="even">
-<td><code>squash</code></td>
-<td>Combine this commit with the <strong>previous one</strong>, and edit the message.</td>
-</tr>
-<tr class="odd">
-<td><code>fixup</code></td>
-<td>Like <code>squash</code>, but discard this commit’s message (use previous message).</td>
-</tr>
-<tr class="even">
-<td><code>drop</code></td>
-<td>Completely remove this commit from history.</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-</section>
-
- ]]></description>
-  <category>git rebase</category>
-  <guid>https://ohgoshgit.github.io/posts/2025-06-06-organize-commits-using-git-rebase/</guid>
-  <pubDate>Fri, 06 Jun 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
