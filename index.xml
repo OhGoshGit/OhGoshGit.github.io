@@ -9,8 +9,274 @@
 <link>https://ohgoshgit.github.io/</link>
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 11 Sep 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.10.19</generator>
+<lastBuildDate>Fri, 23 Oct 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What’s the difference between hoge/ and /hoge/ in .gitignore?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-10-23-gitginore-tips/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>hoge/</code> ignores <strong>every</strong> directory named <code>hoge</code>, at any depth (<code>hoge/</code>, <code>docs/hoge/</code>, <code>src/analysis_project/hoge/</code>, …)</li>
+<li><code>/hoge/</code> ignores <strong>only</strong> the <code>hoge/</code> directly under the directory that holds the <code>.gitignore</code> (the repository root for a top-level <code>.gitignore</code>)</li>
+<li>When you mean “the <code>hoge/</code> at the root”, write <code>/hoge/</code></li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/hoge/"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> .gitignore</span></code></pre></div></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-10-23-gitginore-tips/figures/gitignore-dir-pattern-flow.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Know which paths <code>hoge/</code> and <code>/hoge/</code> match</label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>You keep local notes in a <code>hoge/</code> directory at the repository root and want Git to stop showing it as untracked. Both of these look like the obvious fix:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hoge/"</span>  <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> .gitignore</span>
+<span id="cb2-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/hoge/"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> .gitignore</span></code></pre></div></div>
+</div>
+<p>They are not equivalent. If the project also has a <code>docs/hoge/</code> that you <strong>do</strong> want to commit, the unanchored form silently hides it from <code>git status</code>, and nobody notices until the docs go missing from the remote.</p>
+</section>
+<section id="how-the-leading-slash-changes-the-match" class="level2">
+<h2 class="anchored" data-anchor-id="how-the-leading-slash-changes-the-match">How the leading slash changes the match</h2>
+<p>A <code>.gitignore</code> pattern without a leading (or middle) slash matches at <strong>any level</strong> below the <code>.gitignore</code>. A leading slash anchors the pattern to the directory that contains the <code>.gitignore</code>. The trailing slash in both forms only means “match directories, not files”.</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th><code>hoge/</code></th>
+<th><code>docs/hoge/</code></th>
+<th><code>src/analysis_project/hoge/</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>hoge/</code></td>
+<td>ignored</td>
+<td>ignored</td>
+<td>ignored</td>
+</tr>
+<tr class="even">
+<td><code>/hoge/</code></td>
+<td>ignored</td>
+<td><strong>tracked</strong></td>
+<td><strong>tracked</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="what-the-official-documentation-says" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-official-documentation-says">What the official documentation says</h2>
+<p>The <a href="https://git-scm.com/docs/gitignore#_pattern_format">Pattern Format</a> section of the <code>gitignore</code> reference defines the rules behind the table above.</p>
+<p><span class="mini-section">Leading and middle slashes</span></p>
+<blockquote class="blockquote">
+<p>The slash “/” is used as the directory separator. Separators may occur at the beginning, middle or end of the .gitignore search pattern.</p>
+<p>If there is a separator at the beginning or middle (or both) of the pattern, then the pattern is relative to the directory level of the particular .gitignore file itself. Otherwise the pattern may also match at any level below the .gitignore level.</p>
+</blockquote>
+<p><code>/hoge/</code> has a separator at the beginning, so it is relative to the <code>.gitignore</code> itself. <code>hoge/</code> has only a trailing separator, so it matches at any level.</p>
+<p><span class="mini-section">Trailing slash</span></p>
+<blockquote class="blockquote">
+<p>If there is a separator at the end of the pattern then the pattern will only match directories, otherwise the pattern can match both files and directories.</p>
+<p>For example, a pattern doc/frotz/ matches doc/frotz directory, but not a/doc/frotz directory; however frotz/ matches frotz and a/frotz that is a directory (all paths are relative from the .gitignore file).</p>
+</blockquote>
+<p>The trailing slash restricts both <code>hoge/</code> and <code>/hoge/</code> to directories, so a regular file named <code>hoge</code> is not ignored by either. Note the <code>doc/frotz/</code> example: a <strong>middle</strong> slash anchors the pattern just like a leading one, so <code>docs/hoge/</code> matches only <code>docs/hoge/</code> under the <code>.gitignore</code>, not <code>a/docs/hoge/</code>.</p>
+<p><span class="mini-section">Two consecutive asterisks</span></p>
+<blockquote class="blockquote">
+<p>Two consecutive asterisks (“**“) in patterns matched against full pathname may have special meaning:</p>
+<ul>
+<li>A leading “**” followed by a slash means match in all directories. For example, “**/foo” matches file or directory “foo” anywhere, the same as pattern “foo”. “**/foo/bar” matches file or directory “bar” anywhere that is directly under directory “foo”.</li>
+<li>A trailing “/**” matches everything inside. For example, “abc/**” matches all files inside directory “abc”, relative to the location of the .gitignore file, with infinite depth.</li>
+<li>A slash followed by two consecutive asterisks then a slash matches zero or more directories. For example, “a/**/b” matches “a/b”, “a/x/b”, “a/x/y/b” and so on.</li>
+</ul>
+</blockquote>
+<p><code>**/hoge/</code> therefore behaves the same as <code>hoge/</code>. Use the <code>**</code> form when the pattern needs a middle slash but should still match at any depth, e.g.&nbsp;<code>**/docs/hoge/</code> matches both <code>docs/hoge/</code> and <code>a/docs/hoge/</code>.</p>
+</section>
+<section id="walking-through" class="level2">
+<h2 class="anchored" data-anchor-id="walking-through">Walking through</h2>
+<p>Start from a repository with a <code>hoge/</code> at the root and another one under <code>docs/</code>:</p>
+<p><span class="mini-section">Tracked files</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git ls-tree <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name-only</span> HEAD <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tree</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--fromfile</span></span>
+<span id="cb3-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">.</span></span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> docs</span>
+<span id="cb3-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└──</span> README.md</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Working tree</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> tree</span>
+<span id="cb4-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">.</span></span>
+<span id="cb4-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> docs</span>
+<span id="cb4-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>   └── hoge</span>
+<span id="cb4-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>       └── test.txt</span>
+<span id="cb4-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├──</span> README.md</span>
+<span id="cb4-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└──</span> hoge</span>
+<span id="cb4-8">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└──</span> test.txt</span></code></pre></div></div>
+</div>
+<p>Without a <code>.gitignore</code>, both directories show up as untracked:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git status <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-sb</span></span>
+<span id="cb5-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## main</span></span>
+<span id="cb5-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">??</span> docs/hoge/</span>
+<span id="cb5-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">??</span> hoge/</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">With <code>hoge/</code></span></p>
+<p>Both directories disappear. <code>docs/hoge/</code> is gone too:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> echo <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hoge/"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> .gitignore</span>
+<span id="cb6-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git status <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-sb</span></span>
+<span id="cb6-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## main</span></span>
+<span id="cb6-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">??</span> .gitignore</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">With <code>/hoge/</code></span></p>
+<p>Only the root <code>hoge/</code> is ignored. <code>docs/hoge/</code> is still visible and can be committed:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> echo <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/hoge/"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> .gitignore</span>
+<span id="cb7-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%</span> git status <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-sb</span></span>
+<span id="cb7-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## main</span></span>
+<span id="cb7-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">??</span> .gitignore</span>
+<span id="cb7-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">??</span> docs/hoge/</span></code></pre></div></div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://git-scm.com/docs/gitignore#_pattern_format"><code>gitignore</code> — Git Reference &gt; Pattern Format</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>gitignore</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-10-23-gitginore-tips/</guid>
+  <pubDate>Fri, 23 Oct 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What’s the difference between git grep, git grep --cached, and git grep HEAD?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -11036,112 +11302,6 @@ font-style: inherit;">-c</span> HOTFIX HEAD~1</span></code></pre></div></div>
   <category>git reset</category>
   <guid>https://ohgoshgit.github.io/posts/2025-06-14-git-reset-hard-mixed-soft/</guid>
   <pubDate>Sat, 14 Jun 2025 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… How to unstage files in Git?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2025-06-13-how-to-unstage-files/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="objective" class="level2">
-<h2 class="anchored" data-anchor-id="objective">Objective</h2>
-<ol type="1">
-<li>To reverse the git add operation for specific files, moving them from the staging area back to the working directory</li>
-<li>not modifying the content of the files themselves</li>
-</ol>
-</section>
-<section id="goal" class="level2">
-<h2 class="anchored" data-anchor-id="goal">Goal</h2>
-<ul class="task-list">
-<li><label><input type="checkbox">unstage one or more files that were previously added to the staging area</label></li>
-</ul>
-</section>
-<section id="guideline" class="level2">
-<h2 class="anchored" data-anchor-id="guideline">Guideline</h2>
-<p>When you stage a file using <code>git add</code>, it moves into the staging area (index), ready to be committed. If you change your mind and want to unstage it (without losing your changes), you have two common options:</p>
-<ul>
-<li><code>git restore --staged &lt;file&gt;</code></li>
-<li><code>git reset &lt;file&gt;</code></li>
-</ul>
-<p>Here I will explain of the first one <code>git restore</code>, because it is part of the newer, task-specific Git commands. This command is more intuitive and descriptive, focusing only on the act of “restoring” the index state. It avoids the broader and potentially confusing implications of <code>git reset</code>, which can also affect commit history when used in other forms.</p>
-<p><span class="mini-section">To unstage a specific file</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--staged</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>file_name<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-<p><span class="mini-section">To unstage multiple specific files</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--staged</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>file_name1<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>file_name2<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> ...</span></code></pre></div></div>
-<ul>
-<li>List all the files you want to unstage, separated by spaces.</li>
-</ul>
-<p><span class="mini-section">To confirm the result after running</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> status</span></code></pre></div></div>
-<section id="custom-alias-setup-for-git-unstage" class="level3">
-<h3 class="anchored" data-anchor-id="custom-alias-setup-for-git-unstage">💻 custom alias setup for git unstage</h3>
-<p>Git lets you define shortcuts (aliases) for longer commands via the <code>[alias]</code> section of <code>.gitconfig</code>.</p>
-<p><span class="mini-section">Setup Syntax</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">[alias]</span></span>
-<span id="cb4-2">    <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>shortcut<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> = <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>actual <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> command<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-<ul class="task-list">
-<li><label><input type="checkbox">Do not include git in the actual command — Git automatically prefixes it.</label></li>
-<li><label><input type="checkbox">You may need quotes if the command includes spaces or options.</label></li>
-</ul>
-<p><span class="mini-section">Alias Setup</span></p>
-<p>The following setup defines a Git subcommand alias called <code>git unstage</code></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">[alias]</span></span>
-<span id="cb5-2">    <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">unstage</span> = <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"restore --staged"</span></span></code></pre></div></div>
-<p>Then, <code>git unstage &lt;file&gt;</code> works the same as <code>git restore --staged &lt;file_name&gt;</code></p>
-
-
-</section>
-</section>
-
- ]]></description>
-  <category>git restore</category>
-  <guid>https://ohgoshgit.github.io/posts/2025-06-13-how-to-unstage-files/</guid>
-  <pubDate>Fri, 13 Jun 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

@@ -38,7 +38,7 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/index.html</loc>
-    <lastmod>2026-09-11T03:22:56.705Z</lastmod>
+    <lastmod>2026-10-23T09:56:38.972Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2026-05-31-git-pathspec/index.html</loc>
@@ -162,7 +162,7 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/index.html</loc>
-    <lastmod>2026-09-11T03:22:56.705Z</lastmod>
+    <lastmod>2026-10-23T09:56:38.973Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html</loc>
@@ -211,5 +211,9 @@
   <url>
     <loc>https://ohgoshgit.github.io/posts/2026-09-11-git-grep-head/index.html</loc>
     <lastmod>2026-09-11T03:22:56.720Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ohgoshgit.github.io/posts/2026-10-23-gitginore-tips/index.html</loc>
+    <lastmod>2026-10-23T09:56:38.988Z</lastmod>
   </url>
 </urlset>
