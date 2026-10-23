@@ -142,4 +142,16 @@
     ],
     "description": "no border top table"
   },
+  // --------------------------------------------
+  // image
+  // --------------------------------------------
+  "image-center": {
+    "scope": "quarto",
+    "prefix": "image-center",
+    "body": [
+      "![](./xxx.svg){fig-align=\"center\" width=\"90%\"}",
+    ],
+    "description": "image centered"
+  },
+
 }

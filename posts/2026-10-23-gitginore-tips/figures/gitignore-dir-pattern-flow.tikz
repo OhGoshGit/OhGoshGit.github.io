@@ -1,0 +1,60 @@
+#| mainfont: Noto Sans CJK JP
+\begin{tikzpicture}[
+    >={Latex[length=2.0mm]}, font=\footnotesize, line width=0.6pt,
+    box/.style={draw=#1!55!black, fill=#1!12, rounded corners=3pt,
+                align=center, minimum height=0.85cm, inner sep=4pt,
+                font=\ttfamily\small, text=#1!30!black},
+    ask/.style={draw=gray!55!black, fill=gray!12, rounded corners=3pt,
+                align=center, minimum height=1.1cm, minimum width=4.6cm,
+                inner sep=4pt, font=\footnotesize, text=gray!30!black},
+    panel/.style={draw=black!35, fill=white, rounded corners=2pt,
+                  align=left, inner sep=4pt, font=\ttfamily\scriptsize,
+                  text=black!70, text width=3.6cm},
+    note/.style={font=\scriptsize, text=black!62, align=center},
+    flow/.style={->, draw=black!45},
+  ]
+
+  % ================= start =================
+  \node[box=blue, minimum width=4.6cm, font=\footnotesize] (start)
+        {Which {\ttfamily hoge/} do you want to ignore?};
+
+  % ================= questions (left column, "no" goes down) =================
+  \node[ask, below=0.9cm of start] (q1)
+        {Only the one directly under\\the .gitignore directory?};
+  \node[ask, below=0.9cm of q1] (q2)
+        {Every {\ttfamily hoge/}, at any depth?};
+  \node[ask, below=0.9cm of q2] (q3)
+        {Only the one under {\ttfamily docs/},\\with {\ttfamily docs/} directly under\\the .gitignore directory?};
+  \coordinate (q4) at ($(q3.south)+(0,-1.0)$);
+
+  \draw[flow] (start) -- (q1);
+  \draw[flow] (q1) -- node[note, right=1pt] {no} (q2);
+  \draw[flow] (q2) -- node[note, right=1pt] {no} (q3);
+
+  % ================= answers (middle column, "yes" goes right) =================
+  \node[box=orange, minimum width=3.2cm, right=1.6cm of q1] (a1) {/hoge/};
+  \node[box=orange, minimum width=3.2cm, right=1.6cm of q2] (a2) {hoge/};
+  \node[box=orange, minimum width=3.2cm, right=1.6cm of q3] (a3) {docs/hoge/};
+  \node[box=orange, minimum width=3.2cm] (a4) at (q4 -| a3) {**/docs/hoge/};
+
+  \draw[flow] (q1) -- node[note, above=1pt] {yes} (a1);
+  \draw[flow] (q2) -- node[note, above=1pt] {yes} (a2);
+  \draw[flow] (q3) -- node[note, above=1pt] {yes} (a3);
+  \draw[flow] (q3.south) |- node[note, left=1pt, pos=0.3] {no,\\{\ttfamily docs/} at\\any depth} (a4.west);
+
+  % ================= what each answer matches (right column) =================
+  \foreach \a/\r/\rs/\s/\ss/\t/\ts in {
+      a1/green!25!black/ignored/red!45!black/shown/red!45!black/shown,
+      a2/green!25!black/ignored/green!25!black/ignored/green!25!black/ignored,
+      a3/red!45!black/shown/green!25!black/ignored/red!45!black/shown,
+      a4/red!45!black/shown/green!25!black/ignored/green!25!black/ignored} {
+    \node[panel, right=0.45cm of \a] (\a-p)
+      {\textcolor{\r}{hoge/ : \rs}\\[-1pt]\textcolor{\s}{docs/hoge/ : \ss}\\[-1pt]\textcolor{\t}{a/docs/hoge/ : \ts}};
+    \draw[draw=black!30, densely dotted] (\a.east) -- (\a-p.west);
+  }
+
+  \node[note, anchor=south] at (a1-p.north)
+        {\textcolor{green!25!black}{ignored} /
+         \textcolor{red!45!black}{shown by git status}};
+
+\end{tikzpicture}
