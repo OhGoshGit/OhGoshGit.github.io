@@ -10,7 +10,396 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.19</generator>
-<lastBuildDate>Fri, 23 Oct 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 29 Oct 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I create a pull request with gh?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-10-29-make-pull-request-via-gh-command/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>gh pr create --base &lt;into&gt; --head &lt;from&gt; --title "..."</code> opens a pull request without leaving the terminal</li>
+<li>Write the description in a Markdown file and pass it with <code>--body-file</code>; the file is sent as-is and rendered as GitHub Flavored Markdown</li>
+<li><code>--label release</code> attaches a label at creation; for an existing PR use <code>gh pr edit &lt;PR number&gt; --add-label release</code></li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> pr create <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--base</span> main <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--head</span> develop <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--title</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Release 0.1.0"</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb1-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--body-file</span> PR_draft_2026-10-29.md <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb1-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--label</span> release</span></code></pre></div></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-10-29-make-pull-request-via-gh-command/figures/gh-pr-create-flow.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:96.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Create a pull request with <code>gh pr create</code></label></li>
+<li><label><input type="checkbox">Write a PR body in a Markdown file that renders the way you expect</label></li>
+<li><label><input type="checkbox">Attach a label at creation, or to a PR that already exists</label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>You open a release pull request from <code>develop</code> into <code>main</code>. The description is long enough that <code>--body "..."</code> on the command line is painful, and the repository expects every release PR to carry the <code>release</code> label. Opening the browser to paste the description and click the label is the step you want to drop.</p>
+</section>
+<section id="solution-using-gh-pr-create" class="level2">
+<h2 class="anchored" data-anchor-id="solution-using-gh-pr-create">Solution: using <code>gh pr create</code></h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Steps
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Write the PR body in a Markdown file</li>
+<li>Make sure the <code>release</code> label exists in the repository</li>
+<li>Create the PR with <code>--body-file</code> and <code>--label</code>, or add the label to an existing PR</li>
+<li>Confirm the result</li>
+</ol>
+</div>
+</div>
+<p><span class="mini-section">Step 1: write the body</span></p>
+<ul>
+<li>Keep the draft outside the working tree, or in an ignored directory, so it never ends up in the commit you are about to propose</li>
+<li>See the next section for what to watch in the file itself.</li>
+</ul>
+<p><span class="mini-section">Step 2: check the label</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> label list</span></code></pre></div></div>
+</div>
+<p>If <code>release</code> is not in the list, create it first:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> label create release</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Step 3a: create the PR with the label</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> pr create <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--base</span> main <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--head</span> develop <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--title</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Release 0.1.0"</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb4-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--body-file</span> PR_draft_2026-10-29.md <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb4-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--label</span> release</span></code></pre></div></div>
+</div>
+<p>Add <code>--dry-run</code> first to print what would be created without opening the PR.</p>
+<p><span class="mini-section">Step 3b: add the label to an existing PR</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> pr edit <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>PR number<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> --add-label release</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Step 4: verify</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> pr view <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>PR number<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+</div>
+<p>The output shows the title, the labels, and the body rendered as Markdown.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span><code>--label</code> and <code>--add-label</code> accept several labels
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Repeat the flag or separate names with commas, e.g.&nbsp;<code>--label "release,documentation"</code>. <code>gh pr edit</code> also has <code>--remove-label</code> for the opposite operation.</p>
+</div>
+</div>
+</section>
+<section id="writing-the-body-file" class="level2">
+<h2 class="anchored" data-anchor-id="writing-the-body-file">Writing the body file</h2>
+<p><code>--body-file</code> sends the file content verbatim. GitHub renders it as GitHub Flavored Markdown, so anything that only makes sense locally ends up on the PR page as-is.</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>What you write</th>
+<th>What happens on GitHub</th>
+<th>Do this instead</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code># Release 0.1.0</code> as the first line</td>
+<td>Repeated under the PR title, which comes from <code>--title</code></td>
+<td>Start with <code>## Summary</code> or plain text</td>
+</tr>
+<tr class="even">
+<td>YAML front matter (<code>---</code> … <code>---</code>)</td>
+<td>Not hidden; the <code>---</code> lines render as rules or turn the line above into a heading</td>
+<td>Drop it</td>
+</tr>
+<tr class="odd">
+<td><code>![](figures/plot.png)</code></td>
+<td>Broken image; local paths are not uploaded</td>
+<td>Attach the file with <code>--attach</code> or upload it in the browser (see Putting images in the body)</td>
+</tr>
+<tr class="even">
+<td><code>@name</code></td>
+<td>The user or team is notified</td>
+<td>Wrap it in backticks when you do not mean to ping</td>
+</tr>
+<tr class="odd">
+<td><code>Closes #12</code></td>
+<td>Issue #12 is closed when the PR merges into the default branch</td>
+<td>Write <code>Refs #12</code> when it should stay open</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="mini-section">Example: PR_draft_2026-10-29.md</span></p>
+<p>The file starts at <code>##</code>, since <code>--title "Release 0.1.0"</code> already supplies the heading, and groups changes in <a href="https://keepachangelog.com/">Keep a Changelog</a> categories.</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">## Summary</span></span>
+<span id="cb7-2"></span>
+<span id="cb7-3">Release 0.1.0: merge <span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">`develop`</span> into <span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">`main`</span>.</span>
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">## Changes</span></span>
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">### Added</span></span>
+<span id="cb7-8"></span>
+<span id="cb7-9"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- </span><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">`gh`</span> helper script for opening release PRs (#21)</span>
+<span id="cb7-10"></span>
+<span id="cb7-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">### Changed</span></span>
+<span id="cb7-12"></span>
+<span id="cb7-13"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- </span>Bump minimum Python version to 3.11 (#18)</span>
+<span id="cb7-14"></span>
+<span id="cb7-15"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">### Fixed</span></span>
+<span id="cb7-16"></span>
+<span id="cb7-17"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- </span>Crash when the config file is empty (#19)</span>
+<span id="cb7-18"></span>
+<span id="cb7-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">## Checklist</span></span>
+<span id="cb7-20"></span>
+<span id="cb7-21"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">[ ]</span> Version in <span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">`pyproject.toml`</span> is <span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">`0.1.0`</span></span>
+<span id="cb7-22"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">[ ]</span> CI is green on <span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">`develop`</span></span>
+<span id="cb7-23"></span>
+<span id="cb7-24">Refs #12</span></code></pre></div></div>
+</div>
+<p>The <code>- [ ]</code> items render as checkboxes that reviewers can tick on the PR page, and <code>(#21)</code> turns into a link to that PR or issue.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The file is not the title
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Unlike <code>gh pr create --editor</code>, where the first line becomes the title, <code>--body-file</code> never reads a title from the file. Without <code>--title</code>, gh prompts for one, or fails in a non-interactive shell.</p>
+</div>
+</div>
+</section>
+<section id="putting-images-in-the-body" class="level2">
+<h2 class="anchored" data-anchor-id="putting-images-in-the-body">Putting images in the body</h2>
+<ul>
+<li>A local path such as <code>![](figures/plot.png)</code> in the body file points at nothing on GitHub.</li>
+<li>The image has to be uploaded first</li>
+</ul>
+<p>There are two ways.</p>
+<p><span class="mini-section">Option 1: <code>--attach</code></span></p>
+<p><code>gh pr create</code> and <code>gh pr edit</code> take <code>--attach &lt;file&gt;</code>. gh uploads the file, and any reference to it in the body is rewritten to the uploaded URL.</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">## Screenshots</span></span>
+<span id="cb8-2"></span>
+<span id="cb8-3"><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">![Before](./figures/before.png)</span></span>
+<span id="cb8-4"><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">![After](./figures/after.png)</span></span></code></pre></div></div>
+</div>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> pr create <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--base</span> main <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--head</span> develop <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--title</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Release 0.1.0"</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb9-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--body-file</span> PR_draft_2026-10-29.md <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb9-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--label</span> release <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb9-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--attach</span> ./figures/before.png <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb9-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--attach</span> ./figures/after.png</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">What <code>gh pr create --help</code> says</span></p>
+<blockquote class="blockquote">
+<p>Use <code>--attach</code> to upload an image or video. The attachment is appended to the body. If the body references an attached file, such as <code>![alt](./login.png)</code>, that reference is rewritten to point at the uploaded asset instead. Paths in a <code>--body-file</code> are relative to its directory, falling back to the working directory. You can attach up to 50 files per command.</p>
+<p>Alt text for an image follows the path after <code>#</code>, as in <code>--attach './login.png#The login error state'</code>. Without it the filename is used. A reference already in the body keeps the alt text written there. Video renders as a player and has no alt text, so it cannot be given any.</p>
+</blockquote>
+<p>In practice:</p>
+<ul>
+<li>Paths in the body are resolved relative to the body file’s directory, then the working directory</li>
+<li>A file you attach but do not reference in the body is appended to the end of the body</li>
+<li>Set alt text for an unreferenced file with <code>#</code>: <code>--attach './figures/after.png#After the fix'</code></li>
+<li>For an existing PR: <code>gh pr edit &lt;PR number&gt; --attach ./figures/after.png</code> appends it to the current body</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Attached images are not tracked by Git
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Attaching a file does <strong>not</strong> make it a Git-tracked file: it is not staged, not committed, and not pushed with the branch. <code>--attach</code> uploads to GitHub’s attachment storage (<code>https://github.com/user-attachments/assets/...</code>), not to the repository, and <code>gh pr create</code> never runs <code>git add</code>. The local files only end up in a commit if you add them yourself, so keep them next to the body file, outside the repository or in an ignored directory.</p>
+</div>
+</div>
+<p><span class="mini-section">Option 2: upload in the browser</span></p>
+<ol type="1">
+<li>Open the PR (<code>gh pr view &lt;PR number&gt; --web</code>) and choose <strong>Edit</strong> from the <code>...</code> menu of the description</li>
+<li>Drag and drop the image into the text area, or paste it from the clipboard</li>
+<li>GitHub uploads it and inserts a line such as <code>![after](https://github.com/user-attachments/assets/...)</code></li>
+<li>Click <strong>Update comment</strong></li>
+</ol>
+<p>Copy that inserted line back into your local body file if you plan to resend the body later with <code>gh pr edit &lt;PR number&gt; --body-file ...</code>; otherwise the next edit overwrites the image.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>gh</category>
+  <category>pull request</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-10-29-make-pull-request-via-gh-command/</guid>
+  <pubDate>Thu, 29 Oct 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What’s the difference between hoge/ and /hoge/ in .gitignore?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -11144,164 +11533,6 @@ font-style: inherit;">&gt;</span></span></code></pre></div></div>
   <category>git checkout</category>
   <guid>https://ohgoshgit.github.io/posts/2025-08-04-git-sparse-checkout/</guid>
   <pubDate>Mon, 04 Aug 2025 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… What’s difference between git reset –hard vs –mixed vs –soft?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2025-06-14-git-reset-hard-mixed-soft/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="objective" class="level2">
-<h2 class="anchored" data-anchor-id="objective">Objective</h2>
-<ul class="task-list">
-<li><label><input type="checkbox">Understand what <code>git reset</code> is</label></li>
-<li><label><input type="checkbox">Understand the difference between <code>git reset --hard</code> vs <code>--mixed</code> vs <code>--soft</code></label></li>
-</ul>
-</section>
-<section id="what-is-git-reset" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-git-reset">What is <code>git reset</code>?</h2>
-<div class="blog-custom-border">
-<p><strong>Definition: git reset</strong><br> <code>git reset</code> is a command used to move <code>HEAD</code> and optionally unstage or delete changes.</p>
-</div>
-<section id="comparison-table-between---soft---mixed-and---hard" class="level3">
-<h3 class="anchored" data-anchor-id="comparison-table-between---soft---mixed-and---hard">Comparison Table between <code>--soft</code>, <code>--mixed</code>, and <code>--hard</code></h3>
-<div class="no-border-top-table pb-3">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Area</th>
-<th><code>--soft</code></th>
-<th><code>--mixed</code> (default)</th>
-<th><code>--hard</code></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>HEAD</code> (commit ptr)</td>
-<td>✔️ moved</td>
-<td>✔️ moved</td>
-<td>✔️ moved</td>
-</tr>
-<tr class="even">
-<td>Staging area (Index)</td>
-<td>✅ kept</td>
-<td>❌ cleared</td>
-<td>❌ cleared</td>
-</tr>
-<tr class="odd">
-<td>Working dir files</td>
-<td>✅ kept</td>
-<td>✅ kept</td>
-<td>❌ cleared</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><span class="mini-section">git reset sequence diagram</span></p>
-<p>The following diagram is a step-by-step visualization of how different <code>git reset</code> modes affect Git’s three areas:</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">sequenceDiagram
-    participant Before as commit-id A
-    participant Working as Working Area
-    participant Staging as Staging(Index)
-    participant HEAD as commit-id B
-
-    Before-&gt;&gt;Working: editing files
-
-    Working-&gt;&gt;Staging: git add
-
-    Staging-&gt;&gt;HEAD: git commit
-
-    HEAD-&gt;&gt;Staging: git reset --soft HEAD~1
-    HEAD-&gt;&gt;Working: git reset --mixed HEAD~1
-    HEAD-&gt;&gt;Before: git reset --hard HEAD~1
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="do-i-need-to-run-git-reset---hard-think-again" class="level2">
-<h2 class="anchored" data-anchor-id="do-i-need-to-run-git-reset---hard-think-again">Do I need to run <code>git reset --hard</code>? Think again</h2>
-<p>When working with Git, you may find yourself needing to create a new branch from a previous commit becasue a bug was introduced in the most recent commit. For example, you might want to create a <code>HOTFIX</code> branch from one commit before the current <code>HEAD</code>.</p>
-<p>You may be thinking of <code>git reset --hard</code> and <code>git switch</code> for checkout, but think again. In that case,</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> switch <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-c</span> HOTFIX HEAD~1</span></code></pre></div></div>
-<p>is better.</p>
-<p><span class="mini-section">What It Does</span></p>
-<ul>
-<li>Creates a new branch named <code>HOTFIX</code> starting from the commit before <code>HEAD</code>.</li>
-<li>Switches you to the HOTFIX branch.</li>
-<li>Leaves your current branch and commit history unchanged.</li>
-</ul>
-<p><span class="mini-section">Benefits</span></p>
-<ul>
-<li>Non-destructive: All commits are preserved.</li>
-<li>Clean separation: You work on the hotfix branch without altering your current one.</li>
-</ul>
-</section>
-<section id="best-practice-guideline-summary" class="level2">
-<h2 class="anchored" data-anchor-id="best-practice-guideline-summary">Best Practice Guideline Summary</h2>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>If you want to…</th>
-<th>Use</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Rewrite commit history but keep work</td>
-<td><code>git reset --soft HEAD~1</code></td>
-</tr>
-<tr class="even">
-<td>Unstage files, keep changes in files</td>
-<td><code>git reset --mixed HEAD~1</code> (default)</td>
-</tr>
-<tr class="odd">
-<td>Fully discard all changes and reset everything</td>
-<td><code>git reset --hard HEAD~1</code></td>
-</tr>
-<tr class="even">
-<td>Create and switch to a new branch <code>HOTFIX</code> from <code>HEAD~1</code></td>
-<td><code>git switch -c HOTFIX HEAD~1</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">📘 References</h2>
-<ul>
-<li><a href="https://git-scm.com/docs/git-reset">Git DOcumentation &gt; git-reset</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <category>git reset</category>
-  <guid>https://ohgoshgit.github.io/posts/2025-06-14-git-reset-hard-mixed-soft/</guid>
-  <pubDate>Sat, 14 Jun 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
