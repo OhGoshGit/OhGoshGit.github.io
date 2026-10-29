@@ -1,0 +1,67 @@
+#| mainfont: Noto Sans CJK JP
+\definecolor{navy}{HTML}{0E3666}
+\definecolor{aliceblue}{HTML}{E8F1FE}
+\definecolor{azureblue}{HTML}{428CE6}
+\definecolor{paleskyblue}{HTML}{B4D7FF}
+\definecolor{fontblack}{HTML}{1A1A1A}
+\definecolor{darkgray}{HTML}{575757}
+\definecolor{lightgray}{HTML}{DEDEDE}
+\definecolor{crimsonred}{HTML}{D31804}
+\definecolor{mistyrose}{HTML}{FBE7E6}
+\begin{tikzpicture}[
+    auto, >={Latex[length=2.6mm]}, font=\small, line width=0.7pt,
+    every node/.style={text=fontblack},
+    block/.style={draw=navy, fill=aliceblue, rounded corners=3pt,
+                  align=center, minimum height=1.1cm, inner sep=5pt},
+    accent/.style={block, fill=paleskyblue},
+    ask/.style={draw=navy, fill=white, diamond, aspect=2.0,
+                align=center, inner sep=2pt},
+    step/.style={font=\footnotesize\bfseries, text=azureblue},
+    head/.style={font=\footnotesize, text=fontblack, align=center},
+    note/.style={font=\footnotesize, text=darkgray, align=center},
+    sig/.style={font=\footnotesize, text=darkgray, inner sep=2pt},
+    dot/.style={circle, fill=navy, inner sep=1.4pt},
+    wire/.style={->, draw=navy},
+  ]
+
+  % ---------- blocks (commands only) ----------
+  \node[block, minimum width=4.0cm] (s1) {\texttt{PR\_draft.md}};
+  \node[block, minimum width=4.0cm, right=1.3cm of s1] (s2) {\texttt{gh label list}};
+  \node[ask, right=1.3cm of s2] (q) {PR already\\exists?};
+  \node[accent, minimum width=6.4cm, anchor=west] (create) at ($(q.east)+(1.4,1.1)$)
+        {\texttt{gh pr create --body-file PR\_draft.md}\\\texttt{--label release}};
+  \node[accent, minimum width=6.4cm, anchor=west] (edit) at ($(q.east)+(1.4,-1.1)$)
+        {\texttt{gh pr edit <PR> --add-label release}};
+  \coordinate (mid) at ($(create.east)!0.5!(edit.east)$);
+  \node[block, minimum width=4.0cm, right=1.5cm of mid] (s4) {\texttt{gh pr view <PR>}};
+
+  % ---------- notes ----------
+  \node[note, below=2mm of s1] {GitHub Markdown,\\kept out of the commit};
+  \node[note, below=2mm of s2] {missing? create it first:\\\texttt{gh label create release}};
+  \node[note, below=2mm of s4] {title, labels and\\rendered body};
+
+  % ---------- step headers on a shared top line ----------
+  \coordinate (top) at ($(create.north)+(0,1.25)$);
+  \coordinate (c3) at ($(q.west)!0.5!(create.east)$);
+  \foreach \x/\n/\t in {
+      s1/Step 1/{Write the PR body\\in a Markdown file},
+      s2/Step 2/{Make sure the release label\\exists in the repository},
+      c3/Step 3/{Create the PR with \texttt{--body-file} and \texttt{--label},\\or add the label to an existing PR},
+      s4/Step 4/{Confirm the result}} {
+    \node[head, anchor=north] (h-\x) at (\x |- top) {\t};
+    \node[step, anchor=south] at (\x |- top) {\n};
+  }
+
+  % ---------- wires ----------
+  \draw[wire] (s1) -- (s2);
+  \draw[wire] (s2) -- (q);
+  \draw[wire] (q.north) |- node[sig, pos=0.75, above] {no} (create.west);
+  \draw[wire] (q.south) |- node[sig, pos=0.75, below] {yes} (edit.west);
+
+  \coordinate (join) at ($(s4.west)+(-0.7,0)$);
+  \draw[draw=navy] (create.east) -| (join);
+  \draw[draw=navy] (edit.east) -| (join);
+  \node[dot] at (join) {};
+  \draw[wire] (join) -- (s4.west);
+
+\end{tikzpicture}
