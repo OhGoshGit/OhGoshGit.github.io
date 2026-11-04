@@ -10,7 +10,718 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.11.9</generator>
-<lastBuildDate>Tue, 03 Nov 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 04 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… What is a GPG signing key, and how do I sign my Git commits with it?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-11-04-gpg-signing-key/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>A GPG signing key is a key pair: the <strong>secret key</strong> stays in <code>~/.gnupg</code> and signs your commits, the <strong>public key</strong> goes to GitHub and verifies them</li>
+<li>GitHub shows <strong>Verified</strong> only when (1) the commit is signed, (2) the public key is registered, and (3) the key’s email matches a verified email on your account</li>
+<li>Point <code>user.signingkey</code> at the primary key’s 40-character fingerprint, not the email</li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">brew</span> install gnupg</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (9) ECC → (1) Curve 25519 → 1y</span></span>
+<span id="cb1-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--full-generate-key</span></span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># find the fingerprint</span></span>
+<span id="cb1-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list-secret-keys</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--keyid-format</span> LONG</span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># paste into GitHub → SSH and GPG keys</span></span>
+<span id="cb1-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--armor</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--export</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>FINGERPRINT<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> user.signingkey <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>FINGERPRINT<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb1-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> commit.gpgsign true</span></code></pre></div></div>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Know what a GPG signing key is</label></li>
+<li><label><input type="checkbox">Generate a key with sensible choices at each <code>gpg --full-generate-key</code> prompt</label></li>
+<li><label><input type="checkbox">Know where GnuPG writes the key and how to read Key ID vs fingerprint</label></li>
+<li><label><input type="checkbox">Get <strong>Verified</strong> on GitHub for new commits, and re-sign the last unsigned one</label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p><code>git config user.email</code> is a free-text field. Anyone can set it to your address and push a commit that GitHub attributes to you. A signature fixes that: the commit carries proof that it was made by someone holding your secret key.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-11-04-gpg-signing-key/figures/gpg-sign-and-verify.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+<p>Only the public key ever leaves your machine. <strong>Never upload the secret key to GitHub.</strong></p>
+</section>
+<section id="what-is-a-gpg-signing-key" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-gpg-signing-key">What is a GPG signing key?</h2>
+<p>GPG (<a href="https://gnupg.org/">GnuPG</a>) is the standard implementation of OpenPGP, a format for signing and encrypting data with public-key cryptography. A <strong>GPG signing key</strong> is an OpenPGP key pair whose job is to sign:</p>
+<ul>
+<li><strong>Secret key</strong>: produces signatures. Only you have it, protected by a passphrase</li>
+<li><strong>Public key</strong>: checks signatures. Anyone can have it; it cannot produce a signature</li>
+</ul>
+<p>A signature made with the secret key verifies only against the matching public key. So when GitHub checks a commit against the public key on your account and the check passes, the commit was signed by whoever holds your secret key.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-11-04-gpg-signing-key/figures/gpg-key-pair.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+<p><span class="mini-section">What gets signed</span></p>
+<p>A commit is a small text object: tree, parents, author, committer, and message. With signing on, Git passes that text to <code>gpg</code>, and stores the signature it gets back in the commit itself, under a <code>gpgsig</code> header:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> cat-file <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> HEAD</span></code></pre></div></div>
+</div>
+<div class="code-area">
+<pre class="text"><code>tree 9bc4a1...
+parent 3f1e0d...
+author Ryo Nakagami &lt;ryo@example.com&gt; 1793754000 +0900
+committer Ryo Nakagami &lt;ryo@example.com&gt; 1793754000 +0900
+gpgsig -----BEGIN PGP SIGNATURE-----
+ ...
+ -----END PGP SIGNATURE-----
+
+Add test.md</code></pre>
+</div>
+<p>Change one byte of the author, message, or tree, and the signature no longer matches. That is why <code>git commit --amend</code> has to sign again, and why the commit ID changes.</p>
+<p><span class="mini-section">Signing key vs SSH key / token</span></p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>SSH key / token</th>
+<th>GPG signing key</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Proves</td>
+<td>Who is <strong>pushing</strong> to GitHub</td>
+<td>Who <strong>made</strong> the commit</td>
+</tr>
+<tr class="even">
+<td>Checked</td>
+<td>Once per connection</td>
+<td>On every commit, forever</td>
+</tr>
+<tr class="odd">
+<td>Travels with the commit</td>
+<td>No</td>
+<td>Yes, inside the commit object</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A push credential lets you push anyone’s commits. A signature stays on each commit, so it still means something after the commit is pushed, fetched by someone else, or mirrored to another host.</p>
+</section>
+<section id="how-to-set-up-a-gpg-signing-key" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-set-up-a-gpg-signing-key">How to set up a GPG signing key</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Steps
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-11-04-gpg-signing-key/figures/gpg-setup-steps.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span class="mini-section">Step 1: install GnuPG</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">brew</span> install gnupg</span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Step 2: generate the key</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--full-generate-key</span></span></code></pre></div></div>
+</div>
+<p>gpg walks through several prompts. The first one picks the algorithm:</p>
+<div class="code-area">
+<pre class="text"><code>Please select what kind of key you want:
+   (1) RSA and RSA
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (9) ECC (sign and encrypt) *default*
+  (10) ECC (sign only)
+  ...
+Your selection? 9</code></pre>
+</div>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 40%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Choice</th>
+<th>What it creates</th>
+<th>For commit signing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(1) RSA and RSA</td>
+<td>RSA keys for signing and encryption</td>
+<td>Works</td>
+</tr>
+<tr class="even">
+<td>(4) RSA (sign only)</td>
+<td>RSA signing key only</td>
+<td>Works</td>
+</tr>
+<tr class="odd">
+<td>(9) ECC (sign and encrypt)</td>
+<td>Elliptic-curve signing key + encryption subkey</td>
+<td><strong>Recommended</strong> (default)</td>
+</tr>
+<tr class="even">
+<td>(10) ECC (sign only)</td>
+<td>Elliptic-curve signing key only</td>
+<td>Enough if you only sign commits</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Next comes the curve:</p>
+<div class="code-area">
+<pre class="text"><code>Please select which elliptic curve you want:
+   (1) Curve 25519 *default*
+   (4) NIST P-384
+   (6) Brainpool P-256
+Your selection? 1</code></pre>
+</div>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 25%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Choice</th>
+<th>Curve</th>
+<th>When to pick it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(1)</td>
+<td>Curve 25519</td>
+<td>Fast, widely supported. <strong>Recommended</strong></td>
+</tr>
+<tr class="even">
+<td>(4)</td>
+<td>NIST P-384</td>
+<td>You must comply with NIST standards</td>
+</tr>
+<tr class="odd">
+<td>(6)</td>
+<td>Brainpool P-256</td>
+<td>You have a specific Brainpool requirement</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>With (9) + (1) you get two keys: an <strong>Ed25519</strong> primary key that signs commits, and a <strong>Cv25519</strong> subkey for encryption. Pressing Enter at both prompts gives the same result.</p>
+<p>The remaining prompts:</p>
+<ol type="1">
+<li>Expiry: <code>1y</code> is a reasonable default; you can extend it later with <code>gpg --edit-key</code></li>
+<li>Real name: <code>Ryo Nakagami</code></li>
+<li>Email address: an email that is <strong>verified on your GitHub account</strong> (the <code>noreply</code> address works too)</li>
+<li>Confirm with <code>O</code></li>
+<li>Passphrase: protects the secret key on disk; <code>gpg-agent</code> caches the unlocked key after the first use (see the Appendix)</li>
+</ol>
+<p><span class="mini-section">Where did gpg write the key?</span></p>
+<p>Everything goes under the GnuPG home directory:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpgconf</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list-dirs</span> homedir</span>
+<span id="cb8-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># /Users/&lt;you&gt;/.gnupg</span></span></code></pre></div></div>
+</div>
+<div class="code-area">
+<pre class="text"><code>~/.gnupg/
+├── pubring.kbx                  # public keys (yours and any you imported)
+├── private-keys-v1.d/
+│   └── &lt;KEYGRIP&gt;.key            # secret keys, one file per key / subkey
+├── openpgp-revocs.d/
+│   └── &lt;FINGERPRINT&gt;.rev        # revocation certificate, created automatically
+└── trustdb.gpg                  # trust levels ([ultimate] for your own key)</code></pre>
+</div>
+<p>Back up <code>private-keys-v1.d/</code> and the <code>.rev</code> file somewhere offline. The revocation certificate is what you publish if the secret key leaks.</p>
+<p><span class="mini-section">Step 3: find the Key ID and fingerprint</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb10-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list-secret-keys</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--keyid-format</span> LONG</span></code></pre></div></div>
+</div>
+<div class="code-area">
+<pre class="text"><code>sec   ed25519/1234567890ABCDEF 2026-11-04 [SC] [expires: 2027-11-04]
+      ABCDEF1234567890ABCDEF1234567890ABCDEF12
+uid                 [ultimate] Ryo Nakagami &lt;ryo@example.com&gt;
+ssb   cv25519/9876543210FEDCBA 2026-11-04 [E] [expires: 2027-11-04]</code></pre>
+</div>
+<p>(Fictional values.) <code>gpg --list-keys --keyid-format LONG</code> prints the same layout with <code>pub</code> / <code>sub</code> for the public halves.</p>
+<div class="no-border-top-table pb-3">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 35%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Example</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sec</code></td>
+<td><code>ed25519/...</code></td>
+<td>Secret primary key</td>
+</tr>
+<tr class="even">
+<td><code>ssb</code></td>
+<td><code>cv25519/...</code></td>
+<td>Secret subkey</td>
+</tr>
+<tr class="odd">
+<td><code>uid</code></td>
+<td><code>Ryo Nakagami &lt;ryo@example.com&gt;</code></td>
+<td>User ID: who owns the key</td>
+</tr>
+<tr class="even">
+<td>Key ID</td>
+<td><code>1234567890ABCDEF</code></td>
+<td>16 hex digits after the <code>/</code>; the last 64 bits of the fingerprint</td>
+</tr>
+<tr class="odd">
+<td>Fingerprint</td>
+<td><code>ABCDEF1234...EF12</code></td>
+<td>40 hex digits on the line below <code>sec</code>; the full identifier</td>
+</tr>
+<tr class="even">
+<td><code>[S]</code> / <code>[C]</code> / <code>[E]</code></td>
+<td></td>
+<td>Signing / Certification / Encryption</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The primary key is <code>[SC]</code>, so it is the one that signs commits. To print only the fingerprint:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb12-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--fingerprint</span></span>
+<span id="cb12-2"></span>
+<span id="cb12-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># or, for scripts (one line per key, so the subkey's fingerprint shows up too)</span></span>
+<span id="cb12-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--list-secret-keys</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--with-colons</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">awk</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-F:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'$1 == "fpr" {print $10}'</span></span></code></pre></div></div>
+</div>
+<p><span class="mini-section">Step 4: register the public key on GitHub</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb13-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpg</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--armor</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--export</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>FINGERPRINT<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
+</div>
+<div class="code-area">
+<pre class="text"><code>-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+...
+
+-----END PGP PUBLIC KEY BLOCK-----</code></pre>
+</div>
+<p>Copy the whole block, including the <code>BEGIN</code> / <code>END</code> lines, into <strong>GitHub → Settings → SSH and GPG keys → New GPG key</strong>.</p>
+<p><span class="mini-section">Step 5: tell Git to sign with it</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> gpg.format openpgp</span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> user.signingkey <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>FINGERPRINT<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span></span>
+<span id="cb15-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> commit.gpgsign true</span></code></pre></div></div>
+</div>
+<p><code>user.signingkey</code> also accepts the 16-digit Key ID, as in <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">GitHub’s guide</a>, but the fingerprint cannot collide with another key in your keyring.</p>
+<p>The committer email must match the key’s <code>uid</code>, and GitHub must have it as a verified email:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> user.name <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Ryo Nakagami"</span></span>
+<span id="cb16-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> user.email <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"&lt;YOUR_GITHUB_EMAIL&gt;"</span></span></code></pre></div></div>
+</div>
+<p>Check all four values at once:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--get</span> gpg.format        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># openpgp</span></span>
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--get</span> user.signingkey   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># &lt;FINGERPRINT&gt;</span></span>
+<span id="cb17-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--get</span> commit.gpgsign    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># true</span></span>
+<span id="cb17-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> config <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--global</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--get</span> user.email        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># same email as the key's uid</span></span></code></pre></div></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>error: gpg failed to sign the data</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>gpg needs a terminal to ask for the passphrase. If <code>git commit</code> fails with this error, tell gpg which TTY to use and add the line to <code>~/.zshrc</code>:</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb18-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">GPG_TTY</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tty</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span></span></code></pre></div></div>
+</div>
+</div>
+</div>
+<p><span class="mini-section">Step 6: re-sign the last commit and check it</span></p>
+<p>A commit made before this setup has no signature, and possibly the wrong author email. Rewrite it with the current config:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--amend</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--reset-author</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-edit</span></span></code></pre></div></div>
+</div>
+<p><code>--reset-author</code> takes the author from the current <code>user.name</code> / <code>user.email</code>, and because <code>commit.gpgsign</code> is <code>true</code>, the new commit is signed.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>--amend</code> changes the commit ID
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The amended commit is a new object. Don’t run this on a commit that is already pushed to a shared branch.</p>
+</div>
+</div>
+<p>Check the author, committer, and signature:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb20-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-1</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--format</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>fuller</span>
+<span id="cb20-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-1</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--show-signature</span></span></code></pre></div></div>
+</div>
+<div class="code-area">
+<pre class="text"><code>gpg: Signature made Wed Nov  4 10:00:00 2026 JST
+gpg:                using EDDSA key ABCDEF1234567890ABCDEF1234567890ABCDEF12
+gpg: Good signature from "Ryo Nakagami &lt;ryo@example.com&gt;" [ultimate]</code></pre>
+</div>
+<p><code>Good signature</code> means the local check passed. After <code>git push</code>, GitHub shows <strong>Verified</strong> next to the commit once it matches the public key you registered in Step 4.</p>
+</section>
+<section id="appendix-why-does-gpg-ask-for-the-passphrase-only-once" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-why-does-gpg-ask-for-the-passphrase-only-once">Appendix: Why does gpg ask for the passphrase only once?</h2>
+<p>The passphrase is for <strong>signing</strong>, not for verifying. The secret key sits encrypted in <code>~/.gnupg/private-keys-v1.d/</code>, and each signature needs the decrypted key. Verifying (on GitHub or with <code>git log --show-signature</code>) uses only the public key, so it never asks.</p>
+<p>You type the passphrase once because <code>gpg</code> does not sign by itself. It hands the work to <code>gpg-agent</code>, a background process that keeps the decrypted key in memory for a while.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ohgoshgit.github.io/posts/2026-11-04-gpg-signing-key/figures/gpg-agent-cache.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+<p><span class="mini-section">First commit</span></p>
+<ol type="1">
+<li><code>git commit</code> runs <code>gpg</code>, and <code>gpg</code> asks <code>gpg-agent</code> to sign</li>
+<li><code>gpg-agent</code> has no unlocked key, so it opens <code>pinentry</code> and asks for the passphrase (①)</li>
+<li>It reads the encrypted key from <code>~/.gnupg</code> and decrypts it with the passphrase (②)</li>
+<li>It signs, and keeps the unlocked key in memory (③)</li>
+</ol>
+<p><span class="mini-section">Next commits</span></p>
+<p><code>gpg-agent</code> signs with the key it already holds (④). No prompt, no disk read.</p>
+<p><span class="mini-section">How long “once” lasts</span></p>
+<p>The cache has two timers, set in <code>~/.gnupg/gpg-agent.conf</code>:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode conf code-with-copy"><code class="sourceCode toml"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># seconds since the key was last used; every use resets it (default: 10 minutes)</span></span>
+<span id="cb22-2"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">default-cache-ttl</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">600</span></span>
+<span id="cb22-3"></span>
+<span id="cb22-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># seconds since the passphrase was entered; using the key does not extend it (default: 2 hours)</span></span>
+<span id="cb22-5"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">max-cache-ttl</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7200</span></span></code></pre></div></div>
+</div>
+<p>Either timer running out drops the key, and the next commit asks again. So “once” means once per cache window: after 10 minutes without a commit, or 2 hours after you typed it.</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb23-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># reload after editing gpg-agent.conf</span></span>
+<span id="cb23-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpgconf</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--reload</span> gpg-agent</span>
+<span id="cb23-3"></span>
+<span id="cb23-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># drop the cached key now; the next signature asks again</span></span>
+<span id="cb23-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpgconf</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--kill</span> gpg-agent</span></code></pre></div></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Storing the passphrase in the macOS Keychain
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With <code>pinentry-mac</code>, the prompt has a <strong>Save in Keychain</strong> checkbox. Once checked, <code>pinentry-mac</code> answers from the Keychain and you are not asked even after the cache expires.</p>
+<div style="padding-left:1em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb24-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">brew</span> install pinentry-mac</span>
+<span id="cb24-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pinentry-program </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">brew</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--prefix</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/bin/pinentry-mac"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> ~/.gnupg/gpg-agent.conf</span>
+<span id="cb24-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gpgconf</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--kill</span> gpg-agent</span></code></pre></div></div>
+</div>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>gpg</category>
+  <category>git commit</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-11-04-gpg-signing-key/</guid>
+  <pubDate>Wed, 04 Nov 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… How do I set up Git authentication on macOS with gh?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -11038,125 +11749,6 @@ squash 7g8h9i Add tests
   <category>cheatsheet</category>
   <guid>https://ohgoshgit.github.io/posts/2025-08-06-git-command-cheatsheet/</guid>
   <pubDate>Wed, 06 Aug 2025 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG… How Can I restore a file from specific commit?</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2025-08-05-restore-file-from-specific-commit/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="objective" class="level2">
-<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
-<ul>
-<li>Restore a specific file to a previous state using its version from a past commit, without switching branches or reverting the entire repository.</li>
-</ul>
-</section>
-<section id="goal" class="level2">
-<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
-<ul>
-<li>Enable developers to recover or review historical versions of individual files from Git history safely and efficiently, preserving other uncommitted changes.</li>
-</ul>
-</section>
-<section id="guideline" class="level2">
-<h2 class="anchored" data-anchor-id="guideline">📘 Guideline</h2>
-<p>Ensure you’re using Git 2.23+, where <code>git restore</code> was introduced.</p>
-<p><span class="mini-section">When to Use</span></p>
-<ul>
-<li>To retrieve a deleted or modified file from a past commit.</li>
-<li>To undo local changes to a file without discarding other work.</li>
-<li>To recover specific content for comparison or patching.</li>
-</ul>
-<p><span class="mini-section">How to Use</span></p>
-<ol type="1">
-<li>Use <code>git log</code> or <code>git blame</code> to identify the target commit hash</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> log <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span>  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># check history</span></span></code></pre></div></div>
-<ol start="2" type="1">
-<li>Run the command:</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## git restore version</span></span>
-<span id="cb2-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--source</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb2-3"></span>
-<span id="cb2-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## git checkout version</span></span>
-<span id="cb2-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> checkout <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>commit-hash<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>filepath<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div></div>
-<p><span class="mini-section">Undo git restore specific commit id version</span></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 34%">
-<col style="width: 65%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Situation</th>
-<th>Recovery Option</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Not staged yet</td>
-<td><code>git restore &lt;filepath&gt;</code></td>
-</tr>
-<tr class="even">
-<td>Staged but not committed</td>
-<td><code>git restore --staged &lt;filepath&gt;</code> then restore</td>
-</tr>
-<tr class="odd">
-<td>Already committed</td>
-<td>Use <code>git reflog</code> + <code>git reset</code></td>
-</tr>
-<tr class="even">
-<td>Preventive measure</td>
-<td>Use <code>git stash</code> before risky restores</td>
-</tr>
-</tbody>
-</table>
-
-
-</section>
-
- ]]></description>
-  <category>git restore</category>
-  <guid>https://ohgoshgit.github.io/posts/2025-08-05-restore-file-from-specific-commit/</guid>
-  <pubDate>Tue, 05 Aug 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
