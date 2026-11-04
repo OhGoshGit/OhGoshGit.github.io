@@ -1,0 +1,76 @@
+#| mainfont: Noto Sans CJK JP
+\definecolor{navy}{HTML}{0E3666}
+\definecolor{aliceblue}{HTML}{E8F1FE}
+\definecolor{azureblue}{HTML}{428CE6}
+\definecolor{paleskyblue}{HTML}{B4D7FF}
+\definecolor{fontblack}{HTML}{1A1A1A}
+\definecolor{darkgray}{HTML}{575757}
+\begin{tikzpicture}[
+    auto, >={Latex[length=2.6mm]}, font=\small, line width=0.7pt,
+    every node/.style={text=fontblack},
+    block/.style={draw=navy, fill=aliceblue, rounded corners=3pt,
+                  align=center, minimum height=1.1cm, minimum width=3.6cm, inner sep=5pt},
+    accent/.style={block, fill=paleskyblue},
+    server/.style={draw=navy, fill=white, rounded corners=3pt, align=center,
+                   minimum width=2.4cm, inner sep=5pt},
+    method/.style={font=\bfseries, text=navy, anchor=west},
+    setup/.style={font=\footnotesize, text=darkgray, align=left, anchor=north west},
+    head/.style={font=\footnotesize\bfseries, text=azureblue, align=center},
+    note/.style={font=\footnotesize, text=darkgray, align=center},
+    sig/.style={font=\footnotesize, text=darkgray, inner sep=2pt},
+    wire/.style={->, draw=navy},
+  ]
+
+  % ---------- rows: secret at rest -> who hands it over -> client ----------
+  \foreach \r/\y in {pat/0, ssh/-2.9, gh/-5.8} {
+    \coordinate (row-\r) at (0,\y);
+  }
+
+  \node[block] (s-pat) at (row-pat) {macOS Keychain\\{\footnotesize the PAT you pasted}};
+  \node[block, right=1.4cm of s-pat] (h-pat) {\texttt{git-credential-}\\\texttt{osxkeychain}};
+  \node[block, minimum width=2.2cm, right=1.4cm of h-pat] (g-pat) {\texttt{git}};
+
+  \node[block] (s-ssh) at (row-ssh) {\verb|~/.ssh/id_ed25519|\\{\footnotesize private key file}};
+  \node[block, right=1.4cm of s-ssh] (h-ssh) {\texttt{ssh-agent}};
+  \node[block, minimum width=2.2cm, right=1.4cm of h-ssh] (g-ssh) {\texttt{git}\\{\footnotesize via \texttt{ssh}}};
+
+  \node[accent] (s-gh) at (row-gh) {macOS Keychain\\{\footnotesize OAuth token \texttt{gho\_...}}};
+  \node[accent, right=1.4cm of s-gh] (h-gh) {\texttt{gh auth}\\\texttt{git-credential}};
+  \node[accent, minimum width=2.2cm, right=1.4cm of h-gh] (g-gh) {\texttt{git}};
+
+  \foreach \r in {pat, ssh, gh} {
+    \draw[wire] (s-\r) -- (h-\r);
+    \draw[wire] (h-\r) -- (g-\r);
+  }
+
+  % ---------- server ----------
+  \coordinate (srv-x) at ($(g-pat.east)+(3.6,0)$);
+  \node[server, minimum height=7.0cm] (srv) at (srv-x |- s-ssh) {\texttt{github.com}};
+
+  \draw[wire] (g-pat) -- node[sig, above] {HTTPS :443} (g-pat -| srv.west);
+  \draw[wire] (g-ssh) -- node[sig, above] {SSH :22} (g-ssh -| srv.west);
+  \draw[wire] (g-gh)  -- node[sig, above] {HTTPS :443} (g-gh -| srv.west);
+
+  % ---------- method labels + one-time setup ----------
+  \coordinate (lab-x) at ($(s-pat.west)+(-5.6,0)$);
+  \foreach \r/\name/\how in {
+      pat/PAT/{create a token on github.com,\\paste it as the password on first push,\\rotate it by hand when it expires},
+      ssh/SSH key/{\texttt{ssh-keygen}, upload the public key,\\remotes must be \texttt{git@github.com:...}},
+      gh/gh auth/{\texttt{gh auth login} (browser OAuth)\\\texttt{gh auth setup-git}}} {
+    \node[method] (m-\r) at ($(lab-x |- s-\r.north)+(0,-0.05)$) {\name};
+    \node[setup] at ($(m-\r.south west)+(0,-0.05)$) {\how};
+  }
+
+  % ---------- column headers ----------
+  \coordinate (top) at ($(s-pat.north)+(0,0.75)$);
+  \node[head] at (lab-x |- top) [anchor=west] {One-time setup};
+  \node[head] at (s-pat |- top) {Where the secret lives};
+  \node[head] at (h-pat |- top) {Who hands it to git};
+  \node[head] at (g-pat |- top) {Client};
+  \node[head] at (srv |- top) {Server};
+
+  % ---------- notes ----------
+  \node[note, below=2mm of h-ssh] {the key never leaves the Mac;\\ssh signs a challenge with it};
+  \node[note, below=2mm of h-gh] {the same token also authenticates\\\texttt{gh pr}, \texttt{gh repo}, \texttt{gh api}};
+
+\end{tikzpicture}
