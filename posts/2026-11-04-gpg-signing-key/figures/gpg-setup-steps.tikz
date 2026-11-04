@@ -1,0 +1,42 @@
+#| mainfont: Noto Sans CJK JP
+\definecolor{navy}{HTML}{0E3666}
+\definecolor{aliceblue}{HTML}{E8F1FE}
+\definecolor{azureblue}{HTML}{428CE6}
+\definecolor{paleskyblue}{HTML}{B4D7FF}
+\definecolor{fontblack}{HTML}{1A1A1A}
+\definecolor{darkgray}{HTML}{575757}
+\begin{tikzpicture}[
+    auto, >={Latex[length=2.6mm]}, font=\small, line width=0.7pt,
+    every node/.style={text=fontblack},
+    block/.style={draw=navy, fill=aliceblue, rounded corners=3pt,
+                  align=center, minimum height=1.2cm, minimum width=2.9cm, inner sep=5pt},
+    accent/.style={block, fill=paleskyblue},
+    step/.style={font=\footnotesize\bfseries, text=azureblue},
+    note/.style={font=\scriptsize, text=darkgray, align=center},
+    wire/.style={->, draw=navy},
+  ]
+
+  \node[block]  (s1) at (0,0)     {Install\\GnuPG};
+  \node[block]  (s2) at (3.8,0)   {Generate\\the key};
+  \node[block]  (s3) at (7.6,0)   {Find Key ID\\and fingerprint};
+  \node[accent] (s4) at (0,-4.0)  {Register public\\key on GitHub};
+  \node[block]  (s5) at (3.8,-4.0)  {Tell Git to\\sign with it};
+  \node[block]  (s6) at (7.6,-4.0)  {Re-sign the last\\commit and check};
+
+  \foreach \n/\s/\t in {
+      s1/Step 1/\texttt{brew install gnupg},
+      s2/Step 2/\texttt{gpg}\\\texttt{--full-generate-key},
+      s3/Step 3/\texttt{gpg}\\\texttt{--list-secret-keys},
+      s4/Step 4 · GitHub/\texttt{gpg --armor --export}\\→ SSH and GPG keys,
+      s5/Step 5/\texttt{git config}\\\texttt{user.signingkey},
+      s6/Step 6/\texttt{git commit --amend}\\\texttt{git log --show-signature}} {
+    \node[step, above=2mm of \n] {\s};
+    \node[note, below=2mm of \n, anchor=north] {\t};
+  }
+
+  \foreach \a/\b in {s1/s2, s2/s3, s4/s5, s5/s6} {
+    \draw[wire] (\a) -- (\b);
+  }
+  % wrap from the end of row 1 to the start of row 2
+  \draw[wire, rounded corners=4pt] (s3.east) -- ++(0.5,0) |- (-2.0,-2.45) |- (s4.west);
+\end{tikzpicture}

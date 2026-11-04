@@ -1,0 +1,44 @@
+#| mainfont: Noto Sans CJK JP
+\definecolor{navy}{HTML}{0E3666}
+\definecolor{aliceblue}{HTML}{E8F1FE}
+\definecolor{azureblue}{HTML}{428CE6}
+\definecolor{paleskyblue}{HTML}{B4D7FF}
+\definecolor{fontblack}{HTML}{1A1A1A}
+\definecolor{darkgray}{HTML}{575757}
+\begin{tikzpicture}[
+    auto, >={Latex[length=2.6mm]}, font=\small, line width=0.7pt,
+    every node/.style={text=fontblack},
+    block/.style={draw=navy, fill=aliceblue, rounded corners=3pt,
+                  align=center, minimum height=1.1cm, minimum width=2.8cm, inner sep=5pt},
+    accent/.style={block, fill=paleskyblue},
+    store/.style={draw=navy, fill=white, cylinder, shape border rotate=90, aspect=0.18,
+                  align=center, minimum height=1.2cm, minimum width=3.2cm, inner sep=4pt},
+    sig/.style={font=\footnotesize, text=darkgray, inner sep=2pt, align=center},
+    step/.style={font=\footnotesize\bfseries, text=azureblue, inner sep=2pt, align=center},
+    note/.style={font=\footnotesize, text=darkgray, align=center},
+    wire/.style={->, draw=navy},
+  ]
+
+  % ---------- main row ----------
+  \node[block] (git)   at (0,0)    {\texttt{git commit}};
+  \node[block, minimum width=2.0cm] (gpg) at (3.8,0) {\texttt{gpg}};
+  \node[accent] (agent) at (8.4,0) {\texttt{gpg-agent}};
+  \node[store] (cache) at (13.0,0) {unlocked\\secret key};
+  \node[note, below=2mm of cache] (ttl) {in memory, dropped after\\600 s idle or 7200 s total};
+
+  % ---------- first time only ----------
+  \node[block] (pin)  at (3.0,-3.2) {\texttt{pinentry}\\(passphrase prompt)};
+  \node[store] (disk) at (13.4,-3.2) {\verb|~/.gnupg|\\(encrypted key)};
+
+  % ---------- wires ----------
+  \draw[wire] (git) -- node[midway, above, sig] {sign} (gpg);
+  \draw[wire] (gpg) -- node[midway, above, sig] {sign request} (agent);
+
+  \draw[<->, draw=navy] ([xshift=-6mm]agent.south) |- (pin.east);
+  \draw[wire] (disk.west) -| ([xshift=6mm]agent.south);
+  \node[step, above] at (6.3,-3.2) {① ask passphrase\\(1st time only)};
+  \node[step, above] at (10.4,-3.2) {② read and\\decrypt key};
+
+  \draw[wire] ([yshift=2mm]agent.east) -- node[midway, above, step] {③ keep} ([yshift=2mm]cache.west);
+  \draw[wire] ([yshift=-2mm]cache.west) -- node[midway, below, step] {④ reuse} ([yshift=-2mm]agent.east);
+\end{tikzpicture}

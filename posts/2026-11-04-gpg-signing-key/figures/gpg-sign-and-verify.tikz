@@ -1,0 +1,55 @@
+#| mainfont: Noto Sans CJK JP
+\definecolor{navy}{HTML}{0E3666}
+\definecolor{aliceblue}{HTML}{E8F1FE}
+\definecolor{azureblue}{HTML}{428CE6}
+\definecolor{paleskyblue}{HTML}{B4D7FF}
+\definecolor{fontblack}{HTML}{1A1A1A}
+\definecolor{darkgray}{HTML}{575757}
+\begin{tikzpicture}[
+    auto, >={Latex[length=2.6mm]}, font=\small, line width=0.7pt,
+    every node/.style={text=fontblack},
+    block/.style={draw=navy, fill=aliceblue, rounded corners=3pt,
+                  align=center, minimum height=1.0cm, minimum width=3.2cm, inner sep=5pt},
+    accent/.style={block, fill=paleskyblue},
+    store/.style={draw=navy, fill=white, cylinder, shape border rotate=90, aspect=0.18,
+                  align=center, minimum height=1.1cm, minimum width=3.0cm, inner sep=4pt},
+    zone/.style={draw=paleskyblue, fill=none, rounded corners=8pt, inner sep=10pt},
+    zlabel/.style={anchor=south, font=\bfseries, text=navy},
+    sig/.style={font=\footnotesize, text=darkgray, inner sep=2pt, align=center},
+    note/.style={font=\footnotesize, text=darkgray, align=center},
+    badge/.style={font=\small\bfseries, text=azureblue},
+    wire/.style={->, draw=navy},
+  ]
+
+  % ---------- your machine ----------
+  \node[block] (gen) at (-4.0,0) {\texttt{gpg}\\\texttt{--full-generate-key}};
+  \node[store] (pub) at (0,1.7)  {public key};
+  \node[store] (sec) at (0,-1.7) {secret key};
+  \node[accent] (commit) at (4.2,-1.7) {\texttt{git commit}};
+
+  \node[note, below=2mm of sec] (secnote) {never leaves this machine};
+
+  % ---------- github ----------
+  \node[block, minimum width=3.6cm] (reg) at (10.0,1.7) {SSH and GPG keys};
+  \node[block, minimum width=3.6cm] (chk) at (10.0,-1.7) {signature check};
+  \node[badge, below=2mm of chk] (ok) {✓ Verified};
+
+  % ---------- zones ----------
+  \coordinate (ztop) at ($(pub.north)+(0,0.1)$);
+  \coordinate (zbot) at ($(secnote.south)+(0,-0.05)$);
+  \begin{scope}[on background layer]
+    \node[zone, fit=(gen)(commit)(gen |- ztop)(gen |- zbot)] (zmac) {};
+    \node[zone, fit=(reg)(chk)(ok)(reg |- ztop)(reg |- zbot)] (zgh) {};
+  \end{scope}
+  \node[zlabel] at (zmac.north) {Your machine (\verb|~/.gnupg|)};
+  \node[zlabel] at (zgh.north) {GitHub};
+
+  % ---------- wires ----------
+  \draw[wire] (gen.north) |- (pub.west);
+  \draw[wire] (gen.south) |- (sec.west);
+  \draw[wire] (sec) -- node[midway, above, sig] {signs} (commit);
+  \draw[wire] (commit) -- node[midway, above, sig] {\texttt{git push}} (chk);
+  \draw[wire] (pub) -- node[midway, above, sig] {\texttt{gpg --armor --export}}
+                       node[midway, below, sig] {(once)} (reg);
+  \draw[wire] (reg) -- node[midway, right, sig] {verifies with\\public key} (chk);
+\end{tikzpicture}

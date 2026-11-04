@@ -1,0 +1,48 @@
+#| mainfont: Noto Sans CJK JP
+\definecolor{navy}{HTML}{0E3666}
+\definecolor{aliceblue}{HTML}{E8F1FE}
+\definecolor{azureblue}{HTML}{428CE6}
+\definecolor{paleskyblue}{HTML}{B4D7FF}
+\definecolor{fontblack}{HTML}{1A1A1A}
+\definecolor{darkgray}{HTML}{575757}
+\definecolor{crimsonred}{HTML}{D31804}
+\begin{tikzpicture}[
+    auto, >={Latex[length=2.6mm]}, font=\small, line width=0.7pt,
+    every node/.style={text=fontblack},
+    block/.style={draw=navy, fill=aliceblue, rounded corners=3pt,
+                  align=center, minimum height=1.1cm, minimum width=3.4cm, inner sep=5pt},
+    accent/.style={block, fill=paleskyblue},
+    store/.style={draw=navy, fill=white, cylinder, shape border rotate=90, aspect=0.18,
+                  align=center, minimum height=1.1cm, minimum width=3.0cm, inner sep=4pt},
+    zone/.style={draw=paleskyblue, fill=none, rounded corners=8pt, inner sep=10pt},
+    zlabel/.style={anchor=south, font=\bfseries, text=navy},
+    sig/.style={font=\footnotesize, text=darkgray, inner sep=2pt, align=center},
+    note/.style={font=\footnotesize, text=darkgray, align=center},
+    badge/.style={font=\small\bfseries, text=azureblue},
+    wire/.style={->, draw=navy},
+  ]
+
+  % ---------- the key pair ----------
+  \node[store] (sec) at (0,2.2)  {secret key};
+  \node[note, below=2mm of sec] (secnote) {produces signatures\\only you · passphrase};
+  \node[store] (pub) at (0,-2.2) {public key};
+  \node[note, below=2mm of pub] (pubnote) {checks signatures\\anyone · cannot sign};
+
+  \draw[<->, draw=darkgray, dashed] (secnote.south) -- node[midway, right, sig] {matching\\pair} (pub.north);
+
+  \begin{scope}[on background layer]
+    \node[zone, fit=(sec)(secnote)(pub)(pubnote)] (zkey) {};
+  \end{scope}
+  \node[zlabel] at (zkey.north) {GPG signing key};
+
+  % ---------- sign and verify ----------
+  \node[accent] (signed) at (6.2,2.2) {signed commit\\(\texttt{gpgsig} header)};
+  \node[block] (chk) at (6.2,-2.2) {signature check\\(on GitHub)};
+  \node[badge] (ok) at (10.0,-2.2) {✓ Verified};
+  \node[note, below=2mm of chk, text=crimsonred] (ng) {any other public key → × fails};
+
+  \draw[wire] (sec) -- node[midway, above, sig] {signs} (signed);
+  \draw[wire] (signed) -- node[midway, right, sig] {\texttt{git push}} (chk);
+  \draw[wire] (pub) -- node[midway, above, sig] {checks with} (chk);
+  \draw[wire] (chk) -- node[midway, above, sig] {match} (ok);
+\end{tikzpicture}
