@@ -38,7 +38,7 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/index.html</loc>
-    <lastmod>2026-11-04T13:24:45.403Z</lastmod>
+    <lastmod>2026-11-05T06:54:29.128Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2026-05-31-git-pathspec/index.html</loc>
@@ -74,7 +74,7 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-07-26-mirror-repository-to-newremote/index.html</loc>
-    <lastmod>2026-08-21T07:37:51.540Z</lastmod>
+    <lastmod>2026-11-05T06:54:29.135Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/posts/2024-11-05-when-do-i-use-git-rebase/index.html</loc>
@@ -162,7 +162,7 @@
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/index.html</loc>
-    <lastmod>2026-11-04T13:24:45.403Z</lastmod>
+    <lastmod>2026-11-05T06:54:29.129Z</lastmod>
   </url>
   <url>
     <loc>https://ohgoshgit.github.io/language/jp/posts-jp/2025-06-14-git-reset-hard-mixed-soft/index.html</loc>
@@ -227,5 +227,9 @@
   <url>
     <loc>https://ohgoshgit.github.io/posts/2026-11-04-gpg-signing-key/index.html</loc>
     <lastmod>2026-11-04T13:24:45.416Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ohgoshgit.github.io/posts/2026-11-05-git-clone-specific-branch/index.html</loc>
+    <lastmod>2026-11-05T06:54:29.147Z</lastmod>
   </url>
 </urlset>

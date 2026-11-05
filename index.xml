@@ -10,7 +10,245 @@
 <atom:link href="https://ohgoshgit.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.11.9</generator>
-<lastBuildDate>Wed, 04 Nov 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 05 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OGG… How do I git clone a specific branch?</title>
+  <dc:creator>Ryo Nakagami</dc:creator>
+  <link>https://ohgoshgit.github.io/posts/2026-11-05-git-clone-specific-branch/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>git clone &lt;url&gt;#&lt;branch&gt;</code> is <strong>not</strong> Git syntax. It is the npm-style dependency notation. Pass the branch with <code>-b</code> (<code>--branch</code>)</li>
+<li>Add <code>--single-branch</code> to fetch only that branch’s history, and <code>--depth 1</code> to fetch only its latest commit</li>
+<li>Already cloned? Just <code>git switch &lt;branch&gt;</code></li>
+</ul>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check out release/1.0 right after cloning</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> release/1.0 https://github.com/example-org/sample-app.git</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># fetch only release/1.0</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> release/1.0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--single-branch</span> https://github.com/example-org/sample-app.git</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># fetch only the latest commit of release/1.0</span></span>
+<span id="cb1-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> release/1.0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--single-branch</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--depth</span> 1 https://github.com/example-org/sample-app.git</span>
+<span id="cb1-9"></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># already cloned</span></span>
+<span id="cb1-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> switch release/1.0</span></code></pre></div></div>
+</div>
+</div>
+</div>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">🎯 Goal</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Clone a repository with a specific branch checked out</label></li>
+<li><label><input type="checkbox">Choose between a full, single-branch, and shallow clone</label></li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">🔎 Objective</h2>
+<p>You want the <code>release/1.0</code> branch of <code>sample-app</code>, not the default branch. Writing the branch after a <code>#</code>, the way <code>package.json</code> does, looks natural:</p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ❌ does not select a branch</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone https://github.com/example-org/sample-app.git<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">#</span>release/1.0</span></code></pre></div></div>
+</div>
+<ul>
+<li><code>npm install github:example-org/sample-app#release/1.0</code> understands <code>#&lt;branch&gt;</code>, but <code>git clone</code> does not.</li>
+<li>Git has no branch part in its URL syntax, so <code>#release/1.0</code> is just part of the URL</li>
+</ul>
+</section>
+<section id="solution-using-git-clone--b" class="level2">
+<h2 class="anchored" data-anchor-id="solution-using-git-clone--b">Solution: using <code>git clone -b</code></h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Check out a specific branch
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> release/1.0 https://github.com/example-org/sample-app.git</span></code></pre></div></div>
+</div>
+<p>This is a normal clone. Git fetches every branch, as usual, but checks out <code>release/1.0</code> instead of the remote’s default branch.</p>
+</div>
+</div>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-b &lt;name&gt;</code>, <code>--branch &lt;name&gt;</code></td>
+<td>Check out <code>&lt;name&gt;</code> instead of the branch the remote’s <code>HEAD</code> points to. <code>&lt;name&gt;</code> can also be a tag; you then get a detached <code>HEAD</code> at that tag</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span class="mini-section">Fetch only that branch</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> release/1.0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--single-branch</span> https://github.com/example-org/sample-app.git</span></code></pre></div></div>
+</div>
+<p><code>--single-branch</code> fetches only the history reachable from <code>release/1.0</code>, and sets the remote’s fetch refspec so that later <code>git fetch</code> runs also track only that branch.</p>
+<p><span class="mini-section">Fetch only the latest commit</span></p>
+<div class="code-area">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> release/1.0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--single-branch</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--depth</span> 1 https://github.com/example-org/sample-app.git</span></code></pre></div></div>
+</div>
+<p><code>--depth 1</code> cuts the history down to the tip commit. Use this when you need the files but not the history, e.g.&nbsp;in CI or to try out a build. It is the fastest option for large repositories.</p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--single-branch</code></td>
+<td>Fetch only the branch given by <code>-b</code> (or the remote’s default branch when <code>-b</code> is omitted). Later <code>git fetch</code> runs track only that branch</td>
+</tr>
+<tr class="even">
+<td><code>--depth &lt;n&gt;</code></td>
+<td>Create a shallow clone with only the last <code>&lt;n&gt;</code> commits. Implies <code>--single-branch</code> unless you pass <code>--no-single-branch</code></td>
+</tr>
+<tr class="odd">
+<td><code>--no-single-branch</code></td>
+<td>Fetch the tips of all branches, even with <code>--depth</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Since <code>--depth</code> already implies <code>--single-branch</code>, writing both is redundant, but harmless. Keeping <code>--single-branch</code> in the command makes the intent explicit.</p>
+<p><span class="mini-section">Which one to use</span></p>
+<div class="no-border-top-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Branches fetched</th>
+<th>History fetched</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git clone -b &lt;branch&gt;</code></td>
+<td>All</td>
+<td>Full</td>
+<td>You work on this branch but may switch to others</td>
+</tr>
+<tr class="even">
+<td><code>git clone -b &lt;branch&gt; --single-branch</code></td>
+<td><code>&lt;branch&gt;</code> only</td>
+<td>Full</td>
+<td>You only care about this branch, but need its log, <code>blame</code>, etc.</td>
+</tr>
+<tr class="odd">
+<td><code>git clone -b &lt;branch&gt; --depth 1</code></td>
+<td><code>&lt;branch&gt;</code> only</td>
+<td>Latest commit</td>
+<td>You only need the files (CI, a quick build)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>git clone</category>
+  <category>git switch</category>
+  <guid>https://ohgoshgit.github.io/posts/2026-11-05-git-clone-specific-branch/</guid>
+  <pubDate>Thu, 05 Nov 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>OGG… What is a GPG signing key, and how do I sign my Git commits with it?</title>
   <dc:creator>Ryo Nakagami</dc:creator>
@@ -11182,573 +11420,6 @@ font-style: inherit;">)</span></span></code></pre></div></div>
   <category>git branch</category>
   <guid>https://ohgoshgit.github.io/posts/2025-09-14-git-branch-naming/</guid>
   <pubDate>Sun, 14 Sep 2025 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>OGG git cheatsheet</title>
-  <dc:creator>Ryo Nakagami</dc:creator>
-  <link>https://ohgoshgit.github.io/posts/2025-08-06-git-command-cheatsheet/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-<section id="git-rules" class="level2">
-<h2 class="anchored" data-anchor-id="git-rules">Git Rules</h2>
-<section id="commit-reference-notation" class="level3">
-<h3 class="anchored" data-anchor-id="commit-reference-notation">Commit Reference Notation</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 50%">
-<col style="width: 30%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Notation</th>
-<th>Meaning</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>HEAD</code></td>
-<td>The current commit (tip of the checked-out branch)</td>
-<td><code>git show HEAD</code></td>
-</tr>
-<tr class="even">
-<td><code>HEAD~1</code> / <code>HEAD~</code></td>
-<td>1st ancestor following the <strong>first parent</strong> chain</td>
-<td><code>git diff HEAD~1 HEAD</code></td>
-</tr>
-<tr class="odd">
-<td><code>HEAD~N</code></td>
-<td>Nth ancestor following the first parent chain</td>
-<td><code>git diff HEAD~3 HEAD</code></td>
-</tr>
-<tr class="even">
-<td><code>HEAD^1</code> / <code>HEAD^</code></td>
-<td>1st parent of HEAD (identical to <code>HEAD~1</code> for linear history)</td>
-<td><code>git show HEAD^</code></td>
-</tr>
-<tr class="odd">
-<td><code>HEAD^2</code></td>
-<td>2nd parent of HEAD — only exists on merge commits</td>
-<td><code>git show HEAD^2</code></td>
-</tr>
-<tr class="even">
-<td><code>HEAD^^</code></td>
-<td>Grandparent via first-parent chain (same as <code>HEAD~2</code>)</td>
-<td><code>git show HEAD^^</code></td>
-</tr>
-<tr class="odd">
-<td><code>&lt;ref&gt;^{commit}</code></td>
-<td>Dereference a tag or ref to its underlying commit object</td>
-<td><code>git cat-file -e v1.0^{commit}</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>~</code> vs <code>^</code> — when they differ
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><code>~N</code> always follows the <strong>first parent</strong> N times (useful for linear history and rebase workflows). <code>^N</code> selects the <strong>Nth parent</strong> of a single commit (only relevant for merge commits, where <code>^1</code> is the branch you merged into and <code>^2</code> is the branch you merged from).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># On a merge commit M with two parents A and B:</span></span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> show M^1   <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># → A (the branch that was merged into)</span></span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> show M^2   <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># → B (the branch that was merged from)</span></span>
-<span id="cb1-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> show M~1   <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># → A (same as ^1, first-parent)</span></span></code></pre></div></div>
-</div>
-</div>
-</section>
-</section>
-<section id="git-command" class="level2">
-<h2 class="anchored" data-anchor-id="git-command">Git command</h2>
-<section id="basic-commands" class="level3">
-<h3 class="anchored" data-anchor-id="basic-commands">Basic Commands</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Check Git Version</strong></td>
-<td><code>git --version</code></td>
-<td>E.g. <code>git version 2.43.0</code></td>
-</tr>
-<tr class="even">
-<td><strong>Clone withou files</strong></td>
-<td><code>git clone --no-checkout &lt;repository-url&gt;</code></td>
-<td>clones the repository without checking out the files</td>
-</tr>
-<tr class="odd">
-<td><strong>Status</strong></td>
-<td><code>git status -sb</code></td>
-<td>Short and branch-aware status (great for quick checks)</td>
-</tr>
-<tr class="even">
-<td><strong>Rename</strong></td>
-<td><code>git mv &lt;oldfilename&gt; &lt;newfilename&gt;</code></td>
-<td>Rename or move a file and stage the change for commit</td>
-</tr>
-<tr class="odd">
-<td><strong>Remove</strong></td>
-<td><code>git rm --cached &lt;FILE_NAME&gt;</code></td>
-<td>Stop tracking a file in Git without deleting it from local</td>
-</tr>
-<tr class="even">
-<td><strong>Log</strong></td>
-<td><code>git log --pretty=format:'%Cgreen%cI%Creset,%C(yellow)%h%Creset,%C(bold blue)%an%Creset,%s'</code></td>
-<td>Display commit log with ISO date, short commit ID, author, and commit message</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="staging-commands" class="level3">
-<h3 class="anchored" data-anchor-id="staging-commands">Staging Commands</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Add all updates</strong></td>
-<td><code>git add -u</code></td>
-<td>Stage modified and deleted tracked files (exclude new untracked files)</td>
-</tr>
-<tr class="even">
-<td><strong>Add multiple extensions</strong></td>
-<td><code>git add -- '*.py' '*.R'</code></td>
-<td>Stage files matching either pattern</td>
-</tr>
-<tr class="odd">
-<td><strong>Add updates except <code>.qmd</code></strong></td>
-<td><code>git add -u -- . ':!*.qmd'</code></td>
-<td>Stage modified and deleted tracked files while excluding <code>.qmd</code> files</td>
-</tr>
-<tr class="even">
-<td></td>
-<td><code>git add -u -- . ':(exclude)*.qmd'</code></td>
-<td>Same as above using explicit pathspec exclusion syntax</td>
-</tr>
-<tr class="odd">
-<td><strong>Preview updates except <code>.qmd</code></strong></td>
-<td><code>git add -u -n -- . ':!*.qmd'</code></td>
-<td>Dry-run to preview which tracked file updates would be staged, excluding <code>.qmd</code> files</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="file-modification-commands" class="level3">
-<h3 class="anchored" data-anchor-id="file-modification-commands">File Modification Commands</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Find file first commit</strong></td>
-<td><code>git log --diff-filter=A -- file.py</code></td>
-<td>Find the commit in which a file was first added to the repository</td>
-</tr>
-<tr class="even">
-<td><strong>Unstage files</strong></td>
-<td><code>git rm --cached -r .</code></td>
-<td>Remove files from the Git index while keeping them in the working tree</td>
-</tr>
-<tr class="odd">
-<td><strong>Discard file changes</strong></td>
-<td><code>git restore &lt;file-path&gt;</code></td>
-<td>Discard local changes and restore the file to the current <code>HEAD</code> state</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>When to use <code>git rm --cached -r .</code> (before the initial commit)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This command is used when you are in a repository that has <strong>no commits yet</strong> (i.e., <code>HEAD</code> does not exist), and you have accidentally staged all files using:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> add .</span></code></pre></div></div>
-<p>In this situation, normal commands like:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> restore <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--staged</span> .</span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">git</span> reset HEAD .</span></code></pre></div></div>
-<p>But these commands will fail because there is no HEAD in an initial repository state.</p>
-</div>
-</div>
-</section>
-<section id="commands-for-branch" class="level3">
-<h3 class="anchored" data-anchor-id="commands-for-branch">commands for branch</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Create Branch</strong></td>
-<td><code>git switch -c &lt;branch-name&gt;</code></td>
-<td>Create and checkout a new branch locally</td>
-</tr>
-<tr class="even">
-<td><strong>Checkout Previous Branch</strong></td>
-<td><code>git switch -</code></td>
-<td>Switch back to the previously checked-out branch</td>
-</tr>
-<tr class="odd">
-<td><strong>Pull From All Remotes</strong></td>
-<td><code>git pull --all</code></td>
-<td>Update all local tracking branches from all configured remotes</td>
-</tr>
-<tr class="even">
-<td><strong>Delete Local Branch</strong></td>
-<td><code>git branch -d &lt;branch-name&gt;</code></td>
-<td>Delete a local branch safely (only if already merged)</td>
-</tr>
-<tr class="odd">
-<td><strong>Force Delete Local Branch</strong></td>
-<td><code>git branch -D &lt;branch-name&gt;</code></td>
-<td>Force delete a local branch even if unmerged</td>
-</tr>
-<tr class="even">
-<td><strong>Delete Remote Branch</strong></td>
-<td><code>git push origin --delete &lt;branch-name&gt;</code></td>
-<td>Delete a branch from the remote repository</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="commands-for-commits" class="level3">
-<h3 class="anchored" data-anchor-id="commands-for-commits">commands for commits</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Amend commit</strong></td>
-<td><code>git commit --amend</code></td>
-<td>Modify the most recent commit (message, content, or both) with editor starting up</td>
-</tr>
-<tr class="even">
-<td><strong>Commit all changes with message</strong></td>
-<td><code>git commit -am "&lt;commit message&gt;"</code></td>
-<td>Stage all tracked changes and commit with a message in one step</td>
-</tr>
-<tr class="odd">
-<td><strong>Interactive rebase</strong></td>
-<td><code>git rebase -i &lt;base&gt;</code></td>
-<td>Rewrite commit history interactively — squash, reorder, edit, or drop commits since <code>&lt;base&gt;</code> (e.g.&nbsp;<code>HEAD~3</code> or a branch name)</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>what is squash
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Squash</strong> combines multiple commits into one. During <code>git rebase -i</code>, marking a commit as <code>squash</code> (or <code>s</code>) folds it into the commit above it, letting you rewrite a single combined message. This keeps history clean by collapsing WIP commits before merging.</p>
-<pre><code>pick a1b2c3 Add feature skeleton
-squash d4e5f6 Fix typo
-squash 7g8h9i Add tests
-# → becomes one commit with a merged message
-# a1b2c3 is the oldest commit</code></pre>
-</div>
-</div>
-</section>
-<section id="diff-check" class="level3">
-<h3 class="anchored" data-anchor-id="diff-check">diff check</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>check staged diff</strong></td>
-<td><code>git diff --cached &lt;branch&gt;</code></td>
-<td>Compare staged changes in the index against the specified branch</td>
-</tr>
-<tr class="even">
-<td><strong>check diff between branches</strong></td>
-<td><code>git diff &lt;base-branch&gt;..&lt;target-branch&gt;</code></td>
-<td>Compare changes between two branches</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="custom-git-commands" class="level3">
-<h3 class="anchored" data-anchor-id="custom-git-commands">Custom Git Commands</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="https://github.com/RyoNakagami/regmonkey_gitcommand/blob/main/src/git-issue2pr.sh"><strong>Convert a specific issue to PR</strong></a></td>
-<td><code>git issue2pr</code></td>
-<td>Create a Pull Request from the current branch and link it to a specific GitHub Issue.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-</section>
-<section id="config-command" class="level2">
-<h2 class="anchored" data-anchor-id="config-command">Config command</h2>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Default branch name</strong></td>
-<td><code>git config --global init.defaultBranch &lt;default branch name&gt;</code></td>
-<td>Set default branch when initializing new repos</td>
-</tr>
-<tr class="even">
-<td><strong>Enable color output</strong></td>
-<td><code>git config --global color.ui auto</code></td>
-<td>Automatically color Git output in the terminal.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="github-cli-command" class="level2">
-<h2 class="anchored" data-anchor-id="github-cli-command">GitHub CLI command</h2>
-<section id="general" class="level3">
-<h3 class="anchored" data-anchor-id="general">general</h3>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Check Organization</strong></td>
-<td><code>gh org list</code></td>
-<td>Show a list of organizations you belong to</td>
-</tr>
-<tr class="even">
-<td><strong>Check Organization Repo</strong></td>
-<td><code>gh repo list &lt;ORG&gt;</code></td>
-<td>Show a list of repositories under a specific organization you belong to</td>
-</tr>
-<tr class="odd">
-<td><strong>Create Repo</strong></td>
-<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin</code></td>
-<td>Create a public repository under your GitHub account</td>
-</tr>
-<tr class="even">
-<td></td>
-<td><code>gh repo create &lt;REPONAME&gt; --public --source=. --remote=origin --org &lt;ORG_NAME&gt;</code></td>
-<td>Create a public repository under the specified organization</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td><code>gh repo create &lt;REPONAME&gt; --private --source=. --remote=origin</code></td>
-<td>Create a private repository under your GitHub account</td>
-</tr>
-<tr class="even">
-<td><strong>Delete Repo</strong></td>
-<td><code>gh repo delete &lt;OWNER&gt;/&lt;REPONAME&gt;</code></td>
-<td>Delete the target repository from GitHub while keeping the local repository intact</td>
-</tr>
-<tr class="odd">
-<td><strong>Create Pull Request</strong></td>
-<td><code>gh pr create --base &lt;BASE_BRANCH&gt; --head &lt;HEAD_BRANCH&gt; --title "&lt;TITLE&gt;" --body "&lt;BODY&gt;"</code></td>
-<td>Create a pull request from the specified source branch to the target branch</td>
-</tr>
-</tbody>
-</table>
-<section id="gist" class="level3">
-<h3 class="anchored" data-anchor-id="gist">Gist</h3>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Even if a Gist is set to <code>Private</code>, it <strong>can still be accessed by anyone with the link</strong>. Do <strong>not</strong> store sensitive information such as passwords, API keys, or personal data in a Gist. For secure storage of secrets, consider using a proper secrets manager.</p>
-</div>
-</div>
-<div class="no-border-top-table">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Command Example</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Create Secret Gist from File</strong></td>
-<td><code>gh gist create &lt;filename&gt; -d "&lt;gist title&gt;"</code></td>
-<td>Create a secret gist with the given file and description</td>
-</tr>
-<tr class="even">
-<td><strong>Create Gist from standard output</strong></td>
-<td><code>cat cool.txt | gh gist create -d "&lt;gist title&gt;"</code></td>
-<td>Create a gist directly from command output or piped content</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-</section>
-</div>
-</section>
-</section>
-
- ]]></description>
-  <category>cheatsheet</category>
-  <guid>https://ohgoshgit.github.io/posts/2025-08-06-git-command-cheatsheet/</guid>
-  <pubDate>Wed, 06 Aug 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-11-05-git-clone-specific-branch/index.html",
       "/posts/2026-11-04-gpg-signing-key/index.html",
       "/posts/2026-11-03-gh-auth-in-macos/index.html",
       "/posts/2026-10-29-make-pull-request-via-gh-command/index.html",
