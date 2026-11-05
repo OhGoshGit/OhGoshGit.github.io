@@ -1,0 +1,61 @@
+#| mainfont: Noto Sans CJK JP
+\definecolor{navy}{HTML}{0E3666}
+\definecolor{aliceblue}{HTML}{E8F1FE}
+\definecolor{azureblue}{HTML}{428CE6}
+\definecolor{paleskyblue}{HTML}{B4D7FF}
+\definecolor{fontblack}{HTML}{1A1A1A}
+\definecolor{darkgray}{HTML}{575757}
+\definecolor{crimsonred}{HTML}{D31804}
+\definecolor{mistyrose}{HTML}{FBE7E6}
+\begin{tikzpicture}[
+    >={Latex[length=2.6mm]}, font=\small, line width=0.7pt,
+    every node/.style={text=fontblack},
+    repo/.style={draw=navy, fill=aliceblue, rounded corners=3pt, align=left,
+                 inner sep=6pt, text width=4.7cm, font=\ttfamily\footnotesize},
+    accent/.style={repo, fill=paleskyblue},
+    ng/.style={repo, draw=crimsonred, fill=mistyrose},
+    title/.style={font=\small\bfseries, text=navy},
+    sig/.style={font=\footnotesize, text=darkgray, inner sep=2pt},
+    note/.style={font=\footnotesize, text=darkgray, align=center},
+    bad/.style={font=\footnotesize\bfseries, text=crimsonred, align=center},
+    good/.style={font=\footnotesize\bfseries, text=azureblue, align=center},
+    wire/.style={->, draw=navy},
+  ]
+
+  % ---------- origin (shared by both rows) ----------
+  \node[repo, text width=3.6cm, label={[title]above:origin (GitHub)}] (origin) at (0,0)
+    {refs/heads/master\\refs/heads/test1..3\\refs/tags/v1.0};
+
+  % ---------- row A: non-bare clone ----------
+  \node[repo, label={[title]above:non-bare clone}] (localA) at (7.8,2.4)
+    {refs/heads/master\\refs/remotes/origin/master\\refs/remotes/origin/test1..3\\refs/tags/v1.0};
+  \node[note, below=2mm of localA] {test1..3 exist only as\\remote-tracking refs};
+
+  \node[ng, label={[title, text=crimsonred]above:new remote}] (newA) at (15.6,2.4)
+    {refs/heads/master\\\textcolor{crimsonred}{refs/remotes/origin/master}\\\textcolor{crimsonred}{refs/remotes/origin/test1..3}\\refs/tags/v1.0};
+  \node[bad, below=2mm of newA] {× no branches test1..3\\stale tracking refs copied as-is};
+
+  % ---------- row B: bare clone ----------
+  \node[repo, label={[title]above:bare clone}] (localB) at (7.8,-2.4)
+    {refs/heads/master\\refs/heads/test1..3\\refs/tags/v1.0};
+  \node[note, below=2mm of localB] {no working tree,\\refs copied one-to-one};
+
+  \node[accent, label={[title]above:new remote}] (newB) at (15.6,-2.4)
+    {refs/heads/master\\refs/heads/test1..3\\refs/tags/v1.0};
+  \node[good, below=2mm of newB] {✓ same refs as origin};
+
+  % ---------- wires ----------
+  \coordinate (fork) at ($(origin.east)+(0.6,0)$);
+  \draw[draw=navy] (origin.east) -- (fork);
+  \fill[navy] (fork) circle (1.4pt);
+  \draw[wire] (fork) |- node[pos=0.78, above, sig] {\texttt{git clone}} (localA.west);
+  \draw[wire] (fork) |- node[pos=0.75, above, sig] {\texttt{git clone --bare}} (localB.west);
+
+  \draw[wire] (localA.east) -- node[midway, above, sig] {\texttt{push --mirror}} (newA.west);
+  \draw[wire] (localB.east) -- node[midway, above, sig] {\texttt{push --mirror}} (newB.west);
+
+  % ---------- takeaway ----------
+  \node[note, anchor=north] at (7.8,-4.6)
+    {\texttt{--mirror} pushes every ref under \texttt{refs/} exactly as it is named locally.\\
+     Only a bare clone keeps the branches as \texttt{refs/heads/*}, the same as origin.};
+\end{tikzpicture}
