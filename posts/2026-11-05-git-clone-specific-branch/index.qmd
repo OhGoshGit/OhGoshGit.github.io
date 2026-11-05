@@ -1,0 +1,145 @@
+---
+title: "OGG... How do I git clone a specific branch?"
+author:
+   - name: "Ryo Nakagami"
+     url: https://github.com/RyoNakagami
+date: "2026-11-05"
+date-modified: "2026-11-05"
+categories: [git clone, git switch]
+---
+
+::: {.callout-note}
+## TL;DR
+
+- `git clone <url>#<branch>` is **not** Git syntax. It is the npm-style dependency notation. Pass the branch with `-b` (`--branch`)
+- Add `--single-branch` to fetch only that branch's history, and `--depth 1` to fetch only its latest commit
+- Already cloned? Just `git switch <branch>`
+
+:::{.code-area}
+
+```zsh
+# check out release/1.0 right after cloning
+git clone -b release/1.0 https://github.com/example-org/sample-app.git
+
+# fetch only release/1.0
+git clone -b release/1.0 --single-branch https://github.com/example-org/sample-app.git
+
+# fetch only the latest commit of release/1.0
+git clone -b release/1.0 --single-branch --depth 1 https://github.com/example-org/sample-app.git
+
+# already cloned
+git switch release/1.0
+```
+
+:::
+
+:::
+
+
+## 🎯 Goal
+
+- [ ] Clone a repository with a specific branch checked out
+- [ ] Choose between a full, single-branch, and shallow clone
+
+
+## 🔎 Objective
+
+You want the `release/1.0` branch of `sample-app`, not the default branch. Writing the
+branch after a `#`, the way `package.json` does, looks natural:
+
+:::{.code-area}
+
+```zsh
+# ❌ does not select a branch
+git clone https://github.com/example-org/sample-app.git#release/1.0
+```
+
+:::
+
+- `npm install github:example-org/sample-app#release/1.0` understands `#<branch>`, but `git clone`
+does not. 
+- Git has no branch part in its URL syntax, so `#release/1.0` is just part of the URL
+
+
+## Solution: using `git clone -b`
+
+
+::: {.callout-note}
+### Check out a specific branch
+
+:::{.code-area}
+
+```zsh
+git clone -b release/1.0 https://github.com/example-org/sample-app.git
+```
+
+:::
+
+This is a normal clone. Git fetches every branch, as usual, but checks out `release/1.0`
+instead of the remote's default branch.
+
+
+:::
+
+
+:::: {.no-border-top-table}
+
+| Option | Meaning |
+| ------ | ------- |
+| `-b <name>`, `--branch <name>` | Check out `<name>` instead of the branch the remote's `HEAD` points to. `<name>` can also be a tag; you then get a detached `HEAD` at that tag |
+: {tbl-colwidths="[30,70]"}
+
+::::
+
+[Fetch only that branch]{.mini-section}
+
+:::{.code-area}
+
+```zsh
+git clone -b release/1.0 --single-branch https://github.com/example-org/sample-app.git
+```
+
+:::
+
+`--single-branch` fetches only the history reachable from `release/1.0`, and sets the
+remote's fetch refspec so that later `git fetch` runs also track only that branch.
+
+[Fetch only the latest commit]{.mini-section}
+
+:::{.code-area}
+
+```zsh
+git clone -b release/1.0 --single-branch --depth 1 https://github.com/example-org/sample-app.git
+```
+
+:::
+
+`--depth 1` cuts the history down to the tip commit. Use this when you need the files but not
+the history, e.g. in CI or to try out a build. It is the fastest option for large repositories.
+
+:::: {.no-border-top-table}
+
+| Option | Meaning |
+| ------ | ------- |
+| `--single-branch` | Fetch only the branch given by `-b` (or the remote's default branch when `-b` is omitted). Later `git fetch` runs track only that branch |
+| `--depth <n>` | Create a shallow clone with only the last `<n>` commits. Implies `--single-branch` unless you pass `--no-single-branch` |
+| `--no-single-branch` | Fetch the tips of all branches, even with `--depth` |
+: {tbl-colwidths="[30,70]"}
+
+::::
+
+Since `--depth` already implies `--single-branch`, writing both is redundant, but harmless.
+Keeping `--single-branch` in the command makes the intent explicit.
+
+[Which one to use]{.mini-section}
+
+:::: {.no-border-top-table}
+
+| Command | Branches fetched | History fetched | Use when |
+| ------- | ---------------- | --------------- | -------- |
+| `git clone -b <branch>` | All | Full | You work on this branch but may switch to others |
+| `git clone -b <branch> --single-branch` | `<branch>` only | Full | You only care about this branch, but need its log, `blame`, etc. |
+| `git clone -b <branch> --depth 1` | `<branch>` only | Latest commit | You only need the files (CI, a quick build) |
+: {tbl-colwidths="[34,16,16,34]"}
+
+::::
